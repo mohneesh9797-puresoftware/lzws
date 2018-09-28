@@ -28,11 +28,34 @@ demo using pipes) and builds with a single command on most platforms. It
 has been designed with maximum portability in mind and should work
 correctly on big-endian as well as little-endian machines.
 
-Linux:
-% gcc -O2 *.c -o lzwfilter
+Debug build
+-----------
 
-Darwin/Mac:
-% clang -O2 *.c -o lzwfilter
+    ::
 
-MS Visual Studio:
-cl -O2 lzwfilter.c lzw-lib.c
+     $ cd build && cmake .. && \
+        make VERBOSE=1 && make test
+
+Features enable/disable
+-----------------------
+
+    ::
+
+     $ cmake .. \
+        -DLZW_AB_SHARED=0/1 \
+        -DLZW_AB_STATIC=0/1
+
+Test all toolchains
+-------------------
+
+    ::
+
+     $ cmake/scripts/test-all-toolchains.sh
+
+DEB and RPM release
+-------------------
+
+    ::
+
+     $ cd build && cmake .. -DCMAKE_BUILD_TYPE=RELEASE && \
+        make VERBOSE=1 && make test && make package

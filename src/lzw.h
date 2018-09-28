@@ -6,10 +6,10 @@
 //      Distributed under the BSD Software License (see license.txt)      //
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef LZWLIB_H_
-#define LZWLIB_H_
+#ifndef LZW_H_
+#define LZW_H_
 
-int lzw_compress (void (*dst)(int), int (*src)(void), int maxbits);
-int lzw_decompress (void (*dst)(int), int (*src)(void));
+int lzw_compress(void (*dst)(int), int (*src)(void), int maxbits);
+int lzw_decompress(void (*dst)(int), int (*src)(void));
 
-#endif /* LZWLIB_H_ */
+#endif /* LZW_H_ */
