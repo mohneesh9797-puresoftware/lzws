@@ -13,8 +13,8 @@ function (cmake_check_lto)
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -flto -fuse-linker-plugin"
-      "-DCMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS} -flto -fuse-linker-plugin"
+      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -flto"
+      "-DCMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS} -fuse-linker-plugin"
     OUTPUT_VARIABLE CHECK_COMPILE_RESULT
   )
   if (${CMAKE_CONFIG_VERBOSE_MAKEFILE})
@@ -24,8 +24,8 @@ function (cmake_check_lto)
 
   if (${CHECK_RESULT})
     set (CMAKE_HAVE_LTO true CACHE STRING "Status of LTO support")
-    set (CMAKE_LTO_C_FLAGS "-flto -fuse-linker-plugin" CACHE STRING "LTO C flags")
-    set (CMAKE_LTO_LD_FLAGS "-flto -fuse-linker-plugin" CACHE STRING "LTO LD flags")
+    set (CMAKE_LTO_C_FLAGS "-flto" CACHE STRING "LTO C flags")
+    set (CMAKE_LTO_LD_FLAGS "-fuse-linker-plugin" CACHE STRING "LTO LD flags")
     message (STATUS "Check for C compiler LTO support - yes")
     return ()
   endif ()
