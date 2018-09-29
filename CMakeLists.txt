@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
 project ("lzw-ab" "C")
 
-set (CMAKE_DISABLE_IN_SOURCE_BUILD true)
+if (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+  message(FATAL_ERROR "In-source builds are not allowed")
+endif ()
 
 set (LZW_AB_VERSION "0.1")
 
@@ -31,17 +33,17 @@ set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks")
 
 include (GetVerboseFlags)
 include (GetPipeFlags)
-include (CheckC99)
+include (CheckC11)
 include (CheckIPO)
 include (CheckRunnable)
 
 cmake_get_verbose_flags ()
 cmake_get_pipe_flags ()
-cmake_check_c99 ()
+cmake_check_c11 ()
 cmake_check_ipo ()
 cmake_check_runnable ()
 
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_PIPE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C99_C_FLAGS}")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_PIPE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C11_C_FLAGS}")
 
 if (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
   set (CMAKE_BUILD_TYPE DEBUG)

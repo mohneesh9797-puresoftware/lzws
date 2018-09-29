@@ -6,7 +6,7 @@ function (cmake_check_ipo)
   include (CheckIPOSupported)
 
   check_ipo_supported (RESULT CHECK_RESULT OUTPUT CHECK_OUTPUT_RESULT)
-  if (CMAKE_CONFIG_VERBOSE_MAKEFILE)
+  if (CMAKE_VERBOSE_MAKEFILE)
     message (STATUS ${CHECK_OUTPUT_RESULT})
   endif ()
 
