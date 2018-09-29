@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.9)
 project ("lzw-ab" "C")
 
+set (CMAKE_DISABLE_IN_SOURCE_BUILD true)
+
 set (LZW_AB_VERSION "0.1")
 
 if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
