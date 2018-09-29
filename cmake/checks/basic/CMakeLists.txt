@@ -8,7 +8,7 @@ add_executable (
   "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
 )
 
-if (${CMAKE_TRY_RUN})
+if (CMAKE_TRY_RUN)
   add_custom_command(
     TARGET "main"
     POST_BUILD

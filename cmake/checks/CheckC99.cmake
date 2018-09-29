@@ -17,17 +17,17 @@ function (cmake_check_c99)
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -std=gnu99"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_CONFIG_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE CHECK_COMPILE_RESULT
+    OUTPUT_VARIABLE CHECK_OUTPUT_RESULT
   )
-  if (${CMAKE_CONFIG_VERBOSE_MAKEFILE})
-    message (STATUS ${CHECK_COMPILE_RESULT})
+  if (CMAKE_CONFIG_VERBOSE_MAKEFILE)
+    message (STATUS ${CHECK_OUTPUT_RESULT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (${CHECK_RESULT})
-    set (CMAKE_HAVE_C99 true CACHE STRING "Status of C99 support")
+  if (CHECK_RESULT)
+    set (CMAKE_HAVE_C99 true CACHE STRING "status of C99 support")
     set (CMAKE_C99_C_FLAGS "-std=gnu99" CACHE STRING "c99 C flags")
-    message (STATUS "Check for C compiler C99 support - gnu99")
+    message (STATUS "Status of C99 support - gnu99")
     return ()
   endif ()
 
@@ -38,17 +38,17 @@ function (cmake_check_c99)
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -std=c99"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_CONFIG_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE CHECK_COMPILE_RESULT
+    OUTPUT_VARIABLE CHECK_OUTPUT_RESULT
   )
-  if (${CMAKE_CONFIG_VERBOSE_MAKEFILE})
-    message (STATUS ${CHECK_COMPILE_RESULT})
+  if (CMAKE_CONFIG_VERBOSE_MAKEFILE)
+    message (STATUS ${CHECK_OUTPUT_RESULT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (${CHECK_RESULT})
-    set (CMAKE_HAVE_C99 true CACHE STRING "Status of C99 support")
+  if (CHECK_RESULT)
+    set (CMAKE_HAVE_C99 true CACHE STRING "status of C99 support")
     set (CMAKE_C99_C_FLAGS "-std=c99" CACHE STRING "c99 C flags")
-    message (STATUS "Check for C compiler C99 support - c99")
+    message (STATUS "Status of C99 support - c99")
     return ()
   endif ()
 
@@ -59,23 +59,23 @@ function (cmake_check_c99)
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_CONFIG_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE CHECK_COMPILE_RESULT
+    OUTPUT_VARIABLE CHECK_OUTPUT_RESULT
   )
-  if (${CMAKE_CONFIG_VERBOSE_MAKEFILE})
-    message (STATUS ${CHECK_COMPILE_RESULT})
+  if (CMAKE_CONFIG_VERBOSE_MAKEFILE)
+    message (STATUS ${CHECK_OUTPUT_RESULT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (${CHECK_RESULT})
-    set (CMAKE_HAVE_C99 true CACHE STRING "Status of C99 support")
+  if (CHECK_RESULT)
+    set (CMAKE_HAVE_C99 true CACHE STRING "status of C99 support")
     set (CMAKE_C99_C_FLAGS "" CACHE STRING "c99 C flags")
-    message (STATUS "Check for C compiler C99 support - vanilla")
+    message (STATUS "Status of C99 support - vanilla")
     return ()
   endif ()
 
   # -- no support --
 
-  set (CMAKE_HAVE_C99 false CACHE STRING "Status of C99 support")
+  set (CMAKE_HAVE_C99 false CACHE STRING "status of C99 support")
   set (CMAKE_C99_C_FLAGS "" CACHE STRING "c99 C flags")
-  message (STATUS "Check for C compiler C99 support - no")
+  message (STATUS "Status of C99 support - no")
 endfunction ()

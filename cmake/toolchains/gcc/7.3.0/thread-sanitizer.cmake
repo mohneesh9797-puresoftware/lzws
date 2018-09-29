@@ -5,4 +5,4 @@ set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE -Werror -fsanitize=thread -fno-omit-f
 set (CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS}    -pie")
 set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pie")
 
-set (CMAKE_HAVE_LTO false CACHE STRING "Status of LTO support")
+set (CMAKE_INTERPROCEDURAL_OPTIMIZATION false CACHE BOOL "status of IPO switch")

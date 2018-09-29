@@ -16,19 +16,19 @@ function (cmake_check_runnable)
       "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_CONFIG_VERBOSE_MAKEFILE}"
       "-DCMAKE_TRY_RUN=1"
-    OUTPUT_VARIABLE CHECK_COMPILE_RESULT
+    OUTPUT_VARIABLE CHECK_OUTPUT_RESULT
   )
-  if (${CMAKE_CONFIG_VERBOSE_MAKEFILE})
-    message (STATUS ${CHECK_COMPILE_RESULT})
+  if (CMAKE_CONFIG_VERBOSE_MAKEFILE)
+    message (STATUS ${CHECK_OUTPUT_RESULT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (${CHECK_RESULT})
-    set (CMAKE_CAN_RUN_EXE true CACHE STRING "Cmake can run exe")
-    message (STATUS "Cmake can run exe - yes")
+  if (CHECK_RESULT)
+    set (CMAKE_CAN_RUN_EXE true CACHE STRING "status of run exe support")
+    message (STATUS "Status of run exe support - yes")
     return ()
   endif ()
 
-  set (CMAKE_CAN_RUN_EXE false CACHE STRING "Cmake can run exe")
-  message (STATUS "Cmake can run exe - no")
+  set (CMAKE_CAN_RUN_EXE false CACHE STRING "status of run exe support")
+  message (STATUS "Status of run exe support - no")
 endfunction ()
