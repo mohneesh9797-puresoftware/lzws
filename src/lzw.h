@@ -3,7 +3,7 @@
 //               Adjusted Binary LZW Compressor/Decompressor              //
 //                     Copyright (c) 2016 David Bryant                    //
 //                           All Rights Reserved                          //
-//      Distributed under the BSD Software License (see license.txt)      //
+//      Distributed under the BSD Software License (see LICENSE)          //
 ////////////////////////////////////////////////////////////////////////////
 
 #ifndef LZW_H_

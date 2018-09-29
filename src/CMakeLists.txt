@@ -1,6 +1,8 @@
 set (HEADERS "lzw.h")
 set (SOURCES "lzw.c")
 
+configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 set (LIB_NAME ${LZW_AB_TARGET})

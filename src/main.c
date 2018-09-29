@@ -3,24 +3,24 @@
 //               Adjusted Binary LZW Compressor/Decompressor              //
 //                     Copyright (c) 2016 David Bryant                    //
 //                           All Rights Reserved                          //
-//      Distributed under the BSD Software License (see license.txt)      //
+//      Distributed under the BSD Software License (see LICENSE)          //
 ////////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _WIN32
+#ifdef WIN32
 #include <fcntl.h>
 #endif
 
+#include "config.h"
 #include "lzw.h"
 
 /* This module provides a command-line filter for testing the lzw library.
- * It can also optionally calculate and display the compression ratio and
- * a simple checksum for informational purposes. Other command-line
- * arguments select decoding mode or the maximum symbol size (9 to 12 bits)
- * for encoding.
+ * It can also optionally calculate and display the compression ratio
+ * and a simple checksum for informational purposes.
+ * Other command-line arguments select decoding mode or the maximum symbol size (9 to 12 bits) for encoding.
  */
 
 static const char *usage =
@@ -48,7 +48,7 @@ static int read_buff(void) {
     read_tail = (read_head = 0) + fread(read_buffer, 1, sizeof(read_buffer), stdin);
 
   if (read_head < read_tail) {
-    value = read_buffer[read_head++];
+    value         = read_buffer[read_head++];
     read_checksum = read_checksum * 3 + (unsigned char)value;
     read_count++;
   } else
@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-#ifdef _WIN32
+#ifdef WIN32
   setmode(fileno(stdin), O_BINARY);
   setmode(fileno(stdout), O_BINARY);
 #endif

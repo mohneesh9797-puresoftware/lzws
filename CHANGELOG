@@ -2,3 +2,9 @@
 ### Added
 - CMake
 - CPack
+
+### Changed
+- Comments cosmetics
+
+### Removed
+- Any symbols limit (like 80). This limit is poisoning code and comments.
