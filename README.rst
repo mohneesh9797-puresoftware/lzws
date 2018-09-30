@@ -40,6 +40,7 @@ Features enable/disable
     ::
 
      $ cmake .. \
+        -DLZW_AB_CLI=0/1 \
         -DLZW_AB_SHARED=0/1 \
         -DLZW_AB_STATIC=0/1
 
