@@ -37,9 +37,9 @@ static const char *usage =
     "info\n\n";
 
 static unsigned char read_buffer[65536], write_buffer[65536];
-static size_t read_count, write_count;
-static int read_checksum, write_checksum;
-static int read_head, read_tail, write_head;
+static size_t        read_count, write_count;
+static int           read_checksum, write_checksum;
+static int           read_head, read_tail, write_head;
 
 static int read_buff(void) {
   int value;

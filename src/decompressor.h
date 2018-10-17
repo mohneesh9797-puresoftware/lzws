@@ -25,4 +25,4 @@ lzw_result_t lzw_decompress(lzw_decompressor_state_t* state,
                             const uint8_t* src, size_t src_length,
                             uint8_t* dst, size_t* dst_length);
 
-#endif  // LZW_DECOMPRESSOR_H_
+#endif // LZW_DECOMPRESSOR_H_
