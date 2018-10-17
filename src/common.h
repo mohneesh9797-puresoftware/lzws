@@ -9,4 +9,7 @@
 
 typedef uint8_t lzw_result_t;
 
+#define LZW_LOWEST_MAX_SYMBOL_SIZE 9
+#define LZW_BIGGEST_MAX_SYMBOL_SIZE 12
+
 #endif  // LZW_COMPRESSOR_COMMON_H_

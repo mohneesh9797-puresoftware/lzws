@@ -1,7 +1,5 @@
-set (HEADERS "lzw.h")
-set (SOURCES "lzw.c")
-
-configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+set (HEADERS "common.h" "compressor.h" "decompressor.h")
+set (SOURCES "compressor.c" "decompressor.c")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
@@ -19,19 +17,19 @@ if (LZW_AB_STATIC)
   install (TARGETS ${LIB_STATIC_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif ()
 
-set (SOURCES "main.c")
-
-set (CLI_NAME "${LZW_AB_TARGET}-cli")
-set (CLI_STATIC_NAME "${LZW_AB_TARGET}-cli-static")
-
-if (LZW_AB_CLI AND LZW_AB_SHARED)
-  add_executable (${CLI_NAME} ${SOURCES})
-  target_link_libraries (${CLI_NAME} ${LIB_NAME})
-  install (TARGETS ${CLI_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif ()
-
-if (LZW_AB_CLI AND LZW_AB_STATIC)
-  add_executable (${CLI_STATIC_NAME} ${SOURCES})
-  target_link_libraries (${CLI_STATIC_NAME} ${LIB_STATIC_NAME})
-  install (TARGETS ${CLI_STATIC_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif ()
+# set (SOURCES "main.c")
+#
+# set (CLI_NAME "${LZW_AB_TARGET}-cli")
+# set (CLI_STATIC_NAME "${LZW_AB_TARGET}-cli-static")
+#
+# if (LZW_AB_CLI AND LZW_AB_SHARED)
+#   add_executable (${CLI_NAME} ${SOURCES})
+#   target_link_libraries (${CLI_NAME} ${LIB_NAME})
+#   install (TARGETS ${CLI_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# endif ()
+#
+# if (LZW_AB_CLI AND LZW_AB_STATIC)
+#   add_executable (${CLI_STATIC_NAME} ${SOURCES})
+#   target_link_libraries (${CLI_STATIC_NAME} ${LIB_STATIC_NAME})
+#   install (TARGETS ${CLI_STATIC_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# endif ()

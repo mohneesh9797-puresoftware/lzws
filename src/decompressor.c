@@ -5,12 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "lzw.h"
-
-// -- utils --
-
-#define MIN_MAXBITS 9
-#define MAX_MAXBITS 12
+#include "decompressor.h"
 
 // -- state --
 
