@@ -17,4 +17,7 @@ extern const uint16_t LZW_MAGIC_HEADER;
 
 #define LZW_BLOCK_MODE 0x80
 
+#define LZW_CLEAR_CODE   256 // Code to flush dictionary and restart decoder.
+#define LZW_FIRST_STRING 257 // Code of first dictionary string.
+
 #endif // LZW_COMPRESSOR_COMMON_H_
