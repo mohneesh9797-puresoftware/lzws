@@ -4,21 +4,20 @@ We want to compress the following string:
 We will create dictionary:
 "a" - 97 (char code)
 "b" - 98 (char code)
-
 "ab" - 257
 "ba" - 258
 "aa" - 259
 "aab" - 260
 
-We can see that we need to use prefix tree, but is a bit special.
+We can see that we need to use prefix tree.
+Our prefix tree is a bit special.
 "aab" has code 260, "aa" - 259, "a" - 97.
-We can say that "string.substring(0, n)" will have some code for any "n" between "1" and "string.length".
-So each node in prefix tree will have a single symbol and code.
+We can say "string.substring(0, n)" will have some code for any "n" between "1" and "string.length".
+So each node in tree will have a single symbol and code.
 
 Each node can have 256 child nodes.
 We want to minimize memory consumption, so will use unidirectional list instead of array.
 Each node has code, so it can be implemented as unidirectional list of codes.
-The type of direction -> or <- is not important.
 
 For example our dictionary looks like:
 "a" (97) -> "b" (257)
@@ -38,29 +37,31 @@ Codes are unique, lets convert it into array:
 259 -> 260
 261 -> (code is free)
 
-We need a special value to say that "code is free".
-"0"-"255" are single symbol codes and "256" is a clear code.
+We need a special value to say "code is free".
+"0" - "255" are single symbol codes and "256" is a clear code.
 For example "a" (97) -> "a" (97) is not possible.
 So we can use any code < 257.
 Lets use "0", but please define constant instead so anybody can see that it means "code is free".
 
+This array will point only to the first code.
+
 We can see 3 lists: "[257, 259]", "[258]" and "[260]".
 Code "257" says "there is code 259 after me".
-Codes "259", "258" and "260" says "no codes after me".
-Each code are unique so we can implement as array again.
+Codes "259", "258" and "260" say "no codes after me".
+Each code are unique so we can implement lists as array again.
 
-See second array:
+Second array:
 257 -> 259
 258 -> (no codes after me)
 259 -> (no codes after me)
 260 -> (no codes after me)
 
-We need a special value to say that "no codes after me".
-Lets use "256" and please define constant too.
+We need a special value to say "no codes after me".
+Lets use "0" and please define constant too.
 
-This array can have values >= 256.
-So in real life it will have length equals to "array_1.length - 256".
-First array code will equals to second array code + 256.
+This array will have keys >= 257.
+It will have length equals to "first_array.length - 257".
+Keys will have 257 offset.
 
 Result, first array:
 97  -> 257
@@ -69,10 +70,10 @@ Result, first array:
 261 -> 0
 
 Second array:
-1 (257) -> 3 (259)
-2 (258) -> 0 (256)
-3 (259) -> 0 (256)
-4 (260) -> 0 (256)
+0 (257) -> 259
+1 (258) -> 0
+2 (259) -> 0
+3 (260) -> 0
 
 -----
 
@@ -86,7 +87,7 @@ Char code for "c" is 99, "first_child_codes[99]" equals "0" and we are going to 
 
 Now lets try to encode new data "ac".
 Char code for "a" is 97, "first_child_codes[97]" equals "257" and we are going to add first sibling.
-"ac" will have code 262, so "first_child_codes[97] = 262" and "next_sibling_codes[262 - 256] = 257 - 256"
+"ac" will have code 262, so "first_child_codes[97] = 262" and "next_sibling_codes[262 - 257] = 257"
 
 Result:
 "a" (97) -> "c" (262)
@@ -102,15 +103,70 @@ First child codes:
 259 -> 260
 
 Next sibling codes:
-1 (257) -> 3 (259)
-2 (258) -> 0 (256)
-3 (259) -> 0 (256)
-4 (260) -> 0 (256)
-5 (261) -> 0 (256)
-6 (262) -> 1 (257)
+0 (257) -> 259
+1 (258) -> 0
+2 (259) -> 0
+3 (260) -> 0
+4 (261) -> 0
+5 (262) -> 257
 
 -----
 
 Now lets try to encode "aac".
-What is a code for "aa"?
-It is 259. But we can't get this information from "First child codes" and "Next sibling codes".
+Code for "aa" is 259.
+But we can't get this information from "First child codes" or "Next sibling codes".
+
+We have to maintain an association between code and it's symbol.
+Association between first codes ("0" - "255") and symbols is identity, we don't need to keep it.
+We don't need any special key so we don't need to keep 256 too.
+
+This array will have keys >= 257.
+It will have length equals to "first_child_codes.length - 257".
+Keys will have 257 offset.
+
+It can be named as "symbol_by_codes".
+
+Symbol by codes:
+0 (257) -> "b"
+1 (258) -> "a"
+2 (259) -> "a"
+3 (260) -> "b"
+4 (261) -> "a"
+5 (262) -> "c"
+
+Char code for "a" is 97, "first_child_codes[97]" equals "262".
+We will traverse all sibling nodes from "262" and find that code "259" has "a" symbol and "first_child_codes[259]" equals "260".
+"aac" will have code 263, so "first_child_codes[259] = 263" and "next_sibling_codes[263 - 257] = 260"
+Do not forget to "symbol_by_codes[263] = 'a'" too.
+
+Result:
+"a" (97) -> "c" (262)
+         -> "b" (257)
+         -> "a" (259) -> "c" (263)
+                      -> "b" (260)
+"b" (98) -> "a" (258)
+"c" (99) -> "a" (261)
+
+First child codes:
+97  -> 262
+98  -> 258
+99  -> 261
+259 -> 263
+
+Next sibling codes:
+0 (257) -> 259
+1 (258) -> 0
+2 (259) -> 263
+3 (260) -> 0
+4 (261) -> 0
+5 (262) -> 257
+6 (263) -> 260
+
+Symbol by codes:
+0 (257) -> "b"
+1 (258) -> "a"
+2 (259) -> "a"
+3 (260) -> "b"
+4 (261) -> "a"
+5 (262) -> "c"
+6 (263) -> "c"
