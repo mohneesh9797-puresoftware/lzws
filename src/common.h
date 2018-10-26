@@ -1,6 +1,6 @@
-// LZW streaming compressor/decompressor based on LZW AB
-// Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved
-// Distributed under the BSD Software License (see LICENSE)
+// LZW streaming compressor/decompressor based on LZW AB.
+// Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
+// Distributed under the BSD Software License (see LICENSE).
 
 #ifndef LZW_COMPRESSOR_COMMON_H_
 #define LZW_COMPRESSOR_COMMON_H_
@@ -17,7 +17,7 @@ extern const uint16_t LZW_MAGIC_HEADER;
 
 #define LZW_BLOCK_MODE 0x80
 
-#define LZW_CLEAR_CODE   256 // Code to flush dictionary and restart decoder.
+#define LZW_CLEAR_CODE 256   // Code to flush dictionary and restart decoder.
 #define LZW_FIRST_STRING 257 // Code of first dictionary string.
 
 #endif // LZW_COMPRESSOR_COMMON_H_

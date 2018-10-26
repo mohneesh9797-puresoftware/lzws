@@ -1,30 +1,11 @@
-////////////////////////////////////////////////////////////////////////////
-//                            **** LZW-AB ****                            //
-//               Adjusted Binary LZW Compressor/Decompressor              //
-//                     Copyright (c) 2016 David Bryant                    //
-//                           All Rights Reserved                          //
-//      Distributed under the BSD Software License (see LICENSE)          //
-////////////////////////////////////////////////////////////////////////////
+LZW streaming compressor/decompressor based on LZW AB.
+Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
+Distributed under the BSD Software License (see LICENSE).
 
-This is an implementation of the Lempel-Ziv-Welch general-purpose data compression algorithm.
-It is targeted at embedded applications that require high speed compression
-or decompression facilities where lots of RAM for large dictionaries might not be available.
-I have used this in several projects for storing compressed firmware images,
-and once I even coded the decompressor in Z-80 assembly language for speed!
-Depending on the maximum symbol size selected, the implementation can require
-from 1024 to 15360 bytes of RAM for decoding (and slightly more for encoding).
+This implementation target is low memory usage.
+It could be slow for big files.
 
-The symbols are stored in adjusted binary, which provides considerably better compression performance
-(with virtually no speed penalty) compared to the fixed sizes nominally used.
-To ensure good performance on data with varying characteristics (like executable images)
-the encoder resets as soon as the dictionary is full.
-Also, worst-case performance is limited to about 8% inflation
-by catching poor performance and forcing an early reset before longer symbols are sent.
-
-LZW-AB consists of two standard C files (the library and a command-line demo using pipes)
-and builds with a single command on most platforms.
-It has been designed with maximum portability in mind
-and should work correctly on big-endian as well as little-endian machines.
+Please read `doc/compressor.txt <doc/compressor.txt>`_ and `doc/decompressor.txt <doc/decompressor.txt>`_
 
 Debug build
 -----------

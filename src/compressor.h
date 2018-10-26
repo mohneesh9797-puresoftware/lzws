@@ -1,6 +1,6 @@
-// LZW streaming compressor based on LZW AB
-// Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved
-// Distributed under the BSD Software License (see LICENSE)
+// LZW streaming compressor/decompressor based on LZW AB.
+// Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
+// Distributed under the BSD Software License (see LICENSE).
 
 #ifndef LZW_COMPRESSOR_H_
 #define LZW_COMPRESSOR_H_
