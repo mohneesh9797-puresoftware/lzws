@@ -14,14 +14,14 @@ enum {
 };
 typedef uint8_t status_t;
 
-struct lzw_decompressor_state_t {
+struct lzws_decompressor_state_t {
   status_t status;
 };
 
-lzw_result_t lzw_get_initial_decompressor_state(lzw_decompressor_state_t** result) {
-  lzw_decompressor_state_t* state = malloc(sizeof(lzw_decompressor_state_t));
+lzws_result_t lzws_get_initial_decompressor_state(lzws_decompressor_state_t** result) {
+  lzws_decompressor_state_t* state = malloc(sizeof(lzws_decompressor_state_t));
   if (state == NULL) {
-    return LZW_DECOMPRESSOR_ALLOC_FAILED;
+    return LZWS_DECOMPRESSOR_ALLOC_FAILED;
   }
 
   state->status = READ_MAXBITS;
@@ -30,15 +30,15 @@ lzw_result_t lzw_get_initial_decompressor_state(lzw_decompressor_state_t** resul
   return 0;
 }
 
-void lzw_free_decompressor_state(lzw_decompressor_state_t* state) {
+void lzws_free_decompressor_state(lzws_decompressor_state_t* state) {
   free(state);
 }
 
 // -- decompress --
 
-static lzw_result_t read_byte(uint8_t* result, uint8_t** src, size_t* src_length) {
+static lzws_result_t read_byte(uint8_t* result, uint8_t** src, size_t* src_length) {
   if (*src_length == 0) {
-    return LZW_DECOMPRESSOR_NEEDS_MORE_INPUT;
+    return LZWS_DECOMPRESSOR_NEEDS_MORE_INPUT;
   }
 
   *result = **src;
@@ -48,10 +48,10 @@ static lzw_result_t read_byte(uint8_t* result, uint8_t** src, size_t* src_length
   return 0;
 }
 
-static lzw_result_t read_max_bits(uint8_t** src, size_t* src_length) {
+static lzws_result_t read_max_bits(uint8_t** src, size_t* src_length) {
   uint8_t byte;
 
-  lzw_result_t result = read_byte(&byte, src, src_length);
+  lzws_result_t result = read_byte(&byte, src, src_length);
   if (result) {
     return result;
   }
@@ -63,12 +63,12 @@ static lzw_result_t read_max_bits(uint8_t** src, size_t* src_length) {
   return 0;
 }
 
-lzw_result_t lzw_decompress(lzw_decompressor_state_t* state,
-                            const uint8_t* src, size_t src_length,
-                            uint8_t* dst, size_t* dst_length) {
-  lzw_result_t result;
-  uint8_t**    src_ptr = (uint8_t**)&src;
-  status_t     status  = state->status;
+lzws_result_t lzws_decompress(lzws_decompressor_state_t* state,
+                              const uint8_t* src, size_t src_length,
+                              uint8_t* dst, size_t* dst_length) {
+  lzws_result_t result;
+  uint8_t**     src_ptr = (uint8_t**)&src;
+  status_t      status  = state->status;
 
   if (status == READ_MAXBITS) {
     result = read_max_bits(src_ptr, &src_length);

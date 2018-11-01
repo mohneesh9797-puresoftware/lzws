@@ -1,7 +1,0 @@
-// LZW streaming compressor/decompressor based on LZW AB.
-// Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
-// Distributed under the BSD Software License (see LICENSE).
-
-#include "common.h"
-
-const uint16_t LZW_MAGIC_HEADER = 0x1f9d; // "\037\235"

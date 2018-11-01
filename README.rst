@@ -1,4 +1,4 @@
-LZW streaming compressor/decompressor based on LZW AB.
+LZW streaming compressor/decompressor (LZW + Stream = LZWS) based on LZW AB.
 Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 Distributed under the BSD Software License (see LICENSE).
 
@@ -21,9 +21,9 @@ Features enable/disable
     ::
 
      $ cmake .. \
-        -DLZW_AB_CLI=0/1 \
-        -DLZW_AB_SHARED=0/1 \
-        -DLZW_AB_STATIC=0/1
+        -DLZWS_CLI=0/1 \
+        -DLZWS_SHARED=0/1 \
+        -DLZWS_STATIC=0/1
 
 Test toolchains
 -------------------
@@ -44,6 +44,8 @@ DEB and RPM release
 
 Known issues
 ------------
+
+  ccc-analyzer toolchain is not working.
 
     ::
 

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.9)
-project ("lzw-ab" "C")
+project ("lzw-st" "C")
 
 if (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed")
 endif ()
 
-set (LZW_AB_VERSION "0.1")
+set (LZWS_VERSION "0.1")
 
 if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
   set (CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "output directory for libraries")
@@ -17,16 +17,16 @@ if (NOT DEFINED CMAKE_INSTALL_BINDIR)
   set (CMAKE_INSTALL_BINDIR "bin" CACHE PATH "output directory for binaries")
 endif ()
 
-if (NOT DEFINED LZW_AB_TARGET)
-  set (LZW_AB_TARGET ${PROJECT_NAME})
+if (NOT DEFINED LZWS_TARGET)
+  set (LZWS_TARGET ${PROJECT_NAME})
 endif ()
 
-set (LZW_AB_CLI    true CACHE BOOL "build cli")
-set (LZW_AB_SHARED true CACHE BOOL "build shared libs")
-set (LZW_AB_STATIC true CACHE BOOL "build static libs")
+set (LZWS_CLI    true CACHE BOOL "build cli")
+set (LZWS_SHARED true CACHE BOOL "build shared libs")
+set (LZWS_STATIC true CACHE BOOL "build static libs")
 
-if (NOT LZW_AB_STATIC AND NOT LZW_AB_SHARED)
-  message (FATAL_ERROR "LZW AB can not be compiled. Please enable building of shared or static libraries.")
+if (NOT LZWS_STATIC AND NOT LZWS_SHARED)
+  message (FATAL_ERROR "LZW ST can not be compiled. Please enable building of shared or static libraries.")
 endif ()
 
 set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks")

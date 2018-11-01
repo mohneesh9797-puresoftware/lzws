@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#ifndef LZW_COMPRESSOR_H_
-#define LZW_COMPRESSOR_H_
+#ifndef LZWS_COMPRESSOR_H_
+#define LZWS_COMPRESSOR_H_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -11,19 +11,41 @@
 
 #include "common.h"
 
+// Possible failed results:
 enum {
-  LZW_COMPRESSOR_ALLOCATE_FAILED = 1,
-  LZW_COMPRESSOR_INVALID_MAX_BITS,
-  LZW_COMPRESSOR_NEEDS_MORE_SRC,
-  LZW_COMPRESSOR_NEEDS_MORE_DST,
-  LZW_COMPRESSOR_UNKNOWN_STATUS
+  LZWS_COMPRESSOR_ALLOCATE_FAILED = 1,
+  LZWS_COMPRESSOR_INVALID_MAX_BITS,
+  LZWS_COMPRESSOR_NEEDS_MORE_SOURCE,
+  LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION,
+  LZWS_COMPRESSOR_UNKNOWN_STATUS
 };
 
-typedef struct lzw_compressor_state_t lzw_compressor_state_t;
+// Possible statuses:
+enum {
+  LZWS_COMPRESSOR_WRITE_HEADER = 1,
+  LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,
+  LZWS_COMPRESSOR_GET_PREFIX,
+  LZWS_COMPRESSOR_PROCESS_SYMBOL,
+  LZWS_COMPRESSOR_FINISHED
+};
+typedef uint8_t lzws_status_t;
 
-lzw_result_t lzw_get_initial_compressor_state(lzw_compressor_state_t** state, uint8_t max_bits, bool block_mode);
-void         lzw_free_compressor_state(lzw_compressor_state_t* state);
+typedef struct lzws_compressor_state_t {
+  lzws_status_t status;
 
-lzw_result_t lzw_compress(lzw_compressor_state_t* state, uint8_t* src, size_t* src_length, uint8_t* dst, size_t* dst_length);
+  uint8_t max_bits;
+  bool    block_mode;
 
-#endif // LZW_COMPRESSOR_H_
+  uint16_t* first_child_codes;
+  uint16_t* next_sibling_codes;
+  uint8_t*  symbol_by_codes;
+} lzws_compressor_state_t;
+
+lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** state, uint8_t max_bits, bool block_mode);
+void          lzws_free_compressor_state(lzws_compressor_state_t* state);
+
+// It is possible to write magic header.
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
+lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t* source, size_t* source_length, uint8_t* destination, size_t* destination_length);
+
+#endif // LZWS_COMPRESSOR_H_

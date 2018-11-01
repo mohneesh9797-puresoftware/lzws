@@ -9,39 +9,41 @@
 
 #include "compressor.h"
 
-// -- state --
+// -- utils --
 
-enum {
-  WRITE_HEADER = 1,
-  ALLOCATE_DICTIONARY,
-  GET_PREFIX,
-  PROCESS_SYMBOL,
-  FINISHED
-};
-typedef uint8_t status_t;
+static void read_byte(uint8_t** source, size_t* source_length, uint8_t* byte) {
+  *byte = **source;
+  (*source)++;
+  (*source_length)--;
+}
 
-struct lzw_compressor_state_t {
-  uint8_t max_bits;
-  bool    block_mode;
+static void write_byte(uint8_t** destination, size_t* destination_length, uint8_t byte) {
+  **destination = byte;
+  (*destination)++;
+  (*destination_length)--;
+}
 
-  uint16_t* first_references;
-  uint16_t* next_references;
-  uint8_t*  terminators;
+// -- magic header --
 
-  uint16_t prefix;
-  uint16_t next_reference;
-
-  status_t status;
-};
-
-lzw_result_t lzw_get_initial_compressor_state(lzw_compressor_state_t** result, uint8_t max_bits, bool block_mode) {
-  if (max_bits < LZW_LOWEST_MAX_BITS || max_bits > LZW_BIGGEST_MAX_BITS) {
-    return LZW_COMPRESSOR_INVALID_MAX_BITS;
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length) {
+  if (*destination_length < 2) {
+    return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzw_compressor_state_t* state = malloc(sizeof(lzw_compressor_state_t));
+  write_byte(destination, destination_length, LZWS_MAGIC_HEADER_BYTE_0);
+  write_byte(destination, destination_length, LZWS_MAGIC_HEADER_BYTE_1);
+
+  return 0;
+}
+
+lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** result, uint8_t max_bits, bool block_mode) {
+  if (max_bits < LZWS_LOWEST_MAX_BITS || max_bits > LZWS_BIGGEST_MAX_BITS) {
+    return LZWS_COMPRESSOR_INVALID_MAX_BITS;
+  }
+
+  lzws_compressor_state_t* state = malloc(sizeof(lzws_compressor_state_t));
   if (state == NULL) {
-    return LZW_COMPRESSOR_ALLOCATE_FAILED;
+    return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
   state->max_bits   = max_bits;
@@ -51,7 +53,7 @@ lzw_result_t lzw_get_initial_compressor_state(lzw_compressor_state_t** result, u
   state->next_references  = NULL;
   state->terminators      = NULL;
 
-  state->next_reference = LZW_FIRST_STRING;
+  state->next_reference = LZWS_FIRST_STRING;
 
   state->status = WRITE_HEADER;
 
@@ -60,7 +62,7 @@ lzw_result_t lzw_get_initial_compressor_state(lzw_compressor_state_t** result, u
   return 0;
 }
 
-void lzw_free_compressor_state(lzw_compressor_state_t* state) {
+void lzws_free_compressor_state(lzws_compressor_state_t* state) {
   uint16_t* first_references = state->first_references;
   if (first_references != NULL) free(first_references);
 
@@ -77,21 +79,21 @@ void lzw_free_compressor_state(lzw_compressor_state_t* state) {
 
 // 2 bytes for magic header (for lzw autodetection) and 1 byte for "block_mode" and "max_bits".
 
-static lzw_result_t write_header(lzw_compressor_state_t* state, uint8_t** dst, size_t* dst_length) {
+static lzws_result_t write_header(lzws_compressor_state_t* state, uint8_t** dst, size_t* dst_length) {
   uint8_t data = state->max_bits;
   if (state->block_mode) {
-    data = data | LZW_BLOCK_MODE;
+    data = data | LZWS_BLOCK_MODE;
   }
 
-  uint8_t magic_header_size = sizeof(LZW_MAGIC_HEADER);
+  uint8_t magic_header_size = sizeof(LZWS_MAGIC_HEADER);
   uint8_t data_size         = sizeof(data);
   uint8_t header_size       = magic_header_size + data_size;
 
   if (*dst_length < header_size) {
-    return LZW_COMPRESSOR_NEEDS_MORE_DST;
+    return LZWS_COMPRESSOR_NEEDS_MORE_DST;
   }
 
-  memcpy(*dst, &LZW_MAGIC_HEADER, magic_header_size);
+  memcpy(*dst, &LZWS_MAGIC_HEADER, magic_header_size);
   (**dst) += magic_header_size;
 
   memcpy(*dst, &data, data_size);
@@ -104,7 +106,7 @@ static lzw_result_t write_header(lzw_compressor_state_t* state, uint8_t** dst, s
   return 0;
 }
 
-static lzw_result_t allocate_dictionary(lzw_compressor_state_t* state) {
+static lzws_result_t allocate_dictionary(lzws_compressor_state_t* state) {
   uint16_t total_codes      = 1 << state->max_bits;
   uint16_t total_next_codes = total_codes - 256;
 
@@ -117,7 +119,7 @@ static lzw_result_t allocate_dictionary(lzw_compressor_state_t* state) {
     if (next_references != NULL) free(next_references);
     if (terminators != NULL) free(terminators);
 
-    return LZW_COMPRESSOR_ALLOCATE_FAILED;
+    return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
   state->first_references = first_references;
@@ -129,9 +131,9 @@ static lzw_result_t allocate_dictionary(lzw_compressor_state_t* state) {
   return 0;
 }
 
-static lzw_result_t get_symbol(uint8_t** src, size_t* src_length, uint8_t* symbol) {
+static lzws_result_t get_symbol(uint8_t** src, size_t* src_length, uint8_t* symbol) {
   if (*src_length < 1) {
-    return LZW_COMPRESSOR_NEEDS_MORE_SRC;
+    return LZWS_COMPRESSOR_NEEDS_MORE_SRC;
   }
 
   *symbol = **src;
@@ -141,9 +143,9 @@ static lzw_result_t get_symbol(uint8_t** src, size_t* src_length, uint8_t* symbo
   return 0;
 }
 
-static lzw_result_t get_prefix(lzw_compressor_state_t* state, uint8_t** src, size_t* src_length) {
-  uint8_t      symbol;
-  lzw_result_t result = get_symbol(src, src_length, &symbol);
+static lzws_result_t get_prefix(lzws_compressor_state_t* state, uint8_t** src, size_t* src_length) {
+  uint8_t       symbol;
+  lzws_result_t result = get_symbol(src, src_length, &symbol);
   if (result != 0) return result;
 
   state->prefix = symbol;
@@ -153,9 +155,9 @@ static lzw_result_t get_prefix(lzw_compressor_state_t* state, uint8_t** src, siz
   return 0;
 }
 
-static lzw_result_t process_symbol(lzw_compressor_state_t* state, uint8_t** src, size_t* src_length, uint8_t** dst, size_t* dst_length) {
-  uint8_t      symbol;
-  lzw_result_t result = get_symbol(src, src_length, &symbol);
+static lzws_result_t process_symbol(lzws_compressor_state_t* state, uint8_t** src, size_t* src_length, uint8_t** dst, size_t* dst_length) {
+  uint8_t       symbol;
+  lzws_result_t result = get_symbol(src, src_length, &symbol);
   if (result != 0) return result;
 
   uint16_t* first_references = state->first_references;
@@ -193,8 +195,8 @@ static lzw_result_t process_symbol(lzw_compressor_state_t* state, uint8_t** src,
   return 0;
 }
 
-lzw_result_t lzw_compress(lzw_compressor_state_t* state, uint8_t* src, size_t* src_length, uint8_t* dst, size_t* dst_length) {
-  lzw_result_t result;
+lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t* src, size_t* src_length, uint8_t* dst, size_t* dst_length) {
+  lzws_result_t result;
 
   while (true) {
     switch (state->status) {
@@ -213,7 +215,7 @@ lzw_result_t lzw_compress(lzw_compressor_state_t* state, uint8_t* src, size_t* s
       case FINISHED:
         return 0;
       default:
-        return LZW_COMPRESSOR_UNKNOWN_STATUS;
+        return LZWS_COMPRESSOR_UNKNOWN_STATUS;
     }
 
     if (result != 0) return result;
