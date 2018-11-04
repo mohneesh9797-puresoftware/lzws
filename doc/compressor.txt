@@ -55,7 +55,7 @@ Second array:
 260 -> (no codes after me)
 
 We need a special value to say "no codes after me".
-Lets use "0" and please define constant too.
+Lets use "0" again and please use same constant here.
 
 This array will have indexes >= 257.
 It will have length equals to "first_array.length - 257".

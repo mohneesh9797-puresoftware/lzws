@@ -23,6 +23,26 @@ static void write_byte(uint8_t** destination, size_t* destination_length, uint8_
   (*destination_length)--;
 }
 
+static void* allocate_array(size_t length, size_t size_of_item, bool default_value_required, uint default_value) {
+  size_t size = length * size_of_item;
+
+  if (!default_value_required) {
+    return malloc(size);
+  }
+
+  if (default_value == 0) {
+    return calloc(1, size);
+  }
+
+  void* array = malloc(size);
+  if (array == NULL) {
+    return NULL;
+  }
+
+  memset(array, default_value, length);
+  return array;
+}
+
 // -- magic header --
 
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length) {
@@ -36,6 +56,8 @@ lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* 
   return 0;
 }
 
+// -- state --
+
 lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** result, uint8_t max_bits, bool block_mode) {
   if (max_bits < LZWS_LOWEST_MAX_BITS || max_bits > LZWS_BIGGEST_MAX_BITS) {
     return LZWS_COMPRESSOR_INVALID_MAX_BITS;
@@ -46,16 +68,16 @@ lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** result
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
+  state->status = LZWS_COMPRESSOR_WRITE_HEADER;
+
   state->max_bits   = max_bits;
   state->block_mode = block_mode;
 
-  state->first_references = NULL;
-  state->next_references  = NULL;
-  state->terminators      = NULL;
+  state->first_child_codes  = NULL;
+  state->next_sibling_codes = NULL;
+  state->symbol_by_codes    = NULL;
 
-  state->next_reference = LZWS_FIRST_STRING;
-
-  state->status = WRITE_HEADER;
+  state->prev_code = LZWS_PREV_FIRST_CODE;
 
   *result = state;
 
@@ -63,157 +85,160 @@ lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** result
 }
 
 void lzws_free_compressor_state(lzws_compressor_state_t* state) {
-  uint16_t* first_references = state->first_references;
-  if (first_references != NULL) free(first_references);
+  uint16_t* first_child_codes = state->first_child_codes;
+  if (first_child_codes != NULL) free(first_child_codes);
 
-  uint16_t* next_references = state->next_references;
-  if (next_references != NULL) free(next_references);
+  uint16_t* next_sibling_codes = state->next_sibling_codes;
+  if (next_sibling_codes != NULL) free(next_sibling_codes);
 
-  uint8_t* terminators = state->terminators;
-  if (terminators != NULL) free(terminators);
+  uint8_t* symbol_by_codes = state->symbol_by_codes;
+  if (symbol_by_codes != NULL) free(symbol_by_codes);
 
   free(state);
 }
 
 // -- compress --
 
-// 2 bytes for magic header (for lzw autodetection) and 1 byte for "block_mode" and "max_bits".
+// 1 byte for "max_bits" and "block_mode".
 
-static lzws_result_t write_header(lzws_compressor_state_t* state, uint8_t** dst, size_t* dst_length) {
-  uint8_t data = state->max_bits;
+static lzws_result_t write_header(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
+  uint8_t byte = state->max_bits;
   if (state->block_mode) {
-    data = data | LZWS_BLOCK_MODE;
+    byte = byte | LZWS_BLOCK_MODE;
   }
 
-  uint8_t magic_header_size = sizeof(LZWS_MAGIC_HEADER);
-  uint8_t data_size         = sizeof(data);
-  uint8_t header_size       = magic_header_size + data_size;
-
-  if (*dst_length < header_size) {
-    return LZWS_COMPRESSOR_NEEDS_MORE_DST;
+  if (*destination_length < 1) {
+    return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  memcpy(*dst, &LZWS_MAGIC_HEADER, magic_header_size);
-  (**dst) += magic_header_size;
+  write_byte(destination, destination_length, byte);
 
-  memcpy(*dst, &data, data_size);
-  (**dst) += data_size;
-
-  (*dst_length) -= header_size;
-
-  state->status = ALLOCATE_DICTIONARY;
+  state->status = LZWS_COMPRESSOR_ALLOCATE_DICTIONARY;
 
   return 0;
 }
 
 static lzws_result_t allocate_dictionary(lzws_compressor_state_t* state) {
-  uint16_t total_codes      = 1 << state->max_bits;
-  uint16_t total_next_codes = total_codes - 256;
+  uint16_t total_codes = 1 << state->max_bits;
 
-  uint16_t* first_references = calloc(1, total_codes * sizeof(uint16_t));
-  uint16_t* next_references  = calloc(1, total_next_codes * sizeof(uint16_t));
-  uint8_t*  terminators      = calloc(1, total_next_codes * sizeof(uint8_t));
-
-  if (first_references == NULL || next_references == NULL || terminators == NULL) {
-    if (first_references != NULL) free(first_references);
-    if (next_references != NULL) free(next_references);
-    if (terminators != NULL) free(terminators);
-
+  uint16_t* first_child_codes = allocate_array(total_codes, sizeof(uint16_t), true, LZWS_UNDEFINED_CODE);
+  if (first_child_codes == NULL) {
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
-  state->first_references = first_references;
-  state->next_references  = next_references;
-  state->terminators      = terminators;
-
-  state->status = GET_PREFIX;
-
-  return 0;
-}
-
-static lzws_result_t get_symbol(uint8_t** src, size_t* src_length, uint8_t* symbol) {
-  if (*src_length < 1) {
-    return LZWS_COMPRESSOR_NEEDS_MORE_SRC;
+  uint16_t* next_sibling_codes = allocate_array(total_codes - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET, sizeof(uint16_t), true, LZWS_UNDEFINED_CODE);
+  if (next_sibling_codes == NULL) {
+    free(first_child_codes);
+    return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
-  *symbol = **src;
-  (**src)++;
-  (*src_length)--;
-
-  return 0;
-}
-
-static lzws_result_t get_prefix(lzws_compressor_state_t* state, uint8_t** src, size_t* src_length) {
-  uint8_t       symbol;
-  lzws_result_t result = get_symbol(src, src_length, &symbol);
-  if (result != 0) return result;
-
-  state->prefix = symbol;
-
-  state->status = PROCESS_SYMBOL;
-
-  return 0;
-}
-
-static lzws_result_t process_symbol(lzws_compressor_state_t* state, uint8_t** src, size_t* src_length, uint8_t** dst, size_t* dst_length) {
-  uint8_t       symbol;
-  lzws_result_t result = get_symbol(src, src_length, &symbol);
-  if (result != 0) return result;
-
-  uint16_t* first_references = state->first_references;
-  uint16_t* next_references  = state->next_references;
-  uint8_t*  terminators      = state->terminators;
-
-  uint16_t prefix         = state->prefix;
-  uint16_t next_reference = state->next_reference;
-
-  uint16_t index = first_references[prefix]; // coding table index
-  if (index == 0) {
-    // No longer strings are based on the current prefix.
-    // So now the current prefix plus the new byte will be the next string.
-
-    first_references[prefix] = next_reference;
-  } else {
-    // If any longer strings are built on the current prefix.
-
-    while (true) {
-      uint8_t current_terminator = terminators[index - 256];
-      if (current_terminator == symbol) { // We found a matching string.
-        prefix = index;                   // So we just update the prefix to that string and continue without sending anything.
-        break;
-      }
-
-      uint16_t current_next_reference = next_references[index - 256];
-      if (current_next_reference == 0) {               // This string did not match the new character and there aren't any more.
-        next_references[index - 256] = next_reference; // So we'll add a new string and point to it with "next_reference".
-        index                        = 0;
-        break;
-      }
-    }
+  uint8_t* symbol_by_codes = allocate_array(total_codes - LZWS_SYMBOL_BY_CODES_INDEX_OFFSET, sizeof(uint8_t), false, 0);
+  if (symbol_by_codes == NULL) {
+    free(first_child_codes);
+    free(next_sibling_codes);
+    return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
+  state->first_child_codes  = first_child_codes;
+  state->next_sibling_codes = next_sibling_codes;
+  state->symbol_by_codes    = symbol_by_codes;
+
+  state->status = LZWS_COMPRESSOR_GET_FIRST_SYMBOL;
+
   return 0;
 }
 
-lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t* src, size_t* src_length, uint8_t* dst, size_t* dst_length) {
+static lzws_result_t get_first_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
+  if (*source_length < 1) {
+    return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
+  }
+
+  uint8_t symbol;
+  read_byte(source, source_length, &symbol);
+
+  state->current_code = symbol;
+
+  state->status = LZWS_COMPRESSOR_PROCESS_SYMBOL;
+
+  return 0;
+}
+
+static uint16_t get_next_code(lzws_compressor_state_t* state) {
+  uint16_t total_codes = 1 << state->max_bits;
+
+  state->prev_code++;
+
+  return state->prev_code;
+}
+
+static void get_code(lzws_compressor_state_t* state, uint8_t symbol) {
+  uint16_t* first_child_codes = state->first_child_codes;
+  uint16_t  current_code      = state->current_code;
+
+  uint16_t first_child_code = first_child_codes[current_code];
+  if (first_child_code == LZWS_UNDEFINED_CODE) {
+  }
+}
+
+static lzws_result_t process_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
+  if (*source_length < 1) {
+    return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
+  }
+
+  uint8_t symbol;
+  read_byte(source, source_length, &symbol);
+
+  uint16_t* first_child_codes  = state->first_child_codes;
+  uint16_t* next_sibling_codes = state->next_sibling_codes;
+  uint8_t*  symbol_by_codes    = state->symbol_by_codes;
+
+  uint8_t current_code = state->current_code;
+
+  // uint16_t index = first_references[prefix]; // coding table index
+  // if (index == 0) {
+  //   // No longer strings are based on the current prefix.
+  //   // So now the current prefix plus the new byte will be the next string.
+  //
+  //   first_references[prefix] = next_reference;
+  // } else {
+  //   // If any longer strings are built on the current prefix.
+  //
+  //   while (true) {
+  //     uint8_t current_terminator = terminators[index - 256];
+  //     if (current_terminator == symbol) { // We found a matching string.
+  //       prefix = index;                   // So we just update the prefix to that string and continue without sending anything.
+  //       break;
+  //     }
+  //
+  //     uint16_t current_next_reference = next_references[index - 256];
+  //     if (current_next_reference == 0) {               // This string did not match the new character and there aren't any more.
+  //       next_references[index - 256] = next_reference; // So we'll add a new string and point to it with "next_reference".
+  //       index                        = 0;
+  //       break;
+  //     }
+  //   }
+  // }
+
+  return 0;
+}
+
+lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
   lzws_result_t result;
 
   while (true) {
     switch (state->status) {
-      case WRITE_HEADER:
-        result = write_header(state, &dst, dst_length);
+      case LZWS_COMPRESSOR_WRITE_HEADER:
+        result = write_header(state, destination, destination_length);
         break;
-      case ALLOCATE_DICTIONARY:
+      case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
         result = allocate_dictionary(state);
         break;
-      case GET_PREFIX:
-        result = get_prefix(state, &src, src_length);
+      case LZWS_COMPRESSOR_GET_FIRST_SYMBOL:
+        result = get_first_symbol(state, source, source_length);
         break;
-      case PROCESS_SYMBOL:
-        result = process_symbol(state, &src, src_length, &dst, dst_length);
+      case LZWS_COMPRESSOR_PROCESS_SYMBOL:
+        result = process_symbol(state, source, source_length, destination, destination_length);
         break;
-      case FINISHED:
-        return 0;
       default:
         return LZWS_COMPRESSOR_UNKNOWN_STATUS;
     }
