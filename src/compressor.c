@@ -168,13 +168,14 @@ static void clear_dictionary(lzws_compressor_state_t* state) {
 
   memset(state->first_child_codes, LZWS_UNDEFINED_CODE, total_codes);
   memset(state->next_sibling_codes, LZWS_UNDEFINED_CODE, total_codes - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET);
+
   // We don't need to clear "symbol_by_codes".
   // Algorithm will access only initialized codes.
 
   state->prev_code = LZWS_PREV_FIRST_CODE;
 }
 
-static lzws_code_t get_next_code_for_symbol(lzws_compressor_state_t* state, uint8_t symbol) {
+static lzws_code_t get_new_code_for_symbol(lzws_compressor_state_t* state, uint8_t symbol) {
   size_t total_codes = 1 << state->max_bits;
 
   if (state->prev_code == total_codes - 1) {
@@ -191,29 +192,34 @@ static lzws_code_t get_next_code_for_symbol(lzws_compressor_state_t* state, uint
   }
 
   state->prev_code++;
-  lzws_code_t code = state->prev_code;
+  lzws_code_t new_code = state->prev_code;
 
-  uint8_t* symbol_by_codes = state->symbol_by_codes;
-  symbol_by_codes[code]    = symbol;
+  // Adding symbol for next code.
+  uint16_t symbol_by_code_index                = new_code - LZWS_SYMBOL_BY_CODES_INDEX_OFFSET;
+  state->symbol_by_codes[symbol_by_code_index] = symbol;
 
-  return code;
+  return new_code;
 }
 
-static void get_code(lzws_compressor_state_t* state, uint8_t symbol, bool* is_added) {
+static lzws_code_t get_code_for_symbol(lzws_compressor_state_t* state, uint8_t symbol, bool* is_added) {
   lzws_code_t  current_code      = state->current_code;
   lzws_code_t* first_child_codes = state->first_child_codes;
 
-  lzws_code_t code = first_child_codes[current_code];
-  if (code == LZWS_UNDEFINED_CODE) {
-    // We are going to add first child.
+  lzws_code_t first_child_code = first_child_codes[current_code];
+  if (first_child_code == LZWS_UNDEFINED_CODE) {
+    // First child is not found.
+    // We are going to add it.
 
-    lzws_code_t next_code = get_next_code_for_symbol(state, symbol);
-    if (next_code == LZWS_UNDEFINED_CODE) {
-      return; // Dictionary was cleared.
+    lzws_code_t new_code = get_new_code_for_symbol(state, symbol);
+    if (new_code == LZWS_UNDEFINED_CODE) {
+      // Dictionary was cleared.
+      return LZWS_UNDEFINED_CODE;
     }
 
-    first_child_codes[current_code] = next_code;
-    return;
+    first_child_codes[current_code] = new_code;
+    *is_added                       = true;
+
+    return new_code;
   }
 
   // We have some first child.
@@ -222,18 +228,36 @@ static void get_code(lzws_compressor_state_t* state, uint8_t symbol, bool* is_ad
   lzws_code_t* next_sibling_codes = state->next_sibling_codes;
   uint8_t*     symbol_by_codes    = state->symbol_by_codes;
 
-  while (code != LZWS_UNDEFINED_CODE) {
-    if (symbol_by_codes[code] == symbol) {
-      return;
+  lzws_code_t next_sibling_code = first_child_code;
+
+  do {
+    uint16_t symbol_by_code_index    = next_sibling_code - LZWS_SYMBOL_BY_CODES_INDEX_OFFSET;
+    uint16_t next_sibling_code_index = next_sibling_code - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET;
+
+    if (symbol_by_codes[symbol_by_code_index] == symbol) {
+      // We found target symbol.
+
+      first_child_codes[current_code]             = next_sibling_code;
+      next_sibling_codes[next_sibling_code_index] = first_child_code;
+      return next_sibling_code;
     }
 
-    code = next_sibling_codes[code];
+    next_sibling_code = next_sibling_codes[next_sibling_code_index];
+  } while (next_sibling_code != LZWS_UNDEFINED_CODE);
+
+  lzws_code_t new_code = get_new_code_for_symbol(state, symbol);
+  if (new_code == LZWS_UNDEFINED_CODE) {
+    // Dictionary was cleared.
+    return LZWS_UNDEFINED_CODE;
   }
 
-  lzws_code_t next_code = get_next_code_for_symbol(state, symbol);
-  if (next_code == LZWS_UNDEFINED_CODE) {
-    return; // Dictionary was cleared.
-  }
+  uint16_t new_sibling_code_index = new_code - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET;
+
+  first_child_codes[current_code]            = new_code;
+  next_sibling_codes[new_sibling_code_index] = first_child_code;
+  *is_added                                  = true;
+
+  return new_code;
 }
 
 static lzws_result_t process_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
@@ -244,36 +268,8 @@ static lzws_result_t process_next_symbol(lzws_compressor_state_t* state, uint8_t
   uint8_t symbol;
   read_byte(source, source_length, &symbol);
 
-  lzws_code_t* first_child_codes  = state->first_child_codes;
-  lzws_code_t* next_sibling_codes = state->next_sibling_codes;
-  uint8_t*     symbol_by_codes    = state->symbol_by_codes;
-
-  uint8_t current_code = state->current_code;
-
-  // uint16_t index = first_references[prefix]; // coding table index
-  // if (index == 0) {
-  //   // No longer strings are based on the current prefix.
-  //   // So now the current prefix plus the new byte will be the next string.
-  //
-  //   first_references[prefix] = next_reference;
-  // } else {
-  //   // If any longer strings are built on the current prefix.
-  //
-  //   while (true) {
-  //     uint8_t current_terminator = terminators[index - 256];
-  //     if (current_terminator == symbol) { // We found a matching string.
-  //       prefix = index;                   // So we just update the prefix to that string and continue without sending anything.
-  //       break;
-  //     }
-  //
-  //     uint16_t current_next_reference = next_references[index - 256];
-  //     if (current_next_reference == 0) {               // This string did not match the new character and there aren't any more.
-  //       next_references[index - 256] = next_reference; // So we'll add a new string and point to it with "next_reference".
-  //       index                        = 0;
-  //       break;
-  //     }
-  //   }
-  // }
+  bool        is_added;
+  lzws_code_t code = get_code_for_symbol(state, symbol, &is_added);
 
   return 0;
 }
