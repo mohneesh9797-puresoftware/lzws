@@ -85,10 +85,10 @@ lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** result
 }
 
 void lzws_free_compressor_state(lzws_compressor_state_t* state) {
-  uint16_t* first_child_codes = state->first_child_codes;
+  lzws_code_t* first_child_codes = state->first_child_codes;
   if (first_child_codes != NULL) free(first_child_codes);
 
-  uint16_t* next_sibling_codes = state->next_sibling_codes;
+  lzws_code_t* next_sibling_codes = state->next_sibling_codes;
   if (next_sibling_codes != NULL) free(next_sibling_codes);
 
   uint8_t* symbol_by_codes = state->symbol_by_codes;
@@ -119,14 +119,14 @@ static lzws_result_t write_header(lzws_compressor_state_t* state, uint8_t** dest
 }
 
 static lzws_result_t allocate_dictionary(lzws_compressor_state_t* state) {
-  uint16_t total_codes = 1 << state->max_bits;
+  size_t total_codes = 1 << state->max_bits;
 
-  uint16_t* first_child_codes = allocate_array(total_codes, sizeof(uint16_t), true, LZWS_UNDEFINED_CODE);
+  lzws_code_t* first_child_codes = allocate_array(total_codes, sizeof(lzws_code_t), true, LZWS_UNDEFINED_CODE);
   if (first_child_codes == NULL) {
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
-  uint16_t* next_sibling_codes = allocate_array(total_codes - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET, sizeof(uint16_t), true, LZWS_UNDEFINED_CODE);
+  lzws_code_t* next_sibling_codes = allocate_array(total_codes - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET, sizeof(lzws_code_t), true, LZWS_UNDEFINED_CODE);
   if (next_sibling_codes == NULL) {
     free(first_child_codes);
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
@@ -158,29 +158,85 @@ static lzws_result_t get_first_symbol(lzws_compressor_state_t* state, uint8_t** 
 
   state->current_code = symbol;
 
-  state->status = LZWS_COMPRESSOR_PROCESS_SYMBOL;
+  state->status = LZWS_COMPRESSOR_PROCESS_NEXT_SYMBOL;
 
   return 0;
 }
 
-static uint16_t get_next_code(lzws_compressor_state_t* state) {
-  uint16_t total_codes = 1 << state->max_bits;
+static void clear_dictionary(lzws_compressor_state_t* state) {
+  size_t total_codes = 1 << state->max_bits;
 
-  state->prev_code++;
+  memset(state->first_child_codes, LZWS_UNDEFINED_CODE, total_codes);
+  memset(state->next_sibling_codes, LZWS_UNDEFINED_CODE, total_codes - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET);
+  // We don't need to clear "symbol_by_codes".
+  // Algorithm will access only initialized codes.
 
-  return state->prev_code;
+  state->prev_code = LZWS_PREV_FIRST_CODE;
 }
 
-static void get_code(lzws_compressor_state_t* state, uint8_t symbol) {
-  uint16_t* first_child_codes = state->first_child_codes;
-  uint16_t  current_code      = state->current_code;
+static lzws_code_t get_next_code_for_symbol(lzws_compressor_state_t* state, uint8_t symbol) {
+  size_t total_codes = 1 << state->max_bits;
 
-  uint16_t first_child_code = first_child_codes[current_code];
-  if (first_child_code == LZWS_UNDEFINED_CODE) {
+  if (state->prev_code == total_codes - 1) {
+    // Dictionary overflow.
+    // We don't need to send clear code, decoder knows about it.
+    clear_dictionary(state);
+
+    // Dictionary was cleared.
+    // We received new first symbol.
+    state->current_code = symbol;
+    state->status       = LZWS_COMPRESSOR_PROCESS_NEXT_SYMBOL;
+
+    return LZWS_UNDEFINED_CODE;
+  }
+
+  state->prev_code++;
+  lzws_code_t code = state->prev_code;
+
+  uint8_t* symbol_by_codes = state->symbol_by_codes;
+  symbol_by_codes[code]    = symbol;
+
+  return code;
+}
+
+static void get_code(lzws_compressor_state_t* state, uint8_t symbol, bool* is_added) {
+  lzws_code_t  current_code      = state->current_code;
+  lzws_code_t* first_child_codes = state->first_child_codes;
+
+  lzws_code_t code = first_child_codes[current_code];
+  if (code == LZWS_UNDEFINED_CODE) {
+    // We are going to add first child.
+
+    lzws_code_t next_code = get_next_code_for_symbol(state, symbol);
+    if (next_code == LZWS_UNDEFINED_CODE) {
+      return; // Dictionary was cleared.
+    }
+
+    first_child_codes[current_code] = next_code;
+    return;
+  }
+
+  // We have some first child.
+  // We need to find target symbol in next siblings.
+
+  lzws_code_t* next_sibling_codes = state->next_sibling_codes;
+  uint8_t*     symbol_by_codes    = state->symbol_by_codes;
+
+  while (code != LZWS_UNDEFINED_CODE) {
+    if (symbol_by_codes[code] == symbol) {
+      return;
+    }
+
+    code = next_sibling_codes[code];
+  }
+
+  lzws_code_t next_code = get_next_code_for_symbol(state, symbol);
+  if (next_code == LZWS_UNDEFINED_CODE) {
+    return; // Dictionary was cleared.
   }
 }
 
-static lzws_result_t process_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
+static lzws_result_t process_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
   if (*source_length < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
@@ -188,9 +244,9 @@ static lzws_result_t process_symbol(lzws_compressor_state_t* state, uint8_t** so
   uint8_t symbol;
   read_byte(source, source_length, &symbol);
 
-  uint16_t* first_child_codes  = state->first_child_codes;
-  uint16_t* next_sibling_codes = state->next_sibling_codes;
-  uint8_t*  symbol_by_codes    = state->symbol_by_codes;
+  lzws_code_t* first_child_codes  = state->first_child_codes;
+  lzws_code_t* next_sibling_codes = state->next_sibling_codes;
+  uint8_t*     symbol_by_codes    = state->symbol_by_codes;
 
   uint8_t current_code = state->current_code;
 
@@ -236,8 +292,8 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
       case LZWS_COMPRESSOR_GET_FIRST_SYMBOL:
         result = get_first_symbol(state, source, source_length);
         break;
-      case LZWS_COMPRESSOR_PROCESS_SYMBOL:
-        result = process_symbol(state, source, source_length, destination, destination_length);
+      case LZWS_COMPRESSOR_PROCESS_NEXT_SYMBOL:
+        result = process_next_symbol(state, source, source_length, destination, destination_length);
         break;
       default:
         return LZWS_COMPRESSOR_UNKNOWN_STATUS;

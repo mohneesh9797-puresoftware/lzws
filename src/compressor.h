@@ -11,7 +11,7 @@
 
 #include "common.h"
 
-// Possible failed results:
+// Possible results:
 enum {
   LZWS_COMPRESSOR_ALLOCATE_FAILED = 1,
   LZWS_COMPRESSOR_INVALID_MAX_BITS,
@@ -25,7 +25,7 @@ enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,
   LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,
   LZWS_COMPRESSOR_GET_FIRST_SYMBOL,
-  LZWS_COMPRESSOR_PROCESS_SYMBOL
+  LZWS_COMPRESSOR_PROCESS_NEXT_SYMBOL
 };
 typedef uint8_t lzws_status_t;
 
@@ -35,12 +35,12 @@ typedef struct lzws_compressor_state_t {
   uint8_t max_bits;
   bool    block_mode;
 
-  uint16_t* first_child_codes;
-  uint16_t* next_sibling_codes;
-  uint8_t*  symbol_by_codes;
+  lzws_code_t* first_child_codes;
+  lzws_code_t* next_sibling_codes;
+  uint8_t*     symbol_by_codes;
 
-  uint16_t current_code;
-  uint16_t prev_code;
+  lzws_code_t current_code;
+  lzws_code_t prev_code;
 } lzws_compressor_state_t;
 
 // It is possible to write magic header.
