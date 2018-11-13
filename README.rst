@@ -5,7 +5,7 @@ Distributed under the BSD Software License (see LICENSE).
 This implementation target is low memory usage.
 It could be slow for big files.
 
-Please read `doc/compressor.txt <doc/compressor.txt>`_ and `doc/decompressor.txt <doc/decompressor.txt>`_
+Please read `doc/compressor.txt <doc/compressor.txt>`_, `doc/decompressor.txt <doc/decompressor.txt>`_ and `doc/output_compatibility.txt <doc/output_compatibility.txt>`_
 
 Debug build
 -----------

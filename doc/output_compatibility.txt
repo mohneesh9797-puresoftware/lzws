@@ -1,0 +1,30 @@
+We are going to be compatible with original unix compress utility.
+Let's show how it works with ncompress (open source version of this utility).
+
+echo -n "abc" | compress -b 9 | ruby -e "pp STDIN.read.unpack('C*')"
+> [31, 157, 137, 97, 196, 140, 1]
+
+"31" and "157" are LZW magic bytes, also known as "\037" and "\235" in octal numeral system.
+"137" is a result of "128 | 9", "128" is a special value for block mode, "9" is current max code bits.
+
+We need to write codes for "a", "b" and "c".
+Codes are 97, 98 and 99, but code width is 9 bit.
+How to write it?
+
+97 equals "001100001".
+We will write last 8 bits "01100001" = 97 into first byte.
+The remainder bit is "0".
+
+98 equals "001100010".
+We will shift this code to the left by remainder bits length and add it.
+"(001100010 << 1) | 0" equals "0011000100".
+We will write last 8 bits "11000100" = 196 into second byte.
+The remainder bits are "00".
+
+99 equals "001100011".
+"(001100011 << 2) | 00" equals "00110001100".
+We will write last 8 bits "10001100" = 140 into third byte.
+The remainder bits are "001".
+
+Input is empty, we will output remainder "001" padded with "0" into last byte.
+We will write bytes using system "write" method and we won't care about LSB/MSB.
