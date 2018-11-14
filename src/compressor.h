@@ -24,7 +24,6 @@ enum {
 enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,
   LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,
-  LZWS_COMPRESSOR_READ_PREFIX_SYMBOL,
   LZWS_COMPRESSOR_READ_NEXT_SYMBOL,
   LZWS_COMPRESSOR_WRITE_CURRENT_CODE
 };
@@ -40,10 +39,13 @@ typedef struct lzws_compressor_state_t {
   lzws_code_t* next_sibling_codes;
   uint8_t*     symbol_by_codes;
 
+  lzws_code_t prefix_code;
   lzws_code_t current_code;
   lzws_code_t last_used_code;
+  uint8_t     last_used_code_bits;
 
-  uint8_t remainder_byte;
+  uint8_t remainder;
+  uint8_t remainder_bits;
 } lzws_compressor_state_t;
 
 // It is possible to write magic header.
