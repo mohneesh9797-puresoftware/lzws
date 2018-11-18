@@ -1,5 +1,5 @@
-set (HEADERS "common.h" "compressor.h")
-set (SOURCES "compressor.c")
+set (HEADERS "common.h" "compressor.h" "file.h")
+set (SOURCES "compressor.c" "file.c")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 

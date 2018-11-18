@@ -21,9 +21,9 @@ if (NOT DEFINED LZWS_TARGET)
   set (LZWS_TARGET ${PROJECT_NAME})
 endif ()
 
-set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")
+set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
 
 if (NOT LZWS_STATIC AND NOT LZWS_SHARED)

@@ -21,9 +21,9 @@ Features enable/disable
     ::
 
      $ cmake .. \
-        -DLZWS_CLI=0/1 \
         -DLZWS_SHARED=0/1 \
         -DLZWS_STATIC=0/1 \
+        -DLZWS_CLI=0/1 \
         -DLZWS_TESTS=0/1
 
 Test toolchains
@@ -32,7 +32,7 @@ Test toolchains
     ::
 
      $ cmake .. -DCMAKE_TOOLCHAIN_FILE="../cmake/toolchains/clang/leak-sanitizer.cmake" \
-       make && make test
+       make VERBOSE=1 && make test
      $ ../cmake/scripts/test-all-toolchains.sh
 
 DEB and RPM release
@@ -41,7 +41,7 @@ DEB and RPM release
     ::
 
      $ cmake .. -DCMAKE_BUILD_TYPE=RELEASE && \
-        make && make test && make package
+        make VERBOSE=1 && make test && make package
 
 Known issues
 ------------

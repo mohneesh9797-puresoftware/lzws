@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#ifndef LZWS_COMPRESSOR_COMMON_H_
-#define LZWS_COMPRESSOR_COMMON_H_
+#ifndef LZWS_COMMON_H_
+#define LZWS_COMMON_H_
 
 #include <stdint.h>
 
@@ -29,4 +29,4 @@ typedef uint16_t lzws_code_t;
 #define LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET LZWS_DICTIONARY_SIZE + 1
 #define LZWS_SYMBOL_BY_CODES_INDEX_OFFSET LZWS_DICTIONARY_SIZE + 1
 
-#endif // LZWS_COMPRESSOR_COMMON_H_
+#endif // LZWS_COMMON_H_

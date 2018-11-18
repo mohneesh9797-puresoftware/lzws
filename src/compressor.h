@@ -53,13 +53,13 @@ typedef struct lzws_compressor_state_t {
 // Use it to be compatible with original "compress" utility.
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
 
-lzws_result_t lzws_get_initial_compressor_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
-void          lzws_free_compressor_state(lzws_compressor_state_t* state);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
+void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 
 lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length);
 
 // This function is mandatory.
 // Use it when you have no input (for example received EOF).
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length);
+lzws_result_t lzws_compressor_flush(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length);
 
 #endif // LZWS_COMPRESSOR_H_
