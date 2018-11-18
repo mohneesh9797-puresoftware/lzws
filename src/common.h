@@ -7,8 +7,6 @@
 
 #include <stdint.h>
 
-#include "config.h"
-
 typedef uint8_t  lzws_result_t;
 typedef uint16_t lzws_code_t;
 

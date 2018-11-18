@@ -24,6 +24,7 @@ endif ()
 set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")
+set (LZWS_TESTS  true CACHE BOOL "build tests")
 
 if (NOT LZWS_STATIC AND NOT LZWS_SHARED)
   message (FATAL_ERROR "LZW ST can not be compiled. Please enable building of shared or static libraries.")
@@ -32,15 +33,18 @@ endif ()
 set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks")
 
 include (GetVerboseFlags)
-include (GetPipeFlags)
-include (CheckC11)
-include (CheckIPO)
-include (CheckRunnable)
-
 cmake_get_verbose_flags ()
+
+include (GetPipeFlags)
 cmake_get_pipe_flags ()
+
+include (CheckC11)
 cmake_check_c11 ()
+
+include (CheckIPO)
 cmake_check_ipo ()
+
+include (CheckRunnable)
 cmake_check_runnable ()
 
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_PIPE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C11_C_FLAGS}")
@@ -63,8 +67,11 @@ if (
   set (CMAKE_INTERPROCEDURAL_OPTIMIZATION true CACHE BOOL "status of IPO switch")
 endif ()
 
-include_directories ("src")
 add_subdirectory ("src")
+
+if (${LZWS_TESTS})
+  add_subdirectory ("tests")
+endif ()
 
 include (CPackConfig.cmake)
 include (CPack)

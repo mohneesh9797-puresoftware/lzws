@@ -1,4 +1,4 @@
-// LZW streaming compressor/decompressor based on LZW AB.
+// LZW streaming compressor based on LZW AB.
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
@@ -27,10 +27,10 @@ enum {
   LZWS_COMPRESSOR_READ_NEXT_SYMBOL,
   LZWS_COMPRESSOR_WRITE_CURRENT_CODE
 };
-typedef uint8_t lzws_status_t;
+typedef uint8_t lzws_compressor_status_t;
 
 typedef struct lzws_compressor_state_t {
-  lzws_status_t status;
+  lzws_compressor_status_t status;
 
   uint8_t max_code_bits;
   bool    block_mode;

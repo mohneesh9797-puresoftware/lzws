@@ -1,4 +1,4 @@
-// LZW streaming compressor/decompressor based on LZW AB.
+// LZW streaming compressor based on LZW AB.
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
@@ -205,12 +205,14 @@ static lzws_code_t get_code_for_symbol(lzws_compressor_state_t* state, uint8_t s
   lzws_code_t  prefix_code       = state->prefix_code;
   lzws_code_t* first_child_codes = state->first_child_codes;
 
+  lzws_code_t new_code;
+
   lzws_code_t first_child_code = first_child_codes[prefix_code];
   if (first_child_code == LZWS_UNDEFINED_CODE) {
     // First child is not found.
     // We will try to add first child.
 
-    lzws_code_t new_code = get_new_code_for_symbol(state, symbol);
+    new_code = get_new_code_for_symbol(state, symbol);
     if (new_code == LZWS_UNDEFINED_CODE) {
       // Dictionary was cleared.
       return LZWS_UNDEFINED_CODE;
@@ -248,7 +250,7 @@ static lzws_code_t get_code_for_symbol(lzws_compressor_state_t* state, uint8_t s
   // Next sibling is not found.
   // We will try to add next sibling.
 
-  lzws_code_t new_code = get_new_code_for_symbol(state, symbol);
+  new_code = get_new_code_for_symbol(state, symbol);
   if (new_code == LZWS_UNDEFINED_CODE) {
     // Dictionary was cleared.
     return LZWS_UNDEFINED_CODE;
@@ -329,23 +331,46 @@ static lzws_result_t read_next_symbol(lzws_compressor_state_t* state, uint8_t** 
 // -- write code --
 
 static lzws_result_t write_current_code(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
-  if (*destination_length < 1) {
+  uint8_t code_bits      = state->last_used_code_bits;
+  uint8_t remainder_bits = state->remainder_bits;
+
+  // Destination bytes will always be >= 1.
+  uint8_t destination_bytes = (code_bits + remainder_bits) / 8;
+
+  if (*destination_length < destination_bytes) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzws_code_t code           = state->current_code;
-  uint8_t     code_bits      = state->last_used_code_bits;
-  uint8_t     remainder      = state->remainder;
-  uint8_t     remainder_bits = state->remainder_bits;
+  lzws_code_t code = state->current_code;
 
-  uint8_t code_mask_bits = 8 - remainder_bits;
+  uint8_t byte;
 
-  // All bits of the mask are 1.
-  uint8_t code_mask = (1 << code_mask_bits) - 1;
+  if (remainder_bits != 0) {
+    uint8_t remainder      = state->remainder;
+    uint8_t code_mask_bits = 8 - remainder_bits;
 
-  uint8_t byte = ((code & code_mask) << remainder_bits) | remainder;
+    // All bits of the mask are 1.
+    uint8_t code_mask = (1 << code_mask_bits) - 1;
 
-  // write_byte(destination, destination_length, 1);
+    // Code bits here will always be > 8.
+    byte = ((code & code_mask) << remainder_bits) | remainder;
+    code >>= code_mask_bits;
+    code_bits -= code_mask_bits;
+
+    write_byte(destination, destination_length, byte);
+  }
+
+  while (code_bits >= 8) {
+    byte = code & 0xff;
+    code >>= 8;
+    code_bits -= 8;
+
+    write_byte(destination, destination_length, byte);
+  }
+
+  state->current_code   = LZWS_UNDEFINED_CODE;
+  state->remainder      = code;
+  state->remainder_bits = code_bits;
 
   state->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
 
