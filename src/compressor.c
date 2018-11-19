@@ -73,10 +73,13 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state->next_sibling_codes = NULL;
   state->symbol_by_codes    = NULL;
 
-  state->prefix_code         = LZWS_UNDEFINED_CODE;
-  state->current_code        = LZWS_UNDEFINED_CODE;
   state->last_used_code      = LZWS_LAST_USED_CODE;
   state->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
+
+  state->prefix_code = LZWS_UNDEFINED_CODE;
+  // It is possible to keep "prefix_code_bits" uninitialized.
+  state->current_code = LZWS_UNDEFINED_CODE;
+  // It is possible to keep "current_code_bits" uninitialized.
 
   state->remainder      = 0;
   state->remainder_bits = 0;
@@ -120,7 +123,6 @@ lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* 
 
 static lzws_result_t write_header(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
   // Writing 1 byte for "max_code_bits" and "block_mode".
-
   if (*destination_length < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
@@ -174,10 +176,11 @@ static lzws_result_t allocate_dictionary(lzws_compressor_state_t* state) {
 }
 
 static void clear_dictionary(lzws_compressor_state_t* state) {
-  size_t total_codes = 1 << state->max_code_bits;
+  // We need to clear only used codes.
+  size_t total_codes_used = state->last_used_code + 1;
 
-  fill_array(state->first_child_codes, sizeof(lzws_code_t), total_codes, LZWS_UNDEFINED_CODE);
-  fill_array(state->next_sibling_codes, sizeof(lzws_code_t), total_codes - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET, LZWS_UNDEFINED_CODE);
+  fill_array(state->first_child_codes, sizeof(lzws_code_t), total_codes_used, LZWS_UNDEFINED_CODE);
+  fill_array(state->next_sibling_codes, sizeof(lzws_code_t), total_codes_used - LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET, LZWS_UNDEFINED_CODE);
 
   // We don't need to clear "symbol_by_codes", they were considered uninitialized.
   // Algorithm will access only initialized codes.
@@ -289,49 +292,34 @@ static lzws_result_t read_next_symbol(lzws_compressor_state_t* state, uint8_t** 
 
   if (prefix_code == LZWS_UNDEFINED_CODE) {
     // Symbol is new prefix code.
-    state->prefix_code = symbol;
+    state->prefix_code      = symbol;
+    state->prefix_code_bits = state->last_used_code_bits;
 
     // We don't need to change status, algorithm wants next symbol.
 
     return 0;
   }
-
-  lzws_code_t current_code = state->current_code;
 
   bool        is_added;
   lzws_code_t code = get_code_for_symbol(state, symbol, &is_added);
 
-  if (code == LZWS_UNDEFINED_CODE) {
-    // Dictionary was cleared, we are not able to get code for symbol.
+  if (code == LZWS_UNDEFINED_CODE || is_added) {
+    // Dictionary was cleared or we can't find code for symbol.
+    // We need to write current "prefix_code".
 
-    // We need to write current code if it exists.
-    if (current_code != LZWS_UNDEFINED_CODE) {
-      state->status = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
-    }
-
-    // Symbol is new prefix code.
-    state->prefix_code = symbol;
-
-    // We don't need to change status, algorithm wants next symbol.
-
-    return 0;
-  }
-
-  if (is_added) {
-    // We can't find code for symbol.
-    // Current code is prefix code.
-    // We need to write it.
-
-    state->current_code = prefix_code;
-    state->status       = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
+    state->current_code      = prefix_code;
+    state->current_code_bits = state->prefix_code_bits;
+    state->status            = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
 
     // Symbol is new prefix code.
-    state->prefix_code = symbol;
+    state->prefix_code      = symbol;
+    state->prefix_code_bits = state->last_used_code_bits;
 
     return 0;
   }
 
   // We found code for symbol, it becomes new prefix code.
+  // We can keep current "prefix_code_bits" unchanged.
   state->prefix_code = code;
 
   // We don't need to change status, algorithm wants next symbol.
@@ -342,7 +330,7 @@ static lzws_result_t read_next_symbol(lzws_compressor_state_t* state, uint8_t** 
 // -- write code --
 
 static lzws_result_t write_current_code(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
-  uint8_t code_bits      = state->last_used_code_bits;
+  uint8_t code_bits      = state->current_code_bits;
   uint8_t remainder_bits = state->remainder_bits;
 
   // Destination bytes will always be >= 1.
@@ -353,8 +341,7 @@ static lzws_result_t write_current_code(lzws_compressor_state_t* state, uint8_t*
   }
 
   lzws_code_t code = state->current_code;
-
-  uint8_t byte;
+  uint8_t     byte;
 
   if (remainder_bits != 0) {
     uint8_t remainder      = state->remainder;
@@ -379,7 +366,9 @@ static lzws_result_t write_current_code(lzws_compressor_state_t* state, uint8_t*
     write_byte(destination, destination_length, byte);
   }
 
-  state->current_code   = LZWS_UNDEFINED_CODE;
+  // It is possible to keep "current_code" as is.
+  // It is possible to keep "current_code_bits" as is.
+
   state->remainder      = code;
   state->remainder_bits = code_bits;
 
@@ -390,13 +379,15 @@ static lzws_result_t write_current_code(lzws_compressor_state_t* state, uint8_t*
 
 static lzws_result_t write_prefix_code(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
   // We need to write prefix code if it exists.
-  lzws_code_t prefix_code = state->prefix_code;
+  lzws_code_t prefix_code      = state->prefix_code;
+  uint8_t     prefix_code_bits = state->prefix_code_bits;
 
   if (prefix_code == LZWS_UNDEFINED_CODE) {
     return 0;
   }
 
-  state->current_code = prefix_code;
+  state->current_code      = prefix_code;
+  state->current_code_bits = prefix_code_bits;
 
   lzws_result_t result = write_current_code(state, destination, destination_length);
   if (result != 0) {
@@ -404,6 +395,7 @@ static lzws_result_t write_prefix_code(lzws_compressor_state_t* state, uint8_t**
   }
 
   state->prefix_code = LZWS_UNDEFINED_CODE;
+  // It is possible to keep "prefix_code_bits" as is.
 
   return 0;
 }
@@ -449,7 +441,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
     }
 
     if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
-      // We have finished when algorithm wants more source.
+      // Algorithm wants more source, we have finished.
       return 0;
     } else if (result != 0) {
       return result;

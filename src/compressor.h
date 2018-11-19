@@ -39,10 +39,13 @@ typedef struct lzws_compressor_state_t {
   lzws_code_t* next_sibling_codes;
   uint8_t*     symbol_by_codes;
 
-  lzws_code_t prefix_code;
-  lzws_code_t current_code;
   lzws_code_t last_used_code;
   uint8_t     last_used_code_bits;
+
+  lzws_code_t prefix_code;
+  uint8_t     prefix_code_bits;
+  lzws_code_t current_code;
+  uint8_t     current_code_bits;
 
   uint8_t remainder;
   uint8_t remainder_bits;

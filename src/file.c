@@ -133,9 +133,7 @@ static lzws_result_t compress_data(
   uint8_t* destination        = destination_buffer;
   size_t   destination_length = destination_buffer_length;
 
-  COMPRESS_WITH_FLUSHING_BUFFER(
-      &lzws_compressor_write_magic_header,
-      &destination, &destination_length);
+  COMPRESS_WITH_FLUSHING_BUFFER(&lzws_compressor_write_magic_header, &destination, &destination_length);
 
   while (true) {
     size_t source_length = fread(source_buffer, 1, source_buffer_length, source_file);
@@ -144,14 +142,10 @@ static lzws_result_t compress_data(
     }
 
     uint8_t* source = source_buffer;
-    COMPRESS_WITH_FLUSHING_BUFFER(
-        &lzws_compress,
-        state, &source, &source_length, &destination, &destination_length);
+    COMPRESS_WITH_FLUSHING_BUFFER(&lzws_compress, state, &source, &source_length, &destination, &destination_length);
   }
 
-  COMPRESS_WITH_FLUSHING_BUFFER(
-      &lzws_compressor_flush,
-      state, &destination, &destination_length);
+  COMPRESS_WITH_FLUSHING_BUFFER(&lzws_compressor_flush, state, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length);
 }

@@ -28,3 +28,18 @@ The remainder bits are "001".
 
 Input is empty, we will output remainder "001" padded with "0" into last byte.
 We will write bytes using system "write" method and we won't care about LSB/MSB.
+
+-----
+
+We have 9 bit codes.
+When should we switch to 10 bit codes?
+
+We should keep current code bits (9 bits).
+We received new symbol.
+We are trying to find code for next symbol in dictionary.
+If we found something we should keep code bits as is (9 bits).
+Codes from dictionary doesn't affect code bits.
+
+We cleared dictionary or added new code inside dictionary.
+We have to write current code with current code bits (9 bits).
+Than we need to create new code for current symbol and increase code bits (10 bits).
