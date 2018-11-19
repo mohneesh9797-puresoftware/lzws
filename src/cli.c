@@ -12,23 +12,21 @@ static const char* help =
     "\n"
     "Usage: lzws-cli [options] [< stdin] [> stdout]\n"
     "\n"
-    "Operation: compression in block mode is default, use -d to decompress\n"
-    "\n"
     "Options:\n"
-    "  -b = max code bits for compressor (%u-%u)\n"
-    "  -d = decompress\n"
-    "  -m = disable block mode\n";
+    "  -b = max code bits for compressor (%u-%u) (%u by default)\n"
+    "  -d = decompress (compress by default)\n"
+    "  -m = disable block mode (enabled by default)\n";
 
 static const char* options = "b:dmh";
 
 static void print_help() {
-  fprintf(stderr, help, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);
+  fprintf(stderr, help, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);
 }
 
 int main(int argc, char** argv) {
   int option;
 
-  uint8_t max_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
+  uint8_t max_code_bits = LZWS_BIGGEST_MAX_CODE_BITS;
   bool    block_mode    = true;
 
   bool is_compressor = true;

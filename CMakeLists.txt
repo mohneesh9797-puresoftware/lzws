@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project ("lzw-st" "C")
+project ("lzws" "C")
 
 if (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed")

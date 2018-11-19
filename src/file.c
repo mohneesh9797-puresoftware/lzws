@@ -30,12 +30,10 @@ static lzws_result_t allocate_buffer(uint8_t** result_buffer, size_t* result_buf
 }
 
 static lzws_result_t allocate_buffers(uint8_t** result_source_buffer, size_t* result_source_buffer_length, uint8_t** result_destination_buffer, size_t* result_destination_buffer_length) {
-  lzws_result_t result;
-
   uint8_t* source_buffer;
   size_t   source_buffer_length = *result_source_buffer_length;
 
-  result = allocate_buffer(&source_buffer, &source_buffer_length, DEFAULT_SOURCE_BUFFER_LENGTH);
+  lzws_result_t result = allocate_buffer(&source_buffer, &source_buffer_length, DEFAULT_SOURCE_BUFFER_LENGTH);
   if (result != 0) {
     return result;
   }
@@ -61,35 +59,6 @@ static lzws_result_t allocate_buffers(uint8_t** result_source_buffer, size_t* re
 
 // -- writing file --
 
-// It is better to wrap function calls that outputs something.
-// We can flush destination buffer and provide more destination.
-
-#define WITH_FLUSHING_BUFFER(FAILED, MORE_DESTINATION, SUCCESS, function, ...) \
-  while (true) {                                                               \
-    lzws_result_t result = (function)(__VA_ARGS__);                            \
-    if (result == SUCCESS) {                                                   \
-      break;                                                                   \
-    }                                                                          \
-                                                                               \
-    if (result != MORE_DESTINATION) {                                          \
-      return FAILED;                                                           \
-    }                                                                          \
-                                                                               \
-    size_t data_length = destination_buffer_length - destination_length;       \
-    if (data_length == 0) {                                                    \
-      /* Function wants to write more bytes at once, than buffer has. */       \
-      return LZWS_FILE_NOT_ENOUGH_DESTINATION_BUFFER;                          \
-    }                                                                          \
-                                                                               \
-    result = write_data(destination_file, destination_buffer, data_length);    \
-    if (result != 0) {                                                         \
-      return result;                                                           \
-    }                                                                          \
-                                                                               \
-    destination        = destination_buffer;                                   \
-    destination_length = destination_buffer_length;                            \
-  }
-
 static lzws_result_t write_data(FILE* destination_file, uint8_t* data, size_t data_length) {
   if (fwrite(data, 1, data_length, destination_file) == 0) {
     return LZWS_FILE_WRITE_FAILED;
@@ -98,9 +67,59 @@ static lzws_result_t write_data(FILE* destination_file, uint8_t* data, size_t da
   return 0;
 }
 
+// It is better to wrap function calls that outputs something.
+// We can flush destination buffer and provide more destination.
+
+#define WITH_FLUSHING_BUFFER(FAILED, NEEDS_MORE_DESTINATION, function, ...) \
+  while (true) {                                                            \
+    lzws_result_t result = (function)(__VA_ARGS__);                         \
+    if (result == 0) {                                                      \
+      break;                                                                \
+    }                                                                       \
+                                                                            \
+    if (result != NEEDS_MORE_DESTINATION) {                                 \
+      return FAILED;                                                        \
+    }                                                                       \
+                                                                            \
+    result = flush_destination_buffer(                                      \
+        destination_file,                                                   \
+        &destination, &destination_length,                                  \
+        destination_buffer, destination_buffer_length);                     \
+    if (result != 0) {                                                      \
+      return result;                                                        \
+    }                                                                       \
+  }
+
+static lzws_result_t flush_destination_buffer(FILE* destination_file, uint8_t** destination, size_t* destination_length, uint8_t* destination_buffer, size_t destination_buffer_length) {
+  size_t data_length = destination_buffer_length - *destination_length;
+  if (data_length == 0) {
+    // We want to write more bytes at once, than buffer has.
+    return LZWS_FILE_NOT_ENOUGH_DESTINATION_BUFFER;
+  }
+
+  lzws_result_t result = write_data(destination_file, destination_buffer, data_length);
+  if (result != 0) {
+    return result;
+  }
+
+  *destination        = destination_buffer;
+  *destination_length = destination_buffer_length;
+
+  return 0;
+}
+
+static lzws_result_t write_remaining_destination_buffer(FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length, size_t destination_length) {
+  size_t data_length = destination_buffer_length - destination_length;
+  if (data_length == 0) {
+    return 0;
+  }
+
+  return write_data(destination_file, destination_buffer, data_length);
+}
+
 // -- compress --
 
-#define COMPRESSOR_WITH_FLUSHING_BUFFER(...) \
+#define COMPRESS_WITH_FLUSHING_BUFFER(...) \
   WITH_FLUSHING_BUFFER(LZWS_FILE_COMPRESSOR_FAILED, LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION, __VA_ARGS__)
 
 static lzws_result_t compress_data(
@@ -114,8 +133,7 @@ static lzws_result_t compress_data(
   uint8_t* destination        = destination_buffer;
   size_t   destination_length = destination_buffer_length;
 
-  COMPRESSOR_WITH_FLUSHING_BUFFER(
-      0,
+  COMPRESS_WITH_FLUSHING_BUFFER(
       &lzws_compressor_write_magic_header,
       &destination, &destination_length);
 
@@ -126,25 +144,16 @@ static lzws_result_t compress_data(
     }
 
     uint8_t* source = source_buffer;
-
-    COMPRESSOR_WITH_FLUSHING_BUFFER(
-        LZWS_COMPRESSOR_NEEDS_MORE_SOURCE,
+    COMPRESS_WITH_FLUSHING_BUFFER(
         &lzws_compress,
         state, &source, &source_length, &destination, &destination_length);
   }
 
-  COMPRESSOR_WITH_FLUSHING_BUFFER(
-      0,
+  COMPRESS_WITH_FLUSHING_BUFFER(
       &lzws_compressor_flush,
       state, &destination, &destination_length);
 
-  // Flush remaining data in destination buffer.
-  size_t data_length = destination_buffer_length - destination_length;
-  if (data_length != 0) {
-    return write_data(destination_file, destination_buffer, data_length);
-  }
-
-  return 0;
+  return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length);
 }
 
 lzws_result_t lzws_file_compress(

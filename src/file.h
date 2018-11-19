@@ -5,8 +5,9 @@
 #ifndef LZWS_FILE_H_
 #define LZWS_FILE_H_
 
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "common.h"
 
