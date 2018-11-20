@@ -20,13 +20,11 @@ typedef uint16_t lzws_code_t;
 #define LZWS_MAX_CODE_BITS_MASK 0x1f // "max_bits" are the last bits, biggest value (16) requires 5 bits.
 #define LZWS_BLOCK_MODE 0x80
 
-#define LZWS_DICTIONARY_SIZE 256
 #define LZWS_UNDEFINED_CODE 0
-#define LZWS_CLEAR_CODE LZWS_DICTIONARY_SIZE // Code to clear dictionary.
-#define LZWS_LAST_USED_CODE LZWS_CLEAR_CODE
+#define LZWS_CLEAR_CODE 256
 
-// "first_child_codes" has no index offset.
-#define LZWS_NEXT_SIBLING_CODES_INDEX_OFFSET 257
-#define LZWS_SYMBOL_BY_CODES_INDEX_OFFSET 257
+// Clear code can be used only in block mode.
+#define LZWS_LAST_USED_CODE 255
+#define LZWS_LAST_USED_CODE_IN_BLOCK_MODE 256
 
 #endif // LZWS_COMMON_H_

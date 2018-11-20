@@ -171,3 +171,8 @@ Symbol by codes:
 4 (261) -> "a"
 5 (262) -> "c"
 6 (263) -> "c"
+
+-----
+
+PS If block mode is disabled we don't need clear code (256).
+So we can move from 257 to 256.
