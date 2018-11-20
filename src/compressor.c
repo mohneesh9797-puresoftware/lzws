@@ -185,8 +185,8 @@ static void clear_dictionary(lzws_compressor_state_t* state) {
   // We don't need to clear "symbol_by_codes", they were considered uninitialized.
   // Algorithm will access only initialized codes.
 
-  state->last_used_code      = LZWS_LAST_USED_CODE;
-  state->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
+  state->last_used_code = LZWS_LAST_USED_CODE;
+  // We should keep current "last_used_code_bits".
 }
 
 // -- read symbol --
