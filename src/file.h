@@ -19,8 +19,8 @@ enum {
   LZWS_FILE_WRITE_FAILED
 };
 
-// 4 KB for each buffer is enough.
-#define DEFAULT_SOURCE_BUFFER_LENGTH 1 << 12
+// 16 KB for each buffer is enough.
+#define DEFAULT_SOURCE_BUFFER_LENGTH 1 << 14
 #define DEFAULT_DESTINATION_BUFFER_LENGTH DEFAULT_SOURCE_BUFFER_LENGTH
 
 // "source_buffer_length" and "destination_buffer_length" can be equal to 0, it will use default values.
