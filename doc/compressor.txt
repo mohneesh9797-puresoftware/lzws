@@ -174,5 +174,30 @@ Symbol by codes:
 
 -----
 
+It is possible to speedup dictionary lookup.
+We can store next sibling codes in sparse array.
+We don't need symbol by codes in this case.
+
+For example, next sibling codes:
+...
+97 ("a") * 256 + 97 ("a") - 257 -> 259
+97 ("a") * 256 + 98 ("b") - 257 -> 257
+97 ("a") * 256 + 99 ("c") - 257 -> 262
+...
+98 ("b") * 256 + 97 ("a") - 257 -> 258
+...
+99 ("c") * 256 + 97 ("a") - 257 -> 261
+...
+259 ("aa") * 256 + 98 ("b") - 257 -> 260
+259 ("aa") * 256 + 99 ("c") - 257 -> 263
+...
+
+How much memory will it consume?
+((2 ** 16) * 256 - 257) * sizeof(code) ~ 33.5 MB
+
+I think it is not a big deal when you want maximum performance.
+
+-----
+
 PS If block mode is disabled we don't need clear code (256).
 So we can move from 257 to 256.

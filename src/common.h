@@ -5,6 +5,7 @@
 #ifndef LZWS_COMMON_H_
 #define LZWS_COMMON_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 typedef uint8_t  lzws_result_t;
@@ -24,7 +25,11 @@ typedef uint16_t lzws_code_t;
 #define LZWS_CLEAR_CODE 256
 
 // Clear code can be used only in block mode.
-#define LZWS_LAST_USED_CODE 255
-#define LZWS_LAST_USED_CODE_IN_BLOCK_MODE 256
+#define LZWS_INITIALLY_LAST_USED_CODE 255
+#define LZWS_INITIALLY_LAST_USED_CODE_IN_BLOCK_MODE 256
+
+inline lzws_code_t lzws_get_initially_last_used_code(bool block_mode) {
+  return block_mode ? LZWS_INITIALLY_LAST_USED_CODE_IN_BLOCK_MODE : LZWS_INITIALLY_LAST_USED_CODE;
+}
 
 #endif // LZWS_COMMON_H_
