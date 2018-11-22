@@ -21,13 +21,19 @@ if (NOT DEFINED LZWS_TARGET)
   set (LZWS_TARGET ${PROJECT_NAME})
 endif ()
 
+set (LZWS_DICTIONARY_IMPLEMENTATIONS "trie-on-linked-list" "trie-on-sparse-array" CACHE STRING "dictionary implementations")
+
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")
 set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
 
+if (NOT LZWS_DICTIONARY_IMPLEMENTATIONS)
+  message (FATAL_ERROR "LZWS can not be compiled. Please enable at least one of dictionary implementations: trie on linked list or trie on sparse array.")
+endif ()
+
 if (NOT LZWS_STATIC AND NOT LZWS_SHARED)
-  message (FATAL_ERROR "LZW ST can not be compiled. Please enable building of shared or static libraries.")
+  message (FATAL_ERROR "LZWS can not be compiled. Please enable building of shared or static libraries.")
 endif ()
 
 set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks")

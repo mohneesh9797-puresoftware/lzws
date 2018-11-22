@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "compressor.h"
+#include "compressor/common.h"
+#include "compressor/main.h"
+
 #include "file.h"
 
 // -- utils --

@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "common.h"
+#include "config.h"
 
 // Possible results:
 enum {
@@ -19,8 +20,20 @@ enum {
   LZWS_FILE_WRITE_FAILED
 };
 
+#if defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
+
 // 16 KB for each buffer is enough.
-#define DEFAULT_SOURCE_BUFFER_LENGTH 1 << 14
+// Performance growth with 32 KB is not significant.
+#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 14)
+
+#elif defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
+
+// 1 MB for each buffer is enough.
+// Performance growth with 2 MB is not significant.
+#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 20)
+
+#endif
+
 #define DEFAULT_DESTINATION_BUFFER_LENGTH DEFAULT_SOURCE_BUFFER_LENGTH
 
 // "source_buffer_length" and "destination_buffer_length" can be equal to 0, it will use default values.

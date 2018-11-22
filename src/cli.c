@@ -26,10 +26,10 @@ static void print_help() {
 int main(int argc, char** argv) {
   int option;
 
+  bool is_compressor = true;
+
   uint8_t max_code_bits = LZWS_BIGGEST_MAX_CODE_BITS;
   bool    block_mode    = true;
-
-  bool is_compressor = true;
 
   while ((option = getopt(argc, argv, options)) != -1) {
     switch (option) {

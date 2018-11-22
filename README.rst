@@ -21,9 +21,10 @@ Features enable/disable
     ::
 
      $ cmake .. \
-        -DLZWS_SHARED=0/1 \
-        -DLZWS_STATIC=0/1 \
-        -DLZWS_CLI=0/1 \
+        -DLZWS_DICTIONARY_IMPLEMENTATIONS="trie-on-linked-list;trie-on-sparse-array"
+        -DLZWS_SHARED=0/1
+        -DLZWS_STATIC=0/1
+        -DLZWS_CLI=0/1
         -DLZWS_TESTS=0/1
 
 Test toolchains
