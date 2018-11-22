@@ -21,15 +21,15 @@ if (NOT DEFINED LZWS_TARGET)
   set (LZWS_TARGET ${PROJECT_NAME})
 endif ()
 
-set (LZWS_DICTIONARY_IMPLEMENTATIONS "trie-on-linked-list" "trie-on-sparse-array" CACHE STRING "dictionary implementations")
+set (LZWS_DICTIONARY "trie-on-sparse-array" CACHE STRING "dictionary implementation")
 
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")
 set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
 
-if (NOT LZWS_DICTIONARY_IMPLEMENTATIONS)
-  message (FATAL_ERROR "LZWS can not be compiled. Please enable at least one of dictionary implementations: trie on linked list or trie on sparse array.")
+if (NOT LZWS_DICTIONARY)
+  message (FATAL_ERROR "LZWS can not be compiled. Please select dictionary implementation.")
 endif ()
 
 if (NOT LZWS_STATIC AND NOT LZWS_SHARED)

@@ -7,3 +7,5 @@ set (HEADERS ${HEADERS} PARENT_SCOPE)
 
 set (SOURCES ${SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/state.c")
 set (SOURCES ${SOURCES} PARENT_SCOPE)
+
+add_subdirectory ("dictionary")

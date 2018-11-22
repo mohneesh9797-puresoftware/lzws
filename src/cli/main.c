@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "common.h"
-#include "file.h"
+#include "../common.h"
+#include "../file.h"
 
 static const char* help =
     "Overview: LZWS cli tool\n"
