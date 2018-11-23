@@ -5,8 +5,6 @@
 #ifndef LZWS_FILE_H_
 #define LZWS_FILE_H_
 
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 
 #include "common.h"
@@ -20,17 +18,17 @@ enum {
   LZWS_FILE_WRITE_FAILED
 };
 
-#if defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
-
-// 1 MB for each buffer is enough.
-// Performance growth with 2 MB is not significant.
-#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 20)
-
-#elif defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
+#if defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
 
 // 16 KB for each buffer is enough.
 // Performance growth with 32 KB is not significant.
 #define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 14)
+
+#elif defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
+
+// 1 MB for each buffer is enough.
+// Performance growth with 2 MB is not significant.
+#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 20)
 
 #endif
 

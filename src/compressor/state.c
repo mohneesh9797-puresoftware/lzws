@@ -2,11 +2,9 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdlib.h>
 
-#include "../common.h"
+#include "../constants.h"
 
 #include "common.h"
 #include "state.h"
@@ -26,13 +24,17 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state->max_code_bits = max_code_bits;
   state->block_mode    = block_mode;
 
-  // dictionary
+  lzws_compressor_dictionary_initialize(&state->dictionary);
 
-  state->initially_last_used_code = lzws_get_initially_last_used_code(block_mode);
-  state->last_used_code           = state->initially_last_used_code;
-  state->last_used_code_bits      = LZWS_LOWEST_MAX_CODE_BITS;
+  state->initial_last_used_code = lzws_get_initial_last_used_code(block_mode);
+  state->initial_code_offset    = state->initial_last_used_code + 1;
+  state->max_code               = LZWS_POWERS_OF_TWO[max_code_bits] - 1;
+
+  state->last_used_code      = state->initial_last_used_code;
+  state->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 
   state->current_code = LZWS_UNDEFINED_CODE;
+  // We could keep "next_symbol" uninitialized.
 
   state->remainder      = 0;
   state->remainder_bits = 0;
@@ -43,7 +45,6 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
 }
 
 void lzws_compressor_free_state(lzws_compressor_state_t* state) {
-  // dictionary
-
+  lzws_compressor_dictionary_free(&state->dictionary);
   free(state);
 }

@@ -5,7 +5,6 @@
 #ifndef LZWS_COMPRESSOR_MAIN_H_
 #define LZWS_COMPRESSOR_MAIN_H_
 
-#include <stdint.h>
 #include <stdlib.h>
 
 #include "state.h"

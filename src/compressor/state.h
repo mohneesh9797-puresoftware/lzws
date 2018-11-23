@@ -5,12 +5,13 @@
 #ifndef LZWS_COMPRESSOR_STATE_H_
 #define LZWS_COMPRESSOR_STATE_H_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "../config.h"
 
-#include "../common.h"
-
-#include "dictionary/common.h"
+#if defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
+#include "dictionary/trie-on-linked-list/main.h"
+#elif defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
+#include "dictionary/trie-on-sparse-array/main.h"
+#endif
 
 enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,
@@ -26,13 +27,17 @@ typedef struct {
   uint8_t max_code_bits;
   bool    block_mode;
 
-  // lzws_compressor_dictionary_t dictionary;
+  lzws_compressor_dictionary_t dictionary;
 
-  lzws_code_t initially_last_used_code;
+  lzws_code_t initial_last_used_code;
+  lzws_code_t initial_code_offset;
+  lzws_code_t max_code;
+
   lzws_code_t last_used_code;
   uint8_t     last_used_code_bits;
 
   lzws_code_t current_code;
+  uint8_t     next_symbol;
 
   uint8_t remainder;
   uint8_t remainder_bits;

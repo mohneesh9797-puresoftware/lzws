@@ -1,19 +1,19 @@
-if (LZWS_DICTIONARY STREQUAL "trie-on-sparse-array")
-  message(STATUS "Dictionary - trie on sparse array")
-  set (LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY true)
-elseif (LZWS_DICTIONARY STREQUAL "trie-on-linked-list")
+if (LZWS_DICTIONARY STREQUAL "trie-on-linked-list")
   message(STATUS "Dictionary - trie on linked list")
   set (LZWS_DICTIONARY_TRIE_ON_LINKED_LIST true)
+elseif (LZWS_DICTIONARY STREQUAL "trie-on-sparse-array")
+  message(STATUS "Dictionary - trie on sparse array")
+  set (LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY true)
 else ()
   message (FATAL_ERROR "Invalid dictionary implementation: ${LZWS_DICTIONARY}")
 endif ()
 
 configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 
-set (HEADERS "common.h" "config.h" "file.h")
-set (SOURCES "file.c")
-
 add_subdirectory ("compressor")
+
+set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "utils.h")
+set (SOURCES ${SOURCES} "constants.c" "file.c")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 

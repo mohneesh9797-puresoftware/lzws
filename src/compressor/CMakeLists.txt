@@ -1,3 +1,5 @@
+add_subdirectory ("dictionary")
+
 set (HEADERS ${HEADERS}
   "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/main.h"
@@ -5,7 +7,8 @@ set (HEADERS ${HEADERS}
 )
 set (HEADERS ${HEADERS} PARENT_SCOPE)
 
-set (SOURCES ${SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/state.c")
+set (SOURCES ${SOURCES}
+  "${CMAKE_CURRENT_SOURCE_DIR}/state.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
+)
 set (SOURCES ${SOURCES} PARENT_SCOPE)
-
-add_subdirectory ("dictionary")
