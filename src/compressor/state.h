@@ -10,6 +10,8 @@
 
 #include "../common.h"
 
+#include "dictionary/common.h"
+
 enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,
   LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,

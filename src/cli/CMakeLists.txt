@@ -1,6 +1,6 @@
 set (SOURCES "main.c")
 
-set (CLI_NAME "${LIB_NAME}-cli")
+set (CLI_NAME "${LZWS_TARGET}-cli")
 set (CLI_NAME_STATIC "${CLI_NAME}-static")
 
 if (LZWS_SHARED)

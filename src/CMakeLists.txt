@@ -17,7 +17,7 @@ add_subdirectory ("compressor")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-set (LIB_NAME "${LZWS_TARGET}-${LZWS_DICTIONARY}")
+set (LIB_NAME ${LZWS_TARGET})
 set (LIB_NAME_STATIC "${LIB_NAME}-static")
 
 if (LZWS_SHARED)
