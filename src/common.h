@@ -21,15 +21,17 @@ typedef uint16_t lzws_code_t;
 #define LZWS_MAX_CODE_BITS_MASK 0x1f // "max_bits" are the last bits, biggest value (16) requires 5 bits.
 #define LZWS_BLOCK_MODE 0x80
 
-#define LZWS_UNDEFINED_CODE 0
+// Code can have any value, but next code will always be > 255.
+// We will use 0 as undefined next code.
+#define LZWS_UNDEFINED_NEXT_CODE 0
 #define LZWS_CLEAR_CODE 256
 
 // Clear code can be used only in block mode.
-#define LZWS_INITIAL_LAST_USED_CODE 255
-#define LZWS_INITIAL_LAST_USED_CODE_IN_BLOCK_MODE 256
+#define LZWS_INITIAL_USED_CODE 255
+#define LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE 256
 
-inline lzws_code_t lzws_get_initial_last_used_code(bool block_mode) {
-  return block_mode ? LZWS_INITIAL_LAST_USED_CODE_IN_BLOCK_MODE : LZWS_INITIAL_LAST_USED_CODE;
+inline lzws_code_t lzws_get_initial_used_code(bool block_mode) {
+  return block_mode ? LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE : LZWS_INITIAL_USED_CODE;
 }
 
 #endif // LZWS_COMMON_H_

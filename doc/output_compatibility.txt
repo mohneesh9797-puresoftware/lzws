@@ -40,6 +40,6 @@ We are trying to find code for next symbol in dictionary.
 If we found it we should keep code bits as is (9 bits).
 Codes from dictionary doesn't affect code bits.
 
-We cleared dictionary or added new code into it.
+We added new code into it.
 We have to write current code with current code bits (9 bits).
 Than we need to create new code for current symbol and increase code bits (10 bits).

@@ -49,7 +49,7 @@ inline void* lzws_allocate_array(size_t size_of_item, size_t length, bool defaul
     return NULL;
   }
 
-  lzws_fill_array(array, size_of_item, length, default_value);
+  lzws_fill_array((uint8_t*)array, size_of_item, length, default_value);
 
   return array;
 }

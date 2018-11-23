@@ -6,6 +6,8 @@
 
 #include "../constants.h"
 
+#include "dictionary/common.h"
+
 #include "common.h"
 #include "state.h"
 
@@ -24,20 +26,19 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state->max_code_bits = max_code_bits;
   state->block_mode    = block_mode;
 
-  lzws_compressor_dictionary_initialize(&state->dictionary);
+  state->initial_used_code = lzws_get_initial_used_code(block_mode);
+  state->max_code          = LZWS_POWERS_OF_TWO[max_code_bits] - 1;
 
-  state->initial_last_used_code = lzws_get_initial_last_used_code(block_mode);
-  state->initial_code_offset    = state->initial_last_used_code + 1;
-  state->max_code               = LZWS_POWERS_OF_TWO[max_code_bits] - 1;
-
-  state->last_used_code      = state->initial_last_used_code;
+  state->last_used_code      = state->initial_used_code;
   state->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 
-  state->current_code = LZWS_UNDEFINED_CODE;
+  // We could keep "current_code" uninitialized.
   // We could keep "next_symbol" uninitialized.
 
   state->remainder      = 0;
   state->remainder_bits = 0;
+
+  lzws_compressor_dictionary_initialize(&state->dictionary, state->initial_used_code);
 
   *result = state;
 

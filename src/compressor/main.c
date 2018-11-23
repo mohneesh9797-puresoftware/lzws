@@ -5,6 +5,8 @@
 #include "../constants.h"
 #include "../utils.h"
 
+#include "dictionary/common.h"
+
 #include "common.h"
 #include "main.h"
 
@@ -42,12 +44,12 @@ static lzws_result_t write_header(lzws_compressor_state_t* state, uint8_t** dest
 // -- dictionary --
 
 static lzws_result_t allocate_dictionary(lzws_compressor_state_t* state) {
-  lzws_result_t result = lzws_compressor_dictionary_allocate(&state->dictionary, state->max_code_bits, state->initial_code_offset);
+  lzws_result_t result = lzws_compressor_dictionary_allocate(&state->dictionary, state->max_code_bits);
   if (result != 0) {
     return result;
   }
 
-  state->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
+  state->status = LZWS_COMPRESSOR_READ_FIRST_SYMBOL;
 
   return 0;
 }
@@ -57,10 +59,10 @@ static lzws_result_t allocate_dictionary(lzws_compressor_state_t* state) {
 
 // -- read symbol --
 
-static lzws_code_t get_new_code(lzws_compressor_state_t* state, uint8_t symbol) {
+static lzws_code_t get_new_code(lzws_compressor_state_t* state) {
   if (state->last_used_code == state->max_code) {
     // Dictionary is full.
-    return LZWS_UNDEFINED_CODE;
+    return LZWS_UNDEFINED_NEXT_CODE;
   }
 
   state->last_used_code++;
@@ -74,25 +76,30 @@ static lzws_code_t get_new_code(lzws_compressor_state_t* state, uint8_t symbol) 
   return new_code;
 }
 
-static lzws_result_t read_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
-  if (*source_length < 1) {
-    return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
-  }
-
-  uint8_t symbol;
+#define READ_SYMBOL                           \
+  if (*source_length < 1) {                   \
+    return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE; \
+  }                                           \
+                                              \
+  uint8_t symbol;                             \
   lzws_read_byte(source, source_length, &symbol);
 
+static lzws_result_t read_first_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
+  READ_SYMBOL
+
+  state->current_code = symbol;
+  state->status       = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
+
+  return 0;
+}
+
+static lzws_result_t read_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
+  READ_SYMBOL
+
   lzws_code_t current_code = state->current_code;
-  if (current_code == LZWS_UNDEFINED_CODE) {
-    // Symbol is new current code.
-    state->current_code = symbol;
 
-    // We don't need to change status, algorithm wants next symbol.
-    return 0;
-  }
-
-  lzws_code_t next_code = lzws_compressor_dictionary_get_code(&state->dictionary, state->initial_code_offset, current_code, symbol);
-  if (next_code != LZWS_UNDEFINED_CODE) {
+  lzws_code_t next_code = lzws_compressor_dictionary_get_next_code(&state->dictionary, current_code, symbol);
+  if (next_code != LZWS_UNDEFINED_NEXT_CODE) {
     // We found next code, it becomes new current code.
     state->current_code = next_code;
 
@@ -101,10 +108,10 @@ static lzws_result_t read_next_symbol(lzws_compressor_state_t* state, uint8_t** 
   }
 
   // Dictionary can't find next code.
+  lzws_code_t new_code = get_new_code(state);
 
-  lzws_code_t new_code = get_new_code(state, symbol);
-  if (new_code != LZWS_UNDEFINED_CODE) {
-    lzws_compressor_dictionary_get_code(&state->dictionary, state->initial_code_offset, current_code, new_code);
+  if (new_code != LZWS_UNDEFINED_NEXT_CODE) {
+    lzws_compressor_dictionary_save_next_code(&state->dictionary, current_code, new_code, symbol);
   }
 
   // We need to write current code.
@@ -127,6 +134,9 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
         break;
       case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
         result = allocate_dictionary(state);
+        break;
+      case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
+        result = read_first_symbol(state, source, source_length);
         break;
       case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
         result = read_next_symbol(state, source, source_length);
