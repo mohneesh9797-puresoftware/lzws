@@ -69,14 +69,14 @@ lzws_code_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictio
   lzws_code_t next_sibling_code = first_child_code;
 
   do {
-    size_t symbol_by_code_index = next_sibling_code - initial_code_offset;
+    lzws_code_t symbol_by_code_index = next_sibling_code - initial_code_offset;
     if (symbol_by_codes[symbol_by_code_index] == symbol) {
       // We found target symbol.
       return next_sibling_code;
     }
 
-    size_t next_sibling_code_index = next_sibling_code - initial_code_offset;
-    next_sibling_code              = next_sibling_codes[next_sibling_code_index];
+    lzws_code_t next_sibling_code_index = next_sibling_code - initial_code_offset;
+    next_sibling_code                   = next_sibling_codes[next_sibling_code_index];
   } while (next_sibling_code != LZWS_UNDEFINED_NEXT_CODE);
 
   // Next sibling is not found.
@@ -87,7 +87,7 @@ void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* 
   uint8_t initial_code_offset = dictionary->initial_code_offset;
 
   // We need to store symbol for this code.
-  size_t symbol_by_code_index                       = code - initial_code_offset;
+  lzws_code_t symbol_by_code_index                  = code - initial_code_offset;
   dictionary->symbol_by_codes[symbol_by_code_index] = symbol;
 
   lzws_code_t* first_child_codes = dictionary->first_child_codes;
@@ -101,7 +101,7 @@ void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* 
 
   // Adding next sibling.
   lzws_code_t* next_sibling_codes = dictionary->next_sibling_codes;
-  size_t       next_code_index    = code - initial_code_offset;
+  lzws_code_t  next_code_index    = code - initial_code_offset;
 
   first_child_codes[current_code]     = code;
   next_sibling_codes[next_code_index] = first_child_code;

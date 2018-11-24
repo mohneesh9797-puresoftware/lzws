@@ -17,20 +17,8 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_read_byte(uint8_t** source, size_t* source_length, uint8_t* byte) {
-  *byte = **source;
-  (*source)++;
-  (*source_length)--;
-}
-
-LZWS_INLINE void lzws_write_byte(uint8_t** destination, size_t* destination_length, uint8_t byte) {
-  **destination = byte;
-  (*destination)++;
-  (*destination_length)--;
-}
-
 LZWS_INLINE void lzws_fill_array(uint8_t* array, size_t size_of_item, size_t length, uint value) {
-  if (size_of_item == 1) {
+  if (size_of_item == 1 || value == 0) {
     memset(array, value, length);
     return;
   }
@@ -59,6 +47,18 @@ LZWS_INLINE void* lzws_allocate_array(size_t size_of_item, size_t length, bool d
   lzws_fill_array((uint8_t*)array, size_of_item, length, default_value);
 
   return array;
+}
+
+LZWS_INLINE void lzws_read_byte(uint8_t** source, size_t* source_length, uint8_t* byte) {
+  *byte = **source;
+  (*source)++;
+  (*source_length)--;
+}
+
+LZWS_INLINE void lzws_write_byte(uint8_t** destination, size_t* destination_length, uint8_t byte) {
+  **destination = byte;
+  (*destination)++;
+  (*destination_length)--;
 }
 
 #endif // LZWS_UTILS_H
