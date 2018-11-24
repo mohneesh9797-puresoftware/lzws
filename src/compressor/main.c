@@ -44,15 +44,6 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
   }
 }
 
-static inline lzws_result_t write_current_code_and_remainder(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
-  lzws_result_t result = lzws_compressor_write_current_code(state, destination, destination_length);
-  if (result != 0) {
-    return result;
-  }
-
-  return lzws_compressor_write_remainder(state, destination, destination_length);
-}
-
 lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
   switch (state->status) {
     case LZWS_COMPRESSOR_WRITE_HEADER:
@@ -64,7 +55,7 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** de
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
     case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
       // We have current code and maybe remainder.
-      return write_current_code_and_remainder(state, destination, destination_length);
+      return lzws_compressor_write_current_code_and_remainder(state, destination, destination_length);
 
     default:
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;

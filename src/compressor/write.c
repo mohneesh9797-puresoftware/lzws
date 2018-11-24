@@ -53,7 +53,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state,
   return 0;
 }
 
-lzws_result_t lzws_compressor_write_remainder(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
+static inline lzws_result_t write_remainder(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
   if (state->remainder_bits == 0) {
     return 0;
   }
@@ -68,4 +68,13 @@ lzws_result_t lzws_compressor_write_remainder(lzws_compressor_state_t* state, ui
   state->remainder_bits = 0;
 
   return 0;
+}
+
+lzws_result_t lzws_compressor_write_current_code_and_remainder(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
+  lzws_result_t result = lzws_compressor_write_current_code(state, destination, destination_length);
+  if (result != 0) {
+    return result;
+  }
+
+  return write_remainder(state, destination, destination_length);
 }

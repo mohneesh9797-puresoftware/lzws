@@ -26,9 +26,13 @@ Codes:
 Indexes of this array are between 0 and (2 ** 16) * 256 - 1.
 Values >= 257.
 
+We can still use 0 constant as undefined next code.
+This is cool, because calloc is faster than malloc + fill.
+
+-----
+
 How much memory will it consume?
 ((2 ** 16) * 256) * sizeof(code) ~ 33.5 MB
 I think it is not a big deal when we need maximum performance.
 
-We can still use 0 constant as undefined next code.
-This is cool, because calloc is faster than malloc + fill.
+Please use this algorithm when you have big amount of data > 50 MB.

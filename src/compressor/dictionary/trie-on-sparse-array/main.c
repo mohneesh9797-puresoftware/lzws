@@ -27,12 +27,12 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 }
 
 lzws_code_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t current_code, uint8_t symbol) {
-  lzws_code_t code_index = current_code * 256 + symbol;
+  size_t code_index = current_code * 256 + symbol;
   return dictionary->codes[code_index];
 }
 
-void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t current_code, lzws_code_t code, uint8_t symbol) {
-  lzws_code_t code_index        = current_code * 256 + symbol;
+void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t current_code, uint8_t symbol, lzws_code_t code) {
+  size_t code_index             = current_code * 256 + symbol;
   dictionary->codes[code_index] = code;
 }
 

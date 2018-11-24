@@ -40,8 +40,8 @@ LZWS_INLINE lzws_code_t lzws_compressor_get_next_code_from_dictionary_in_state(l
   return lzws_compressor_get_next_code_from_dictionary(&state->dictionary, state->current_code, symbol);
 }
 
-LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_in_state(lzws_compressor_state_t* state, lzws_code_t code, uint8_t symbol) {
-  lzws_compressor_save_next_code_to_dictionary(&state->dictionary, state->current_code, code, symbol);
+LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_in_state(lzws_compressor_state_t* state, uint8_t symbol, lzws_code_t code) {
+  lzws_compressor_save_next_code_to_dictionary(&state->dictionary, state->current_code, symbol, code);
 }
 
 LZWS_INLINE void lzws_compressor_free_dictionary_in_state(lzws_compressor_state_t* state) {

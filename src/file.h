@@ -20,9 +20,9 @@ enum {
 
 #if defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
 
-// 16 KB for each buffer is enough.
-// Performance growth with 32 KB is not significant.
-#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 14)
+// 32 KB for each buffer is enough.
+// Performance growth with 64 KB is not significant.
+#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 15)
 
 #elif defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
 
