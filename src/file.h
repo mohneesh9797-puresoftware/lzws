@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#ifndef LZWS_FILE_H_
-#define LZWS_FILE_H_
+#if !defined(LZWS_FILE_H)
+#define LZWS_FILE_H
 
 #include <stdio.h>
 
@@ -43,4 +43,4 @@ lzws_result_t lzws_file_compress(
     uint8_t max_code_bits,
     bool    block_mode);
 
-#endif // LZWS_FILE_H_
+#endif // LZWS_FILE_H

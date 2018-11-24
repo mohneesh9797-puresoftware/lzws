@@ -2,11 +2,18 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#ifndef LZWS_COMMON_H_
-#define LZWS_COMMON_H_
+#if !defined(LZWS_COMMON_H)
+#define LZWS_COMMON_H
 
 #include <stdbool.h>
 #include <stdint.h>
+
+#undef LZWS_INLINE
+#if defined(LZWS_COMMON_C)
+#define LZWS_INLINE
+#else
+#define LZWS_INLINE inline
+#endif
 
 typedef uint8_t  lzws_result_t;
 typedef uint16_t lzws_code_t;
@@ -30,8 +37,8 @@ typedef uint16_t lzws_code_t;
 #define LZWS_INITIAL_USED_CODE 255
 #define LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE 256
 
-inline lzws_code_t lzws_get_initial_used_code(bool block_mode) {
+LZWS_INLINE lzws_code_t lzws_get_initial_used_code(bool block_mode) {
   return block_mode ? LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE : LZWS_INITIAL_USED_CODE;
 }
 
-#endif // LZWS_COMMON_H_
+#endif // LZWS_COMMON_H

@@ -3,6 +3,7 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "compressor/common.h"
+#include "compressor/header.h"
 #include "compressor/main.h"
 
 #include "file.h"
@@ -142,7 +143,7 @@ static lzws_result_t compress_data(
     COMPRESS_WITH_FLUSHING_BUFFER(&lzws_compress, state, &source, &source_length, &destination, &destination_length);
   }
 
-  COMPRESS_WITH_FLUSHING_BUFFER(&lzws_compressor_flush, state, &destination, &destination_length);
+  COMPRESS_WITH_FLUSHING_BUFFER(&lzws_flush_compressor, state, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length);
 }

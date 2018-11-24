@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#ifndef LZWS_COMPRESSOR_STATE_H_
-#define LZWS_COMPRESSOR_STATE_H_
+#if !defined(LZWS_COMPRESSOR_STATE_H)
+#define LZWS_COMPRESSOR_STATE_H
 
 #include "../config.h"
 
@@ -18,7 +18,7 @@ enum {
   LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,
   LZWS_COMPRESSOR_READ_FIRST_SYMBOL,
   LZWS_COMPRESSOR_READ_NEXT_SYMBOL,
-  LZWS_COMPRESSOR_WRITE_CURRENT_CODE
+  LZWS_COMPRESSOR_PROCESS_CURRENT_CODE
 };
 typedef uint8_t lzws_compressor_status_t;
 
@@ -46,4 +46,4 @@ typedef struct {
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 
-#endif // LZWS_COMPRESSOR_STATE_H_
+#endif // LZWS_COMPRESSOR_STATE_H

@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#ifndef LZWS_COMPRESSOR_COMMON_H_
-#define LZWS_COMPRESSOR_COMMON_H_
+#if !defined(LZWS_COMPRESSOR_COMMON_H)
+#define LZWS_COMPRESSOR_COMMON_H
 
 // Possible results:
 enum {
@@ -14,4 +14,4 @@ enum {
   LZWS_COMPRESSOR_UNKNOWN_STATUS
 };
 
-#endif // LZWS_COMPRESSOR_COMMON_H_
+#endif // LZWS_COMPRESSOR_COMMON_H

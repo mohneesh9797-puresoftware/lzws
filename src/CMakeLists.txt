@@ -12,8 +12,8 @@ configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 
 add_subdirectory ("compressor")
 
-set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "utils.h")
-set (SOURCES ${SOURCES} "constants.c" "file.c")
+set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "macro.h" "utils.h")
+set (SOURCES ${SOURCES} "common.c" "constants.c" "file.c" "utils.c")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
