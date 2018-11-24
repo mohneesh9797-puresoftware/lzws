@@ -16,15 +16,15 @@ Debug build
 
     ::
 
-     $ cd build && cmake .. -DCMAKE_VERBOSE_MAKEFILE=1 && \
-        make VERBOSE=1 && make test
+    $ cd build && cmake .. -DCMAKE_VERBOSE_MAKEFILE=1
+    $ make VERBOSE=1 && make test
 
 Features enable/disable
 -----------------------
 
     ::
 
-     $ cmake .. \
+    $ cmake .. \
         -DLZWS_DICTIONARY="trie-on-linked-list"/"trie-on-sparse-array"
         -DLZWS_SHARED=0/1
         -DLZWS_STATIC=0/1
@@ -36,23 +36,24 @@ Test toolchains
 
     ::
 
-     $ cmake .. -DCMAKE_TOOLCHAIN_FILE="../cmake/toolchains/clang/leak-sanitizer.cmake" \
-       make VERBOSE=1 && make test
-     $ ../cmake/scripts/test-all-toolchains.sh
+    $ cmake .. -DCMAKE_TOOLCHAIN_FILE="../cmake/toolchains/clang/leak-sanitizer.cmake"
+    $ make VERBOSE=1 && make test
+    $ ../cmake/scripts/test-all-toolchains.sh
 
 DEB and RPM release
 -------------------
 
     ::
 
-     $ cmake .. -DCMAKE_BUILD_TYPE=RELEASE && \
-        make VERBOSE=1 && make test && make package
+    $ cmake .. -DCMAKE_BUILD_TYPE=RELEASE
+    $ make VERBOSE=1 && make test
+    $ make package
 
 Known issues
 ------------
 
-  ccc-analyzer toolchain is not working.
+ccc-analyzer toolchain is not working.
 
     ::
 
-     $ sudo ln -s /usr/lib/llvm/6/libexec/ccc-analyzer /usr/local/bin/ccc-analyzer
+    $ sudo ln -s /usr/lib/llvm/6/libexec/ccc-analyzer /usr/local/bin/ccc-analyzer
