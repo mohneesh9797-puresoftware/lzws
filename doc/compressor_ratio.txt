@@ -1,0 +1,55 @@
+We have created tar archive from directory and wants to compress it (create tar.Z).
+Let's imagine that first file in tar will be binary image.
+LZW compression will not be effective with binary files.
+But there are many text files after binary image in tar.
+So we can reset dictionary and send clear code.
+
+Efficiency of compression can be measured as source bytes length / destination bytes length.
+This efficiency is known as compression ratio (or just ratio).
+This parameter changes during data processing.
+
+Let's consider 3 steps:
+1. We read 3 byte and outputs 2 bytes. Ratio is 3/2.
+2. We read 2 more bytes and outputs 1 more byte. Ratio is 5/3.
+3. We read 1 more bytes and outputs 2 more bytes. Ratio is 6/5.
+
+3/2 < 5/3 > 6/5
+You can see that ratio from step 2 is bigger than ratio from step 1.
+Ratio from step 3 is lower than ratio from step 2.
+
+Ratio is not a smooth curve, we need more consolidated ratio to make a decision about clear.
+Original ncompress uses magic gap of 10000 source bytes between ratio checks.
+It uses the following terminology: doing ratio measurement on checkpoints, 10000 source bytes before each checkpoint.
+I think this terminology is good.
+
+So we have 2 checkpoints: last and current.
+Each checkpoint has ratio.
+We need to clear if last ratio is greater than current.
+
+There are 2 problems:
+1. On 32 bit system we couldn't count more than 4 GB source bytes length.
+2. Division is not accurate.
+
+Lets use simple mathematics.
+Let source length = s, destination length = d, new source length - m, new destination length - n.
+
+We want to clear when (s + m) / (d + n) < s / d.
+s, m, d, n >= 0.
+We don't want to divide by 0 so we need to add special case for d == 0.
+So d > 0.
+
+(s + m) / (d + n) - s / d < 0
+
+Let's multiply it by d * (d + n) > 0 (because d > 0 and n >= 0).
+
+s * d + m * d - s * d - s * n < 0
+m * d - s * n < 0
+m * d < s * n
+
+This formular is much better: we need to process 2 multiplications and compare it.
+We can use GMP library for such purpose.
+This solution will be accurate and won't limit source length.
+
+-----
+
+PS we shouldn't clear when dictionary is full.

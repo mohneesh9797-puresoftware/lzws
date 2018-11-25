@@ -4,18 +4,18 @@ LZW streaming compressor/decompressor (LZW + Stream = LZWS) based on LZW AB.
 
 It consists of library and cli tool. Cli tool should be compatible with recent version of [ncompress](https://github.com/vapier/ncompress).
 
-The main goal of the project is to provide streaming interface for lzw compressor. This interface is framework agnostic and could be used in any application.
+The main goal of the project is to provide streaming interface for lzw compressor. This interface is framework agnostic and can be used in any application.
 
 ## Dictionary implementations
 
-* Trie based on linked list (idea from LZW AB). Low memory usage <= 327 KB but slow. Use it for small data < 50 MB.
-* Trie based on sparse array. High memory usage <= 33.5 MB and maximum performance. Use it for big data > 50 MB.
+* Trie based on linked list (idea from LZW AB). Low memory usage <= 327 KB (16 bit codes) but slow. Use it for small data < 50 MB.
+* Trie based on sparse array. High memory usage <= 33.5 MB (16 bit codes) and maximum performance. Use it for big data > 50 MB.
 
 You can add your own implementation.
 
 ## Getting Started
 
-Project has no deps. You can build it with cmake. It is good to have both gcc and clang for testing.
+Project depends on [GMP](https://gmplib.org). You can build it with cmake. It is good to have both gcc and clang for testing.
 
 ```sh
 cd build
@@ -76,7 +76,7 @@ make package
 
 ```c
 // This function is optional.
-// Use it to be compatible with ncompress and others.
+// Use it to be compatible with with original UNIX compress utility.
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
@@ -95,13 +95,13 @@ These methods are framework agnostic. You are free to use it with any files, buf
 You can use it with synchronous or asynchronous code.
 It won't be hard to implement bindings for ruby, python, etc.
 
-First of all you could use `lzws_compressor_write_magic_header` to be compatible with `ncompress` and others.
+First of all you can use `lzws_compressor_write_magic_header` to be compatible with `ncompress` and others.
 It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
 
 Than you need to create `lzws_compressor_state_t`. Do not forget to free it later with `lzws_compressor_free_state`.
 
 Than use `lzws_compress` within some read loop.
-This method will return `0` when he wants more source.
+This method will return `0` when algorithm wants more source (it won't return `LZWS_COMPRESSOR_NEEDS_MORE_SOURCE`).
 It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
 
 Use `lzws_flush_compressor` when you received end of your input (EOF for example).
@@ -120,6 +120,7 @@ Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 
 * [compressor.txt](doc/compressor.txt)
 * [fast_compressor.txt](doc/fast_compressor.txt)
+* [compressor_ratio.txt](doc/compressor_ratio.txt)
 * [decompressor.txt](doc/decompressor.txt)
 * [output_compatibility.txt](doc/output_compatibility.txt)
 
@@ -130,14 +131,24 @@ Distributed under the BSD Software License (see LICENSE).
 
 ## Why not LZW AB?
 
-It is not compatible with `ncompress` and old UNIX `compress`.
+It is not compatible with `ncompress` and original UNIX `compress`.
 You can read its code to meet with original idea of "trie-on-linked-list".
 It is well documented.
 
-## Why not ncompress?
+## Why not ncompress/gzip?
 
 `ncompress` code is not user friendly.
 It is full of goto, inliners and it has no comments or any documentation.
 I've found here some [overflow issues](https://github.com/vapier/ncompress/issues/17).
 It is very hard to modify it for streaming purposes.
 It has no tests.
+
+`gzip` uses a bit modified decompressor from ncompress.
+It has no compressor.
+
+## Example
+
+There are HTTP servers that supports `Content-Encoding: compress` or `x-compress` via compress or gzip utilities.
+See [recent apache 2.0 for example](https://github.com/apache/httpd/blob/trunk/modules/metadata/mod_mime_magic.c#L2055-L2063) uses gzip decompressor.
+Apache 1.3.0 and others was using `ncompress`.
+You can support this content encoding in your application using lzws.

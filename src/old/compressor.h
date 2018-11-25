@@ -53,7 +53,7 @@ typedef struct lzws_compressor_state_t {
 
 // It is possible to write magic header.
 // This function is optional.
-// Use it to be compatible with original "compress" utility.
+// Use it to be compatible with original UNIX compress utility.
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
