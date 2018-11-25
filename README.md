@@ -56,6 +56,15 @@ sha256sum linux-2.6.39.tar
 sha256sum linux-2.6.39.tar.new
 ```
 
+Toolchains:
+```sh
+cmake .. -DCMAKE_TOOLCHAIN_FILE="../cmake/toolchains/clang/leak-sanitizer.cmake"
+make
+make test
+
+../cmake/scripts/test-all-toolchains.sh
+```
+
 DEB and RPM release:
 ```sh
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE
@@ -63,7 +72,51 @@ make
 make package
 ```
 
-## Implementation documentation
+## Library
+
+```c
+// This function is optional.
+// Use it to be compatible with ncompress and others.
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
+
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
+void          lzws_compressor_free_state(lzws_compressor_state_t* state);
+
+lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length);
+
+// Use this function when you have no source (received EOF for example).
+lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length);
+```
+
+You can see that input was implemented using `uint8_t** source, size_t* source_length` and output with `uint8_t** destination, size_t* destination_length`.
+Functions will read bytes and change both `source`, `source_length`, write bytes and change both `destination` and `destination_length`.
+
+These methods are framework agnostic. You are free to use it with any files, buffers, sockets, etc.
+You can use it with synchronous or asynchronous code.
+It won't be hard to implement bindings for ruby, python, etc.
+
+First of all you could use `lzws_compressor_write_magic_header` to be compatible with `ncompress` and others.
+It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
+
+Than you need to create `lzws_compressor_state_t`. Do not forget to free it later with `lzws_compressor_free_state`.
+
+Than use `lzws_compress` within some read loop.
+This method will return `0` when he wants more source.
+It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
+
+Use `lzws_flush_compressor` when you received end of your input (EOF for example).
+It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
+
+`LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION` means that `destination` is 100% filled.
+You can write your destination buffer to output.
+Than you need to provide new destination (same buffer for example).
+
+PS minimum `destination_length` is just 2 bytes, `source_length` is 1 byte.
+I can recommend to use 32 KB buffers for `trie-on-linked-list` and 1 MB for `trie-on-sparse-array`.
+
+Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
+
+## Documentation
 
 * [compressor.txt](doc/compressor.txt)
 * [fast_compressor.txt](doc/fast_compressor.txt)
