@@ -127,3 +127,17 @@ Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 
 Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 Distributed under the BSD Software License (see LICENSE).
+
+## Why not LZW AB?
+
+It is not compatible with `ncompress` and old UNIX `compress`.
+You can read its code to meet with original idea of "trie-on-linked-list".
+It is well documented.
+
+## Why not ncompress?
+
+`ncompress` code is not user friendly.
+It is full of goto, inliners and it has no comments or any documentation.
+I've found here some [overflow issues](https://github.com/vapier/ncompress/issues/17).
+It is very hard to modify it for streaming purposes.
+It has no tests.
