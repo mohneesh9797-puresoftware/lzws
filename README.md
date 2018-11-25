@@ -2,7 +2,8 @@
 
 LZW streaming compressor/decompressor (LZW + Stream = LZWS) based on LZW AB.
 
-It consists of library and cli tool. Cli tool should be compatible with recent version of [ncompress](https://github.com/vapier/ncompress).
+It consists of library and cli tool.
+Cli tool should be compatible with recent version of [ncompress](https://github.com/vapier/ncompress) and [gzip unlzw](https://github.com/Distrotech/gzip/blob/distrotech-gzip/unlzw.c).
 
 The main goal of the project is to provide streaming interface for lzw compressor. This interface is framework agnostic and can be used in any application.
 
