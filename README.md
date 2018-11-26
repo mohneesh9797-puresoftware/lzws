@@ -51,8 +51,8 @@ wget "https://cdn.kernel.org/pub/linux/kernel/v2.6/linux-2.6.39.tar.xz"
 tar xf linux-2.6.39.tar.xz
 tar cvf linux-2.6.39.tar linux-2.6.39
 
-time ./src/cli/lzws-cli < linux-2.6.39.tar > linux-2.6.39.tar.Z
-time ./src/cli/lzws-cli -d < linux-2.6.39.tar.Z > linux-2.6.39.tar.new
+time ./src/cli/lzws-cli-static < linux-2.6.39.tar > linux-2.6.39.tar.Z
+time ./src/cli/lzws-cli-static -d < linux-2.6.39.tar.Z > linux-2.6.39.tar.new
 sha256sum linux-2.6.39.tar
 sha256sum linux-2.6.39.tar.new
 ```

@@ -29,14 +29,14 @@ set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
 
 if (NOT LZWS_DICTIONARY)
-  message (FATAL_ERROR "LZWS can not be compiled. Please select dictionary implementation.")
+  message (FATAL_ERROR "Please select dictionary implementation.")
 endif ()
 
-if (NOT LZWS_STATIC AND NOT LZWS_SHARED)
-  message (FATAL_ERROR "LZWS can not be compiled. Please enable building of shared or static libraries.")
+if (NOT LZWS_SHARED AND NOT LZWS_STATIC)
+  message (FATAL_ERROR "Please enable building of shared or static libraries.")
 endif ()
 
-set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks")
+set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks" "${PROJECT_SOURCE_DIR}/cmake/finds")
 
 include (GetVerboseFlags)
 cmake_get_verbose_flags ()
@@ -52,6 +52,18 @@ cmake_check_ipo ()
 
 include (CheckRunnable)
 cmake_check_runnable ()
+
+find_package(GMP REQUIRED)
+
+include (CheckGMP)
+cmake_check_gmp ()
+
+if (LZWS_SHARED AND NOT CMAKE_GMP_SHARED_LIBRARY_PATH)
+  message (FATAL_ERROR "GMP shared library is not available.")
+endif ()
+if (LZWS_STATIC AND NOT CMAKE_GMP_STATIC_LIBRARY_PATH)
+  message (FATAL_ERROR "GMP static library is not available.")
+endif ()
 
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_PIPE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C11_C_FLAGS}")
 

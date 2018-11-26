@@ -31,4 +31,6 @@ function (cmake_check_runnable)
 
   set (CMAKE_CAN_RUN_EXE false CACHE STRING "status of run exe support")
   message (STATUS "Status of run exe support - no")
+
+  mark_as_advanced(CMAKE_CAN_RUN_EXE)
 endfunction ()
