@@ -14,19 +14,41 @@
 lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
   lzws_result_t result;
 
+  if (state->status == LZWS_COMPRESSOR_WRITE_HEADER) {
+    result = lzws_compressor_write_header(state, destination, destination_length);
+
+    if (result != 0) {
+      return result;
+    }
+  }
+
+  if (state->status == LZWS_COMPRESSOR_ALLOCATE_DICTIONARY) {
+    result = lzws_compressor_allocate_dictionary_in_state(state);
+
+    if (result != 0) {
+      return result;
+    }
+  }
+
+  if (state->status == LZWS_COMPRESSOR_READ_FIRST_SYMBOL) {
+    result = lzws_compressor_read_first_symbol(state, source, source_length);
+
+    if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+      // Algorithm wants more source, we have finished.
+      return 0;
+    } else if (result != 0) {
+      return result;
+    }
+  }
+
   while (true) {
     switch (state->status) {
-      case LZWS_COMPRESSOR_WRITE_HEADER:
-        result = lzws_compressor_write_header(state, destination, destination_length);
-        break;
-      case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
-        result = lzws_compressor_allocate_dictionary_in_state(state);
-        break;
-      case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
-        result = lzws_compressor_read_first_symbol(state, source, source_length);
-        break;
       case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
         result = lzws_compressor_read_next_symbol(state, source, source_length);
+        if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+          // Algorithm wants more source, we have finished.
+          return 0;
+        }
         break;
       case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
         result = lzws_compressor_process_current_code(state, destination, destination_length);
@@ -35,10 +57,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
         return LZWS_COMPRESSOR_UNKNOWN_STATUS;
     }
 
-    if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
-      // Algorithm wants more source, we have finished.
-      return 0;
-    } else if (result != 0) {
+    if (result != 0) {
       return result;
     }
   }

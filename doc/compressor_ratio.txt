@@ -52,4 +52,14 @@ This solution will be accurate and won't limit source length.
 
 -----
 
+What is the worst possible ratio?
+The worst possible scenario: each source byte provides 2 destination bytes (16 bit codes).
+This scenario is not possible but we could limit ratio >= 1/2.
+
+The maximum possible m (new source length) is 10000.
+So maximum possible n (new destination length) <= 20000.
+We can use 16 bit unassigned integers for both m and n.
+
+-----
+
 PS we shouldn't clear when dictionary is full.
