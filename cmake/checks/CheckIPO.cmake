@@ -18,4 +18,6 @@ function (cmake_check_ipo)
 
   set (CMAKE_HAVE_IPO false CACHE STRING "status of IPO support")
   message (STATUS "Status of IPO support - no")
+
+  mark_as_advanced(CMAKE_HAVE_IPO)
 endfunction ()

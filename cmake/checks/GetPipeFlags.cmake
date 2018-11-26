@@ -31,4 +31,6 @@ function (cmake_get_pipe_flags)
   endif ()
 
   set (CMAKE_GET_PIPE_FLAGS_PROCESSED true CACHE STRING "get pipe flags processed")
+
+  mark_as_advanced(CMAKE_GET_PIPE_FLAGS_PROCESSED CMAKE_PIPE_C_FLAGS)
 endfunction ()
