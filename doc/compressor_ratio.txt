@@ -1,8 +1,8 @@
-We have created tar archive from directory and wants to compress it (create tar.Z).
+We have created tar archive from directory and want to compress it (create tar.Z).
 Let's imagine that first file in tar will be binary image.
 LZW compression will not be effective with binary files.
 But there are many text files after binary image in tar.
-So we can reset dictionary and send clear code.
+So we can reset dictionary and send clear code after binary file.
 
 Efficiency of compression can be measured as source bytes length / destination bytes length.
 This efficiency is known as compression ratio (or just ratio).
