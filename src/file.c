@@ -148,13 +148,7 @@ static lzws_result_t compress_data(
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length);
 }
 
-lzws_result_t lzws_file_compress(
-    FILE*   source_file,
-    size_t  source_buffer_length,
-    FILE*   destination_file,
-    size_t  destination_buffer_length,
-    uint8_t max_code_bits,
-    bool    block_mode) {
+lzws_result_t lzws_file_compress(FILE* source_file, size_t source_buffer_length, FILE* destination_file, size_t destination_buffer_length, uint8_t max_code_bits, bool block_mode) {
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
 

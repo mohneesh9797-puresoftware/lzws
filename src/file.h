@@ -35,12 +35,6 @@ enum {
 #define DEFAULT_DESTINATION_BUFFER_LENGTH DEFAULT_SOURCE_BUFFER_LENGTH
 
 // "source_buffer_length" and "destination_buffer_length" can be equal to 0, it will use default values.
-lzws_result_t lzws_file_compress(
-    FILE*   source_file,
-    size_t  source_buffer_length,
-    FILE*   destination_file,
-    size_t  destination_buffer_length,
-    uint8_t max_code_bits,
-    bool    block_mode);
+lzws_result_t lzws_file_compress(FILE* source_file, size_t source_buffer_length, FILE* destination_file, size_t destination_buffer_length, uint8_t max_code_bits, bool block_mode);
 
 #endif // LZWS_FILE_H
