@@ -14,5 +14,7 @@ int main() {
 
   assert(mpz_cmp(r1, r2) < 0);
 
+  mpz_clears(a, b, c, r1, r2, NULL);
+
   return 0;
 }

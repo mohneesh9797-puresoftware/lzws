@@ -5,6 +5,7 @@
 #include "../constants.h"
 
 #include "dictionary/wrapper.h"
+#include "ratio/main.h"
 
 #include "common.h"
 #include "state.h"
@@ -36,6 +37,7 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state->remainder_bits = 0;
 
   lzws_compressor_initialize_dictionary_wrapper(state);
+  lzws_compressor_initialize_ratio(state);
 
   *result = state;
 
@@ -44,5 +46,7 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
 
 void lzws_compressor_free_state(lzws_compressor_state_t* state) {
   lzws_compressor_free_dictionary_wrapper(state);
+  lzws_compressor_free_ratio(state);
+
   free(state);
 }

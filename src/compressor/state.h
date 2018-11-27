@@ -5,7 +5,8 @@
 #if !defined(LZWS_COMPRESSOR_STATE_H)
 #define LZWS_COMPRESSOR_STATE_H
 
-#include "dictionary/main.h"
+#include "dictionary/type.h"
+#include "ratio/type.h"
 
 enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,
@@ -35,6 +36,7 @@ typedef struct {
   uint8_t remainder_bits;
 
   lzws_compressor_dictionary_t dictionary;
+  lzws_compressor_ratio_t      ratio;
 } lzws_compressor_state_t;
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);

@@ -3,9 +3,9 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "../constants.h"
-#include "../utils.h"
 
 #include "common.h"
+#include "utils.h"
 #include "write.h"
 
 lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
@@ -34,7 +34,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state,
     code >>= code_mask_bits;
     code_bits -= code_mask_bits;
 
-    lzws_write_byte(destination, destination_length, byte);
+    lzws_compressor_write_byte(state, destination, destination_length, byte);
   }
 
   while (code_bits >= 8) {
@@ -42,7 +42,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state,
     code >>= 8;
     code_bits -= 8;
 
-    lzws_write_byte(destination, destination_length, byte);
+    lzws_compressor_write_byte(state, destination, destination_length, byte);
   }
 
   // We should keep current code as is.
@@ -62,7 +62,7 @@ static inline lzws_result_t write_remainder(lzws_compressor_state_t* state, uint
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzws_write_byte(destination, destination_length, state->remainder);
+  lzws_compressor_write_byte(state, destination, destination_length, state->remainder);
 
   state->remainder      = 0;
   state->remainder_bits = 0;

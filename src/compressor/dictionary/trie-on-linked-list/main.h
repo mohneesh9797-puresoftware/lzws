@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-#include "../../../common.h"
+#include "type.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_C)
@@ -15,14 +15,6 @@
 #else
 #define LZWS_INLINE inline
 #endif
-
-typedef struct {
-  uint8_t initial_code_offset;
-
-  lzws_code_t* first_child_codes;
-  lzws_code_t* next_sibling_codes;
-  uint8_t*     symbol_by_codes;
-} lzws_compressor_dictionary_t;
 
 LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t initial_used_code) {
   dictionary->initial_code_offset = initial_used_code + 1;

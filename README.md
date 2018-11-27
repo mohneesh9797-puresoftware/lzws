@@ -140,7 +140,7 @@ It is well documented.
 
 `ncompress` code is not user friendly.
 It is full of goto, inliners and it has no comments or any documentation.
-I've found here some [overflow issues](https://github.com/vapier/ncompress/issues/17).
+I've found here some overflow issues.
 It is very hard to modify it for streaming purposes.
 It has no tests.
 

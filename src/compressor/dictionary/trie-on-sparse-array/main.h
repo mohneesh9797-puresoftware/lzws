@@ -5,11 +5,12 @@
 #if !defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_SPARSE_ARRAY_MAIN_H)
 #define LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_SPARSE_ARRAY_MAIN_H
 
-#include "../../../common.h"
 #include "../../../constants.h"
 #include "../../../macro.h"
 #include "../../../utils.h"
 #include "../../common.h"
+
+#include "type.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_SPARSE_ARRAY_MAIN_C)
@@ -17,10 +18,6 @@
 #else
 #define LZWS_INLINE inline
 #endif
-
-typedef struct {
-  lzws_code_t* codes;
-} lzws_compressor_dictionary_t;
 
 LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t LZWS_UNUSED(initial_used_code)) {
   dictionary->codes = NULL;
