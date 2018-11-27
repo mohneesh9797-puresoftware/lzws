@@ -2,7 +2,7 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "dictionary/state.h"
+#include "dictionary/wrapper.h"
 
 #include "common.h"
 #include "header.h"
@@ -23,7 +23,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
   }
 
   if (state->status == LZWS_COMPRESSOR_ALLOCATE_DICTIONARY) {
-    result = lzws_compressor_allocate_dictionary_in_state(state);
+    result = lzws_compressor_allocate_dictionary_wrapper(state);
 
     if (result != 0) {
       return result;

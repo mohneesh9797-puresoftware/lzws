@@ -2,11 +2,9 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include <stdlib.h>
-
 #include "../constants.h"
 
-#include "dictionary/state.h"
+#include "dictionary/wrapper.h"
 
 #include "common.h"
 #include "state.h"
@@ -37,7 +35,7 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state->remainder      = 0;
   state->remainder_bits = 0;
 
-  lzws_compressor_initialize_dictionary_in_state(state);
+  lzws_compressor_initialize_dictionary_wrapper(state);
 
   *result = state;
 
@@ -45,6 +43,6 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
 }
 
 void lzws_compressor_free_state(lzws_compressor_state_t* state) {
-  lzws_compressor_free_dictionary_in_state(state);
+  lzws_compressor_free_dictionary_wrapper(state);
   free(state);
 }

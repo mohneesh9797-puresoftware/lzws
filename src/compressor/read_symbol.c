@@ -4,7 +4,7 @@
 
 #include "../utils.h"
 
-#include "dictionary/state.h"
+#include "dictionary/wrapper.h"
 
 #include "common.h"
 #include "read_symbol.h"
@@ -29,7 +29,7 @@ lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, 
 lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
   READ_SYMBOL
 
-  lzws_code_t next_code = lzws_compressor_get_next_code_from_dictionary_in_state(state, symbol);
+  lzws_code_t next_code = lzws_compressor_get_next_code_from_dictionary_wrapper(state, symbol);
   if (next_code != LZWS_UNDEFINED_NEXT_CODE) {
     // We found next code, it becomes new current code.
     state->current_code = next_code;

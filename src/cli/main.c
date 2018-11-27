@@ -19,7 +19,7 @@ static const char* help =
 
 static const char* options = "b:dmh";
 
-static void print_help() {
+static inline void print_help() {
   fprintf(stderr, help, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);
 }
 

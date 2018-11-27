@@ -5,8 +5,6 @@
 #if !defined(LZWS_COMPRESSOR_HEADER_H)
 #define LZWS_COMPRESSOR_HEADER_H
 
-#include <stdlib.h>
-
 #include "state.h"
 
 // This function is optional.

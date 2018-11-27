@@ -10,7 +10,7 @@
 
 // -- utils --
 
-static lzws_result_t allocate_buffer(uint8_t** result_buffer, size_t* result_buffer_length, size_t default_buffer_length) {
+static inline lzws_result_t allocate_buffer(uint8_t** result_buffer, size_t* result_buffer_length, size_t default_buffer_length) {
   size_t buffer_length = *result_buffer_length;
   if (buffer_length == 0) {
     buffer_length = default_buffer_length;
@@ -27,7 +27,7 @@ static lzws_result_t allocate_buffer(uint8_t** result_buffer, size_t* result_buf
   return 0;
 }
 
-static lzws_result_t allocate_buffers(uint8_t** result_source_buffer, size_t* result_source_buffer_length, uint8_t** result_destination_buffer, size_t* result_destination_buffer_length) {
+static inline lzws_result_t allocate_buffers(uint8_t** result_source_buffer, size_t* result_source_buffer_length, uint8_t** result_destination_buffer, size_t* result_destination_buffer_length) {
   uint8_t* source_buffer;
   size_t   source_buffer_length = *result_source_buffer_length;
 
@@ -57,7 +57,7 @@ static lzws_result_t allocate_buffers(uint8_t** result_source_buffer, size_t* re
 
 // -- writing file --
 
-static lzws_result_t write_data(FILE* destination_file, uint8_t* data, size_t data_length) {
+static inline lzws_result_t write_data(FILE* destination_file, uint8_t* data, size_t data_length) {
   if (fwrite(data, 1, data_length, destination_file) == 0) {
     return LZWS_FILE_WRITE_FAILED;
   }
@@ -88,7 +88,7 @@ static lzws_result_t write_data(FILE* destination_file, uint8_t* data, size_t da
     }                                                                       \
   }
 
-static lzws_result_t flush_destination_buffer(FILE* destination_file, uint8_t** destination, size_t* destination_length, uint8_t* destination_buffer, size_t destination_buffer_length) {
+static inline lzws_result_t flush_destination_buffer(FILE* destination_file, uint8_t** destination, size_t* destination_length, uint8_t* destination_buffer, size_t destination_buffer_length) {
   size_t data_length = destination_buffer_length - *destination_length;
   if (data_length == 0) {
     // We want to write more bytes at once, than buffer has.
@@ -106,7 +106,7 @@ static lzws_result_t flush_destination_buffer(FILE* destination_file, uint8_t** 
   return 0;
 }
 
-static lzws_result_t write_remaining_destination_buffer(FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length, size_t destination_length) {
+static inline lzws_result_t write_remaining_destination_buffer(FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length, size_t destination_length) {
   size_t data_length = destination_buffer_length - destination_length;
   if (data_length == 0) {
     return 0;
@@ -120,7 +120,7 @@ static lzws_result_t write_remaining_destination_buffer(FILE* destination_file, 
 #define COMPRESS_WITH_FLUSHING_BUFFER(...) \
   WITH_FLUSHING_BUFFER(LZWS_FILE_COMPRESSOR_FAILED, LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION, __VA_ARGS__)
 
-static lzws_result_t compress_data(
+static inline lzws_result_t compress_data(
     lzws_compressor_state_t* state,
     FILE*                    source_file,
     uint8_t*                 source_buffer,

@@ -5,13 +5,7 @@
 #if !defined(LZWS_COMPRESSOR_STATE_H)
 #define LZWS_COMPRESSOR_STATE_H
 
-#include "../config.h"
-
-#if defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
-#include "dictionary/trie-on-linked-list/main.h"
-#elif defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
-#include "dictionary/trie-on-sparse-array/main.h"
-#endif
+#include "dictionary/main.h"
 
 enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,

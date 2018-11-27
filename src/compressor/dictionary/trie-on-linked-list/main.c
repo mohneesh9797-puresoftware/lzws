@@ -2,19 +2,13 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#define LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_C
+
 #include "../../../constants.h"
 #include "../../../utils.h"
 #include "../../common.h"
 
 #include "main.h"
-
-void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t initial_used_code) {
-  dictionary->initial_code_offset = initial_used_code + 1;
-
-  dictionary->first_child_codes  = NULL;
-  dictionary->next_sibling_codes = NULL;
-  dictionary->symbol_by_codes    = NULL;
-}
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
   size_t total_codes = LZWS_POWERS_OF_TWO[max_code_bits];
@@ -105,18 +99,4 @@ void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* 
 
   first_child_codes[current_code]     = code;
   next_sibling_codes[next_code_index] = first_child_code;
-}
-
-void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary) {
-  if (dictionary->first_child_codes != NULL) {
-    free(dictionary->first_child_codes);
-  }
-
-  if (dictionary->next_sibling_codes != NULL) {
-    free(dictionary->next_sibling_codes);
-  }
-
-  if (dictionary->symbol_by_codes != NULL) {
-    free(dictionary->symbol_by_codes);
-  }
 }

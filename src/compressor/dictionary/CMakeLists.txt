@@ -4,11 +4,8 @@ elseif (LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
   add_subdirectory ("trie-on-sparse-array")
 endif ()
 
-set (HEADERS ${HEADERS}
-  "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/state.h"
-)
+set (HEADERS ${HEADERS} "${CMAKE_CURRENT_SOURCE_DIR}/wrapper.h")
 set (HEADERS ${HEADERS} PARENT_SCOPE)
 
-set (SOURCES ${SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/state.c")
+set (SOURCES ${SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/wrapper.c")
 set (SOURCES ${SOURCES} PARENT_SCOPE)
