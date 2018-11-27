@@ -28,17 +28,25 @@ LZWS_INLINE void lzws_compressor_initialize_ratio(lzws_compressor_state_t* state
 void lzws_compressor_calculate_clear_for_ratio(lzws_compressor_ratio_t* ratio);
 
 LZWS_INLINE void lzws_compressor_add_source_symbol_to_ratio(lzws_compressor_state_t* state) {
-  lzws_compressor_ratio_t ratio = state->ratio;
-
-  ratio.new_source_length++;
-  if (ratio.new_source_length != LZWS_RATIO_CHECKPOINT_GAP) {
+  if (lzws_compressor_is_dictionary_full(state)) {
+    // We don't need clear code when dictionary is full.
     return;
   }
 
-  lzws_compressor_calculate_clear_for_ratio(&ratio);
+  lzws_compressor_ratio_t ratio = state->ratio;
+
+  ratio.new_source_length++;
+  if (ratio.new_source_length == LZWS_RATIO_CHECKPOINT_GAP) {
+    lzws_compressor_calculate_clear_for_ratio(&ratio);
+  }
 }
 
 LZWS_INLINE void lzws_compressor_add_destination_symbol_to_ratio(lzws_compressor_state_t* state) {
+  if (lzws_compressor_is_dictionary_full(state)) {
+    // We don't need clear code when dictionary is full.
+    return;
+  }
+
   state->ratio.new_destination_length++;
 }
 

@@ -10,7 +10,7 @@
 #include "write.h"
 
 static inline lzws_code_t get_new_code(lzws_compressor_state_t* state) {
-  if (state->last_used_code == state->max_code) {
+  if (lzws_compressor_is_dictionary_full(state)) {
     // Dictionary is full.
     return LZWS_UNDEFINED_NEXT_CODE;
   }

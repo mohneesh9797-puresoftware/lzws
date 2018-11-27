@@ -8,6 +8,13 @@
 #include "dictionary/type.h"
 #include "ratio/type.h"
 
+#undef LZWS_INLINE
+#if defined(LZWS_COMPRESSOR_STATE_C)
+#define LZWS_INLINE
+#else
+#define LZWS_INLINE inline
+#endif
+
 enum {
   LZWS_COMPRESSOR_WRITE_HEADER = 1,
   LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,
@@ -41,5 +48,9 @@ typedef struct {
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
+
+LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state) {
+  return state->last_used_code == state->max_code;
+}
 
 #endif // LZWS_COMPRESSOR_STATE_H

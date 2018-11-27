@@ -20,7 +20,6 @@ Ratio from step 3 is lower than ratio from step 2.
 Ratio is not a smooth curve, we need more consolidated ratio to make a decision about clear.
 Original ncompress uses magic gap of 10000 source bytes between ratio checks.
 It uses the following terminology: doing ratio measurement on checkpoints, 10000 source bytes before each checkpoint.
-I think this terminology is good.
 
 So we have 2 checkpoints: last and current.
 Each checkpoint has ratio.
@@ -52,14 +51,31 @@ This solution will be accurate and won't limit source length.
 
 -----
 
-What is the worst possible ratio?
-The worst possible scenario: each source byte provides 2 destination bytes (16 bit codes).
-This scenario is not possible but we could limit ratio >= 1/2.
+Ncompress counts ratio when:
+1. Dictionary is full.
+2. New source bytes length >= 10000.
+3. We have written last code and going to switch to next prefix symbol.
 
-The maximum possible m (new source length) is 10000.
-So maximum possible n (new destination length) <= 20000.
-We can use 16 bit unassigned integers for both m and n.
+For example:
+We readed symbol "a" from source and resolved to write previous code.
+Than we are asking dictionary to give us a new code for previous code + "a".
+But dictionary is full.
+So we will count ratio now and think about clear code.
+Both "a" and previous code should be counted in new source length and new destination length.
 
 -----
 
-PS we shouldn't clear when dictionary is full.
+What size is required for new source length and new destination length?
+
+# TODO
+
+# What is the worst possible ratio for 10000 source bytes?
+# Each source byte provides 2 destination bytes (16 bit codes).
+# This scenario is not possible: we have 256 codes, 257 input byte will already be in dictionary.
+# But we could limit ratio > 1/2.
+
+# The maximum possible m (new source length) is 10000.
+# So maximum possible n (new destination length) <= 20000.
+# We can use 16 bit unassigned integers for both m and n.
+
+-----

@@ -19,11 +19,11 @@ void lzws_compressor_calculate_clear_for_ratio(lzws_compressor_ratio_t* ratio) {
 
   mpz_clears(destination_and_new_source, source_and_new_destination, NULL);
 
-  // We need to reset current ratio.
+  // We need to reset lengths in ratio.
 
   mpz_add_ui(ratio->source_length, ratio->source_length, ratio->new_source_length);
-  mpz_add_ui(ratio->destination_length, ratio->destination_length, ratio->new_destination_length);
+  ratio->new_source_length = 0;
 
-  ratio->new_source_length      = 0;
+  mpz_add_ui(ratio->destination_length, ratio->destination_length, ratio->new_destination_length);
   ratio->new_destination_length = 0;
 }
