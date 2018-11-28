@@ -15,9 +15,11 @@
 #endif
 
 LZWS_INLINE void lzws_compressor_initialize_ratio(lzws_compressor_state_t* state) {
-  lzws_compressor_ratio_t ratio = state->ratio;
+  if (!state->block_mode) {
+    return;
+  }
 
-  ratio.need_to_clear = false;
+  lzws_compressor_ratio_t ratio = state->ratio;
 
   ratio.new_source_length      = 0;
   ratio.new_destination_length = 0;
@@ -25,36 +27,49 @@ LZWS_INLINE void lzws_compressor_initialize_ratio(lzws_compressor_state_t* state
   mpz_inits(ratio.source_length, ratio.destination_length, NULL);
 }
 
-void lzws_compressor_calculate_clear_for_ratio(lzws_compressor_ratio_t* ratio);
-
 LZWS_INLINE void lzws_compressor_add_source_symbol_to_ratio(lzws_compressor_state_t* state) {
-  if (lzws_compressor_is_dictionary_full(state)) {
-    // We don't need clear code when dictionary is full.
+  if (!state->block_mode) {
     return;
   }
 
   lzws_compressor_ratio_t ratio = state->ratio;
 
-  ratio.new_source_length++;
-  if (ratio.new_source_length == LZWS_RATIO_CHECKPOINT_GAP) {
-    lzws_compressor_calculate_clear_for_ratio(&ratio);
+  if (lzws_compressor_is_dictionary_full(state)) {
+    ratio.new_source_length++;
+  } else {
+    mpz_add_ui(ratio.source_length, ratio.source_length, 1);
   }
 }
 
 LZWS_INLINE void lzws_compressor_add_destination_symbol_to_ratio(lzws_compressor_state_t* state) {
-  if (lzws_compressor_is_dictionary_full(state)) {
-    // We don't need clear code when dictionary is full.
+  if (!state->block_mode) {
     return;
   }
 
-  state->ratio.new_destination_length++;
+  lzws_compressor_ratio_t ratio = state->ratio;
+
+  if (lzws_compressor_is_dictionary_full(state)) {
+    ratio.new_destination_length++;
+  } else {
+    mpz_add_ui(ratio.destination_length, ratio.destination_length, 1);
+  }
 }
 
+bool lzws_compressor_get_need_to_clear_for_ratio(lzws_compressor_ratio_t* ratio);
+
 LZWS_INLINE bool lzws_compressor_need_to_clear_by_ratio(lzws_compressor_state_t* state) {
-  return state->ratio.need_to_clear;
+  if (!state->block_mode || !lzws_compressor_is_dictionary_full(state) || state->ratio.new_source_length < LZWS_RATIO_SOURCE_CHECKPOINT_GAP) {
+    return false;
+  }
+
+  return lzws_compressor_get_need_to_clear_for_ratio(&state->ratio);
 }
 
 LZWS_INLINE void lzws_compressor_free_ratio(lzws_compressor_state_t* state) {
+  if (!state->block_mode) {
+    return;
+  }
+
   lzws_compressor_ratio_t ratio = state->ratio;
 
   mpz_clears(ratio.source_length, ratio.destination_length, NULL);

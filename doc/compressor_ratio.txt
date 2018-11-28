@@ -57,7 +57,7 @@ Ncompress counts ratio when:
 3. We have written last code and going to switch to next prefix symbol.
 
 For example:
-We readed symbol "a" from source and resolved to write previous code.
+We read symbol "a" from source and resolved to write previous code.
 Than we are asking dictionary to give us a new code for previous code + "a".
 But dictionary is full.
 So we will count ratio now and think about clear code.
@@ -65,17 +65,24 @@ Both "a" and previous code should be counted in new source length and new destin
 
 -----
 
-What size is required for new source length and new destination length?
+Until dictionary is full we can increment source length and destination length.
+Both source length and destination length won't overflow.
 
-# TODO
+Than we can increment new source length and new destination length.
 
-# What is the worst possible ratio for 10000 source bytes?
-# Each source byte provides 2 destination bytes (16 bit codes).
-# This scenario is not possible: we have 256 codes, 257 input byte will already be in dictionary.
-# But we could limit ratio > 1/2.
+What will be the maximum for new source length?
+The worst scenario:
+We read 9999 bytes and we are waiting until last code will be written.
+The max source sequence for 1 destination byte (dictionary is full) has 2 ** 16 - 257 (block mode enabled) length.
+So we can say that new source length < 2 ** 16 + 9999.
+We have to use 32 bit unassigned integer for new source length.
 
-# The maximum possible m (new source length) is 10000.
-# So maximum possible n (new destination length) <= 20000.
-# We can use 16 bit unassigned integers for both m and n.
-
------
+What will be the maximum for new destination length?
+The worst scenario:
+Dictionary was filled by "aa..." input.
+Now we are receiving "bb..." input.
+Each source byte will provide 2 destination bytes (16 bit codes).
+So we can say that new destination length <= 20000.
+We can use 16 bit unassigned integer for new destination length.
+In practice it has no sense because struct alignment will eat this 16 bits.
+We will use 32 bit unassigned integer for new destination length too.

@@ -5,6 +5,7 @@
 #include "../constants.h"
 
 #include "dictionary/wrapper.h"
+#include "ratio/main.h"
 
 #include "process_code.h"
 #include "write.h"
@@ -32,6 +33,13 @@ static inline void process_next_symbol(lzws_compressor_state_t* state) {
     // Dictionary is not full.
     lzws_compressor_save_next_code_to_dictionary_wrapper(state, state->next_symbol, new_code);
   }
+
+  // if (lzws_compressor_need_to_clear_by_ratio(state)) {
+  //   state->current_code = LZWS_CLEAR_CODE;
+  //
+  //   // We don't need to change status, algorithm wants to process current code.
+  //   return;
+  // }
 
   state->current_code = state->next_symbol;
 

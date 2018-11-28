@@ -32,7 +32,7 @@ typedef uint16_t lzws_code_t;
 // We will use 0 as undefined next code.
 #define LZWS_UNDEFINED_NEXT_CODE 0
 #define LZWS_CLEAR_CODE 256
-#define LZWS_RATIO_CHECKPOINT_GAP 10000
+#define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 
 // Clear code can be used only in block mode.
 #define LZWS_INITIAL_USED_CODE 255
