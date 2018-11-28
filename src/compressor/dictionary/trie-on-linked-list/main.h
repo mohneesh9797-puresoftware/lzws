@@ -25,6 +25,7 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionar
 }
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits);
+void          lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits);
 lzws_code_t   lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t current_code, uint8_t symbol);
 void          lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t current_code, uint8_t symbol, lzws_code_t code);
 

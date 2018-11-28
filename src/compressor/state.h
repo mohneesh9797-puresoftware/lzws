@@ -47,6 +47,7 @@ typedef struct {
 } lzws_compressor_state_t;
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
+void          lzws_compressor_clear_state(lzws_compressor_state_t* state);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 
 LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state) {

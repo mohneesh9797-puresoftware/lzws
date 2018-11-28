@@ -46,6 +46,14 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   return 0;
 }
 
+void lzws_compressor_clear_state(lzws_compressor_state_t* state) {
+  state->last_used_code      = state->initial_used_code;
+  state->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
+
+  lzws_compressor_clear_dictionary_wrapper(state);
+  lzws_compressor_clear_ratio(state);
+}
+
 void lzws_compressor_free_state(lzws_compressor_state_t* state) {
   lzws_compressor_free_dictionary_wrapper(state);
   lzws_compressor_free_ratio(state);

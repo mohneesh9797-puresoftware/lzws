@@ -6,7 +6,15 @@
 
 #include "main.h"
 
-bool lzws_compressor_get_need_to_clear_for_ratio(lzws_compressor_ratio_t* ratio) {
+void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio) {
+  mpz_add_ui(ratio->source_length, ratio->source_length, ratio->new_source_length);
+  ratio->new_source_length = 0;
+
+  mpz_add_ui(ratio->destination_length, ratio->destination_length, ratio->new_destination_length);
+  ratio->new_destination_length = 0;
+}
+
+bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio) {
   // We need to clear when "destination_length" * "new_source_length" - "source_length" * "new_destination_length" < 0.
 
   mpz_t destination_and_new_source, source_and_new_destination;
@@ -19,13 +27,10 @@ bool lzws_compressor_get_need_to_clear_for_ratio(lzws_compressor_ratio_t* ratio)
 
   mpz_clears(destination_and_new_source, source_and_new_destination, NULL);
 
-  // We need to reset lengths in ratio.
+  // We need to clear ratio now.
+  // After sending clear code we will clear it again.
 
-  mpz_add_ui(ratio->source_length, ratio->source_length, ratio->new_source_length);
-  ratio->new_source_length = 0;
-
-  mpz_add_ui(ratio->destination_length, ratio->destination_length, ratio->new_destination_length);
-  ratio->new_destination_length = 0;
+  lzws_compressor_calculate_clear_ratio(ratio);
 
   return result;
 }

@@ -5,7 +5,6 @@
 #if !defined(LZWS_COMPRESSOR_DICTIONARY_WRAPPER_H)
 #define LZWS_COMPRESSOR_DICTIONARY_WRAPPER_H
 
-#include "../../macro.h"
 #include "../state.h"
 
 #include "main.h"
@@ -32,8 +31,8 @@ LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compr
   return 0;
 }
 
-LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* LZWS_UNUSED(state)) {
-  // TODO
+LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* state) {
+  lzws_compressor_clear_dictionary(&state->dictionary, state->max_code_bits);
 }
 
 LZWS_INLINE lzws_code_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state, uint8_t symbol) {

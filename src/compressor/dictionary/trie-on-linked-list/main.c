@@ -11,14 +11,13 @@
 #include "main.h"
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
-  size_t total_codes = LZWS_POWERS_OF_TWO[max_code_bits];
+  size_t  total_codes         = LZWS_POWERS_OF_TWO[max_code_bits];
+  uint8_t initial_code_offset = dictionary->initial_code_offset;
 
   lzws_code_t* first_child_codes = lzws_allocate_array(sizeof(lzws_code_t), total_codes, true, LZWS_UNDEFINED_NEXT_CODE);
   if (first_child_codes == NULL) {
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
-
-  uint8_t initial_code_offset = dictionary->initial_code_offset;
 
   lzws_code_t* next_sibling_codes = lzws_allocate_array(sizeof(lzws_code_t), total_codes - initial_code_offset, true, LZWS_UNDEFINED_NEXT_CODE);
   if (next_sibling_codes == NULL) {
@@ -44,6 +43,17 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   dictionary->symbol_by_codes    = symbol_by_codes;
 
   return 0;
+}
+
+void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
+  size_t  total_codes         = LZWS_POWERS_OF_TWO[max_code_bits];
+  uint8_t initial_code_offset = dictionary->initial_code_offset;
+
+  lzws_fill_array((uint8_t*)dictionary->first_child_codes, sizeof(lzws_code_t), total_codes, LZWS_UNDEFINED_NEXT_CODE);
+  lzws_fill_array((uint8_t*)dictionary->next_sibling_codes, sizeof(lzws_code_t), total_codes - initial_code_offset, LZWS_UNDEFINED_NEXT_CODE);
+
+  // We could keep symbol by codes as is.
+  // Algorithm will access only initialized symbols.
 }
 
 lzws_code_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary, lzws_code_t current_code, uint8_t symbol) {
