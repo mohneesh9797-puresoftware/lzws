@@ -27,14 +27,16 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, u
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
-  // We have at least one source symbol pending.
-  // Before reading this symbol we can reset dictionary.
-  // So this symbol will use dictionary after reset.
-  if (lzws_compressor_need_to_clear_by_ratio(state)) {
+  // We want to clear dictionary when there is at least one symbol that will use new dictionary.
+  // So we should check whether we need to clear dictionary before reading this symbol.
+  //
+  // Current code >= initial used code means that dictionary is still working on current source sequence.
+  // We couldn't clear dictionary during source sequence.
+  // We can ignore situation when current code equals clear code.
+  // So we can compare current code with alphabet length.
+  if (state->current_code < LZWS_ALPHABET_LENGTH && lzws_compressor_need_to_clear_by_ratio(state)) {
+    state->next_symbol  = state->current_code;
     state->current_code = LZWS_CLEAR_CODE;
-
-    // It is possible to keep next symbol as is.
-    // Algorithm won't touch next symbol without reinitialization.
 
     state->status = LZWS_COMPRESSOR_PROCESS_CURRENT_CODE;
 

@@ -2,8 +2,8 @@ We want to compress the following string:
 "abaaab"
 
 We will create dictionary:
-"a" - 97 (char code)
-"b" - 98 (char code)
+"a" - 97 (symbol code)
+"b" - 98 (symbol code)
 "ab" - 257
 "ba" - 258
 "aa" - 259
@@ -83,11 +83,11 @@ How to name them? Terminology is important.
 Lets use "first_child_codes" as first array and "next_sibling_codes" as second (from DOM terminology).
 
 Now lets try to encode new data "ca".
-Char code for "c" is 99, "first_child_codes[99]" equals "0" and we are going to add first child.
+Symbol code for "c" is 99, "first_child_codes[99]" equals "0" and we are going to add first child.
 "ca" will have code 261, so "first_child_codes[99] = 261" and we don't need to touch "next_sibling_codes".
 
 Now lets try to encode new data "ac".
-Char code for "a" is 97, "first_child_codes[97]" equals "257" and we are going to add next sibling.
+Symbol code for "a" is 97, "first_child_codes[97]" equals "257" and we are going to add next sibling.
 "ac" will have code 262, so "first_child_codes[97] = 262" and "next_sibling_codes[262 - 257] = 257"
 
 Result:
@@ -135,7 +135,7 @@ Symbol by codes:
 4 (261) -> "a"
 5 (262) -> "c"
 
-Char code for "a" is 97, "first_child_codes[97]" equals "262".
+Symbol code for "a" is 97, "first_child_codes[97]" equals "262".
 We will traverse all sibling nodes from "262" and find that code "259" has "a" symbol and "first_child_codes[259]" equals "260".
 "aac" will have code 263, so "first_child_codes[259] = 263" and "next_sibling_codes[263 - 257] = 260"
 Do not forget to "symbol_by_codes[263] = 'a'" too.

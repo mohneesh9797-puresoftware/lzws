@@ -29,17 +29,19 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
     }
   }
 
+  if (state->status == LZWS_COMPRESSOR_READ_FIRST_SYMBOL) {
+    result = lzws_compressor_read_first_symbol(state, source, source_length);
+
+    if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+      // Algorithm wants more source, we have finished.
+      return 0;
+    } else if (result != 0) {
+      return result;
+    }
+  }
+
   while (true) {
     switch (state->status) {
-      case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
-        result = lzws_compressor_read_first_symbol(state, source, source_length);
-
-        if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
-          // Algorithm wants more source, we have finished.
-          return 0;
-        }
-        break;
-
       case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
         result = lzws_compressor_read_next_symbol(state, source, source_length);
 
@@ -67,12 +69,9 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** de
   switch (state->status) {
     case LZWS_COMPRESSOR_WRITE_HEADER:
     case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
+    case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
       // We have no current code and remainder yet.
       return 0;
-
-    case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
-      // We have no current code but maybe we have remainder.
-      return lzws_compressor_write_remainder(state, destination, destination_length);
 
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
     case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:

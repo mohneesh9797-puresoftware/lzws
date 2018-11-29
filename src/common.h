@@ -31,6 +31,7 @@ typedef uint16_t lzws_code_t;
 // Code can have any value, but next code will always be > 255.
 // We will use 0 as undefined next code.
 #define LZWS_UNDEFINED_NEXT_CODE 0
+#define LZWS_ALPHABET_LENGTH 256
 #define LZWS_CLEAR_CODE 256
 #define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 

@@ -113,7 +113,7 @@ You can write your destination buffer to output.
 Than you need to provide new destination (same buffer for example).
 
 PS minimum `destination_length` is just 2 bytes, `source_length` is 1 byte.
-I can recommend to use 32 KB buffers for `trie-on-linked-list` and 1 MB for `trie-on-sparse-array`.
+We can recommend to use 32 KB buffers for `trie-on-linked-list` and 1 MB for `trie-on-sparse-array`.
 
 Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 

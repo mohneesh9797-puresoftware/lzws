@@ -38,7 +38,7 @@ bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* r
   mpz_inits(full_source, full_destination, NULL);
   mpz_add_ui(full_source, ratio->source_length, ratio->new_source_length);
   mpz_add_ui(full_destination, ratio->destination_length, ratio->new_destination_length);
-  gmp_fprintf(stderr, "ololo %u %Zu %u %Zu\n", result, full_source, ratio->new_source_length, full_destination);
+  gmp_fprintf(stderr, "ololo %u %Zu %Zu\n", result, full_source, full_destination);
   mpz_clears(full_source, full_destination, NULL);
   //
 
