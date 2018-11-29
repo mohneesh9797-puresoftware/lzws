@@ -9,24 +9,23 @@ This efficiency is known as compression ratio (or just ratio).
 This parameter changes during data processing.
 
 Let's consider 3 steps:
-1. We read 3 byte and outputs 2 bytes. Ratio is 3/2.
-2. We read 2 more bytes and outputs 1 more byte. Ratio is 5/3.
-3. We read 1 more bytes and outputs 2 more bytes. Ratio is 6/5.
+1. We read 3 byte and output 2 bytes. Ratio is 3/2.
+2. We read 2 more bytes and output 1 more byte. Ratio is 5/3.
+3. We read 1 more bytes and output 2 more bytes. Ratio is 6/5.
 
 3/2 < 5/3 > 6/5
-You can see that ratio from step 2 is bigger than ratio from step 1.
+We can see that ratio from step 2 is bigger than ratio from step 1.
 Ratio from step 3 is lower than ratio from step 2.
 
 Ratio is not a smooth curve, we need more consolidated ratio to make a decision about clear.
 Original ncompress uses magic gap of 10000 source bytes between ratio checks.
-It uses the following terminology: doing ratio measurement on checkpoints, 10000 source bytes before each checkpoint.
 
 So we have 2 checkpoints: last and current.
 Each checkpoint has ratio.
 We need to clear if last ratio is greater than current.
 
 There are 2 problems:
-1. On 32 bit system we couldn't count more than 4 GB source bytes length.
+1. Source length and destination length can overflow.
 2. Division is not accurate.
 
 Lets use simple mathematics.
@@ -49,40 +48,112 @@ This formular is much better: we need to process 2 multiplications and compare i
 We can use GMP library for such purpose.
 This solution will be accurate and won't limit source length.
 
+We will count these multiplications and comparison once per 10000 new source length.
+It won't provide a big performance penalty.
+
 -----
 
 Ncompress counts ratio when:
 1. Dictionary is full.
 2. New source bytes length >= 10000.
-3. We have written last code and going to switch to next prefix symbol.
+3. We have written last code and switched to next prefix symbol.
+4. We have at least 1 source symbol pending.
 
 For example:
-We read symbol "a" from source and resolved to write previous code.
-Than we are asking dictionary to give us a new code for previous code + "a".
-But dictionary is full.
-So we will count ratio now and think about clear code.
-Both "a" and previous code should be counted in new source length and new destination length.
+We read symbol "a" from source and resolved to write some code.
+We wrote this code.
+Both "a" and written code should be counted in new source length and new destination length.
+Than we can see that we have at least 1 more source symbol.
+Before reading this code we will count ratio and think about clear.
+
+This is reasonable because we have at least one symbol that will require dictionary after reset.
+
+So we need to increment new source length and new destination length until dictionary is full.
+What amount of bits should they have to avoid overflow?
 
 -----
 
-Until dictionary is full we can increment source length and destination length.
-Both source length and destination length won't overflow.
-
-Than we can increment new source length and new destination length.
-
 What will be the maximum for new source length?
 The worst scenario:
-We read 9999 bytes and we are waiting until last code will be written.
-The max source sequence for 1 destination byte (dictionary is full) has 2 ** 16 - 257 (block mode enabled) length.
-So we can say that new source length < 2 ** 16 + 9999.
-We have to use 32 bit unassigned integer for new source length.
+Input: "aaa..." > 4G.
+
+First code 97 will be written for 1-st input byte (1 byte).
+Second code 257 will be written for 2-st and 3-d bytes (2 bytes).
+
+So we have an arithmetic progression.
+First element is 1, second is 2.
+The amount of elements is (2 ** 16) - 1 - 256.
+Total source length is (1 + (2 ** 16) - 257) * ((2 ** 16) - 257) / 2 = 2130706560.
+
+Now dictionary is full.
+Than we will read source symbols until any code will be written.
+The longest source sequence for destination code is (2 ** 16) - 256.
+
+So total bytes: 2130706560 + (2 ** 16) - 256 < 2 ** 32.
+32 bit unassigned integer is enough for new source length.
+
+-----
 
 What will be the maximum for new destination length?
+
+We are going to output code when we have no substring in dictionary.
+So we need to count amount of bytes required to write each dictionary code.
+8 bit codes (will be written as 9 bit codes): 256.
+9 bit codes: (2 ** 9) - 1 - 257 = 254.
+10 bit codes: (2 ** 10) - 1 - (2 ** 9) - 1 = 510.
+We can see than n bit codes amount equals (2 ** (n - 1)) - 2.
+
+Total amount of bits:
+  256 * 9 +
+  ((2 ** 8) - 2)  * 9 +
+  ((2 ** 9) - 2)  * 10 +
+  ((2 ** 10) - 2) * 11 +
+  ((2 ** 11) - 2) * 12 +
+  ((2 ** 12) - 2) * 13 +
+  ((2 ** 13) - 2) * 14 +
+  ((2 ** 14) - 2) * 15 +
+  ((2 ** 15) - 2) * 16
+  = 983352.
+Total amount of bytes: 122919.
+
+Now dictionary is full.
+Than we will wait for any destination code.
+
+Please be aware that this scenario is not possible.
+It is just a way to limit new destination length from the top.
+
+So total bytes: 122919 + 2 = 122921 < 2 ** 32.
+32 bit unassigned integer is enough for new destination length too.
+
+-----
+
+Than we need to increment new source length and new destination length when dictionary is full.
+Will 32 bit unassigned integers be enough to avoid overflow?
+
+-----
+
+What will be the maximum for new source length?
+
 The worst scenario:
-Dictionary was filled by "aa..." input.
-Now we are receiving "bb..." input.
-Each source byte will provide 2 destination bytes (16 bit codes).
-So we can say that new destination length <= 20000.
-We can use 16 bit unassigned integer for new destination length.
-In practice it has no sense because struct alignment will eat this 16 bits.
-We will use 32 bit unassigned integer for new destination length too.
+We have counted 9999 source bytes.
+Than we are waiting for any destination code.
+The longest source sequence for destination code is (2 ** 16) - 256.
+
+Please be aware that this scenario is not possible.
+It is just a way to provide a rough limit for new source length from the top.
+
+So total bytes: 9999 + (2 ** 16) - 256 < 2 ** 32.
+32 bit unassigned integer is enough for new source length.
+
+-----
+
+What will be the maximum for new destination length?
+
+The worst scenario:
+Each source byte equals to 2 destination bytes.
+
+Please be aware that this scenario is not possible.
+It is just a way to provide a rough limit for new destination length from the top.
+
+So total bytes: 20000 < 2 ** 32.
+32 bit unassigned integer is enough for new destination length too.

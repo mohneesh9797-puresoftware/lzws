@@ -9,8 +9,6 @@
 
 #include "ratio/main.h"
 
-#include "state.h"
-
 #undef LZWS_INLINE
 #if defined(LZWS_COMPRESSOR_UTILS_C)
 #define LZWS_INLINE

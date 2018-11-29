@@ -32,13 +32,7 @@ LZWS_INLINE void lzws_compressor_add_source_symbol_to_ratio(lzws_compressor_stat
     return;
   }
 
-  lzws_compressor_ratio_t* ratio = &state->ratio;
-
-  if (lzws_compressor_is_dictionary_full(state)) {
-    ratio->new_source_length++;
-  } else {
-    mpz_add_ui(ratio->source_length, ratio->source_length, 1);
-  }
+  state->ratio.new_source_length++;
 }
 
 LZWS_INLINE void lzws_compressor_add_destination_symbol_to_ratio(lzws_compressor_state_t* state) {
@@ -46,13 +40,7 @@ LZWS_INLINE void lzws_compressor_add_destination_symbol_to_ratio(lzws_compressor
     return;
   }
 
-  lzws_compressor_ratio_t* ratio = &state->ratio;
-
-  if (lzws_compressor_is_dictionary_full(state)) {
-    ratio->new_destination_length++;
-  } else {
-    mpz_add_ui(ratio->destination_length, ratio->destination_length, 1);
-  }
+  state->ratio.new_destination_length++;
 }
 
 bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio);
