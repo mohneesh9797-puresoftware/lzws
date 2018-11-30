@@ -10,17 +10,19 @@
 static const char* help =
     "Overview: LZWS cli tool\n"
     "\n"
-    "Usage: lzws-cli [options] [< stdin] [> stdout]\n"
+    "Usage: lzws-cli [-%s] [< stdin] [> stdout]\n"
     "\n"
     "Options:\n"
-    "  -b = max code bits for compressor (%u-%u) (%u by default)\n"
+    "  -b = set max code bits (%u-%u) (%u by default) [compressor only]\n"
     "  -d = decompress (compress by default)\n"
-    "  -m = disable block mode (enabled by default)\n";
+    "  -h = print help\n"
+    "  -m = enable most significant bit (least significant bit used by default)\n"
+    "  -r = raw mode, disable block mode (enabled by default) [compressor only]\n";
 
-static const char* options = "b:dmh";
+static const char* options = "b:dhmr";
 
 static inline void print_help() {
-  fprintf(stderr, help, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);
+  fprintf(stderr, help, options, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);
 }
 
 int main(int argc, char** argv) {
@@ -30,6 +32,7 @@ int main(int argc, char** argv) {
 
   uint8_t max_code_bits = LZWS_BIGGEST_MAX_CODE_BITS;
   bool    block_mode    = true;
+  bool    msb           = false;
 
   while ((option = getopt(argc, argv, options)) != -1) {
     switch (option) {
@@ -40,6 +43,9 @@ int main(int argc, char** argv) {
         is_compressor = false;
         break;
       case 'm':
+        msb = true;
+        break;
+      case 'r':
         block_mode = false;
         break;
       default:
