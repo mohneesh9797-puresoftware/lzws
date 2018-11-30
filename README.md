@@ -49,7 +49,7 @@ make
 
 wget "https://cdn.kernel.org/pub/linux/kernel/v2.6/linux-2.6.39.tar.xz"
 tar xf linux-2.6.39.tar.xz
-tar cvf linux-2.6.39.tar linux-2.6.39
+tar cf linux-2.6.39.tar linux-2.6.39
 
 time ./src/cli/lzws-cli-static < linux-2.6.39.tar > linux-2.6.39.tar.Z
 time ./src/cli/lzws-cli-static -d < linux-2.6.39.tar.Z > linux-2.6.39.tar.new

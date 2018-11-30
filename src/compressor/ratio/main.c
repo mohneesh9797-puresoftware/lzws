@@ -14,8 +14,6 @@ void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio) {
   ratio->new_destination_length = 0;
 }
 
-#include <stdio.h>
-
 bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio) {
   // We don't need to clear when destination length equals to zero.
   // Source length won't be zero when destination length is not zero.
@@ -32,15 +30,6 @@ bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* r
   mpz_mul_ui(source_and_new_destination, ratio->source_length, ratio->new_destination_length);
 
   bool result = mpz_cmp(destination_and_new_source, source_and_new_destination) < 0;
-
-  //
-  mpz_t full_source, full_destination;
-  mpz_inits(full_source, full_destination, NULL);
-  mpz_add_ui(full_source, ratio->source_length, ratio->new_source_length);
-  mpz_add_ui(full_destination, ratio->destination_length, ratio->new_destination_length);
-  gmp_fprintf(stderr, "ololo %u %Zu %Zu\n", result, full_source, full_destination);
-  mpz_clears(full_source, full_destination, NULL);
-  //
 
   mpz_clears(destination_and_new_source, source_and_new_destination, NULL);
 

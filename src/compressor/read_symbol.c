@@ -5,6 +5,7 @@
 #include "dictionary/wrapper.h"
 #include "ratio/main.h"
 
+#include "common.h"
 #include "read_symbol.h"
 #include "utils.h"
 

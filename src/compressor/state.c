@@ -4,9 +4,12 @@
 
 #define LZWS_COMPRESSOR_STATE_C
 
+#include "../constants.h"
+
 #include "dictionary/wrapper.h"
 #include "ratio/main.h"
 
+#include "common.h"
 #include "state.h"
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result, uint8_t max_code_bits, bool block_mode) {

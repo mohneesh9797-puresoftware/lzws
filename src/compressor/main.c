@@ -4,6 +4,7 @@
 
 #include "dictionary/wrapper.h"
 
+#include "common.h"
 #include "header.h"
 #include "main.h"
 #include "process_code.h"
