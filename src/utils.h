@@ -18,8 +18,13 @@
 #endif
 
 LZWS_INLINE void lzws_fill_array(uint8_t* array, size_t size_of_item, size_t length, uint value) {
-  if (size_of_item == 1 || value == 0) {
+  if (size_of_item == 1) {
     memset(array, value, length);
+    return;
+  }
+
+  if (value == 0) {
+    memset(array, value, size_of_item * length);
     return;
   }
 
