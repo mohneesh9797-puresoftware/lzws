@@ -11,7 +11,7 @@ We need to write codes for "a", "b" and "c".
 Codes are 97, 98 and 99, but code width is 9 bit.
 How to write it?
 
-97 equals "001100001".
+97 equals "001100001" (left padded with zeroes).
 We will write last 8 bits "01100001" = 97 into first byte.
 The remainder bit is "0".
 
@@ -26,8 +26,13 @@ The remainder bits are "00".
 We will write last 8 bits "10001100" = 140 into third byte.
 The remainder bits are "001".
 
-Input is empty, we will output remainder "001" padded with "0" into last byte.
-We will write bytes using system "write" method and we won't care about LSB/MSB.
+Input is empty, we will output remainder "001" left padded with zeroes into last byte.
+
+This method is known as LSB.
+
+-----
+
+TODO MSB
 
 -----
 
@@ -40,6 +45,6 @@ We are trying to find code for next symbol in dictionary.
 If we found it we should keep code bits as is (9 bits).
 Codes from dictionary doesn't affect code bits.
 
-We added new code into it.
+We added new code into dictionary and it requires 10 bits.
 We have to write current code with current code bits (9 bits).
-Than we need to create new code for current symbol and increase code bits (10 bits).
+Than we can increase code bits (10 bits).

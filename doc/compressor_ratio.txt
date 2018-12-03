@@ -57,18 +57,24 @@ Ncompress counts ratio when:
 1. Dictionary is full.
 2. New source bytes length >= 10000.
 3. We have written last code and switched to next prefix symbol.
-4. We have at least 1 source symbol pending.
+4. We have at least 1 source symbol pending that will use new dictionary.
 
-For example:
-We read symbol "a" from source and resolved to write some code.
-We wrote this code.
-Both "a" and written code should be counted in new source length and new destination length.
-Than we can see that we have at least 1 more source symbol.
-Before reading this code we will count ratio and think about clear.
+Dictionary is not full.
+We will increment new source length and new destination length.
+Dictionary become full after we have written last code + new source bytes length >= 10000.
+We couldn't count ratio now because destination length is 0.
+So we will clear ratio and repeat procedure once again.
 
-This is reasonable because we have at least one symbol that will require dictionary after reset.
+Dictionary is full.
+We will increment new source length and new destination length.
+We have written last code + new source bytes length >= 10000 + there is at least 1 symbol pending.
+We will count ratio now and think about clear.
 
-So we need to increment new source length and new destination length until dictionary is full.
+So this process can be split into 2 steps.
+
+-----
+
+1 step: we need to increment new source length and new destination length until dictionary is full.
 What amount of bits should they have to avoid overflow?
 
 -----
@@ -79,6 +85,7 @@ Input: "aaa..." > 4G.
 
 First code 97 will be written for 1-st input byte (1 byte).
 Second code 257 will be written for 2-st and 3-d bytes (2 bytes).
+Third code 258 will be written for 4-th, 5-th and 6-th bytes (3 bytes).
 
 So we have an arithmetic progression.
 First element is 1, second is 2.
@@ -127,7 +134,7 @@ So total bytes: 122919 + 2 = 122921 < 2 ** 32.
 
 -----
 
-Than we need to increment new source length and new destination length when dictionary is full.
+2 step: we need to increment new source length and new destination length when dictionary is full.
 Will 32 bit unassigned integers be enough to avoid overflow?
 
 -----
