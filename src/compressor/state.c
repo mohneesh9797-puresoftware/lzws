@@ -12,7 +12,7 @@
 #include "common.h"
 #include "state.h"
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result, uint8_t max_code_bits, bool block_mode) {
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result, uint8_t max_code_bits, bool block_mode, bool msb) {
   if (max_code_bits < LZWS_LOWEST_MAX_CODE_BITS || max_code_bits > LZWS_BIGGEST_MAX_CODE_BITS) {
     return LZWS_COMPRESSOR_INVALID_MAX_CODE_BITS;
   }
@@ -26,6 +26,7 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
 
   state->max_code_bits = max_code_bits;
   state->block_mode    = block_mode;
+  state->msb           = msb;
 
   state->initial_used_code = lzws_get_initial_used_code(block_mode);
   state->max_code          = LZWS_POWERS_OF_TWO[max_code_bits] - 1;

@@ -29,6 +29,7 @@ typedef struct {
 
   uint8_t max_code_bits;
   bool    block_mode;
+  bool    msb;
 
   lzws_code_t initial_used_code;
   lzws_code_t max_code;
@@ -46,7 +47,7 @@ typedef struct {
   lzws_compressor_ratio_t      ratio;
 } lzws_compressor_state_t;
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode, bool msb);
 void          lzws_compressor_clear_state(lzws_compressor_state_t* state);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 

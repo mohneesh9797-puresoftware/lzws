@@ -32,7 +32,25 @@ This method is known as LSB.
 
 -----
 
-TODO MSB
+97 equals "001100001" (left padded with zeroes).
+We will write first 8 bits "00110000" in opposite direction ("00001100" = 12) into first byte.
+The remainder bit is "1".
+
+98 equals "001100010".
+We will shift remainder to add its bits from the top.
+"001100010 | (1 << 8)" equals "1001100010".
+We will write first 8 bits "10011000" in opposite direction ("00011001" = 25) into second byte.
+The remainder bits are "10".
+
+99 equals "001100011".
+"001100011 | (10 << 8)" equals "10001100011".
+We will write first 8 bits "10001100" in opposite direction ("00110001" = 49) into third byte.
+The remainder bits are "011".
+
+Input is empty, we will output remainder "011" right padded with zeroes in opposite direction ("01100000" -> "00000110" = 6) into last byte.
+
+This method is known as MSB.
+We can see that this method requires reversing bits in byte.
 
 -----
 

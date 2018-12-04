@@ -9,7 +9,7 @@
 
 // This function is optional.
 // Use it to be compatible with original UNIX compress utility.
-lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
+lzws_result_t lzws_compressor_write_magic_header(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length);
 lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length);
 
 #endif // LZWS_COMPRESSOR_HEADER_H

@@ -7,7 +7,7 @@
 #include "common.h"
 #include "header.h"
 
-lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length) {
+lzws_result_t lzws_compressor_write_magic_header(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
   if (*destination_length < 2) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }

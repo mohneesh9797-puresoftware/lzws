@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+extern const uint8_t  LZWS_REVERSE_BITS_TABLE[256];
 extern const uint32_t LZWS_POWERS_OF_TWO[];
 
 #endif // LZWS_CONSTANTS_H
