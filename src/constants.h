@@ -7,7 +7,10 @@
 
 #include <stdint.h>
 
-extern const uint8_t  LZWS_REVERSE_BITS_TABLE[];
-extern const uint32_t LZWS_POWERS_OF_TWO[];
+// The size of this table is standard to reverse single byte.
+extern const uint8_t LZWS_REVERSE_BITS_TABLE[256];
+
+// Algorithm will try to find 2 ** 0 - 2 ** 16 only.
+extern const uint32_t LZWS_POWERS_OF_TWO[17];
 
 #endif // LZWS_CONSTANTS_H

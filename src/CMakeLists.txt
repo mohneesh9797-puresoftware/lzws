@@ -13,12 +13,15 @@ configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 include (GenerateReverseBitsTable)
 generate_reverse_bits_table ()
 
+include (GeneratePowersOfTwoTable)
+generate_powers_of_two_table ()
+
 configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c")
 
 add_subdirectory ("compressor")
 
 set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "macro.h" "utils.h")
-set (SOURCES ${SOURCES} "common.c" "constants.c" "file.c" "utils.c")
+set (SOURCES ${SOURCES} "common.c" "file.c" "generated_constants.c" "utils.c")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 

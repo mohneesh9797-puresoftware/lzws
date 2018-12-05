@@ -6,9 +6,10 @@
 #define LZWS_UTILS_H
 
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "constants.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_UTILS_C)
@@ -64,6 +65,10 @@ LZWS_INLINE void lzws_write_byte(uint8_t** destination, size_t* destination_leng
   **destination = byte;
   (*destination)++;
   (*destination_length)--;
+}
+
+LZWS_INLINE uint8_t lzws_reverse_byte(uint8_t byte) {
+  return LZWS_REVERSE_BITS_TABLE[byte];
 }
 
 #endif // LZWS_UTILS_H
