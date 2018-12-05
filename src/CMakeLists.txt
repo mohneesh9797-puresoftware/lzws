@@ -13,7 +13,7 @@ configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 include (GenerateReverseBitsTable)
 generate_reverse_bits_table ()
 
-configure_file ("generated-constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated-constants.c")
+configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c")
 
 add_subdirectory ("compressor")
 
