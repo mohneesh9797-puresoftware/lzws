@@ -10,6 +10,11 @@ endif ()
 
 configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 
+include (GenerateReverseBitsTable)
+generate_reverse_bits_table ()
+
+configure_file ("generated-constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated-constants.c")
+
 add_subdirectory ("compressor")
 
 set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "macro.h" "utils.h")

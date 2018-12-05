@@ -6,7 +6,7 @@ function (cmake_get_pipe_flags)
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()
 
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/basic")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
   set (NAME "cmake_check_basic")
 
@@ -15,10 +15,10 @@ function (cmake_get_pipe_flags)
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -pipe"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE CHECK_OUTPUT_RESULT
+    OUTPUT_VARIABLE CHECK_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${CHECK_OUTPUT_RESULT})
+    message (STATUS ${CHECK_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 

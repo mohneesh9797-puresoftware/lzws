@@ -36,7 +36,12 @@ if (NOT LZWS_SHARED AND NOT LZWS_STATIC)
   message (FATAL_ERROR "Please enable building of shared or static libraries.")
 endif ()
 
-set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/checks" "${PROJECT_SOURCE_DIR}/cmake/finds")
+set (
+  CMAKE_MODULE_PATH
+  "${PROJECT_SOURCE_DIR}/cmake/checks"
+  "${PROJECT_SOURCE_DIR}/cmake/finds"
+  "${PROJECT_SOURCE_DIR}/cmake/generators"
+)
 
 include (GetVerboseFlags)
 cmake_get_verbose_flags ()
