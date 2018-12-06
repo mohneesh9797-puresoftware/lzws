@@ -22,6 +22,10 @@ LZWS_INLINE void lzws_compressor_read_byte(lzws_compressor_state_t* state, uint8
 }
 
 LZWS_INLINE void lzws_compressor_write_byte(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length, uint8_t byte) {
+  if (state->msb) {
+    byte = lzws_reverse_byte(byte);
+  }
+
   lzws_write_byte(destination, destination_length, byte);
   lzws_compressor_add_destination_symbol_to_ratio(state);
 }

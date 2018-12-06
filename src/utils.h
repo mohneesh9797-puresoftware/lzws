@@ -18,19 +18,32 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_fill_array(uint8_t* array, size_t size_of_item, size_t length, uint value) {
+LZWS_INLINE void lzws_fill_array(void* array, size_t size_of_item, size_t length, void* value) {
+  uint8_t* bytes      = value;
+  uint8_t  first_byte = bytes[0];
+
   if (size_of_item == 1) {
-    memset(array, value, length);
+    memset(array, first_byte, length);
     return;
   }
 
-  if (value == 0) {
-    memset(array, value, size_of_item * length);
+  // Size of item will always be > 1.
+  bool all_bytes_are_identical = true;
+
+  for (size_t byte_index = 1; byte_index < size_of_item; byte_index++) {
+    if (bytes[byte_index] != first_byte) {
+      all_bytes_are_identical = false;
+      break;
+    }
+  }
+
+  if (all_bytes_are_identical) {
+    memset(array, first_byte, size_of_item * length);
     return;
   }
 
   for (size_t index = 0; index < length; index++) {
-    memcpy(array + size_of_item * index, &value, size_of_item);
+    memcpy(array + size_of_item * index, value, size_of_item);
   }
 }
 
@@ -50,7 +63,7 @@ LZWS_INLINE void* lzws_allocate_array(size_t size_of_item, size_t length, bool d
     return NULL;
   }
 
-  lzws_fill_array((uint8_t*)array, size_of_item, length, default_value);
+  lzws_fill_array(array, size_of_item, length, &default_value);
 
   return array;
 }

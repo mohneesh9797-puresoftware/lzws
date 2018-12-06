@@ -12,8 +12,8 @@
 
 // -- utils --
 
-static inline lzws_result_t allocate_buffer(uint8_t** result_buffer, size_t* result_buffer_length, size_t default_buffer_length) {
-  size_t buffer_length = *result_buffer_length;
+static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer_length_ptr, size_t default_buffer_length) {
+  size_t buffer_length = *buffer_length_ptr;
   if (buffer_length == 0) {
     buffer_length = default_buffer_length;
   }
@@ -23,8 +23,8 @@ static inline lzws_result_t allocate_buffer(uint8_t** result_buffer, size_t* res
     return LZWS_FILE_ALLOCATE_FAILED;
   }
 
-  *result_buffer        = buffer;
-  *result_buffer_length = buffer_length;
+  *buffer_ptr        = buffer;
+  *buffer_length_ptr = buffer_length;
 
   return 0;
 }
