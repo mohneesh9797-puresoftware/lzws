@@ -25,8 +25,13 @@ int main() {
   uint8_t index = 0;
 
   while (true) {
-    if (index != 0 && index % BYTES_PER_LINE == 0) {
-      PRINT(LINE_PREFIX);
+    if (index != 0) {
+      if (index % BYTES_PER_LINE == 0) {
+        PRINT(LINE_TERMINATOR);
+        PRINT(LINE_PREFIX);
+      } else {
+        PRINT(BYTES_GLUE);
+      }
     }
 
     print_reversed_byte(index);
@@ -34,14 +39,7 @@ int main() {
     if (index == 255) {
       break;
     }
-
     index++;
-
-    if (index % BYTES_PER_LINE == 0) {
-      PRINT(LINE_TERMINATOR);
-    } else {
-      PRINT(BYTES_GLUE);
-    }
   }
 
   return 0;
