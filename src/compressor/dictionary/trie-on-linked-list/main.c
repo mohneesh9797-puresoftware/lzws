@@ -49,8 +49,9 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary, 
   size_t  total_codes         = LZWS_POWERS_OF_TWO[max_code_bits];
   uint8_t initial_code_offset = dictionary->initial_code_offset;
 
-  lzws_fill_array(dictionary->first_child_codes, sizeof(lzws_code_t), total_codes, LZWS_UNDEFINED_NEXT_CODE);
-  lzws_fill_array(dictionary->next_sibling_codes, sizeof(lzws_code_t), total_codes - initial_code_offset, LZWS_UNDEFINED_NEXT_CODE);
+  lzws_code_t undefined_next_code = LZWS_UNDEFINED_NEXT_CODE;
+  lzws_fill_array(dictionary->first_child_codes, sizeof(lzws_code_t), total_codes, &undefined_next_code);
+  lzws_fill_array(dictionary->next_sibling_codes, sizeof(lzws_code_t), total_codes - initial_code_offset, &undefined_next_code);
 
   // We could keep symbol by codes as is.
   // Algorithm will access only initialized symbols.
