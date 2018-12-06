@@ -3,7 +3,7 @@ function (cmake_check_gmp)
     return ()
   endif ()
 
-  find_package(GMP REQUIRED)
+  find_package (GMP REQUIRED)
 
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()
@@ -35,12 +35,14 @@ function (cmake_check_gmp)
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
   if (CHECK_RESULT)
-    set (CMAKE_GMP_WORKS true CACHE STRING "GMP working status")
+    set (CMAKE_GMP_WORKS true)
     message (STATUS "Status of GMP - working")
   else ()
-    set (CMAKE_GMP_WORKS false CACHE STRING "GMP working status")
+    set (CMAKE_GMP_WORKS false)
     message (FATAL_ERROR "Status of GMP - not working")
   endif ()
 
-  mark_as_advanced(CMAKE_GMP_WORKS)
+  set (CMAKE_GMP_WORKS ${CMAKE_GMP_WORKS} CACHE STRING "GMP working status")
+
+  mark_as_advanced (CMAKE_GMP_WORKS)
 endfunction ()

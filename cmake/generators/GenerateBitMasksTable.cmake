@@ -1,11 +1,11 @@
-function (generate_reverse_bits_table)
-  if (DEFINED CMAKE_REVERSE_BITS_TABLE)
+function (generate_bit_masks_table)
+  if (DEFINED CMAKE_BIT_MASKS_TABLE)
     return ()
   endif ()
 
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_reverse_bits_table")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/reverse_bits_table")
-  set (NAME "cmake_generator_reverse_bits_table")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_bit_masks_table")
+  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/bit_masks_table")
+  set (NAME "cmake_generator_bit_masks_table")
 
   try_compile (
     COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
@@ -18,7 +18,7 @@ function (generate_reverse_bits_table)
 
   if (NOT COMPILE_RESULT)
     FILE (REMOVE_RECURSE ${BINARY_DIR})
-    message (FATAL_ERROR "Reverse bits table - compilation failed")
+    message (FATAL_ERROR "Bit masks table - compilation failed")
   endif ()
 
   execute_process (
@@ -28,13 +28,13 @@ function (generate_reverse_bits_table)
   )
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  set (CMAKE_REVERSE_BITS_TABLE ${RUN_OUTPUT} PARENT_SCOPE)
+  set (CMAKE_BIT_MASKS_TABLE ${RUN_OUTPUT} PARENT_SCOPE)
 
   if (RUN_RESULT EQUAL 0)
-    message (STATUS "Reverse bits table - generated")
+    message (STATUS "Bit masks table - generated")
   else ()
-    message (FATAL_ERROR "Reverse bits table - failed to generate")
+    message (FATAL_ERROR "Bit masks table - failed to generate")
   endif ()
 
-  mark_as_advanced (CMAKE_REVERSE_BITS_TABLE)
+  mark_as_advanced (CMAKE_BIT_MASKS_TABLE)
 endfunction ()

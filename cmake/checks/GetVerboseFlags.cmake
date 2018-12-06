@@ -97,5 +97,5 @@ function (cmake_get_verbose_flags)
   set (CMAKE_VERBOSE_C_FLAGS ${CMAKE_VERBOSE_C_FLAGS} CACHE STRING "verbose C flags")
   set (CMAKE_GET_VERBOSE_FLAGS_PROCESSED true CACHE STRING "get verbose flags processed")
 
-  mark_as_advanced(CMAKE_GET_VERBOSE_FLAGS_PROCESSED CMAKE_VERBOSE_C_FLAGS)
+  mark_as_advanced (CMAKE_VERBOSE_C_FLAGS CMAKE_GET_VERBOSE_FLAGS_PROCESSED)
 endfunction ()

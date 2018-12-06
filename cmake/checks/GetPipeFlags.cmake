@@ -23,14 +23,15 @@ function (cmake_get_pipe_flags)
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
   if (CHECK_RESULT)
-    set (CMAKE_PIPE_C_FLAGS "-pipe" CACHE STRING "pipe C flags")
+    set (CMAKE_PIPE_C_FLAGS "-pipe")
     message (STATUS "Status of -pipe support - yes")
   else ()
-    set (CMAKE_PIPE_C_FLAGS "" CACHE STRING "pipe C flags")
+    set (CMAKE_PIPE_C_FLAGS "")
     message (STATUS "Status of -pipe support - no")
   endif ()
 
+  set (CMAKE_PIPE_C_FLAGS ${CMAKE_PIPE_C_FLAGS} CACHE STRING "pipe C flags")
   set (CMAKE_GET_PIPE_FLAGS_PROCESSED true CACHE STRING "get pipe flags processed")
 
-  mark_as_advanced(CMAKE_GET_PIPE_FLAGS_PROCESSED CMAKE_PIPE_C_FLAGS)
+  mark_as_advanced (CMAKE_GET_PIPE_FLAGS_PROCESSED CMAKE_PIPE_C_FLAGS)
 endfunction ()

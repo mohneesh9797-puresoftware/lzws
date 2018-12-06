@@ -39,8 +39,8 @@ static inline lzws_code_t get_new_code(lzws_compressor_state_t* state) {
   return new_code;
 }
 
-lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
-  lzws_result_t result = lzws_compressor_write_current_code(state, destination, destination_length);
+lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+  lzws_result_t result = lzws_compressor_write_current_code(state, destination_ptr, destination_length_ptr);
   if (result != 0) {
     return result;
   }

@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.9)
-project ("cmake_generator_reverse_bits_table" "C")
+project ("cmake_generator_bit_masks_table" "C")
 
 include ("../toolchain.cmake")
 

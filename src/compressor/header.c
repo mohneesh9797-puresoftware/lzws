@@ -7,20 +7,20 @@
 #include "common.h"
 #include "header.h"
 
-lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length) {
-  if (*destination_length < 2) {
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr) {
+  if (*destination_length_ptr < 2) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzws_write_byte(destination, destination_length, LZWS_MAGIC_HEADER_BYTE_0);
-  lzws_write_byte(destination, destination_length, LZWS_MAGIC_HEADER_BYTE_1);
+  lzws_write_byte(destination_ptr, destination_length_ptr, LZWS_MAGIC_HEADER_BYTE_0);
+  lzws_write_byte(destination_ptr, destination_length_ptr, LZWS_MAGIC_HEADER_BYTE_1);
 
   return 0;
 }
 
-lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
+lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr) {
   // Writing 1 byte for "max_code_bits" and "block_mode".
-  if (*destination_length < 1) {
+  if (*destination_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
@@ -29,7 +29,7 @@ lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state, uint8
     byte = byte | LZWS_BLOCK_MODE;
   }
 
-  lzws_write_byte(destination, destination_length, byte);
+  lzws_write_byte(destination_ptr, destination_length_ptr, byte);
 
   state->status = LZWS_COMPRESSOR_ALLOCATE_DICTIONARY;
 

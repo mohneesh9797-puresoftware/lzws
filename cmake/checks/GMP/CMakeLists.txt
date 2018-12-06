@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required (VERSION 3.9)
 project ("cmake_check_gmp" "C")
 
 set (CMAKE_TRY_RUN false CACHE BOOL "try run targets after build")
@@ -14,7 +14,7 @@ if (CMAKE_GMP_SHARED_LIBRARY_PATH)
   target_link_libraries ("main" ${CMAKE_GMP_SHARED_LIBRARY_PATH})
 
   if (CMAKE_TRY_RUN)
-    add_custom_command(
+    add_custom_command (
       TARGET "main"
       POST_BUILD
       COMMAND "./main"
@@ -28,7 +28,7 @@ if (CMAKE_GMP_STATIC_LIBRARY_PATH)
   target_link_libraries ("main-static" ${CMAKE_GMP_STATIC_LIBRARY_PATH})
 
   if (CMAKE_TRY_RUN)
-    add_custom_command(
+    add_custom_command (
       TARGET "main-static"
       POST_BUILD
       COMMAND "./main-static"

@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required (VERSION 3.9)
 project ("lzws" "C")
 
 if (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
-  message(FATAL_ERROR "In-source builds are not allowed")
+  message (FATAL_ERROR "In-source builds are not allowed")
 endif ()
 
 set (LZWS_VERSION "0.1")
@@ -58,7 +58,7 @@ cmake_check_ipo ()
 include (CheckRunnable)
 cmake_check_runnable ()
 
-find_package(GMP REQUIRED)
+find_package (GMP REQUIRED)
 
 include (CheckGMP)
 cmake_check_gmp ()

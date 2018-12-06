@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
   }
 
   if (is_compressor) {
-    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bits, block_mode) != 0) {
+    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bits, block_mode, msb) != 0) {
       return 2;
     }
   }

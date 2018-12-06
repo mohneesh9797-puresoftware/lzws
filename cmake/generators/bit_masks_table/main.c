@@ -6,7 +6,7 @@
 #define STR(x) #x
 
 #define MAX_INDEX 16
-#define NUMBER_WIDTH 5
+#define NUMBER_WIDTH 4
 
 #define BYTES_PER_LINE 4
 #define BYTES_GLUE ", "
@@ -26,7 +26,7 @@ int main() {
       }
     }
 
-    printf("0x%0" XSTR(NUMBER_WIDTH) "x", 1 << index);
+    printf("0x%0" XSTR(NUMBER_WIDTH) "x", (1 << index) - 1);
   }
 
   return 0;

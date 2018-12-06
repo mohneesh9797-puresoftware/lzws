@@ -11,11 +11,11 @@
 #include "read_symbol.h"
 #include "write.h"
 
-lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length) {
+lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
   lzws_result_t result;
 
   if (state->status == LZWS_COMPRESSOR_WRITE_HEADER) {
-    result = lzws_compressor_write_header(state, destination, destination_length);
+    result = lzws_compressor_write_header(state, destination_ptr, destination_length_ptr);
 
     if (result != 0) {
       return result;
@@ -31,7 +31,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
   }
 
   if (state->status == LZWS_COMPRESSOR_READ_FIRST_SYMBOL) {
-    result = lzws_compressor_read_first_symbol(state, source, source_length);
+    result = lzws_compressor_read_first_symbol(state, source_ptr, source_length_ptr);
 
     if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
       // Algorithm wants more source, we have finished.
@@ -44,7 +44,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
   while (true) {
     switch (state->status) {
       case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
-        result = lzws_compressor_read_next_symbol(state, source, source_length);
+        result = lzws_compressor_read_next_symbol(state, source_ptr, source_length_ptr);
 
         if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
           // Algorithm wants more source, we have finished.
@@ -53,7 +53,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
         break;
 
       case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
-        result = lzws_compressor_process_current_code(state, destination, destination_length);
+        result = lzws_compressor_process_current_code(state, destination_ptr, destination_length_ptr);
         break;
 
       default:
@@ -66,7 +66,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, si
   }
 }
 
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length) {
+lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr) {
   switch (state->status) {
     case LZWS_COMPRESSOR_WRITE_HEADER:
     case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
@@ -77,7 +77,7 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** de
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
     case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
       // We have current code and maybe remainder.
-      return lzws_compressor_write_current_code_and_remainder(state, destination, destination_length);
+      return lzws_compressor_write_current_code_and_remainder(state, destination_ptr, destination_length_ptr);
 
     default:
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;

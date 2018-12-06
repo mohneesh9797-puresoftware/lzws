@@ -8,13 +8,13 @@
 #include "read_symbol.h"
 #include "utils.h"
 
-lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
-  if (*source_length < 1) {
+lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr) {
+  if (*source_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
   uint8_t symbol;
-  lzws_compressor_read_byte(state, source, source_length, &symbol);
+  lzws_compressor_read_byte(state, source_ptr, source_length_ptr, &symbol);
 
   state->current_code = symbol;
   state->status       = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
@@ -22,8 +22,8 @@ lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, 
   return 0;
 }
 
-lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length) {
-  if (*source_length < 1) {
+lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr) {
+  if (*source_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
@@ -44,7 +44,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, u
   }
 
   uint8_t symbol;
-  lzws_compressor_read_byte(state, source, source_length, &symbol);
+  lzws_compressor_read_byte(state, source_ptr, source_length_ptr, &symbol);
 
   lzws_code_t next_code = lzws_compressor_get_next_code_from_dictionary_wrapper(state, symbol);
   if (next_code != LZWS_UNDEFINED_NEXT_CODE) {

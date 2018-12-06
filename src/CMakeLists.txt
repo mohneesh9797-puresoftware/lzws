@@ -1,8 +1,8 @@
 if (LZWS_DICTIONARY STREQUAL "trie-on-linked-list")
-  message(STATUS "Dictionary - trie on linked list")
+  message (STATUS "Dictionary - trie on linked list")
   set (LZWS_DICTIONARY_TRIE_ON_LINKED_LIST true)
 elseif (LZWS_DICTIONARY STREQUAL "trie-on-sparse-array")
-  message(STATUS "Dictionary - trie on sparse array")
+  message (STATUS "Dictionary - trie on sparse array")
   set (LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY true)
 else ()
   message (FATAL_ERROR "Invalid dictionary implementation: ${LZWS_DICTIONARY}")
@@ -15,6 +15,9 @@ generate_reverse_bits_table ()
 
 include (GeneratePowersOfTwoTable)
 generate_powers_of_two_table ()
+
+include (GenerateBitMasksTable)
+generate_bit_masks_table ()
 
 configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c")
 
@@ -43,4 +46,4 @@ endif ()
 
 if (LZWS_CLI)
   add_subdirectory ("cli")
-endif()
+endif ()

@@ -43,7 +43,7 @@ LZWS_INLINE void lzws_fill_array(void* array, size_t size_of_item, size_t length
   }
 
   for (size_t index = 0; index < length; index++) {
-    memcpy(array + size_of_item * index, value, size_of_item);
+    memcpy((uint8_t*)array + size_of_item * index, value, size_of_item);
   }
 }
 
@@ -68,20 +68,20 @@ LZWS_INLINE void* lzws_allocate_array(size_t size_of_item, size_t length, bool d
   return array;
 }
 
-LZWS_INLINE void lzws_read_byte(uint8_t** source, size_t* source_length, uint8_t* byte) {
-  *byte = **source;
-  (*source)++;
-  (*source_length)--;
+LZWS_INLINE void lzws_read_byte(uint8_t** source_ptr, size_t* source_length_ptr, uint8_t* byte) {
+  *byte = **source_ptr;
+  (*source_ptr)++;
+  (*source_length_ptr)--;
 }
 
-LZWS_INLINE void lzws_write_byte(uint8_t** destination, size_t* destination_length, uint8_t byte) {
-  **destination = byte;
-  (*destination)++;
-  (*destination_length)--;
+LZWS_INLINE void lzws_write_byte(uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t byte) {
+  **destination_ptr = byte;
+  (*destination_ptr)++;
+  (*destination_length_ptr)--;
 }
 
 LZWS_INLINE uint8_t lzws_reverse_byte(uint8_t byte) {
-  return LZWS_REVERSE_BITS_TABLE[byte];
+  return LZWS_REVERSE_BITS[byte];
 }
 
 #endif // LZWS_UTILS_H

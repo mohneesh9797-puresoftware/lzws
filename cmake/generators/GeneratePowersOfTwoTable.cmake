@@ -21,17 +21,20 @@ function (generate_powers_of_two_table)
     message (FATAL_ERROR "Powers of two table - compilation failed")
   endif ()
 
-  execute_process(
+  execute_process (
     COMMAND "${BINARY_DIR}/main"
     RESULT_VARIABLE RUN_RESULT
     OUTPUT_VARIABLE RUN_OUTPUT
   )
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
+  set (CMAKE_POWERS_OF_TWO_TABLE ${RUN_OUTPUT} PARENT_SCOPE)
+
   if (RUN_RESULT EQUAL 0)
-    set (CMAKE_POWERS_OF_TWO_TABLE ${RUN_OUTPUT} CACHE STRING "powers of two table")
     message (STATUS "Powers of two table - generated")
   else ()
     message (FATAL_ERROR "Powers of two table - failed to generate")
   endif ()
+
+  mark_as_advanced (CMAKE_POWERS_OF_TWO_TABLE)
 endfunction ()

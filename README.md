@@ -78,19 +78,19 @@ make package
 ```c
 // This function is optional.
 // Use it to be compatible with with original UNIX compress utility.
-lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination, size_t* destination_length);
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 
-lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length, uint8_t** destination, size_t* destination_length);
+lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 // Use this function when you have no source (received EOF for example).
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination, size_t* destination_length);
+lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr);
 ```
 
-You can see that input was implemented using `uint8_t** source, size_t* source_length` and output with `uint8_t** destination, size_t* destination_length`.
-Functions will read bytes and change both `source`, `source_length`, write bytes and change both `destination` and `destination_length`.
+You can see that input was implemented using `uint8_t** source_ptr, size_t* source_length_ptr` and output with `uint8_t** destination_ptr, size_t* destination_length_ptr`.
+Functions will read bytes and change both `source_ptr`, `source_length_ptr`, write bytes and change both `destination_ptr` and `destination_length_ptr`.
 
 These methods are framework agnostic. You are free to use it with any files, buffers, sockets, etc.
 You can use it with synchronous or asynchronous code.

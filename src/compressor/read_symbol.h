@@ -7,7 +7,7 @@
 
 #include "state.h"
 
-lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length);
-lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, uint8_t** source, size_t* source_length);
+lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr);
+lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr);
 
 #endif // LZWS_COMPRESSOR_READ_SYMBOL_H
