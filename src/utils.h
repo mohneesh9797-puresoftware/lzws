@@ -84,4 +84,12 @@ LZWS_INLINE uint8_t lzws_reverse_byte(uint8_t byte) {
   return LZWS_REVERSE_BITS[byte];
 }
 
+LZWS_INLINE uint32_t lzws_get_power_of_two(uint8_t power) {
+  return LZWS_POWERS_OF_TWO[power];
+}
+
+LZWS_INLINE uint16_t lzws_get_bit_mask(uint8_t bits) {
+  return LZWS_BIT_MASKS[bits];
+}
+
 #endif // LZWS_UTILS_H

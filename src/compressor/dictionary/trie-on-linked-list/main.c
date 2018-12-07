@@ -10,7 +10,7 @@
 #include "main.h"
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
-  size_t  total_codes         = LZWS_POWERS_OF_TWO[max_code_bits];
+  size_t  total_codes         = lzws_get_power_of_two(max_code_bits);
   uint8_t initial_code_offset = dictionary->initial_code_offset;
 
   lzws_code_t* first_child_codes = lzws_allocate_array(sizeof(lzws_code_t), total_codes, true, LZWS_UNDEFINED_NEXT_CODE);
@@ -45,7 +45,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 }
 
 void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
-  size_t  total_codes         = LZWS_POWERS_OF_TWO[max_code_bits];
+  size_t  total_codes         = lzws_get_power_of_two(max_code_bits);
   uint8_t initial_code_offset = dictionary->initial_code_offset;
 
   lzws_code_t undefined_next_code = LZWS_UNDEFINED_NEXT_CODE;

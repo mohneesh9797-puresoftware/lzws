@@ -23,7 +23,7 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionar
 }
 
 LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
-  size_t total_codes = LZWS_POWERS_OF_TWO[max_code_bits];
+  size_t total_codes = lzws_get_power_of_two(max_code_bits);
 
   lzws_code_t* codes = lzws_allocate_array(sizeof(lzws_code_t), total_codes * LZWS_ALPHABET_LENGTH, true, LZWS_UNDEFINED_NEXT_CODE);
   if (codes == NULL) {
@@ -36,7 +36,7 @@ LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_di
 }
 
 LZWS_INLINE void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary, uint8_t max_code_bits) {
-  size_t total_codes = LZWS_POWERS_OF_TWO[max_code_bits];
+  size_t total_codes = lzws_get_power_of_two(max_code_bits);
 
   lzws_code_t undefined_next_code = LZWS_UNDEFINED_NEXT_CODE;
   lzws_fill_array(dictionary->codes, sizeof(lzws_code_t), total_codes * LZWS_ALPHABET_LENGTH, &undefined_next_code);

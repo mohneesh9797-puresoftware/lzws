@@ -2,12 +2,11 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "../constants.h"
-
 #include "dictionary/wrapper.h"
 #include "ratio/main.h"
 
 #include "process_code.h"
+#include "utils.h"
 #include "write.h"
 
 static inline void read_next_symbol(lzws_compressor_state_t* state) {
@@ -27,7 +26,7 @@ static inline lzws_code_t get_new_code(lzws_compressor_state_t* state) {
   state->last_used_code++;
   lzws_code_t new_code = state->last_used_code;
 
-  lzws_code_t first_code_for_next_code_bits = LZWS_POWERS_OF_TWO[state->last_used_code_bits];
+  lzws_code_t first_code_for_next_code_bits = lzws_get_power_of_two(state->last_used_code_bits);
   if (new_code == first_code_for_next_code_bits) {
     state->last_used_code_bits++;
   }

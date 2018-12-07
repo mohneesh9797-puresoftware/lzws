@@ -25,10 +25,10 @@ static inline uint8_t get_byte(lzws_code_t* code_ptr, uint8_t* code_bits_ptr, ui
     }
 
     // Removing first bits.
-    code &= LZWS_BIT_MASKS[remaining_bits];
+    code &= lzws_get_bit_mask(remaining_bits);
   } else {
     // Taking last bits.
-    byte = code & LZWS_BIT_MASKS[current_bits];
+    byte = code & lzws_get_bit_mask(current_bits);
 
     if (remainder_bits != 0) {
       // Remainder is sitting on the bottom.
