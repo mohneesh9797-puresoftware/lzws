@@ -4,7 +4,6 @@
 
 #define LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_C
 
-#include "../../../constants.h"
 #include "../../../utils.h"
 #include "../../common.h"
 

@@ -35,51 +35,52 @@ function (cmake_check_c11)
     set (CMAKE_HAVE_C11 true)
     set (CMAKE_C11_C_FLAGS "-std=gnu11")
     message (STATUS "Status of C11 support - gnu11")
-    return ()
   endif ()
 
   # -- -c11 --
 
-  try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
-    CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -std=c11"
-      "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-      "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
-    OUTPUT_VARIABLE CHECK_OUTPUT
-  )
-  if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${CHECK_OUTPUT})
-  endif ()
-  FILE (REMOVE_RECURSE ${BINARY_DIR})
+  if (NOT CHECK_RESULT)
+    try_compile (
+      CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+      CMAKE_FLAGS
+        "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -std=c11"
+        "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
+        "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
+      OUTPUT_VARIABLE CHECK_OUTPUT
+    )
+    if (CMAKE_VERBOSE_MAKEFILE)
+      message (STATUS ${CHECK_OUTPUT})
+    endif ()
+    FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
-    set (CMAKE_HAVE_C11 true)
-    set (CMAKE_C11_C_FLAGS "-std=c11")
-    message (STATUS "Status of C11 support - c11")
-    return ()
+    if (CHECK_RESULT)
+      set (CMAKE_HAVE_C11 true)
+      set (CMAKE_C11_C_FLAGS "-std=c11")
+      message (STATUS "Status of C11 support - c11")
+    endif ()
   endif ()
 
   # -- vanilla --
 
-  try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
-    CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
-      "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-      "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
-    OUTPUT_VARIABLE CHECK_OUTPUT
-  )
-  if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${CHECK_OUTPUT})
-  endif ()
-  FILE (REMOVE_RECURSE ${BINARY_DIR})
+  if (NOT CHECK_RESULT)
+    try_compile (
+      CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+      CMAKE_FLAGS
+        "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
+        "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
+        "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
+      OUTPUT_VARIABLE CHECK_OUTPUT
+    )
+    if (CMAKE_VERBOSE_MAKEFILE)
+      message (STATUS ${CHECK_OUTPUT})
+    endif ()
+    FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
-    set (CMAKE_HAVE_C11 true)
-    set (CMAKE_C11_C_FLAGS "")
-    message (STATUS "Status of C11 support - vanilla")
-    return ()
+    if (CHECK_RESULT)
+      set (CMAKE_HAVE_C11 true)
+      set (CMAKE_C11_C_FLAGS "")
+      message (STATUS "Status of C11 support - vanilla")
+    endif ()
   endif ()
 
   # -- no support --

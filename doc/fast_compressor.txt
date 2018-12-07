@@ -35,4 +35,4 @@ How much memory will it consume?
 ((2 ** 16) * 256) * sizeof(code) ~ 33.5 MB
 I think it is not a big deal when we need maximum performance.
 
-Please use this algorithm when you have big amount of data > 50 MB.
+Please use this algorithm when you have big amount of data > 200 MB.

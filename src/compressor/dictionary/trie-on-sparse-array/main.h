@@ -5,7 +5,6 @@
 #if !defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_SPARSE_ARRAY_MAIN_H)
 #define LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_SPARSE_ARRAY_MAIN_H
 
-#include "../../../constants.h"
 #include "../../../macro.h"
 #include "../../../utils.h"
 #include "../../common.h"

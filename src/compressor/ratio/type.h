@@ -6,7 +6,6 @@
 #define LZWS_COMPRESSOR_RATIO_TYPE_H
 
 #include <gmp.h>
-#include <stdbool.h>
 #include <stdint.h>
 
 typedef struct {

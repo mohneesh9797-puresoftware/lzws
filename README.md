@@ -1,16 +1,19 @@
+# WIP
+Compressor is almost done, decompressor is pending.
+
 # LZW + Stream = LZWS
 
 LZW streaming compressor/decompressor (LZW + Stream = LZWS) based on LZW AB.
 
 It consists of library and cli tool.
-Cli tool should be compatible with recent version of [ncompress](https://github.com/vapier/ncompress) and [gzip unlzw](https://github.com/Distrotech/gzip/blob/distrotech-gzip/unlzw.c).
+Cli tool should be compatible with original UNIX `compress`, [ncompress](https://github.com/vapier/ncompress) and [gzip unlzw](https://github.com/Distrotech/gzip/blob/distrotech-gzip/unlzw.c).
 
 The main goal of the project is to provide streaming interface for lzw compressor. This interface is framework agnostic and can be used in any application.
 
 ## Dictionary implementations
 
-* Trie based on linked list (idea from LZW AB). Low memory usage <= 327 KB (16 bit codes) but slow. Use it for small data < 50 MB.
-* Trie based on sparse array. High memory usage <= 33.5 MB (16 bit codes) and maximum performance. Use it for big data > 50 MB.
+* Trie based on linked list (idea from LZW AB). Low memory usage <= 327 KB (16 bit codes) but slow. Use it for small data < 200 MB.
+* Trie based on sparse array. High memory usage <= 33.5 MB (16 bit codes) and maximum performance. Use it for big data > 200 MB.
 
 You can add your own implementation.
 
@@ -44,17 +47,23 @@ cmake .. \
 
 Testing performance:
 ```sh
+wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.18.20.tar.xz"
+tar xf linux-4.18.20.tar.xz
+tar cf linux.tar linux-4.18.20
+
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_DICTIONARY="trie-on-linked-list"
+make
+
+time ./src/cli/lzws-cli-static < linux.tar > linux.tar.Z
+time ./src/cli/lzws-cli-static -d < linux.tar.Z > linux.tar.new
+sha256sum linux.tar && sha256sum linux.tar.new && sha256sum linux.tar.Z
+
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_DICTIONARY="trie-on-sparse-array"
 make
 
-wget "https://cdn.kernel.org/pub/linux/kernel/v2.6/linux-2.6.39.tar.xz"
-tar xf linux-2.6.39.tar.xz
-tar cf linux-2.6.39.tar linux-2.6.39
-
-time ./src/cli/lzws-cli-static < linux-2.6.39.tar > linux-2.6.39.tar.Z
-time ./src/cli/lzws-cli-static -d < linux-2.6.39.tar.Z > linux-2.6.39.tar.new
-sha256sum linux-2.6.39.tar
-sha256sum linux-2.6.39.tar.new
+time ./src/cli/lzws-cli-static < linux.tar > linux.tar.Z
+time ./src/cli/lzws-cli-static -d < linux.tar.Z > linux.tar.new
+sha256sum linux.tar && sha256sum linux.tar.new && sha256sum linux.tar.Z
 ```
 
 Toolchains:
@@ -80,7 +89,7 @@ make package
 // Use it to be compatible with with original UNIX compress utility.
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr);
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode, bool msb);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 
 lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
@@ -89,14 +98,14 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state, uint8_t** source_ptr
 lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr);
 ```
 
-You can see that input was implemented using `uint8_t** source_ptr, size_t* source_length_ptr` and output with `uint8_t** destination_ptr, size_t* destination_length_ptr`.
+You can see that input was implemented using `uint8_t** source_ptr, size_t* source_length_ptr` and output using `uint8_t** destination_ptr, size_t* destination_length_ptr`.
 Functions will read bytes and change both `source_ptr`, `source_length_ptr`, write bytes and change both `destination_ptr` and `destination_length_ptr`.
 
 These methods are framework agnostic. You are free to use it with any files, buffers, sockets, etc.
 You can use it with synchronous or asynchronous code.
 It won't be hard to implement bindings for ruby, python, etc.
 
-First of all you can use `lzws_compressor_write_magic_header` to be compatible with `ncompress` and others.
+First of all you can use `lzws_compressor_write_magic_header` to be compatible with `compress` and others.
 It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
 
 Than you need to create `lzws_compressor_state_t`. Do not forget to free it later with `lzws_compressor_free_state`.
@@ -132,7 +141,7 @@ Distributed under the BSD Software License (see LICENSE).
 
 ## Why not LZW AB?
 
-It is not compatible with `ncompress` and original UNIX `compress`.
+It is not compatible with original UNIX `compress` and others.
 You can read its code to meet with original idea of "trie-on-linked-list".
 It is well documented.
 
@@ -141,7 +150,8 @@ It is well documented.
 `ncompress` code is not user friendly.
 It is full of goto, inliners and it has no comments or any documentation.
 I've found here some overflow issues.
-It is very hard to modify it for streaming purposes.
+It is very hard to fix it, you have to know all code history of this project, but it is now available.
+It looks almost impossible to modify it for streaming purposes.
 It has no tests.
 
 `gzip` uses a bit modified decompressor from ncompress.
@@ -152,4 +162,4 @@ It has no compressor.
 There are HTTP servers that supports `Content-Encoding: compress` or `x-compress` via compress or gzip utilities.
 See [recent apache 2.0 for example](https://github.com/apache/httpd/blob/trunk/modules/metadata/mod_mime_magic.c#L2055-L2063) uses gzip decompressor.
 Apache 1.3.0 and others was using `ncompress`.
-You can support this content encoding in your application using lzws.
+You can support this content encoding in your application using `lzws`.

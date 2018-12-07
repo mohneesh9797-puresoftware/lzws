@@ -180,7 +180,7 @@ Next sibling codes: ((2 ** 16) - 257) * sizeof(code)
 Symbol by codes: (2 ** 16) - 257
 Total: ~ 327 KB
 
-Please use this algorithm when you have small amount of data < 50 MB.
+Please use this algorithm when you have small amount of data < 200 MB.
 
 -----
 

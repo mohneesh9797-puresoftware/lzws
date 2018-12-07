@@ -4,6 +4,6 @@ set (CMAKE_C_COMPILER "ccc-analyzer")
 set (CMAKE_C_COMPILER_AR "llvm-ar")
 set (CMAKE_C_COMPILER_RANLIB "llvm-ranlib")
 
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror" CACHE STRING "cmake C flags")
 
-set (CMAKE_INTERPROCEDURAL_OPTIMIZATION false CACHE BOOL "status of IPO switch")
+set (CMAKE_HAVE_IPO false CACHE BOOL "status of IPO support")
