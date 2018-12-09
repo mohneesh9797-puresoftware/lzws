@@ -2,15 +2,15 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#if !defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_H)
-#define LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_H
+#if !defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_H)
+#define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_H
 
 #include <stdlib.h>
 
 #include "type.h"
 
 #undef LZWS_INLINE
-#if defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_C)
+#if defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_C)
 #define LZWS_INLINE
 #else
 #define LZWS_INLINE inline
@@ -44,4 +44,4 @@ LZWS_INLINE void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* d
   }
 }
 
-#endif // LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_MAIN_H
+#endif // LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_H

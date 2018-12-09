@@ -2,5 +2,5 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#cmakedefine LZWS_DICTIONARY_TRIE_ON_LINKED_LIST
-#cmakedefine LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY
+#cmakedefine LZWS_DICTIONARY_LINKED_LIST
+#cmakedefine LZWS_DICTIONARY_SPARSE_ARRAY

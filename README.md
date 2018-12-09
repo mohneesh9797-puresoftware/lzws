@@ -12,8 +12,8 @@ The main goal of the project is to provide streaming interface for lzw compresso
 
 ## Dictionary implementations
 
-* Trie based on linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes) but may be slow.
-* Trie based on sparse array. I has high memory usage <= 33.5 MB (16 bit codes). It will be the fastest when block mode disabled or amount of clears is low, otherwise it will be slow.
+* Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes) but may be slow.
+* Sparse array. I has high memory usage <= 33.5 MB (16 bit codes). It will be the fastest when block mode disabled or amount of clears is low, otherwise it will be slow.
 
 You can add your own implementation.
 
@@ -38,7 +38,7 @@ make test
 You can enable/disable features:
 ```sh
 cmake .. \
-  -DLZWS_DICTIONARY="trie-on-linked-list"/"trie-on-sparse-array"
+  -DLZWS_DICTIONARY="linked-list"/"sparse-array"
   -DLZWS_SHARED=0/1
   -DLZWS_STATIC=0/1
   -DLZWS_CLI=0/1
@@ -51,14 +51,7 @@ wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.18.20.tar.xz"
 tar xf linux-4.18.20.tar.xz
 tar cf linux.tar linux-4.18.20
 
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_DICTIONARY="trie-on-linked-list"
-make
-
-time ./src/cli/lzws-cli-static < linux.tar > linux.tar.Z
-time ./src/cli/lzws-cli-static -d < linux.tar.Z > linux.tar.new
-sha256sum linux.tar && sha256sum linux.tar.new && sha256sum linux.tar.Z
-
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_DICTIONARY="trie-on-sparse-array"
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_DICTIONARY="linked-list"
 make
 
 time ./src/cli/lzws-cli-static < linux.tar > linux.tar.Z
@@ -122,14 +115,14 @@ You can write your destination buffer to output.
 Than you need to provide new destination (same buffer for example).
 
 PS minimum `destination_length` is just 2 bytes, `source_length` is 1 byte.
-We can recommend to use 32 KB buffers for `trie-on-linked-list` and 1 MB for `trie-on-sparse-array`.
+We can recommend to use 32 KB buffers for `linked-list` and 1 MB for `sparse-array`.
 
 Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 
 ## Documentation
 
-* [trie_on_linked_list_compressor.txt](doc/trie_on_linked_list_compressor.txt)
-* [trie_on_sparse_array_compressor.txt](doc/trie_on_sparse_array_compressor.txt)
+* [linked_list_compressor.txt](doc/linked_list_compressor.txt)
+* [sparse_array_compressor.txt](doc/sparse_array_compressor.txt)
 * [compressor_ratio.txt](doc/compressor_ratio.txt)
 * [decompressor.txt](doc/decompressor.txt)
 * [output_compatibility.txt](doc/output_compatibility.txt)
@@ -142,7 +135,7 @@ Distributed under the BSD Software License (see LICENSE).
 ## Why not LZW AB?
 
 It is not compatible with original UNIX `compress` and others.
-You can read its code to meet with original idea of "trie-on-linked-list".
+You can read its code to meet with original idea of "linked-list".
 It is well documented.
 
 ## Why not ncompress/gzip?

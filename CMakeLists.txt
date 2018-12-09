@@ -21,7 +21,7 @@ if (NOT DEFINED LZWS_TARGET)
   set (LZWS_TARGET ${PROJECT_NAME})
 endif ()
 
-set (LZWS_DICTIONARY "trie-on-sparse-array" CACHE STRING "dictionary implementation")
+set (LZWS_DICTIONARY "sparse-array" CACHE STRING "dictionary implementation")
 
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")

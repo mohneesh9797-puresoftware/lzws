@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#if !defined(LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_TYPE_H)
-#define LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_TYPE_H
+#if !defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_TYPE_H)
+#define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_TYPE_H
 
 #include "../../../common.h"
 
@@ -15,4 +15,4 @@ typedef struct {
   uint8_t*     symbol_by_codes;
 } lzws_compressor_dictionary_t;
 
-#endif // LZWS_COMPRESSOR_DICTIONARY_TRIE_ON_LINKED_LIST_TYPE_H
+#endif // LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_TYPE_H

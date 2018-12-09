@@ -7,10 +7,10 @@
 
 #include "../../config.h"
 
-#if defined(LZWS_DICTIONARY_TRIE_ON_LINKED_LIST)
-#include "trie-on-linked-list/type.h"
-#elif defined(LZWS_DICTIONARY_TRIE_ON_SPARSE_ARRAY)
-#include "trie-on-sparse-array/type.h"
+#if defined(LZWS_DICTIONARY_LINKED_LIST)
+#include "linked-list/type.h"
+#elif defined(LZWS_DICTIONARY_SPARSE_ARRAY)
+#include "sparse-array/type.h"
 #endif
 
 #endif // LZWS_COMPRESSOR_DICTIONARY_TYPE_H
