@@ -18,15 +18,15 @@ static inline void read_next_symbol(lzws_compressor_state_t* state) {
   state->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
 }
 
-static inline lzws_code_t get_new_code(lzws_compressor_state_t* state) {
+static inline lzws_code_fast_t get_new_code(lzws_compressor_state_t* state) {
   if (lzws_compressor_is_dictionary_full(state)) {
     return LZWS_UNDEFINED_NEXT_CODE;
   }
 
   state->last_used_code++;
-  lzws_code_t new_code = state->last_used_code;
+  lzws_code_fast_t new_code = state->last_used_code;
 
-  lzws_code_t first_code_for_next_code_bits = lzws_get_power_of_two(state->last_used_code_bits);
+  lzws_code_fast_t first_code_for_next_code_bits = lzws_get_power_of_two(state->last_used_code_bits);
   if (new_code == first_code_for_next_code_bits) {
     state->last_used_code_bits++;
   }
@@ -54,7 +54,7 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
     return 0;
   }
 
-  lzws_code_t new_code = get_new_code(state);
+  lzws_code_fast_t new_code = get_new_code(state);
   if (new_code != LZWS_UNDEFINED_NEXT_CODE) {
     // Dictionary is not full.
     lzws_compressor_save_next_code_to_dictionary_wrapper(state, state->next_symbol, new_code);

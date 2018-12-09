@@ -35,11 +35,11 @@ LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_
   lzws_compressor_clear_dictionary(&state->dictionary, state->max_code_bits);
 }
 
-LZWS_INLINE lzws_code_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state, uint8_t symbol) {
+LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state, uint_fast8_t symbol) {
   return lzws_compressor_get_next_code_from_dictionary(&state->dictionary, state->current_code, symbol);
 }
 
-LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_wrapper(lzws_compressor_state_t* state, uint8_t symbol, lzws_code_t code) {
+LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_wrapper(lzws_compressor_state_t* state, uint_fast8_t symbol, lzws_code_fast_t code) {
   lzws_compressor_save_next_code_to_dictionary(&state->dictionary, state->current_code, symbol, code);
 }
 

@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-// The size of this table is standard to reverse single byte.
+// Standard table to reverse single byte.
 extern const uint8_t LZWS_REVERSE_BITS[256];
 
 // Algorithm will try to access 2 ** 0 - 2 ** 16 only.

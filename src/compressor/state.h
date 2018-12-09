@@ -22,32 +22,32 @@ enum {
   LZWS_COMPRESSOR_READ_NEXT_SYMBOL,
   LZWS_COMPRESSOR_PROCESS_CURRENT_CODE
 };
-typedef uint8_t lzws_compressor_status_t;
+typedef uint_fast8_t lzws_compressor_status_t;
 
 typedef struct {
   lzws_compressor_status_t status;
 
-  uint8_t max_code_bits;
-  bool    block_mode;
-  bool    msb;
+  uint_fast8_t max_code_bits;
+  bool         block_mode;
+  bool         msb;
 
-  lzws_code_t initial_used_code;
-  lzws_code_t max_code;
+  lzws_code_fast_t initial_used_code;
+  lzws_code_fast_t max_code;
 
-  lzws_code_t last_used_code;
-  uint8_t     last_used_code_bits;
+  lzws_code_fast_t last_used_code;
+  uint_fast8_t     last_used_code_bits;
 
-  lzws_code_t current_code;
-  uint8_t     next_symbol;
+  lzws_code_fast_t current_code;
+  uint_fast8_t     next_symbol;
 
-  uint8_t remainder;
-  uint8_t remainder_bits;
+  uint_fast8_t remainder;
+  uint_fast8_t remainder_bits;
 
   lzws_compressor_dictionary_t dictionary;
   lzws_compressor_ratio_t      ratio;
 } lzws_compressor_state_t;
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint8_t max_code_bits, bool block_mode, bool msb);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint_fast8_t max_code_bits, bool block_mode, bool msb);
 void          lzws_compressor_clear_state(lzws_compressor_state_t* state);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state);
 

@@ -18,8 +18,32 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_fill_array(void* array, size_t size_of_item, size_t length, void* value) {
-  uint8_t* bytes      = value;
+LZWS_INLINE uint_fast8_t lzws_reverse_byte(uint_fast8_t byte) {
+  return LZWS_REVERSE_BITS[byte];
+}
+
+LZWS_INLINE uint_fast32_t lzws_get_power_of_two(uint_fast8_t power) {
+  return LZWS_POWERS_OF_TWO[power];
+}
+
+LZWS_INLINE uint_fast16_t lzws_get_bit_mask(uint_fast8_t bits) {
+  return LZWS_BIT_MASKS[bits];
+}
+
+LZWS_INLINE void lzws_read_byte(uint8_t** source_ptr, size_t* source_length_ptr, uint_fast8_t* byte) {
+  *byte = **source_ptr;
+  (*source_ptr)++;
+  (*source_length_ptr)--;
+}
+
+LZWS_INLINE void lzws_write_byte(uint8_t** destination_ptr, size_t* destination_length_ptr, uint_fast8_t byte) {
+  **destination_ptr = byte;
+  (*destination_ptr)++;
+  (*destination_length_ptr)--;
+}
+
+LZWS_INLINE void lzws_fill_array(void* array, size_t size_of_item, size_t length, void* item, bool item_is_zero) {
+  uint8_t* bytes      = item;
   uint8_t  first_byte = bytes[0];
 
   if (size_of_item == 1) {
@@ -27,34 +51,24 @@ LZWS_INLINE void lzws_fill_array(void* array, size_t size_of_item, size_t length
     return;
   }
 
-  // Size of item will always be > 1.
-  bool all_bytes_are_identical = true;
-
-  for (size_t byte_index = 1; byte_index < size_of_item; byte_index++) {
-    if (bytes[byte_index] != first_byte) {
-      all_bytes_are_identical = false;
-      break;
-    }
-  }
-
-  if (all_bytes_are_identical) {
+  if (item_is_zero) {
     memset(array, first_byte, size_of_item * length);
     return;
   }
 
   for (size_t index = 0; index < length; index++) {
-    memcpy((uint8_t*)array + size_of_item * index, value, size_of_item);
+    memcpy((uint8_t*)array + size_of_item * index, item, size_of_item);
   }
 }
 
-LZWS_INLINE void* lzws_allocate_array(size_t size_of_item, size_t length, bool default_value_required, uint default_value) {
+LZWS_INLINE void* lzws_allocate_array(uint_fast8_t size_of_item, size_t length, void* item, bool item_required, bool item_is_zero) {
   size_t size = size_of_item * length;
 
-  if (!default_value_required) {
+  if (!item_required) {
     return malloc(size);
   }
 
-  if (default_value == 0) {
+  if (item_is_zero) {
     return calloc(1, size);
   }
 
@@ -63,33 +77,9 @@ LZWS_INLINE void* lzws_allocate_array(size_t size_of_item, size_t length, bool d
     return NULL;
   }
 
-  lzws_fill_array(array, size_of_item, length, &default_value);
+  lzws_fill_array(array, size_of_item, length, item, false);
 
   return array;
-}
-
-LZWS_INLINE void lzws_read_byte(uint8_t** source_ptr, size_t* source_length_ptr, uint8_t* byte) {
-  *byte = **source_ptr;
-  (*source_ptr)++;
-  (*source_length_ptr)--;
-}
-
-LZWS_INLINE void lzws_write_byte(uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t byte) {
-  **destination_ptr = byte;
-  (*destination_ptr)++;
-  (*destination_length_ptr)--;
-}
-
-LZWS_INLINE uint8_t lzws_reverse_byte(uint8_t byte) {
-  return LZWS_REVERSE_BITS[byte];
-}
-
-LZWS_INLINE uint32_t lzws_get_power_of_two(uint8_t power) {
-  return LZWS_POWERS_OF_TWO[power];
-}
-
-LZWS_INLINE uint16_t lzws_get_bit_mask(uint8_t bits) {
-  return LZWS_BIT_MASKS[bits];
 }
 
 #endif // LZWS_UTILS_H

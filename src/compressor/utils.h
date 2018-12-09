@@ -16,12 +16,12 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_compressor_read_byte(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t* byte) {
+LZWS_INLINE void lzws_compressor_read_byte(lzws_compressor_state_t* state, uint8_t** source_ptr, size_t* source_length_ptr, uint_fast8_t* byte) {
   lzws_read_byte(source_ptr, source_length_ptr, byte);
   lzws_compressor_add_source_symbol_to_ratio(state);
 }
 
-LZWS_INLINE void lzws_compressor_write_byte(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t byte) {
+LZWS_INLINE void lzws_compressor_write_byte(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr, uint_fast8_t byte) {
   if (state->msb) {
     byte = lzws_reverse_byte(byte);
   }

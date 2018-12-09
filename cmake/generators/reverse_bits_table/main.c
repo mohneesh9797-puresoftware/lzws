@@ -10,11 +10,11 @@
 
 #define PRINT(string) fwrite(string, 1, sizeof(string), stdout)
 
-static inline void print_reversed_byte(uint8_t byte) {
-  uint8_t reversed_byte = 0;
+static inline void print_reversed_byte(uint_fast8_t byte) {
+  uint_fast8_t reversed_byte = 0;
 
-  for (uint8_t bit_index = 0; bit_index < 8; bit_index++) {
-    uint8_t bit_value = (byte >> bit_index) & 1;
+  for (uint_fast8_t bit_index = 0; bit_index < 8; bit_index++) {
+    uint_fast8_t bit_value = (byte >> bit_index) & 1;
     reversed_byte |= bit_value << (7 - bit_index);
   }
 
@@ -22,7 +22,7 @@ static inline void print_reversed_byte(uint8_t byte) {
 }
 
 int main() {
-  uint8_t index = 0;
+  uint_fast8_t index = 0;
 
   while (true) {
     if (index != 0) {

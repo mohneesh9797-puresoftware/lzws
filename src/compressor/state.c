@@ -11,7 +11,7 @@
 #include "state.h"
 #include "utils.h"
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result, uint8_t max_code_bits, bool block_mode, bool msb) {
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result, uint_fast8_t max_code_bits, bool block_mode, bool msb) {
   if (max_code_bits < LZWS_LOWEST_MAX_CODE_BITS || max_code_bits > LZWS_BIGGEST_MAX_CODE_BITS) {
     return LZWS_COMPRESSOR_INVALID_MAX_CODE_BITS;
   }

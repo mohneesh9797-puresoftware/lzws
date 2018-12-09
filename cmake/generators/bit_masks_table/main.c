@@ -16,7 +16,7 @@
 #define PRINT(string) fwrite(string, 1, sizeof(string), stdout)
 
 int main() {
-  for (uint8_t index = 0; index <= MAX_INDEX; index++) {
+  for (uint_fast8_t index = 0; index <= MAX_INDEX; index++) {
     if (index != 0) {
       if (index % BYTES_PER_LINE == 0) {
         PRINT(LINE_TERMINATOR);

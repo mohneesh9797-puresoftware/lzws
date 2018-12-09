@@ -149,7 +149,7 @@ static inline lzws_result_t compress_data(
 lzws_result_t lzws_file_compress(
     FILE* source_file, size_t source_buffer_length,
     FILE* destination_file, size_t destination_buffer_length,
-    uint8_t max_code_bits, bool block_mode, bool msb) {
+    uint_fast8_t max_code_bits, bool block_mode, bool msb) {
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
 

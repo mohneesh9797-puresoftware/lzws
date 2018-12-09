@@ -14,7 +14,7 @@ lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state, 
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
-  uint8_t symbol;
+  uint_fast8_t symbol;
   lzws_compressor_read_byte(state, source_ptr, source_length_ptr, &symbol);
 
   state->current_code = symbol;
@@ -44,10 +44,10 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state, u
     return 0;
   }
 
-  uint8_t symbol;
+  uint_fast8_t symbol;
   lzws_compressor_read_byte(state, source_ptr, source_length_ptr, &symbol);
 
-  lzws_code_t next_code = lzws_compressor_get_next_code_from_dictionary_wrapper(state, symbol);
+  lzws_code_fast_t next_code = lzws_compressor_get_next_code_from_dictionary_wrapper(state, symbol);
   if (next_code != LZWS_UNDEFINED_NEXT_CODE) {
     // We found next code, it becomes new current code.
     state->current_code = next_code;

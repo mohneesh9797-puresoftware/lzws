@@ -38,6 +38,6 @@ enum {
 lzws_result_t lzws_file_compress(
     FILE* source_file, size_t source_buffer_length,
     FILE* destination_file, size_t destination_buffer_length,
-    uint8_t max_code_bits, bool block_mode, bool msb);
+    uint_fast8_t max_code_bits, bool block_mode, bool msb);
 
 #endif // LZWS_FILE_H

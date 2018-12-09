@@ -9,8 +9,8 @@
 #include <stdint.h>
 
 typedef struct {
-  uint32_t new_source_length, new_destination_length;
-  mpz_t    source_length, destination_length;
+  uint_fast32_t new_source_length, new_destination_length;
+  mpz_t         source_length, destination_length;
 } lzws_compressor_ratio_t;
 
 #endif // LZWS_COMPRESSOR_RATIO_TYPE_H

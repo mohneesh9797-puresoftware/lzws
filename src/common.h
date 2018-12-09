@@ -15,8 +15,17 @@
 #define LZWS_INLINE inline
 #endif
 
-typedef uint8_t  lzws_result_t;
-typedef uint16_t lzws_code_t;
+// We are working for POSIX systems only.
+// POSIX system requires CHAR_BIT to be 8.
+// We won't use "least" types from "stdint.h".
+
+// We will use precise types for source, destination, dictionary and constants to optimize memory consumption.
+// We will try to use fast types in all other cases.
+
+typedef uint_fast8_t lzws_result_t;
+
+typedef uint16_t      lzws_code_t;
+typedef uint_fast16_t lzws_code_fast_t;
 
 // External programs requires 2 byte magic header.
 // For example: https://github.com/apache/httpd/blob/trunk/modules/metadata/mod_mime_magic.c#L2060
@@ -31,6 +40,7 @@ typedef uint16_t lzws_code_t;
 // Code can have any value, but next code will always be > 255.
 // We will use 0 as undefined next code.
 #define LZWS_UNDEFINED_NEXT_CODE 0
+#define LZWS_IS_UNDEFINED_NEXT_CODE_ZERO true
 #define LZWS_ALPHABET_LENGTH 256
 #define LZWS_CLEAR_CODE 256
 #define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
@@ -39,7 +49,7 @@ typedef uint16_t lzws_code_t;
 #define LZWS_INITIAL_USED_CODE 255
 #define LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE 256
 
-LZWS_INLINE lzws_code_t lzws_get_initial_used_code(bool block_mode) {
+LZWS_INLINE lzws_code_fast_t lzws_get_initial_used_code(bool block_mode) {
   return block_mode ? LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE : LZWS_INITIAL_USED_CODE;
 }
 
