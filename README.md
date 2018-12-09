@@ -12,8 +12,8 @@ The main goal of the project is to provide streaming interface for lzw compresso
 
 ## Dictionary implementations
 
-* Trie based on linked list (idea from LZW AB). Low memory usage <= 327 KB (16 bit codes) but slow. Use it for small data < 200 MB.
-* Trie based on sparse array. High memory usage <= 33.5 MB (16 bit codes) and maximum performance. Use it for big data > 200 MB.
+* Trie based on linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes) but may be slow.
+* Trie based on sparse array. I has high memory usage <= 33.5 MB (16 bit codes). It will be the fastest when block mode disabled or amount of clears is low, otherwise it will be slow.
 
 You can add your own implementation.
 
@@ -128,8 +128,8 @@ Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 
 ## Documentation
 
-* [compressor.txt](doc/compressor.txt)
-* [fast_compressor.txt](doc/fast_compressor.txt)
+* [trie_on_linked_list_compressor.txt](doc/trie_on_linked_list_compressor.txt)
+* [trie_on_sparse_array_compressor.txt](doc/trie_on_sparse_array_compressor.txt)
 * [compressor_ratio.txt](doc/compressor_ratio.txt)
 * [decompressor.txt](doc/decompressor.txt)
 * [output_compatibility.txt](doc/output_compatibility.txt)

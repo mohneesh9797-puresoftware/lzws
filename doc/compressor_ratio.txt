@@ -62,7 +62,7 @@ Ncompress counts ratio when:
 Dictionary is not full.
 We will increment new source length and new destination length.
 Dictionary become full after we have written last code + new source bytes length >= 10000.
-We couldn't count ratio now because destination length is 0.
+We can't count ratio now because destination length is 0.
 So we will clear ratio and repeat procedure once again.
 
 Dictionary is full.

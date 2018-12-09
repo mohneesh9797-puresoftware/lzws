@@ -8,6 +8,7 @@
 #include "../../../common.h"
 
 typedef struct {
+  uint_fast8_t codes_length_offset;
   lzws_code_t* codes;
 } lzws_compressor_dictionary_t;
 

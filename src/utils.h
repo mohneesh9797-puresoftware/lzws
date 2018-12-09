@@ -61,12 +61,8 @@ LZWS_INLINE void lzws_fill_array(void* array, size_t size_of_item, size_t length
   }
 }
 
-LZWS_INLINE void* lzws_allocate_array(uint_fast8_t size_of_item, size_t length, void* item, bool item_required, bool item_is_zero) {
+LZWS_INLINE void* lzws_allocate_array(uint_fast8_t size_of_item, size_t length, void* item, bool item_is_zero) {
   size_t size = size_of_item * length;
-
-  if (!item_required) {
-    return malloc(size);
-  }
 
   if (item_is_zero) {
     return calloc(1, size);
