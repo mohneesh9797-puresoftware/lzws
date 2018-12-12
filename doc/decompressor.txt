@@ -1,0 +1,117 @@
+Let's try to decompress [97, 98, 257].
+We need to find a convenient way to simulate algorithm.
+
+Read 97.
+It means that first prefix is "a".
+Remote dictionary applied code 257 for "ax" (x is unknown symbol).
+
+Read 98.
+It means that next prefix is "a".
+So remote dictionary applied code 257 for "ab".
+Remote dictionary applied code 258 for "bx".
+
+Read 257.
+It means that next prefix is "ab" (from dictionary).
+So remote dictionary applied code 258 for "ba".
+
+Destination is "abab".
+
+-----
+
+Now let's try to decompress [97, 98, 258].
+
+97 and 98 means the same.
+
+Read 258.
+There is no 258 in dictionary.
+We know that remote dictionary applied code 258 for "bx".
+So destination looks like "abbx".
+But it means that remote dictionary applied code 258 for "bb".
+
+Destination is "abbb".
+This is the most complex part of decompression algorithm.
+We need to clarify it in general case.
+
+-----
+
+We have current prefix "a...b".
+We know that remote dictionary applied code "c" for "a...bx".
+
+Than we read this code "c" from source.
+It means that destination looks like "a...ba...bx".
+So "a...bx" is "a...ba".
+So we have two identical strings that intersects by first symbol "a".
+
+"a...ba....."
+      |
+".....a...ba"
+
+We read max code from source, it is not available in current dictionary.
+In this case next prefix equals to current prefix + first symbol of current prefix.
+
+-----
+
+What operations are required for decompressor's dictionary?
+1. Is code available?
+2. Store next code by code and next symbol.
+3. Output code.
+
+We don't need to find code by symbol sequence.
+
+Compressor requires to maintain mapping between current code and next code.
+The problem is that current code has many next codes.
+Decompressor requires opposite mapping.
+One current code has only one previous code.
+
+-----
+
+So we need just one array for code mapping.
+It can be named as "previous_codes".
+
+Indexes of this array will be >= 257.
+Values will be between 0 - ((2 ** 16) - 1).
+
+We need a special value for previous code that will terminate codes sequence.
+It is not possible to use 0 (as next code).
+Only one value is available - max code (2 ** 16) - 1.
+This code can't be previous for any other code.
+This code has identical bytes, so we can use memset to initialize this array.
+
+-----
+
+We need a separate array to map between code and last symbol.
+It can be named as "last_symbol_by_codes".
+
+Indexes of this array will be >= 257.
+
+We don't need to initialize it.
+Algorithm will access only initialized symbols.
+
+-----
+
+We have to write output in an opposite direction.
+It is possible to use another array as an reverse buffer.
+It can be named as "reverse_buffer".
+
+Let's imagine we compressed "aa..." data.
+All codes will be equal to prev code + 'a' symbol.
+So max length of buffer will be (2 ** 16) - 257.
+
+We don't need to initialize it.
+Algorithm will access only initialized bytes.
+
+-----
+
+For example [97, 98, 257] -> "abab":
+
+Previous codes:
+0 (257) -> 97
+1 (258) -> 65535
+
+Last symbol by codes:
+0 (257) -> 'b'
+
+Reverse buffer:
+a
+b
+ba

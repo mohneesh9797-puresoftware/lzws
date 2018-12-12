@@ -6,18 +6,18 @@
 
 #include "main.h"
 
-void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio) {
-  mpz_add_ui(ratio->source_length, ratio->source_length, ratio->new_source_length);
-  ratio->new_source_length = 0;
+void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio_ptr) {
+  mpz_add_ui(ratio_ptr->source_length, ratio_ptr->source_length, ratio_ptr->new_source_length);
+  ratio_ptr->new_source_length = 0;
 
-  mpz_add_ui(ratio->destination_length, ratio->destination_length, ratio->new_destination_length);
-  ratio->new_destination_length = 0;
+  mpz_add_ui(ratio_ptr->destination_length, ratio_ptr->destination_length, ratio_ptr->new_destination_length);
+  ratio_ptr->new_destination_length = 0;
 }
 
-bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio) {
+bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio_ptr) {
   // We don't need to clear when destination length equals to zero.
   // Source length won't be zero when destination length is not zero.
-  if (mpz_cmp_ui(ratio->destination_length, 0) == 0) {
+  if (mpz_cmp_ui(ratio_ptr->destination_length, 0) == 0) {
     return false;
   }
 
@@ -26,14 +26,14 @@ bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* r
   mpz_t destination_and_new_source, source_and_new_destination;
   mpz_inits(destination_and_new_source, source_and_new_destination, NULL);
 
-  mpz_mul_ui(destination_and_new_source, ratio->destination_length, ratio->new_source_length);
-  mpz_mul_ui(source_and_new_destination, ratio->source_length, ratio->new_destination_length);
+  mpz_mul_ui(destination_and_new_source, ratio_ptr->destination_length, ratio_ptr->new_source_length);
+  mpz_mul_ui(source_and_new_destination, ratio_ptr->source_length, ratio_ptr->new_destination_length);
 
   bool result = mpz_cmp(destination_and_new_source, source_and_new_destination) < 0;
 
   mpz_clears(destination_and_new_source, source_and_new_destination, NULL);
 
-  lzws_compressor_calculate_clear_ratio(ratio);
+  lzws_compressor_calculate_clear_ratio(ratio_ptr);
 
   return result;
 }

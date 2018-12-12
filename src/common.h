@@ -5,8 +5,7 @@
 #if !defined(LZWS_COMMON_H)
 #define LZWS_COMMON_H
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "utils.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMMON_C)
@@ -34,16 +33,27 @@ typedef uint_fast16_t lzws_code_fast_t;
 
 #define LZWS_LOWEST_MAX_CODE_BITS 9
 #define LZWS_BIGGEST_MAX_CODE_BITS 16
-#define LZWS_MAX_CODE_BITS_MASK 0x1f // "max_bits" are the last bits, biggest value (16) requires 5 bits.
+#define LZWS_MAX_CODE_BITS_MASK 0x1f // "max_code_bits" are the last bits, biggest value (16) requires 5 bits.
 #define LZWS_BLOCK_MODE 0x80
+
+#define LZWS_ALPHABET_LENGTH 256
+#define LZWS_CLEAR_CODE 256
+#define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 
 // Code can have any value, but next code will always be > 255.
 // We will use 0 as undefined next code.
 #define LZWS_UNDEFINED_NEXT_CODE 0
-#define LZWS_IS_UNDEFINED_NEXT_CODE_ZERO true
-#define LZWS_ALPHABET_LENGTH 256
-#define LZWS_CLEAR_CODE 256
-#define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
+#define LZWS_UNDEFINED_NEXT_CODE_ZERO true
+#define LZWS_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES true
+
+// Previous code will always be < (2 ** max_code_bits) - 1.
+// We will use (2 ** max_code_bits) - 1 as undefined previous code.
+#define LZWS_UNDEFINED_PREVIOUS_CODE_ZERO false
+#define LZWS_UNDEFINED_PREVIOUS_CODE_IDENTICAL_BYTES true
+
+LZWS_INLINE lzws_code_fast_t lzws_get_undefined_previous_code(uint_fast8_t max_code_bits) {
+  return lzws_get_bit_mask(max_code_bits);
+}
 
 // Clear code can be used only in block mode.
 #define LZWS_INITIAL_USED_CODE 255

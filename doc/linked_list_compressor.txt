@@ -117,7 +117,7 @@ Now lets try to encode "aac".
 Code for "aa" is 259.
 But we can't get this information from "First child codes" or "Next sibling codes".
 
-We have to maintain an association between code and it's symbol.
+We have to maintain an association between code and it's last symbol.
 Association between first codes ("0" - "255") and symbols is identity, we don't need to keep it.
 We don't need any special value so we don't need to keep 256 too.
 
@@ -125,9 +125,9 @@ This array will have indexes >= 257.
 It will have length equals to "first_child_codes.length - 257".
 Indexes will have 257 offset.
 
-It can be named as "symbol_by_codes".
+It can be named as "last_symbol_by_codes".
 
-Symbol by codes:
+Last symbol by codes:
 0 (257) -> "b"
 1 (258) -> "a"
 2 (259) -> "a"
@@ -138,7 +138,7 @@ Symbol by codes:
 Symbol code for "a" is 97, "first_child_codes[97]" equals "262".
 We will traverse all sibling nodes from "262" and find that code "259" has "a" symbol and "first_child_codes[259]" equals "260".
 "aac" will have code 263, so "first_child_codes[259] = 263" and "next_sibling_codes[263 - 257] = 260"
-Do not forget to "symbol_by_codes[263] = 'a'" too.
+Do not forget to "last_symbol_by_codes[263] = 'a'" too.
 
 Result:
 "a" (97) -> "c" (262)
@@ -163,7 +163,7 @@ Next sibling codes:
 5 (262) -> 257
 6 (263) -> 260
 
-Symbol by codes:
+Last symbol by codes:
 0 (257) -> "b"
 1 (258) -> "a"
 2 (259) -> "a"
@@ -176,7 +176,7 @@ Symbol by codes:
 
 We need to clear dictionary, how to do it?
 We have to clear both first and next sibling codes.
-We can keep symbol by codes as is.
+We can keep last symbol by codes as is.
 Algorithm will access only initialized symbols.
 
 -----
@@ -184,7 +184,7 @@ Algorithm will access only initialized symbols.
 How much memory will it consume?
 First child codes: (2 ** 16) * sizeof(code_t)
 Next sibling codes: ((2 ** 16) - 257) * sizeof(code_t)
-Symbol by codes: (2 ** 16) - 257
+Last symbol by codes: (2 ** 16) - 257
 Total: ~ 327 KB
 
 -----

@@ -1,5 +1,6 @@
 It is possible to speedup dictionary lookup.
 We can store codes trie in single sparse array.
+We can name it "next codes".
 
 For example:
 "a" (97) -> "c" (262)
@@ -9,7 +10,7 @@ For example:
 "b" (98) -> "a" (258)
 "c" (99) -> "a" (261)
 
-Codes:
+Next codes:
 ...
 97 ("a") * 256 + 97 ("a") -> 259
 97 ("a") * 256 + 98 ("b") -> 257

@@ -12,7 +12,7 @@ The main goal of the project is to provide streaming interface for lzw compresso
 
 ## Dictionary implementations
 
-* Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes) but may be slow.
+* Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general.
 * Sparse array. I has high memory usage <= 33.5 MB (16 bit codes). It will be the fastest when block mode disabled or amount of clears is low, otherwise it will be slow.
 
 You can add your own implementation.

@@ -47,12 +47,12 @@ typedef struct {
   lzws_compressor_ratio_t      ratio;
 } lzws_compressor_state_t;
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state, uint_fast8_t max_code_bits, bool block_mode, bool msb);
-void          lzws_compressor_clear_state(lzws_compressor_state_t* state);
-void          lzws_compressor_free_state(lzws_compressor_state_t* state);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bits, bool block_mode, bool msb);
+void          lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);
+void          lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
 
-LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state) {
-  return state->last_used_code == state->max_code;
+LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state_ptr) {
+  return state_ptr->last_used_code == state_ptr->max_code;
 }
 
 #endif // LZWS_COMPRESSOR_STATE_H

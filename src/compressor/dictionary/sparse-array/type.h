@@ -9,7 +9,7 @@
 
 typedef struct {
   uint_fast8_t codes_length_offset;
-  lzws_code_t* codes;
+  lzws_code_t* next_codes;
 } lzws_compressor_dictionary_t;
 
 #endif // LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_TYPE_H

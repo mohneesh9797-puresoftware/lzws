@@ -12,7 +12,7 @@ typedef struct {
 
   lzws_code_t* first_child_codes;
   lzws_code_t* next_sibling_codes;
-  uint8_t*     symbol_by_codes;
+  uint8_t*     last_symbol_by_codes;
 } lzws_compressor_dictionary_t;
 
 #endif // LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_TYPE_H

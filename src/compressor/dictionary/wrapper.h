@@ -16,35 +16,35 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_compressor_initialize_dictionary_wrapper(lzws_compressor_state_t* state) {
-  lzws_compressor_initialize_dictionary(&state->dictionary, state->initial_used_code);
+LZWS_INLINE void lzws_compressor_initialize_dictionary_wrapper(lzws_compressor_state_t* state_ptr) {
+  lzws_compressor_initialize_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code);
 }
 
-LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compressor_state_t* state) {
-  lzws_result_t result = lzws_compressor_allocate_dictionary(&state->dictionary, state->max_code_bits);
+LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compressor_state_t* state_ptr) {
+  lzws_result_t result = lzws_compressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->max_code_bits);
   if (result != 0) {
     return result;
   }
 
-  state->status = LZWS_COMPRESSOR_READ_FIRST_SYMBOL;
+  state_ptr->status = LZWS_COMPRESSOR_READ_FIRST_SYMBOL;
 
   return 0;
 }
 
-LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* state) {
-  lzws_compressor_clear_dictionary(&state->dictionary, state->max_code_bits);
+LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* state_ptr) {
+  lzws_compressor_clear_dictionary(&state_ptr->dictionary, state_ptr->max_code_bits);
 }
 
-LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state, uint_fast8_t symbol) {
-  return lzws_compressor_get_next_code_from_dictionary(&state->dictionary, state->current_code, symbol);
+LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state_ptr, uint_fast8_t symbol) {
+  return lzws_compressor_get_next_code_from_dictionary(&state_ptr->dictionary, state_ptr->current_code, symbol);
 }
 
-LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_wrapper(lzws_compressor_state_t* state, uint_fast8_t symbol, lzws_code_fast_t code) {
-  lzws_compressor_save_next_code_to_dictionary(&state->dictionary, state->current_code, symbol, code);
+LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_wrapper(lzws_compressor_state_t* state_ptr, uint_fast8_t symbol, lzws_code_fast_t code) {
+  lzws_compressor_save_next_code_to_dictionary(&state_ptr->dictionary, state_ptr->current_code, symbol, code);
 }
 
-LZWS_INLINE void lzws_compressor_free_dictionary_wrapper(lzws_compressor_state_t* state) {
-  lzws_compressor_free_dictionary(&state->dictionary);
+LZWS_INLINE void lzws_compressor_free_dictionary_wrapper(lzws_compressor_state_t* state_ptr) {
+  lzws_compressor_free_dictionary(&state_ptr->dictionary);
 }
 
 #endif // LZWS_COMPRESSOR_DICTIONARY_WRAPPER_H

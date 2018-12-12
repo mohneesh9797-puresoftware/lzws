@@ -7,6 +7,6 @@
 
 #include "state.h"
 
-lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state, uint8_t** destination_ptr, size_t* destination_length_ptr);
+lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 #endif // LZWS_COMPRESSOR_PROCESS_CODE_H
