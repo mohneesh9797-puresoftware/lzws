@@ -8,6 +8,10 @@
 #include "compressor/header.h"
 #include "compressor/main.h"
 
+#include "decompressor/common.h"
+#include "decompressor/header.h"
+#include "decompressor/main.h"
+
 #include "file.h"
 
 // -- utils --
@@ -57,7 +61,7 @@ static inline lzws_result_t allocate_buffers(uint8_t** source_buffer_ptr, size_t
   return 0;
 }
 
-// -- writing file --
+// -- file --
 
 static inline lzws_result_t write_data(FILE* destination_file_ptr, uint8_t* data, size_t data_length) {
   if (fwrite(data, 1, data_length, destination_file_ptr) == 0) {
@@ -177,4 +181,56 @@ lzws_result_t lzws_file_compress(
 }
 
 // -- decompress --
-// TODO
+
+#define DECOMPRESS_WITH_FLUSHING_BUFFER(...) \
+  WITH_FLUSHING_BUFFER(LZWS_FILE_DECOMPRESSOR_FAILED, LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION, __VA_ARGS__)
+
+static inline lzws_result_t decompress_data(
+    lzws_decompressor_state_t* state_ptr,
+    FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
+    FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length) {
+  uint8_t* destination        = destination_buffer;
+  size_t   destination_length = destination_buffer_length;
+
+  DECOMPRESS_WITH_FLUSHING_BUFFER(&lzws_decompressor_read_magic_header, &destination, &destination_length);
+
+  while (true) {
+    size_t source_length = fread(source_buffer, 1, source_buffer_length, source_file_ptr);
+    if (source_length == 0) {
+      break;
+    }
+
+    uint8_t* source = source_buffer;
+    DECOMPRESS_WITH_FLUSHING_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
+  }
+
+  return write_remaining_destination_buffer(destination_file_ptr, destination_buffer, destination_buffer_length, destination_length);
+}
+
+lzws_result_t lzws_file_decompress(
+    FILE* source_file_ptr, size_t source_buffer_length,
+    FILE* destination_file_ptr, size_t destination_buffer_length,
+    bool msb) {
+  uint8_t* source_buffer;
+  uint8_t* destination_buffer;
+
+  lzws_result_t result = allocate_buffers(&source_buffer, &source_buffer_length, &destination_buffer, &destination_buffer_length);
+  if (result != 0) {
+    return result;
+  }
+
+  lzws_decompressor_state_t* state_ptr;
+  if (lzws_decompressor_get_initial_state(&state_ptr, msb) != 0) {
+    free(source_buffer);
+    free(destination_buffer);
+    return LZWS_FILE_DECOMPRESSOR_FAILED;
+  }
+
+  result = decompress_data(state_ptr, source_file_ptr, source_buffer, source_buffer_length, destination_file_ptr, destination_buffer, destination_buffer_length);
+
+  lzws_decompressor_free_state(state_ptr);
+  free(source_buffer);
+  free(destination_buffer);
+
+  return result;
+}

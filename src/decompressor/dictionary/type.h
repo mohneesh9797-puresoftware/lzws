@@ -8,11 +8,12 @@
 #include "../../common.h"
 
 typedef struct {
-  lzws_code_fast_t undefined_previous_code;
-  lzws_code_t*     previous_codes;
+  lzws_code_fast_t codes_length_offset;
+  lzws_code_t      undefined_previous_code;
 
-  uint8_t* last_symbol_by_codes;
-  uint8_t* reverse_buffer;
+  lzws_code_t* previous_codes;
+  uint8_t*     last_symbol_by_codes;
+  uint8_t*     output_buffer;
 } lzws_decompressor_dictionary_t;
 
 #endif // LZWS_DECOMPRESSOR_DICTIONARY_TYPE_H

@@ -90,8 +90,8 @@ Algorithm will access only initialized symbols.
 -----
 
 We have to write output in an opposite direction.
-It is possible to use another array as an reverse buffer.
-It can be named as "reverse_buffer".
+It is possible to use another array as output buffer.
+It can be named as "output_buffer".
 
 Let's imagine we compressed "aa..." data.
 All codes will be equal to prev code + 'a' symbol.
@@ -111,7 +111,20 @@ Previous codes:
 Last symbol by codes:
 0 (257) -> 'b'
 
-Reverse buffer:
+Output buffer:
 a
 b
 ba
+
+-----
+
+How much memory will it consume?
+Previous codes:       ((2 ** 16) - 257) * sizeof(code_t)
+Last symbol by codes: (2 ** 16) - 257
+Output buffer:        (2 ** 16) - 257
+Total: ~ 216 KB
+
+-----
+
+PS If block mode is disabled we don't need clear code (256).
+So we can move from 257 to 256.

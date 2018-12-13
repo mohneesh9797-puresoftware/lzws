@@ -13,19 +13,19 @@ static const char* help =
     "Usage: lzws-cli [-%s] [< stdin] [> stdout]\n"
     "\n"
     "Options:\n"
-    "  --max-code-bits (-b) = set max code bits (%u-%u) (%u by default) [compressor only]\n"
     "  --decompress (-d) = decompress (compress by default)\n"
-    "  --help (-h) = print help\n"
+    "  --max-code-bits (-b) = set max code bits (%u-%u) (%u by default) [compressor only]\n"
+    "  --raw (-r) = raw mode, disable block mode (enabled by default) [compressor only]\n"
     "  --msb (-m) = enable most significant bit (least significant bit used by default)\n"
-    "  --raw (-r) = raw mode, disable block mode (enabled by default) [compressor only]\n";
+    "  --help (-h) = print help\n";
 
-static const char*   short_options  = "b:dhmr";
+static const char*   short_options  = "db:rmh";
 static struct option long_options[] = {
-    {"max-code-bits", optional_argument, NULL, 'b'},
     {"decompress", optional_argument, NULL, 'd'},
-    {"help", optional_argument, NULL, 'h'},
-    {"msb", optional_argument, NULL, 'm'},
+    {"max-code-bits", optional_argument, NULL, 'b'},
     {"raw", optional_argument, NULL, 'r'},
+    {"msb", optional_argument, NULL, 'm'},
+    {"help", optional_argument, NULL, 'h'},
     {NULL, 0, NULL, 0}};
 
 static inline void print_help() {
@@ -64,6 +64,10 @@ int main(int argc, char** argv) {
   if (is_compressor) {
     if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bits, block_mode, msb) != 0) {
       return 2;
+    }
+  } else {
+    if (lzws_file_decompress(stdin, 0, stdout, 0, msb) != 0) {
+      return 3;
     }
   }
 

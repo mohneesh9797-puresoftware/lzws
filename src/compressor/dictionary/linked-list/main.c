@@ -13,8 +13,8 @@ static inline size_t get_total_codes_length(uint_fast8_t max_code_bits) {
 }
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits) {
-  size_t       total_codes_length  = get_total_codes_length(max_code_bits);
-  uint_fast8_t codes_length_offset = dictionary_ptr->codes_length_offset;
+  size_t           total_codes_length  = get_total_codes_length(max_code_bits);
+  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
 
   lzws_code_t undefined_next_code = LZWS_UNDEFINED_NEXT_CODE;
 
@@ -54,10 +54,11 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 }
 
 void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits) {
-  size_t       total_codes_length  = get_total_codes_length(max_code_bits);
-  uint_fast8_t codes_length_offset = dictionary_ptr->codes_length_offset;
+  size_t           total_codes_length  = get_total_codes_length(max_code_bits);
+  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
 
   lzws_code_t undefined_next_code = LZWS_UNDEFINED_NEXT_CODE;
+
   lzws_fill_array(
       dictionary_ptr->first_child_codes,
       sizeof(lzws_code_t), total_codes_length,
@@ -80,9 +81,9 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_d
 
   // We need to find target next symbol in next siblings.
 
-  uint_fast8_t codes_length_offset  = dictionary_ptr->codes_length_offset;
-  lzws_code_t* next_sibling_codes   = dictionary_ptr->next_sibling_codes;
-  uint8_t*     last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
+  lzws_code_fast_t codes_length_offset  = dictionary_ptr->codes_length_offset;
+  lzws_code_t*     next_sibling_codes   = dictionary_ptr->next_sibling_codes;
+  uint8_t*         last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
 
   // We know that "first_child_code" is not undefined, so it is better to use do + while for it.
   lzws_code_fast_t next_sibling_code = first_child_code;
@@ -103,7 +104,7 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_d
 }
 
 void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code) {
-  uint_fast8_t codes_length_offset = dictionary_ptr->codes_length_offset;
+  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
 
   // We need to store next symbol for next code.
   lzws_code_fast_t last_symbol_by_code_index                      = next_code - codes_length_offset;

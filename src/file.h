@@ -14,6 +14,7 @@
 enum {
   LZWS_FILE_ALLOCATE_FAILED = 1,
   LZWS_FILE_COMPRESSOR_FAILED,
+  LZWS_FILE_DECOMPRESSOR_FAILED,
   LZWS_FILE_NOT_ENOUGH_DESTINATION_BUFFER,
   LZWS_FILE_WRITE_FAILED
 };
@@ -35,9 +36,14 @@ enum {
 #define DEFAULT_DESTINATION_BUFFER_LENGTH DEFAULT_SOURCE_BUFFER_LENGTH
 
 // "source_buffer_length" and "destination_buffer_length" can be equal to 0, it will use default values.
+
 lzws_result_t lzws_file_compress(
     FILE* source_file_ptr, size_t source_buffer_length,
     FILE* destination_file_ptr, size_t destination_buffer_length,
     uint_fast8_t max_code_bits, bool block_mode, bool msb);
+lzws_result_t lzws_file_decompress(
+    FILE* source_file_ptr, size_t source_buffer_length,
+    FILE* destination_file_ptr, size_t destination_buffer_length,
+    bool msb);
 
 #endif // LZWS_FILE_H

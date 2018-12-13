@@ -8,7 +8,7 @@
 #include "../../../common.h"
 
 typedef struct {
-  uint_fast8_t codes_length_offset;
+  lzws_code_fast_t codes_length_offset;
 
   lzws_code_t* first_child_codes;
   lzws_code_t* next_sibling_codes;
