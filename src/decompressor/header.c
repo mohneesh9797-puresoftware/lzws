@@ -43,6 +43,8 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
   state_ptr->max_code_bits = max_code_bits;
   state_ptr->block_mode    = (byte & LZWS_BLOCK_MODE) != 0;
 
+  state_ptr->initial_used_code = lzws_get_initial_used_code(block_mode);
+
   state_ptr->status = LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY;
 
   return 0;

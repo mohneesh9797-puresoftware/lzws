@@ -44,11 +44,22 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
-  dictionary_ptr->undefined_previous_code = undefined_previous_code;
-
   dictionary_ptr->previous_codes       = previous_codes;
   dictionary_ptr->last_symbol_by_codes = last_symbol_by_codes;
   dictionary_ptr->output_buffer        = output_buffer;
 
   return 0;
+}
+
+void lzws_decompressor_clear_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits) {
+  lzws_code_t undefined_previous_code = lzws_get_undefined_previous_code(max_code_bits);
+  size_t      codes_length            = get_codes_length(dictionary_ptr, max_code_bits);
+
+  lzws_fill_array(
+      dictionary_ptr->previous_codes,
+      sizeof(lzws_code_t), codes_length,
+      &undefined_previous_code, LZWS_UNDEFINED_PREVIOUS_CODE_IDENTICAL_BYTES);
+
+  // We can keep last symbol by codes and output buffer as is.
+  // Algorithm will access only initialized symbols and buffer bytes.
 }

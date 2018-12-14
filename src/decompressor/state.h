@@ -26,6 +26,10 @@ typedef struct {
   uint_fast8_t max_code_bits;
   bool         block_mode;
   bool         msb;
+
+  lzws_code_fast_t initial_used_code;
+
+  lzws_decompressor_dictionary_t dictionary;
 } lzws_decompressor_state_t;
 
 lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb);

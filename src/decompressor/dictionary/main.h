@@ -24,6 +24,7 @@ LZWS_INLINE void lzws_decompressor_initialize_dictionary(lzws_decompressor_dicti
 }
 
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits);
+void          lzws_decompressor_clear_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits);
 
 LZWS_INLINE void lzws_decompressor_free_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr) {
   if (dictionary_ptr->previous_codes != NULL) {

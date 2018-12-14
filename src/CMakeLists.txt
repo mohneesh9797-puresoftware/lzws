@@ -22,6 +22,7 @@ generate_bit_masks_table ()
 configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c")
 
 add_subdirectory ("compressor")
+add_subdirectory ("decompressor")
 
 set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "macro.h" "utils.h")
 set (SOURCES ${SOURCES} "common.c" "file.c" "generated_constants.c" "utils.c")

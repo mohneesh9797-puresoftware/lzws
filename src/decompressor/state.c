@@ -4,8 +4,10 @@
 
 #define LZWS_DECOMPRESSOR_STATE_C
 
-#include "state.h"
+#include "dictionary/main.h"
+
 #include "common.h"
+#include "state.h"
 
 lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb) {
   lzws_decompressor_state_t* state_ptr = malloc(sizeof(lzws_decompressor_state_t));
@@ -17,7 +19,7 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
   state_ptr->msb = msb;
 
-  // lzws_decompressor_initialize_dictionary(state_ptr);
+  lzws_decompressor_initialize_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code);
 
   *result_state_ptr = state_ptr;
 
