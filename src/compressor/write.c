@@ -51,8 +51,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
 
   // Code bits here will always be >= 8.
   // So destination bytes will always be >= 1.
-  uint_fast8_t destination_bytes = (code_bits + remainder_bits) >> 3;
-
+  uint_fast8_t destination_bytes = lzws_floor_bits_to_bytes(code_bits + remainder_bits);
   if (*destination_length_ptr < destination_bytes) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }

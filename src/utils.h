@@ -30,6 +30,14 @@ LZWS_INLINE uint_fast16_t lzws_get_bit_mask(uint_fast8_t bits) {
   return LZWS_BIT_MASKS[bits];
 }
 
+LZWS_INLINE size_t lzws_floor_bits_to_bytes(size_t bits) {
+  return bits >> 3;
+}
+
+LZWS_INLINE size_t lzws_ceil_bits_to_bytes(size_t bits) {
+  return (bits + 7) >> 3;
+}
+
 LZWS_INLINE void lzws_read_byte(uint8_t** source_ptr, size_t* source_length_ptr, uint_fast8_t* byte_ptr) {
   *byte_ptr = **source_ptr;
   (*source_ptr)++;

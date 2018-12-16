@@ -27,9 +27,8 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state_ptr->block_mode    = block_mode;
   state_ptr->msb           = msb;
 
-  state_ptr->initial_used_code = lzws_get_initial_used_code(block_mode);
-  state_ptr->max_code          = lzws_get_bit_mask(max_code_bits);
-
+  state_ptr->initial_used_code   = lzws_get_initial_used_code(block_mode);
+  state_ptr->max_code            = lzws_get_bit_mask(max_code_bits);
   state_ptr->last_used_code      = state_ptr->initial_used_code;
   state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 

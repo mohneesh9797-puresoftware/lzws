@@ -2,7 +2,7 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_DECOMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_C
+#define LZWS_DECOMPRESSOR_DICTIONARY_MAIN_C
 
 #include "../common.h"
 
@@ -12,9 +12,12 @@ static inline size_t get_codes_length(lzws_decompressor_dictionary_t* dictionary
   return lzws_get_power_of_two(max_code_bits) - dictionary_ptr->codes_length_offset;
 }
 
-lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits) {
-  lzws_code_t undefined_previous_code = lzws_get_undefined_previous_code(max_code_bits);
+lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, uint_fast8_t max_code_bits) {
+  // We won't store char codes and clear code.
+  dictionary_ptr->codes_length_offset = initial_used_code + 1;
+
   size_t      codes_length            = get_codes_length(dictionary_ptr, max_code_bits);
+  lzws_code_t undefined_previous_code = lzws_get_undefined_previous_code(max_code_bits);
 
   lzws_code_t* previous_codes = lzws_allocate_array(
     sizeof(lzws_code_t), codes_length,
@@ -44,6 +47,8 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
+  dictionary_ptr->undefined_previous_code = undefined_previous_code;
+
   dictionary_ptr->previous_codes       = previous_codes;
   dictionary_ptr->last_symbol_by_codes = last_symbol_by_codes;
   dictionary_ptr->output_buffer        = output_buffer;
@@ -52,13 +57,12 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 }
 
 void lzws_decompressor_clear_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits) {
-  lzws_code_t undefined_previous_code = lzws_get_undefined_previous_code(max_code_bits);
-  size_t      codes_length            = get_codes_length(dictionary_ptr, max_code_bits);
+  size_t codes_length = get_codes_length(dictionary_ptr, max_code_bits);
 
   lzws_fill_array(
     dictionary_ptr->previous_codes,
     sizeof(lzws_code_t), codes_length,
-    &undefined_previous_code, LZWS_UNDEFINED_PREVIOUS_CODE_IDENTICAL_BYTES);
+    &dictionary_ptr->undefined_previous_code, LZWS_UNDEFINED_PREVIOUS_CODE_IDENTICAL_BYTES);
 
   // We can keep last symbol by codes and output buffer as is.
   // Algorithm will access only initialized symbols and buffer bytes.

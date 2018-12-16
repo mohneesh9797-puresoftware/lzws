@@ -9,6 +9,7 @@
 
 typedef struct {
   lzws_code_fast_t codes_length_offset;
+  lzws_code_t      undefined_previous_code;
 
   lzws_code_t* previous_codes;
   uint8_t*     last_symbol_by_codes;

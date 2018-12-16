@@ -121,8 +121,8 @@ Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 
 ## Documentation
 
-* [linked_list_compressor.txt](doc/linked_list_compressor.txt)
-* [sparse_array_compressor.txt](doc/sparse_array_compressor.txt)
+* [compressor_with_linked_list.txt](doc/compressor_with_linked_list.txt)
+* [compressor_with_sparse_array.txt](doc/compressor_with_sparse_array.txt)
 * [compressor_ratio.txt](doc/compressor_ratio.txt)
 * [decompressor.txt](doc/decompressor.txt)
 * [output_compatibility.txt](doc/output_compatibility.txt)

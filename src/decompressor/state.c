@@ -4,7 +4,7 @@
 
 #define LZWS_DECOMPRESSOR_STATE_C
 
-#include "dictionary/main.h"
+#include "dictionary/wrapper.h"
 
 #include "common.h"
 #include "state.h"
@@ -19,7 +19,10 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
   state_ptr->msb = msb;
 
-  lzws_decompressor_initialize_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code);
+  state_ptr->remainder      = 0;
+  state_ptr->remainder_bits = 0;
+
+  lzws_decompressor_initialize_dictionary_wrapper(state_ptr);
 
   *result_state_ptr = state_ptr;
 
@@ -27,7 +30,7 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 }
 
 void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr) {
-  // lzws_decompressor_free_dictionary(state_ptr);
+  lzws_decompressor_free_dictionary_wrapper(state_ptr);
 
   free(state_ptr);
 }

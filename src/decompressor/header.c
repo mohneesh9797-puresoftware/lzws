@@ -7,7 +7,7 @@
 #include "common.h"
 #include "header.h"
 
-lzws_result_t lzws_decompressor_write_magic_header(uint8_t** source_ptr, size_t* source_length_ptr) {
+lzws_result_t lzws_decompressor_read_magic_header(uint8_t** source_ptr, size_t* source_length_ptr) {
   if (*source_length_ptr < 2) {
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
@@ -40,10 +40,15 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
     return LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BITS;
   }
 
-  state_ptr->max_code_bits = max_code_bits;
-  state_ptr->block_mode    = (byte & LZWS_BLOCK_MODE) != 0;
+  bool block_mode = (byte & LZWS_BLOCK_MODE) != 0;
 
-  state_ptr->initial_used_code = lzws_get_initial_used_code(block_mode);
+  state_ptr->max_code_bits = max_code_bits;
+  state_ptr->block_mode    = block_mode;
+
+  state_ptr->initial_used_code   = lzws_get_initial_used_code(block_mode);
+  state_ptr->max_code            = lzws_get_bit_mask(max_code_bits);
+  state_ptr->last_used_code      = state_ptr->initial_used_code;
+  state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 
   state_ptr->status = LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY;
 
