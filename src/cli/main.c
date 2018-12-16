@@ -8,25 +8,25 @@
 #include "../file.h"
 
 static const char* help =
-    "Overview: LZWS cli tool\n"
-    "\n"
-    "Usage: lzws-cli [-%s] [< stdin] [> stdout]\n"
-    "\n"
-    "Options:\n"
-    "  --decompress (-d) = decompress (compress by default)\n"
-    "  --max-code-bits (-b) = set max code bits (%u-%u) (%u by default) [compressor only]\n"
-    "  --raw (-r) = raw mode, disable block mode (enabled by default) [compressor only]\n"
-    "  --msb (-m) = enable most significant bit (least significant bit used by default)\n"
-    "  --help (-h) = print help\n";
+  "Overview: LZWS cli tool\n"
+  "\n"
+  "Usage: lzws-cli [-%s] [< stdin] [> stdout]\n"
+  "\n"
+  "Options:\n"
+  "  --decompress (-d) = decompress (compress by default)\n"
+  "  --max-code-bits (-b) = set max code bits (%u-%u) (%u by default) [compressor only]\n"
+  "  --raw (-r) = raw mode, disable block mode (enabled by default) [compressor only]\n"
+  "  --msb (-m) = enable most significant bit (least significant bit used by default)\n"
+  "  --help (-h) = print help\n";
 
 static const char*   short_options  = "db:rmh";
 static struct option long_options[] = {
-    {"decompress", optional_argument, NULL, 'd'},
-    {"max-code-bits", optional_argument, NULL, 'b'},
-    {"raw", optional_argument, NULL, 'r'},
-    {"msb", optional_argument, NULL, 'm'},
-    {"help", optional_argument, NULL, 'h'},
-    {NULL, 0, NULL, 0}};
+  {"decompress", optional_argument, NULL, 'd'},
+  {"max-code-bits", optional_argument, NULL, 'b'},
+  {"raw", optional_argument, NULL, 'r'},
+  {"msb", optional_argument, NULL, 'm'},
+  {"help", optional_argument, NULL, 'h'},
+  {NULL, 0, NULL, 0}};
 
 static inline void print_help() {
   fprintf(stderr, help, short_options, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);

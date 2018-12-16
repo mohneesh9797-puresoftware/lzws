@@ -59,12 +59,12 @@ static inline lzws_result_t allocate_buffers(uint8_t** source_buffer_ptr, size_t
   return 0;
 }
 
-#define ALLOCATE_BUFFERS()                              \
-  result = allocate_buffers(                            \
-      &source_buffer, &source_buffer_length,            \
-      &destination_buffer, &destination_buffer_length); \
-  if (result != 0) {                                    \
-    return result;                                      \
+#define ALLOCATE_BUFFERS()                            \
+  result = allocate_buffers(                          \
+    &source_buffer, &source_buffer_length,            \
+    &destination_buffer, &destination_buffer_length); \
+  if (result != 0) {                                  \
+    return result;                                    \
   }
 
 // -- files --
@@ -101,9 +101,9 @@ static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer
 // Than we need to read more data from file into remaining part of the buffer.
 // Than algorithm can use same buffer again.
 static inline lzws_result_t read_source_buffer(
-    FILE*    source_file_ptr,
-    uint8_t* source_buffer, size_t source_buffer_length,
-    uint8_t** source_ptr, size_t* source_length_ptr) {
+  FILE*    source_file_ptr,
+  uint8_t* source_buffer, size_t source_buffer_length,
+  uint8_t** source_ptr, size_t* source_length_ptr) {
   uint8_t* remaining_data        = *source_ptr;
   size_t   remaining_data_length = *source_length_ptr;
   if (remaining_data != source_buffer && remaining_data_length != 0) {
@@ -134,9 +134,9 @@ static inline lzws_result_t read_source_buffer(
 // We need to write this data into file.
 // Than algorithm can use same buffer again.
 static inline lzws_result_t flush_destination_buffer(
-    FILE*    destination_file_ptr,
-    uint8_t* destination_buffer, size_t destination_buffer_length,
-    uint8_t** destination_ptr, size_t* destination_length_ptr) {
+  FILE*    destination_file_ptr,
+  uint8_t* destination_buffer, size_t destination_buffer_length,
+  uint8_t** destination_ptr, size_t* destination_length_ptr) {
   size_t data_length = destination_buffer_length - *destination_length_ptr;
   if (data_length == 0) {
     // We want to write more data at once, than buffer has.
@@ -159,9 +159,9 @@ static inline lzws_result_t flush_destination_buffer(
 // We can read more source from file.
 #define READ_MORE_SOURCE(FAILED)                           \
   result = read_source_buffer(                             \
-      source_file_ptr,                                     \
-      source_buffer, source_buffer_length,                 \
-      &source, &source_length);                            \
+    source_file_ptr,                                       \
+    source_buffer, source_buffer_length,                   \
+    &source, &source_length);                              \
                                                            \
   if (result == LZWS_FILE_READ_FINISHED) {                 \
     if (source_length != 0) {                              \
@@ -174,14 +174,14 @@ static inline lzws_result_t flush_destination_buffer(
   }
 
 // We can flush destination buffer into file.
-#define FLUSH_DESTINATION_BUFFER()                   \
-  result = flush_destination_buffer(                 \
-      destination_file_ptr,                          \
-      destination_buffer, destination_buffer_length, \
-      &destination, &destination_length);            \
-                                                     \
-  if (result != 0) {                                 \
-    return result;                                   \
+#define FLUSH_DESTINATION_BUFFER()                 \
+  result = flush_destination_buffer(               \
+    destination_file_ptr,                          \
+    destination_buffer, destination_buffer_length, \
+    &destination, &destination_length);            \
+                                                   \
+  if (result != 0) {                               \
+    return result;                                 \
   }
 
 #define WITH_READ_WRITE_BUFFERS(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
@@ -214,9 +214,9 @@ static inline lzws_result_t write_remaining_destination_buffer(FILE* destination
   WITH_READ_WRITE_BUFFERS(LZWS_COMPRESSOR_NEEDS_MORE_SOURCE, LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION, LZWS_FILE_COMPRESSOR_FAILED, __VA_ARGS__)
 
 static inline lzws_result_t compress_data(
-    lzws_compressor_state_t* state_ptr,
-    FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
-    FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length) {
+  lzws_compressor_state_t* state_ptr,
+  FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
+  FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length) {
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
   uint8_t* destination        = destination_buffer;
@@ -232,9 +232,9 @@ static inline lzws_result_t compress_data(
 }
 
 lzws_result_t lzws_file_compress(
-    FILE* source_file_ptr, size_t source_buffer_length,
-    FILE* destination_file_ptr, size_t destination_buffer_length,
-    uint_fast8_t max_code_bits, bool block_mode, bool msb) {
+  FILE* source_file_ptr, size_t source_buffer_length,
+  FILE* destination_file_ptr, size_t destination_buffer_length,
+  uint_fast8_t max_code_bits, bool block_mode, bool msb) {
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
 
@@ -250,9 +250,9 @@ lzws_result_t lzws_file_compress(
   }
 
   result = compress_data(
-      state_ptr,
-      source_file_ptr, source_buffer, source_buffer_length,
-      destination_file_ptr, destination_buffer, destination_buffer_length);
+    state_ptr,
+    source_file_ptr, source_buffer, source_buffer_length,
+    destination_file_ptr, destination_buffer, destination_buffer_length);
 
   lzws_compressor_free_state(state_ptr);
   free(source_buffer);
@@ -267,9 +267,9 @@ lzws_result_t lzws_file_compress(
   WITH_READ_WRITE_BUFFERS(LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE, LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION, LZWS_FILE_DECOMPRESSOR_FAILED, __VA_ARGS__)
 
 static inline lzws_result_t decompress_data(
-    lzws_decompressor_state_t* state_ptr,
-    FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
-    FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length) {
+  lzws_decompressor_state_t* state_ptr,
+  FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
+  FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length) {
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
   uint8_t* destination        = destination_buffer;
@@ -284,9 +284,9 @@ static inline lzws_result_t decompress_data(
 }
 
 lzws_result_t lzws_file_decompress(
-    FILE* source_file_ptr, size_t source_buffer_length,
-    FILE* destination_file_ptr, size_t destination_buffer_length,
-    bool msb) {
+  FILE* source_file_ptr, size_t source_buffer_length,
+  FILE* destination_file_ptr, size_t destination_buffer_length,
+  bool msb) {
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
 
@@ -302,9 +302,9 @@ lzws_result_t lzws_file_decompress(
   }
 
   result = decompress_data(
-      state_ptr,
-      source_file_ptr, source_buffer, source_buffer_length,
-      destination_file_ptr, destination_buffer, destination_buffer_length);
+    state_ptr,
+    source_file_ptr, source_buffer, source_buffer_length,
+    destination_file_ptr, destination_buffer, destination_buffer_length);
 
   lzws_decompressor_free_state(state_ptr);
   free(source_buffer);

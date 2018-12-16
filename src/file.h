@@ -41,12 +41,13 @@ enum {
 // "source_buffer_length" and "destination_buffer_length" can be equal to 0, it will use default values.
 
 lzws_result_t lzws_file_compress(
-    FILE* source_file_ptr, size_t source_buffer_length,
-    FILE* destination_file_ptr, size_t destination_buffer_length,
-    uint_fast8_t max_code_bits, bool block_mode, bool msb);
+  FILE* source_file_ptr, size_t source_buffer_length,
+  FILE* destination_file_ptr, size_t destination_buffer_length,
+  uint_fast8_t max_code_bits, bool block_mode, bool msb);
+
 lzws_result_t lzws_file_decompress(
-    FILE* source_file_ptr, size_t source_buffer_length,
-    FILE* destination_file_ptr, size_t destination_buffer_length,
-    bool msb);
+  FILE* source_file_ptr, size_t source_buffer_length,
+  FILE* destination_file_ptr, size_t destination_buffer_length,
+  bool msb);
 
 #endif // LZWS_FILE_H
