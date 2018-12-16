@@ -15,21 +15,24 @@ enum {
   LZWS_FILE_ALLOCATE_FAILED = 1,
   LZWS_FILE_COMPRESSOR_FAILED,
   LZWS_FILE_DECOMPRESSOR_FAILED,
+  LZWS_FILE_NOT_ENOUGH_SOURCE_BUFFER,
   LZWS_FILE_NOT_ENOUGH_DESTINATION_BUFFER,
+  LZWS_FILE_READ_FINISHED,
+  LZWS_FILE_READ_FAILED,
   LZWS_FILE_WRITE_FAILED
 };
 
-#if defined(LZWS_DICTIONARY_LINKED_LIST)
+#if defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST)
 
 // 32 KB for each buffer is enough.
 // Performance growth with 64 KB is not significant.
 #define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 15)
 
-#elif defined(LZWS_DICTIONARY_SPARSE_ARRAY)
+#elif defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY)
 
-// 1 MB for each buffer is enough.
-// Performance growth with 2 MB is not significant.
-#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 20)
+// 512 KB for each buffer is enough.
+// Performance growth with 1 MB is not significant.
+#define DEFAULT_SOURCE_BUFFER_LENGTH (1 << 19)
 
 #endif
 

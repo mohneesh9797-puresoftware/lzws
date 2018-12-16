@@ -1,6 +1,6 @@
-if (LZWS_DICTIONARY_LINKED_LIST)
+if (LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST)
   add_subdirectory ("linked-list")
-elseif (LZWS_DICTIONARY_SPARSE_ARRAY)
+elseif (LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY)
   add_subdirectory ("sparse-array")
 endif ()
 

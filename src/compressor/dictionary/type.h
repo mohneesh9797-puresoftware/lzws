@@ -7,9 +7,9 @@
 
 #include "../../config.h"
 
-#if defined(LZWS_DICTIONARY_LINKED_LIST)
+#if defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST)
 #include "linked-list/type.h"
-#elif defined(LZWS_DICTIONARY_SPARSE_ARRAY)
+#elif defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY)
 #include "sparse-array/type.h"
 #endif
 

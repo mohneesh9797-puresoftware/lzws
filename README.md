@@ -1,5 +1,5 @@
 # WIP
-Compressor is almost done, decompressor is pending.
+Compressor is almost done, decompressor and tests are pending.
 
 # LZW + Stream = LZWS
 
@@ -10,7 +10,7 @@ Cli tool should be compatible with original UNIX `compress`, [ncompress](https:/
 
 The main goal of the project is to provide streaming interface for lzw compressor/decompressor. This interface is framework agnostic and can be used in any application.
 
-## Dictionary implementations
+## Compressor dictionary implementations
 
 * Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general.
 * Sparse array. It has high memory usage <= 33.5 MB (16 bit codes). It will be the fastest when block mode disabled or amount of clears is low, otherwise it will be slow.
@@ -38,7 +38,7 @@ make test
 You can enable/disable features:
 ```sh
 cmake .. \
-  -DLZWS_DICTIONARY="linked-list"/"sparse-array"
+  -DLZWS_COMPRESSOR_DICTIONARY="linked-list"/"sparse-array"
   -DLZWS_SHARED=0/1
   -DLZWS_STATIC=0/1
   -DLZWS_CLI=0/1
@@ -51,7 +51,7 @@ wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.18.20.tar.xz"
 tar xf linux-4.18.20.tar.xz
 tar cf linux.tar linux-4.18.20
 
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_DICTIONARY="linked-list"
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_COMPRESSOR_DICTIONARY="linked-list"
 make
 
 time ./src/cli/lzws-cli-static < linux.tar > linux.tar.Z
@@ -115,7 +115,7 @@ You can write your destination buffer to output.
 Than you need to provide new destination (same buffer for example).
 
 PS minimum `destination_length` is just 2 bytes, `source_length` is 1 byte.
-We can recommend to use 32 KB buffers for `linked-list` and 1 MB for `sparse-array`.
+We can recommend to use 32 KB buffers for `linked-list` and 512 KB for `sparse-array`.
 
 Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
 

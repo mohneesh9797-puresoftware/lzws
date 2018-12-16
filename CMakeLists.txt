@@ -21,14 +21,14 @@ if (NOT DEFINED LZWS_TARGET)
   set (LZWS_TARGET ${PROJECT_NAME})
 endif ()
 
-set (LZWS_DICTIONARY "sparse-array" CACHE STRING "dictionary implementation")
+set (LZWS_COMPRESSOR_DICTIONARY "sparse-array" CACHE STRING "dictionary implementation")
 
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")
 set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
 
-if (NOT LZWS_DICTIONARY)
+if (NOT LZWS_COMPRESSOR_DICTIONARY)
   message (FATAL_ERROR "Please select dictionary implementation.")
 endif ()
 
