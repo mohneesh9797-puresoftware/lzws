@@ -19,8 +19,8 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
   state_ptr->msb = msb;
 
-  state_ptr->remainder      = 0;
-  state_ptr->remainder_bits = 0;
+  state_ptr->source_remainder      = 0;
+  state_ptr->source_remainder_bits = 0;
 
   lzws_decompressor_initialize_dictionary_wrapper(state_ptr);
 

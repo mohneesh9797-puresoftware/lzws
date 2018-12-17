@@ -54,3 +54,21 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 
   return 0;
 }
+
+lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
+  switch (state_ptr->status) {
+    case LZWS_DECOMPRESSOR_READ_HEADER:
+    case LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY:
+    case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
+      // We have no current code and source remainder yet.
+      return 0;
+
+      // case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
+      // case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
+      //   // We have current code and maybe source remainder.
+      //   return lzws_compressor_write_current_code_and_source_remainder(state_ptr, destination_ptr, destination_length_ptr);
+
+    default:
+      return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
+  }
+}

@@ -60,13 +60,13 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
     case LZWS_COMPRESSOR_WRITE_HEADER:
     case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
     case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
-      // We have no current code and remainder yet.
+      // We have no current code and destination remainder yet.
       return 0;
 
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
     case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
-      // We have current code and maybe remainder.
-      return lzws_compressor_write_current_code_and_remainder(state_ptr, destination_ptr, destination_length_ptr);
+      // We have current code and maybe destination remainder.
+      return lzws_compressor_write_current_code_and_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
 
     default:
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;

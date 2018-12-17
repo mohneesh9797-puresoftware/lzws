@@ -290,6 +290,7 @@ static inline lzws_result_t decompress_data(
 
   DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompressor_read_magic_header, &source, &source_length);
   DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
+  DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_flush_decompressor, state_ptr);
 
   return write_remaining_destination_buffer(destination_file_ptr, destination_buffer, destination_buffer_length, destination_length);
 }

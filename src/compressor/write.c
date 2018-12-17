@@ -6,11 +6,11 @@
 #include "common.h"
 #include "utils.h"
 
-static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, uint_fast8_t remainder, uint_fast8_t remainder_bits, bool msb) {
+static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, uint_fast8_t destination_remainder, uint_fast8_t destination_remainder_bits, bool msb) {
   lzws_code_fast_t code      = *code_ptr;
   uint_fast8_t     code_bits = *code_bits_ptr;
 
-  uint_fast8_t current_bits   = 8 - remainder_bits;
+  uint_fast8_t current_bits   = 8 - destination_remainder_bits;
   uint_fast8_t remaining_bits = code_bits - current_bits;
 
   uint_fast8_t byte;
@@ -19,9 +19,9 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
     // Taking first bits.
     byte = code >> remaining_bits;
 
-    if (remainder_bits != 0) {
-      // Remainder is sitting on the top.
-      byte = (remainder << current_bits) | byte;
+    if (destination_remainder_bits != 0) {
+      // Destination remainder is sitting on the top.
+      byte = (destination_remainder << current_bits) | byte;
     }
 
     // Removing first bits.
@@ -30,9 +30,9 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
     // Taking last bits.
     byte = code & lzws_get_bit_mask(current_bits);
 
-    if (remainder_bits != 0) {
-      // Remainder is sitting on the bottom.
-      byte = (byte << remainder_bits) | remainder;
+    if (destination_remainder_bits != 0) {
+      // Destination remainder is sitting on the bottom.
+      byte = (byte << destination_remainder_bits) | destination_remainder;
     }
 
     // Removing last bits.
@@ -46,21 +46,22 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
 }
 
 lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
-  uint_fast8_t code_bits      = state_ptr->last_used_code_bits;
-  uint_fast8_t remainder_bits = state_ptr->remainder_bits;
+  uint_fast8_t code_bits                  = state_ptr->last_used_code_bits;
+  uint_fast8_t destination_remainder_bits = state_ptr->destination_remainder_bits;
 
-  // Code bits here will always be >= 8.
+  // Code bits will always be >= 8.
+  // Destination remainder bits will always be <= 7.
   // So destination bytes will always be >= 1.
-  uint_fast8_t destination_bytes = lzws_floor_bits_to_bytes(code_bits + remainder_bits);
+  uint_fast8_t destination_bytes = lzws_floor_bits_to_bytes(code_bits + destination_remainder_bits);
   if (*destination_length_ptr < destination_bytes) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzws_code_fast_t code      = state_ptr->current_code;
-  uint_fast8_t     remainder = state_ptr->remainder;
-  bool             msb       = state_ptr->msb;
+  lzws_code_fast_t code                  = state_ptr->current_code;
+  uint_fast8_t     destination_remainder = state_ptr->destination_remainder;
+  bool             msb                   = state_ptr->msb;
 
-  uint_fast8_t byte = get_byte(&code, &code_bits, remainder, remainder_bits, msb);
+  uint_fast8_t byte = get_byte(&code, &code_bits, destination_remainder, destination_remainder_bits, msb);
   lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
 
   while (code_bits >= 8) {
@@ -70,15 +71,15 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
 
   // We should keep current code as is.
 
-  state_ptr->remainder      = code;
-  state_ptr->remainder_bits = code_bits;
+  state_ptr->destination_remainder      = code;
+  state_ptr->destination_remainder_bits = code_bits;
 
   return 0;
 }
 
-static inline lzws_result_t write_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
-  uint_fast8_t remainder_bits = state_ptr->remainder_bits;
-  if (remainder_bits == 0) {
+static inline lzws_result_t write_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+  uint_fast8_t destination_remainder_bits = state_ptr->destination_remainder_bits;
+  if (destination_remainder_bits == 0) {
     return 0;
   }
 
@@ -86,27 +87,27 @@ static inline lzws_result_t write_remainder(lzws_compressor_state_t* state_ptr, 
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  // Remainder is left padded with zeroes by default.
-  uint_fast8_t remainder = state_ptr->remainder;
+  // Destination remainder is left padded with zeroes by default.
+  uint_fast8_t destination_remainder = state_ptr->destination_remainder;
 
   if (state_ptr->msb) {
     // Adding right padding.
-    remainder <<= 8 - remainder_bits;
+    destination_remainder <<= 8 - destination_remainder_bits;
   }
 
-  lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, remainder);
+  lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, destination_remainder);
 
-  state_ptr->remainder      = 0;
-  state_ptr->remainder_bits = 0;
+  state_ptr->destination_remainder      = 0;
+  state_ptr->destination_remainder_bits = 0;
 
   return 0;
 }
 
-lzws_result_t lzws_compressor_write_current_code_and_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_compressor_write_current_code_and_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
   lzws_result_t result = lzws_compressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {
     return result;
   }
 
-  return write_remainder(state_ptr, destination_ptr, destination_length_ptr);
+  return write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
 }

@@ -39,8 +39,8 @@ typedef struct {
   lzws_code_fast_t current_code;
   uint_fast8_t     next_symbol;
 
-  uint_fast8_t remainder;
-  uint_fast8_t remainder_bits;
+  uint_fast8_t destination_remainder;
+  uint_fast8_t destination_remainder_bits;
 
   lzws_compressor_dictionary_t dictionary;
   lzws_compressor_ratio_t      ratio;
