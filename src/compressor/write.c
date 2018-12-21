@@ -64,9 +64,10 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   uint_fast8_t byte = get_byte(&code, &code_bits, destination_remainder, destination_remainder_bits, msb);
   lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
 
-  while (code_bits >= 8) {
+  while (destination_bytes != 1) {
     byte = get_byte(&code, &code_bits, 0, 0, msb);
     lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
+    destination_bytes--;
   }
 
   // We should keep current code as is.

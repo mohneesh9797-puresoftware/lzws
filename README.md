@@ -114,7 +114,7 @@ It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
 You can write your destination buffer to output.
 Than you need to provide new destination (same buffer for example).
 
-PS minimum `destination_length` is just 2 bytes, `source_length` is 1 byte.
+PS minimum for `source_length` and `destination_length` is just 2 bytes.
 We can recommend to use 32 KB buffers for `linked-list` and 512 KB for `sparse-array`.
 
 Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.

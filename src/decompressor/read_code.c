@@ -9,30 +9,45 @@
 static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, uint_fast8_t byte, bool msb) {
   lzws_code_fast_t code      = *code_ptr;
   uint_fast8_t     code_bits = *code_bits_ptr;
+
+  uint_fast8_t current_bits   = 1;
+  uint_fast8_t remaining_bits = 2;
+
+  // if (code_bits != 0) {
+  //   code <<= 8;
+  // }
+
+  if (msb) {
+  } else {
+  }
+
+  printf("ololo %u\n", byte);
 }
 
 lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
-  uint_fast8_t code_bits             = state_ptr->last_used_code_bits;
+  uint_fast8_t target_code_bits      = state_ptr->last_used_code_bits;
   uint_fast8_t source_remainder_bits = state_ptr->source_remainder_bits;
 
-  // Source remainder bits will always be <= code bits - 1.
+  // Source remainder bits will always be <= target code bits - 1.
   // So source bytes will always be >= 1.
-  uint_fast8_t source_bytes = lzws_ceil_bits_to_bytes(code_bits - source_remainder_bits);
+  uint_fast8_t source_bytes = lzws_ceil_bits_to_bytes(target_code_bits - source_remainder_bits);
   if (*source_length_ptr < source_bytes) {
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
-  lzws_code_fast_t current_code      = state_ptr->source_remainder;
-  uint_fast8_t     current_code_bits = source_remainder_bits;
-  bool             msb               = state_ptr->msb;
+  lzws_code_fast_t code      = state_ptr->source_remainder;
+  uint_fast8_t     code_bits = source_remainder_bits;
+  bool             msb       = state_ptr->msb;
 
-  do {
-    uint_fast8_t byte;
+  uint_fast8_t byte;
+
+  while (source_bytes != 1) {
     lzws_decompressor_read_byte(state_ptr, source_ptr, source_length_ptr, &byte);
 
-    add_byte(&current_code, &current_code_bits, byte, msb);
     source_bytes--;
-  } while (source_bytes != 0);
+  }
+
+  lzws_decompressor_read_byte(state_ptr, source_ptr, source_length_ptr, &byte);
 
   return 0;
 }
