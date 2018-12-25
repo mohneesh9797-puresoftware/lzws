@@ -35,8 +35,8 @@ typedef struct {
   lzws_code_fast_t last_used_code;
   uint_fast8_t     last_used_code_bits;
 
-  lzws_code_fast_t source_remainder;
-  uint_fast8_t     source_remainder_bits;
+  uint_fast8_t source_remainder;
+  uint_fast8_t source_remainder_bits;
 
   lzws_decompressor_dictionary_t dictionary;
 } lzws_decompressor_state_t;
