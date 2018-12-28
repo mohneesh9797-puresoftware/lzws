@@ -10,25 +10,25 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
   lzws_code_fast_t code      = *code_ptr;
   uint_fast8_t     code_bits = *code_bits_ptr;
 
-  uint_fast8_t current_bits   = 8 - destination_remainder_bits;
-  uint_fast8_t remaining_bits = code_bits - current_bits;
+  uint_fast8_t current_code_bits   = 8 - destination_remainder_bits;
+  uint_fast8_t remaining_code_bits = code_bits - current_code_bits;
 
   uint_fast8_t byte;
 
   if (msb) {
     // Taking first bits.
-    byte = code >> remaining_bits;
+    byte = code >> remaining_code_bits;
 
     if (destination_remainder_bits != 0) {
       // Destination remainder is sitting on the top.
-      byte = (destination_remainder << current_bits) | byte;
+      byte = (destination_remainder << current_code_bits) | byte;
     }
 
     // Removing first bits.
-    code &= lzws_get_bit_mask(remaining_bits);
+    code &= lzws_get_bit_mask(remaining_code_bits);
   } else {
     // Taking last bits.
-    byte = code & lzws_get_bit_mask(current_bits);
+    byte = code & lzws_get_bit_mask(current_code_bits);
 
     if (destination_remainder_bits != 0) {
       // Destination remainder is sitting on the bottom.
@@ -36,11 +36,11 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
     }
 
     // Removing last bits.
-    code >>= current_bits;
+    code >>= current_code_bits;
   }
 
   *code_ptr      = code;
-  *code_bits_ptr = remaining_bits;
+  *code_bits_ptr = remaining_code_bits;
 
   return byte;
 }
