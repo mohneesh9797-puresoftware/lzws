@@ -29,16 +29,19 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_d
 void             lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code);
 
 LZWS_INLINE void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary_ptr) {
-  if (dictionary_ptr->first_child_codes != NULL) {
-    free(dictionary_ptr->first_child_codes);
+  lzws_code_t* first_child_codes = dictionary_ptr->first_child_codes;
+  if (first_child_codes != NULL) {
+    free(first_child_codes);
   }
 
-  if (dictionary_ptr->next_sibling_codes != NULL) {
-    free(dictionary_ptr->next_sibling_codes);
+  lzws_code_t* next_sibling_codes = dictionary_ptr->next_sibling_codes;
+  if (next_sibling_codes != NULL) {
+    free(next_sibling_codes);
   }
 
-  if (dictionary_ptr->last_symbol_by_codes != NULL) {
-    free(dictionary_ptr->last_symbol_by_codes);
+  uint8_t* last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
+  if (last_symbol_by_codes != NULL) {
+    free(last_symbol_by_codes);
   }
 }
 

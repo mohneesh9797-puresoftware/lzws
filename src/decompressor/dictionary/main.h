@@ -24,16 +24,19 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 void          lzws_decompressor_clear_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits);
 
 LZWS_INLINE void lzws_decompressor_free_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr) {
-  if (dictionary_ptr->previous_codes != NULL) {
-    free(dictionary_ptr->previous_codes);
+  lzws_code_t* previous_codes = dictionary_ptr->previous_codes;
+  if (previous_codes != NULL) {
+    free(previous_codes);
   }
 
-  if (dictionary_ptr->last_symbol_by_codes != NULL) {
-    free(dictionary_ptr->last_symbol_by_codes);
+  uint8_t* last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
+  if (last_symbol_by_codes != NULL) {
+    free(last_symbol_by_codes);
   }
 
-  if (dictionary_ptr->output_buffer != NULL) {
-    free(dictionary_ptr->output_buffer);
+  uint8_t* output_buffer = dictionary_ptr->output_buffer;
+  if (output_buffer != NULL) {
+    free(output_buffer);
   }
 }
 

@@ -44,8 +44,9 @@ LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_di
 }
 
 LZWS_INLINE void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary_ptr) {
-  if (dictionary_ptr->next_codes != NULL) {
-    free(dictionary_ptr->next_codes);
+  lzws_code_t* next_codes = dictionary_ptr->next_codes;
+  if (next_codes != NULL) {
+    free(next_codes);
   }
 }
 

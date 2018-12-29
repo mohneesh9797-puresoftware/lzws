@@ -18,7 +18,8 @@ enum {
   LZWS_DECOMPRESSOR_READ_HEADER = 1,
   LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY,
   LZWS_DECOMPRESSOR_READ_FIRST_CODE,
-  LZWS_DECOMPRESSOR_CORRUPTED_SOURCE,
+  LZWS_DECOMPRESSOR_READ_NEXT_CODE,
+  LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL,
   LZWS_DECOMPRESSOR_UNKNOWN_STATUS
 };
 typedef uint_fast8_t lzws_decompressor_status_t;
@@ -34,6 +35,8 @@ typedef struct {
   lzws_code_fast_t max_code;
   lzws_code_fast_t last_used_code;
   uint_fast8_t     last_used_code_bits;
+
+  lzws_code_fast_t prefix_code;
 
   uint_fast8_t source_remainder;
   uint_fast8_t source_remainder_bits;

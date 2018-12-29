@@ -8,6 +8,7 @@
 #include "header.h"
 #include "main.h"
 #include "read_code.h"
+#include "write.h"
 
 lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
   lzws_result_t result;
@@ -33,24 +34,28 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     }
   }
 
-  // while (true) {
-  //   switch (state_ptr->status) {
-  //     case LZWS_DECOMPRESSOR_READ_NEXT_SYMBOL:
-  //       result = lzws_decompressor_read_next_symbol(state_ptr, source_ptr, source_length_ptr);
-  //       break;
-  //
-  //     case LZWS_DECOMPRESSOR_PROCESS_CURRENT_CODE:
-  //       result = lzws_decompressor_process_current_code(state_ptr, destination_ptr, destination_length_ptr);
-  //       break;
-  //
-  //     default:
-  //       return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
-  //   }
-  //
-  //   if (result != 0) {
-  //     return result;
-  //   }
-  // }
+  while (true) {
+    switch (state_ptr->status) {
+      case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
+        result = lzws_decompressor_read_next_code(state_ptr, source_ptr, source_length_ptr);
+        break;
+
+      case LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL:
+        result = lzws_decompressor_write_prefix_symbol(state_ptr, destination_ptr, destination_length_ptr);
+        break;
+
+        // case LZWS_DECOMPRESSOR_PROCESS_CURRENT_CODE:
+        //   result = lzws_decompressor_process_current_code(state_ptr, destination_ptr, destination_length_ptr);
+        //   break;
+
+      default:
+        return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
+    }
+
+    if (result != 0) {
+      return result;
+    }
+  }
 
   return 0;
 }
@@ -60,13 +65,14 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
     case LZWS_DECOMPRESSOR_READ_HEADER:
     case LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY:
     case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
-      // We have no current code and source remainder yet.
+      // We have no prefix code and source remainder yet.
       return 0;
 
-      // case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
-      // case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
-      //   // We have current code and maybe source remainder.
-      //   return lzws_compressor_write_current_code_and_source_remainder(state_ptr, destination_ptr, destination_length_ptr);
+      // case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
+      // case LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL:
+      // case LZWS_DECOMPRESSOR_PROCESS_CURRENT_CODE:
+      // // We have prefix code and maybe source remainder.
+      // return lzws_decompressor_write_current_code_and_source_remainder(state_ptr, destination_ptr, destination_length_ptr);
 
     default:
       return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;

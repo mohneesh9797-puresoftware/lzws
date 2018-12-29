@@ -6,9 +6,8 @@
 #include "common.h"
 #include "utils.h"
 
-static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, uint_fast8_t byte, bool msb) {
-  lzws_code_fast_t code      = *code_ptr;
-  uint_fast8_t     code_bits = *code_bits_ptr;
+static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bits, uint_fast8_t byte, bool msb) {
+  lzws_code_fast_t code = *code_ptr;
 
   if (msb) {
     // Code is sitting on the top.
@@ -18,30 +17,37 @@ static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_
     code = (byte << code_bits) | code;
   }
 
-  *code_ptr      = code;
-  *code_bits_ptr = code_bits + 8;
+  *code_ptr = code;
 }
 
-static inline void add_last_byte(
+static inline void add_byte_with_remainder(
   lzws_code_fast_t* code_ptr, uint_fast8_t code_bits, uint_fast8_t target_code_bits,
-  uint_fast8_t byte, uint_fast8_t* remainder_ptr, uint_fast8_t* remainder_bits_ptr,
+  uint_fast8_t byte, uint_fast8_t* source_remainder_ptr, uint_fast8_t* source_remainder_bits_ptr,
   bool msb) {
   //
 
-  lzws_code_fast_t code = *code_ptr;
-
-  uint_fast8_t code_part;
   uint_fast8_t code_part_bits = target_code_bits - code_bits;
+  if (code_part_bits == 8) {
+    add_byte(code_ptr, code_bits, byte, msb);
 
-  uint_fast8_t remainder;
-  uint_fast8_t remainder_bits = 8 - code_part_bits;
+    *source_remainder_ptr      = 0;
+    *source_remainder_bits_ptr = 0;
+
+    return;
+  }
+
+  lzws_code_fast_t code = *code_ptr;
+  uint_fast8_t     code_part;
+
+  uint_fast8_t source_remainder;
+  uint_fast8_t source_remainder_bits = 8 - code_part_bits;
 
   if (msb) {
     // Taking first bits from byte.
-    code_part = byte >> remainder_bits;
+    code_part = byte >> source_remainder_bits;
 
     // Last bits of byte is a remainder.
-    remainder = byte & lzws_get_bit_mask(remainder_bits);
+    source_remainder = byte & lzws_get_bit_mask(source_remainder_bits);
 
     // Code is sitting on the top.
     code = (code << code_part_bits) | code_part;
@@ -50,18 +56,18 @@ static inline void add_last_byte(
     code_part = byte & lzws_get_bit_mask(code_part_bits);
 
     // First bits of byte is a remainder.
-    remainder = byte >> code_part_bits;
+    source_remainder = byte >> code_part_bits;
 
     // Code is sitting on the bottom.
     code = (code_part << code_bits) | code;
   }
 
-  *code_ptr           = code;
-  *remainder_ptr      = remainder;
-  *remainder_bits_ptr = remainder_bits;
+  *code_ptr                  = code;
+  *source_remainder_ptr      = source_remainder;
+  *source_remainder_bits_ptr = source_remainder_bits;
 }
 
-lzws_result_t lzws_decompressor_read_current_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, lzws_code_fast_t* code_ptr) {
   uint_fast8_t target_code_bits      = state_ptr->last_used_code_bits;
   uint_fast8_t source_remainder_bits = state_ptr->source_remainder_bits;
 
@@ -81,17 +87,63 @@ lzws_result_t lzws_decompressor_read_current_code(lzws_decompressor_state_t* sta
 
   while (source_bytes != 1) {
     lzws_decompressor_read_byte(state_ptr, source_ptr, source_length_ptr, &byte);
-    add_byte(&code, &code_bits, byte, msb);
+    add_byte(&code, code_bits, byte, msb);
+
+    code_bits += 8;
     source_bytes--;
   }
 
   lzws_decompressor_read_byte(state_ptr, source_ptr, source_length_ptr, &byte);
-  add_last_byte(
+  add_byte_with_remainder(
     &code, code_bits, target_code_bits,
     byte, &state_ptr->source_remainder, &state_ptr->source_remainder_bits,
     msb);
 
-  state_ptr->current_code = code;
+  *code_ptr = code;
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+  lzws_code_fast_t code;
+
+  lzws_result_t result = lzws_decompressor_read_code(state_ptr, source_ptr, source_length_ptr, &code);
+  if (result != 0) {
+    return result;
+  }
+
+  // It is not possible to receive clear code as first code.
+  // So we can compare first code with alphabet length.
+
+  if (code >= LZWS_ALPHABET_LENGTH) {
+    return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+  }
+
+  state_ptr->prefix_code = code;
+  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL;
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+  lzws_code_fast_t code;
+
+  lzws_result_t result = lzws_decompressor_read_code(state_ptr, source_ptr, source_length_ptr, &code);
+  if (result != 0) {
+    return result;
+  }
+
+  // It is not possible to read more than max code from source.
+  // So we need to compare code with next code only when we haven't reached max code.
+
+  lzws_code_fast_t next_code = state_ptr->last_used_code;
+  if (next_code != state_ptr->max_code) {
+    next_code++;
+
+    if (code > next_code) {
+      return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+    }
+  }
 
   return 0;
 }
