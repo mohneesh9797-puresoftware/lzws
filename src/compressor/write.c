@@ -6,7 +6,7 @@
 #include "common.h"
 #include "utils.h"
 
-static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, uint_fast8_t destination_remainder, uint_fast8_t destination_remainder_bits, bool msb) {
+static inline uint_fast8_t get_first_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, uint_fast8_t destination_remainder, uint_fast8_t destination_remainder_bits, bool msb) {
   lzws_code_fast_t code      = *code_ptr;
   uint_fast8_t     code_bits = *code_bits_ptr;
 
@@ -16,7 +16,7 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
   uint_fast8_t byte;
 
   if (msb) {
-    // Taking first bits.
+    // Taking first bits from code.
     byte = code >> remaining_code_bits;
 
     if (destination_remainder_bits != 0) {
@@ -24,10 +24,10 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
       byte = (destination_remainder << current_code_bits) | byte;
     }
 
-    // Removing first bits.
+    // Removing first bits from code.
     code &= lzws_get_bit_mask(remaining_code_bits);
   } else {
-    // Taking last bits.
+    // Taking last bits from code.
     byte = code & lzws_get_bit_mask(current_code_bits);
 
     if (destination_remainder_bits != 0) {
@@ -35,8 +35,36 @@ static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* co
       byte = (byte << destination_remainder_bits) | destination_remainder;
     }
 
-    // Removing last bits.
+    // Removing last bits from code.
     code >>= current_code_bits;
+  }
+
+  *code_ptr      = code;
+  *code_bits_ptr = remaining_code_bits;
+
+  return byte;
+}
+
+static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, bool msb) {
+  lzws_code_fast_t code      = *code_ptr;
+  uint_fast8_t     code_bits = *code_bits_ptr;
+
+  uint_fast8_t remaining_code_bits = code_bits - 8;
+
+  uint_fast8_t byte;
+
+  if (msb) {
+    // Taking first bits from code.
+    byte = code >> remaining_code_bits;
+
+    // Removing first bits from code.
+    code &= lzws_get_bit_mask(remaining_code_bits);
+  } else {
+    // Taking last bits from code.
+    byte = code & 0xff;
+
+    // Removing last bits from code.
+    code >>= 8;
   }
 
   *code_ptr      = code;
@@ -61,11 +89,11 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   uint_fast8_t     destination_remainder = state_ptr->destination_remainder;
   bool             msb                   = state_ptr->msb;
 
-  uint_fast8_t byte = get_byte(&code, &code_bits, destination_remainder, destination_remainder_bits, msb);
+  uint_fast8_t byte = get_first_byte(&code, &code_bits, destination_remainder, destination_remainder_bits, msb);
   lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
 
   while (destination_bytes != 1) {
-    byte = get_byte(&code, &code_bits, 0, 0, msb);
+    byte = get_byte(&code, &code_bits, msb);
     lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
     destination_bytes--;
   }
