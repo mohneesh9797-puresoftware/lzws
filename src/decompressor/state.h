@@ -47,4 +47,8 @@ typedef struct {
 lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb);
 void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
 
+LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr) {
+  return state_ptr->last_used_code == state_ptr->max_code;
+}
+
 #endif // LZWS_DECOMPRESSOR_STATE_H

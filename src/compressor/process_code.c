@@ -46,7 +46,7 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
     return result;
   }
 
-  if (state_ptr->current_code == LZWS_CLEAR_CODE) {
+  if (state_ptr->block_mode && state_ptr->current_code == LZWS_CLEAR_CODE) {
     // We need to clear state after sending clear code.
     lzws_compressor_clear_state(state_ptr);
     read_next_symbol(state_ptr);
