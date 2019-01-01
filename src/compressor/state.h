@@ -33,7 +33,9 @@ typedef struct {
 
   lzws_code_fast_t initial_used_code;
   lzws_code_fast_t max_code;
+
   lzws_code_fast_t last_used_code;
+  lzws_code_fast_t last_used_max_code;
   uint_fast8_t     last_used_code_bits;
 
   lzws_code_fast_t current_code;
