@@ -6,7 +6,6 @@
 #include "ratio/main.h"
 
 #include "process_code.h"
-#include "utils.h"
 #include "write.h"
 
 static inline void read_next_symbol(lzws_compressor_state_t* state_ptr) {
@@ -19,24 +18,12 @@ static inline void read_next_symbol(lzws_compressor_state_t* state_ptr) {
 }
 
 static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr) {
-  if (lzws_compressor_is_dictionary_full(state_ptr)) {
-    return LZWS_UNDEFINED_NEXT_CODE;
-  }
-
   if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
     uint_fast8_t last_used_code_bits = ++state_ptr->last_used_code_bits;
     state_ptr->last_used_max_code    = lzws_get_bit_mask(last_used_code_bits);
   }
 
-  lzws_code_fast_t next_code = ++state_ptr->last_used_code;
-
-  if (lzws_compressor_is_dictionary_full(state_ptr)) {
-    // Dictionary become full.
-    // We need to clear ratio now.
-    lzws_compressor_clear_ratio(state_ptr);
-  }
-
-  return next_code;
+  return ++state_ptr->last_used_code;
 }
 
 lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
@@ -53,10 +40,16 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
     return 0;
   }
 
-  lzws_code_fast_t next_code = get_next_code(state_ptr);
-  if (next_code != LZWS_UNDEFINED_NEXT_CODE) {
-    // Dictionary is not full.
+  if (!lzws_compressor_is_dictionary_full(state_ptr)) {
+    lzws_code_fast_t next_code = get_next_code(state_ptr);
+
     lzws_compressor_save_next_code_to_dictionary_wrapper(state_ptr, state_ptr->next_symbol, next_code);
+
+    if (lzws_compressor_is_dictionary_full(state_ptr)) {
+      // Dictionary become full.
+      // We need to clear ratio now.
+      lzws_compressor_clear_ratio(state_ptr);
+    }
   }
 
   read_next_symbol(state_ptr);

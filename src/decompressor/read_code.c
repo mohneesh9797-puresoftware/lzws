@@ -67,8 +67,18 @@ static inline void add_byte_with_remainder(
   *source_remainder_bits_ptr = source_remainder_bits;
 }
 
+static inline uint_fast8_t get_target_code_bits(lzws_decompressor_state_t* state_ptr) {
+  uint_fast8_t last_used_code_bits = state_ptr->last_used_code_bits;
+
+  if (lzws_decompressor_is_dictionary_full(state_ptr) || state_ptr->last_used_code != state_ptr->last_used_max_code) {
+    return last_used_code_bits;
+  }
+
+  return last_used_code_bits + 1;
+}
+
 lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, lzws_code_fast_t* code_ptr) {
-  uint_fast8_t target_code_bits      = state_ptr->last_used_code_bits;
+  uint_fast8_t target_code_bits      = get_target_code_bits(state_ptr);
   uint_fast8_t source_remainder_bits = state_ptr->source_remainder_bits;
 
   // Target code bits will always be >= 8.
@@ -125,6 +135,19 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
   return 0;
 }
 
+static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_ptr) {
+  if (lzws_decompressor_is_dictionary_full(state_ptr)) {
+    return LZWS_UNDEFINED_NEXT_CODE;
+  }
+
+  if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
+    uint_fast8_t last_used_code_bits = ++state_ptr->last_used_code_bits;
+    state_ptr->last_used_max_code    = lzws_get_bit_mask(last_used_code_bits);
+  }
+
+  return ++state_ptr->last_used_code;
+}
+
 lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
   lzws_code_fast_t code;
 
@@ -133,17 +156,23 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  // It is not possible to read more than max code from source.
-  // So we need to compare code with next code only when we haven't reached max code.
-
-  lzws_code_fast_t next_code = state_ptr->last_used_code;
-  if (next_code != state_ptr->max_code) {
-    next_code++;
+  if (!lzws_decompressor_is_dictionary_full(state_ptr)) {
+    lzws_code_fast_t next_code = get_next_code(state_ptr);
 
     if (code > next_code) {
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
     }
+
+    if (code == next_code) {
+    }
   }
+
+  // state_ptr->prefix_code = code;
+  //
+  // if (code < LZWS_ALPHABET_LENGTH) {
+  //   state_ptr->status = LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL;
+  //   return 0;
+  // }
 
   return 0;
 }
