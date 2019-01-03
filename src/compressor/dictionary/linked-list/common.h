@@ -2,14 +2,17 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#if !defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_TYPE_H)
-#define LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_TYPE_H
+#if !defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_COMMON_H)
+#define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_COMMON_H
 
 #include "../../../common.h"
 
 typedef struct {
   lzws_code_fast_t codes_length_offset;
-  lzws_code_t*     next_codes;
+
+  lzws_code_t* first_child_codes;
+  lzws_code_t* next_sibling_codes;
+  uint8_t*     last_symbol_by_codes;
 } lzws_compressor_dictionary_t;
 
-#endif // LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_TYPE_H
+#endif // LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_COMMON_H

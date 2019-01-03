@@ -5,7 +5,7 @@
 #if !defined(LZWS_DECOMPRESSOR_DICTIONARY_MAIN_H)
 #define LZWS_DECOMPRESSOR_DICTIONARY_MAIN_H
 
-#include "type.h"
+#include "common.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_DECOMPRESSOR_DICTIONARY_MAIN_C)
@@ -20,8 +20,8 @@ LZWS_INLINE void lzws_decompressor_initialize_dictionary(lzws_decompressor_dicti
   dictionary_ptr->output_buffer        = NULL;
 }
 
-lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, uint_fast8_t max_code_bits);
-void          lzws_decompressor_clear_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits);
+lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, size_t total_codes_length);
+void          lzws_decompressor_clear_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length);
 
 LZWS_INLINE void lzws_decompressor_free_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr) {
   lzws_code_t* previous_codes = dictionary_ptr->previous_codes;

@@ -5,8 +5,8 @@
 #if !defined(LZWS_COMPRESSOR_STATE_H)
 #define LZWS_COMPRESSOR_STATE_H
 
-#include "dictionary/type.h"
-#include "ratio/type.h"
+#include "dictionary/common.h"
+#include "ratio/common.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMPRESSOR_STATE_C)

@@ -69,13 +69,15 @@ So we need just one array for code mapping.
 It can be named as "previous_codes".
 
 Indexes of this array will be >= 257.
-Values will be between 0 - ((2 ** 16) - 1).
+Values are previous codes.
+Any code can be previous for other code except max code.
+Max code (2 ** 16) - 1 can't be previous code.
+So values will be between 0 and (2 ** 16) - 2.
 
-We need a special value for previous code that will terminate codes sequence.
-It is not possible to use 0 (as next code).
-Only one value is available - max code (2 ** 16) - 1.
-This code can't be previous for any other code.
-This code has identical bytes, so we can use memset to initialize this array.
+So undefined previous code will be equal to (2 ** 16) - 1.
+It is possible to use zero instead of max code as undefined previous code.
+We need just to increase each previous code value by 1 (offset constant).
+So we can use efficient calloc and memset for previous codes.
 
 -----
 

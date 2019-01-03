@@ -6,7 +6,7 @@ endif ()
 
 set (HEADERS ${HEADERS}
   "${CMAKE_CURRENT_SOURCE_DIR}/main.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/type.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/wrapper.h"
 )
 set (HEADERS ${HEADERS} PARENT_SCOPE)

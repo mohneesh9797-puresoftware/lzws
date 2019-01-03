@@ -5,6 +5,12 @@
 #if !defined(LZWS_COMPRESSOR_COMMON_H)
 #define LZWS_COMPRESSOR_COMMON_H
 
+// Code can have any value, but next code will always be > 255.
+// So we can use zero as undefined next code.
+#define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE 0
+#define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_ZERO true
+#define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES true
+
 // Possible results:
 enum {
   LZWS_COMPRESSOR_ALLOCATE_FAILED = 1,

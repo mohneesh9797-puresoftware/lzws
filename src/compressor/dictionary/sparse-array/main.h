@@ -5,7 +5,7 @@
 #if !defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_H)
 #define LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_H
 
-#include "type.h"
+#include "common.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_C)
@@ -21,8 +21,8 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionar
   dictionary_ptr->next_codes = NULL;
 }
 
-lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits);
-void          lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, uint_fast8_t max_code_bits);
+lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length);
+void          lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length);
 
 LZWS_INLINE size_t lzws_compressor_get_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol) {
   // We need to remove code offset from current code when it is not a char code.
@@ -35,11 +35,13 @@ LZWS_INLINE size_t lzws_compressor_get_code_index(lzws_compressor_dictionary_t* 
 
 LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol) {
   size_t code_index = lzws_compressor_get_code_index(dictionary_ptr, current_code, next_symbol);
+
   return dictionary_ptr->next_codes[code_index];
 }
 
 LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code) {
-  size_t code_index                      = lzws_compressor_get_code_index(dictionary_ptr, current_code, next_symbol);
+  size_t code_index = lzws_compressor_get_code_index(dictionary_ptr, current_code, next_symbol);
+
   dictionary_ptr->next_codes[code_index] = next_code;
 }
 

@@ -40,21 +40,6 @@ typedef uint_fast16_t lzws_code_fast_t;
 #define LZWS_CLEAR_CODE 256
 #define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 
-// Code can have any value, but next code will always be > 255.
-// We will use 0 as undefined next code.
-#define LZWS_UNDEFINED_NEXT_CODE 0
-#define LZWS_UNDEFINED_NEXT_CODE_ZERO true
-#define LZWS_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES true
-
-// Previous code will always be < (2 ** max_code_bits) - 1.
-// We will use (2 ** max_code_bits) - 1 as undefined previous code.
-#define LZWS_UNDEFINED_PREVIOUS_CODE_ZERO false
-#define LZWS_UNDEFINED_PREVIOUS_CODE_IDENTICAL_BYTES true
-
-LZWS_INLINE lzws_code_fast_t lzws_get_undefined_previous_code(uint_fast8_t max_code_bits) {
-  return lzws_get_bit_mask(max_code_bits);
-}
-
 // Clear code can be used only in block mode.
 #define LZWS_INITIAL_USED_CODE 255
 #define LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE 256

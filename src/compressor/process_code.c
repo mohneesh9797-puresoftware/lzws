@@ -32,7 +32,9 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
     return result;
   }
 
-  if (state_ptr->block_mode && state_ptr->current_code == LZWS_CLEAR_CODE) {
+  lzws_code_fast_t current_code = state_ptr->current_code;
+
+  if (state_ptr->block_mode && current_code == LZWS_CLEAR_CODE) {
     // We need to clear state after sending clear code.
     lzws_compressor_clear_state(state_ptr);
     read_next_symbol(state_ptr);
@@ -42,8 +44,7 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
 
   if (!lzws_compressor_is_dictionary_full(state_ptr)) {
     lzws_code_fast_t next_code = get_next_code(state_ptr);
-
-    lzws_compressor_save_next_code_to_dictionary_wrapper(state_ptr, state_ptr->next_symbol, next_code);
+    lzws_compressor_save_next_code_to_dictionary_wrapper(state_ptr, current_code, state_ptr->next_symbol, next_code);
 
     if (lzws_compressor_is_dictionary_full(state_ptr)) {
       // Dictionary become full.

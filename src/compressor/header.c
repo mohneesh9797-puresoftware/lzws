@@ -2,10 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "../utils.h"
-
-#include "common.h"
 #include "header.h"
+#include "common.h"
 
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr) {
   if (*destination_length_ptr < 2) {

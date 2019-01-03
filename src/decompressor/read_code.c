@@ -136,10 +136,6 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
 }
 
 static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_ptr) {
-  if (lzws_decompressor_is_dictionary_full(state_ptr)) {
-    return LZWS_UNDEFINED_NEXT_CODE;
-  }
-
   if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
     uint_fast8_t last_used_code_bits = ++state_ptr->last_used_code_bits;
     state_ptr->last_used_max_code    = lzws_get_bit_mask(last_used_code_bits);

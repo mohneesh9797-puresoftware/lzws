@@ -16,12 +16,18 @@
 #define LZWS_INLINE inline
 #endif
 
+LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr) {
+  return state_ptr->max_code + 1;
+}
+
 LZWS_INLINE void lzws_decompressor_initialize_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
   lzws_decompressor_initialize_dictionary(&state_ptr->dictionary);
 }
 
 LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
-  lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code, state_ptr->max_code_bits);
+  size_t total_codes_length = lzws_decompressor_get_total_codes_length(state_ptr);
+
+  lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code, total_codes_length);
   if (result != 0) {
     return result;
   }
@@ -32,7 +38,9 @@ LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_dec
 }
 
 LZWS_INLINE void lzws_decompressor_clear_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
-  lzws_decompressor_clear_dictionary(&state_ptr->dictionary, state_ptr->max_code_bits);
+  size_t total_codes_length = lzws_decompressor_get_total_codes_length(state_ptr);
+
+  lzws_decompressor_clear_dictionary(&state_ptr->dictionary, total_codes_length);
 }
 
 LZWS_INLINE void lzws_decompressor_free_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {

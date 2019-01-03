@@ -40,7 +40,7 @@ Both operations has O(1) compexity.
 
 Indexes of this array are between 0 and ((2 ** 16) - 1) * 256 - 1.
 Values >= 257.
-So we can still use 0 constant as undefined next code.
+So we can still use zero constant as undefined next code.
 
 -----
 

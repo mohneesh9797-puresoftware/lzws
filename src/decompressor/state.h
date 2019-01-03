@@ -5,7 +5,7 @@
 #if !defined(LZWS_DECOMPRESSOR_STATE_H)
 #define LZWS_DECOMPRESSOR_STATE_H
 
-#include "dictionary/type.h"
+#include "dictionary/common.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_DECOMPRESSOR_STATE_C)
@@ -27,9 +27,8 @@ typedef uint_fast8_t lzws_decompressor_status_t;
 typedef struct {
   lzws_decompressor_status_t status;
 
-  uint_fast8_t max_code_bits;
-  bool         block_mode;
-  bool         msb;
+  bool block_mode;
+  bool msb;
 
   lzws_code_fast_t initial_used_code;
   lzws_code_fast_t max_code;
@@ -51,6 +50,12 @@ void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr)
 
 LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr) {
   return state_ptr->last_used_code == state_ptr->max_code;
+}
+
+// Previous code will always be < max code.
+// So we can use max code as undefined previous code.
+LZWS_INLINE lzws_code_fast_t lzws_decompressor_get_undefined_previous_code(lzws_decompressor_state_t* state_ptr) {
+  return state_ptr->max_code;
 }
 
 #endif // LZWS_DECOMPRESSOR_STATE_H
