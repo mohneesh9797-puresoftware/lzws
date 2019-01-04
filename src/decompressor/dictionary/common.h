@@ -8,7 +8,7 @@
 #include "../../common.h"
 
 // It is possible to use zero instead of max code as undefined previous code.
-// We need just to increase each previous code value by 1.
+// We need just to increase each previous code value by 1 (offset constant).
 
 #define LZWS_DECOMPRESSOR_DICTIONARY_PREVIOUS_CODE_OFFSET 1
 
@@ -17,7 +17,6 @@
 #define LZWS_DECOMPRESSOR_DICTIONARY_UNDEFINED_PREVIOUS_CODE_IDENTICAL_BYTES true
 
 typedef struct {
-  size_t           total_codes_length;
   lzws_code_fast_t codes_length_offset;
 
   lzws_code_t* previous_codes;

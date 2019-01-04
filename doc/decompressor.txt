@@ -52,20 +52,23 @@ In this case next prefix equals to current prefix + first symbol of current pref
 -----
 
 What operations are required for decompressor's dictionary?
-1. Is code available?
-2. Store next code by code and next symbol.
-3. Output code.
+1. Is code presented in dictionary?
+2. Output code.
+3. Store next code in dictionary by prefix code and first symbol of current code.
 
 We don't need to find code by symbol sequence.
 
 Compressor requires to maintain mapping between current code and next code.
 The problem is that current code has many next codes.
+
 Decompressor requires opposite mapping.
 One current code has only one previous code.
+It makes decompressor simple and it looks impossible to speed up it.
+So we can use single implementation of dictionary.
 
 -----
 
-So we need just one array for code mapping.
+We need just one array for code mapping.
 It can be named as "previous_codes".
 
 Indexes of this array will be >= 257.
@@ -74,7 +77,7 @@ Any code can be previous for other code except max code.
 Max code (2 ** 16) - 1 can't be previous code.
 So values will be between 0 and (2 ** 16) - 2.
 
-So undefined previous code will be equal to (2 ** 16) - 1.
+Undefined previous code will be equal to (2 ** 16) - 1.
 It is possible to use zero instead of max code as undefined previous code.
 We need just to increase each previous code value by 1 (offset constant).
 So we can use efficient calloc and memset for previous codes.
@@ -86,7 +89,7 @@ It can be named as "last_symbol_by_codes".
 
 Indexes of this array will be >= 257.
 
-We don't need to initialize it.
+We don't need to initialize or clear it.
 Algorithm will access only initialized symbols.
 
 -----
@@ -99,7 +102,7 @@ Let's imagine we compressed "aa..." data.
 All codes will be equal to prev code + 'a' symbol.
 So max length of buffer will be (2 ** 16) - 257.
 
-We don't need to initialize it.
+We don't need to initialize or clear it.
 Algorithm will access only initialized bytes.
 
 -----
@@ -107,15 +110,13 @@ Algorithm will access only initialized bytes.
 For example [97, 98, 257] -> "abab":
 
 Previous codes:
-0 (257) -> 97
-1 (258) -> 65535
+0 (257) -> 98 (97)
+1 (258) -> 0
 
 Last symbol by codes:
 0 (257) -> 'b'
 
-Output buffer:
-a
-b
+Output buffer for 257 code:
 ba
 
 -----

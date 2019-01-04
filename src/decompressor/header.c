@@ -11,6 +11,7 @@ lzws_result_t lzws_decompressor_read_magic_header(uint8_t** source_ptr, size_t* 
   }
 
   uint_fast8_t byte;
+
   lzws_read_byte(source_ptr, source_length_ptr, &byte);
   if (byte != LZWS_MAGIC_HEADER_BYTE_0) {
     return LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER;
@@ -51,7 +52,7 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
   state_ptr->last_used_max_code  = lzws_get_bit_mask(LZWS_LOWEST_MAX_CODE_BITS);
   state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 
-  // It is possible to keep "prefix_code" uninitialized.
+  // It is possible to keep "prefix_code" and "current_code" uninitialized.
 
   state_ptr->status = LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY;
 

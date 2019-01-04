@@ -39,7 +39,6 @@ LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compr
 
 LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* state_ptr) {
   size_t total_codes_length = lzws_compressor_get_total_codes_length(state_ptr);
-
   lzws_compressor_clear_dictionary(&state_ptr->dictionary, total_codes_length);
 }
 

@@ -129,19 +129,17 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
   }
 
+  // It is possible to keep current code as is.
+  // Algorithm won't touch it without reinitialization.
+
   state_ptr->prefix_code = code;
-  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL;
+  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL;
 
   return 0;
 }
 
-static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_ptr) {
-  if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
-    uint_fast8_t last_used_code_bits = ++state_ptr->last_used_code_bits;
-    state_ptr->last_used_max_code    = lzws_get_bit_mask(last_used_code_bits);
-  }
-
-  return ++state_ptr->last_used_code;
+static inline lzws_code_fast_t get_future_next_code(lzws_decompressor_state_t* state_ptr) {
+  return state_ptr->last_used_code + 1;
 }
 
 lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
@@ -152,23 +150,18 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
+  // It is not possible to receive more than max code.
+  // So we can compare code only with future next code when dictionary is not full.
+
   if (!lzws_decompressor_is_dictionary_full(state_ptr)) {
-    lzws_code_fast_t next_code = get_next_code(state_ptr);
-
-    if (code > next_code) {
+    lzws_code_fast_t future_next_code = get_future_next_code(state_ptr);
+    if (code > future_next_code) {
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
-    }
-
-    if (code == next_code) {
     }
   }
 
-  // state_ptr->prefix_code = code;
-  //
-  // if (code < LZWS_ALPHABET_LENGTH) {
-  //   state_ptr->status = LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL;
-  //   return 0;
-  // }
+  state_ptr->current_code = code;
+  state_ptr->status       = LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE;
 
   return 0;
 }

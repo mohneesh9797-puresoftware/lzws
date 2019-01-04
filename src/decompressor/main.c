@@ -40,13 +40,13 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         result = lzws_decompressor_read_next_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL:
-        result = lzws_decompressor_write_prefix_symbol(state_ptr, destination_ptr, destination_length_ptr);
+      case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
+        result = lzws_decompressor_write_first_symbol(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
-        // case LZWS_DECOMPRESSOR_PROCESS_CURRENT_CODE:
-        //   result = lzws_decompressor_process_current_code(state_ptr, destination_ptr, destination_length_ptr);
-        //   break;
+      case LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE:
+        result = lzws_decompressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
+        break;
 
       default:
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
@@ -69,8 +69,8 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
       return 0;
 
       // case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
-      // case LZWS_DECOMPRESSOR_WRITE_PREFIX_SYMBOL:
-      // case LZWS_DECOMPRESSOR_PROCESS_CURRENT_CODE:
+      // case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
+      // case LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE:
       // // We have prefix code and maybe source remainder.
       // return lzws_decompressor_write_current_code_and_source_remainder(state_ptr, destination_ptr, destination_length_ptr);
 

@@ -12,7 +12,7 @@ static inline void read_next_symbol(lzws_compressor_state_t* state_ptr) {
   state_ptr->current_code = state_ptr->next_symbol;
 
   // It is possible to keep next symbol as is.
-  // Algorithm won't touch next symbol without reinitialization.
+  // Algorithm won't touch it without reinitialization.
 
   state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
 }
