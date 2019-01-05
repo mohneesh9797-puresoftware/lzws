@@ -138,8 +138,35 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
   return 0;
 }
 
-static inline lzws_code_fast_t get_future_next_code(lzws_decompressor_state_t* state_ptr) {
-  return state_ptr->last_used_code + 1;
+static inline lzws_result_t prepare_code_for_writing(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code) {
+  // It is not possible to receive more than max code.
+  // So we can compare code only with expected next code when dictionary is not full.
+
+  if (lzws_decompressor_is_dictionary_full(state_ptr)) {
+    if (code >= LZWS_ALPHABET_LENGTH) {
+      // TODO prepare code for writing.
+    }
+    return 0;
+  }
+
+  lzws_code_fast_t last_used_code     = state_ptr->last_used_code;
+  lzws_code_fast_t expected_next_code = last_used_code + 1;
+
+  if (code > expected_next_code) {
+    return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+  }
+
+  if (code == expected_next_code) {
+    // Code can be equal to expected next code only when prefix code equals to last used code.
+    if (state_ptr->prefix_code != last_used_code) {
+      return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+    }
+    // TODO prepare special code for writing.
+  } else if (code >= LZWS_ALPHABET_LENGTH) {
+    // TODO prepare code for writing.
+  }
+
+  return 0;
 }
 
 lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
@@ -150,14 +177,9 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  // It is not possible to receive more than max code.
-  // So we can compare code only with future next code when dictionary is not full.
-
-  if (!lzws_decompressor_is_dictionary_full(state_ptr)) {
-    lzws_code_fast_t future_next_code = get_future_next_code(state_ptr);
-    if (code > future_next_code) {
-      return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
-    }
+  result = prepare_code_for_writing(state_ptr, code);
+  if (result != 0) {
+    return result;
   }
 
   state_ptr->current_code = code;

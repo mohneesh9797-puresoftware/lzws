@@ -46,8 +46,11 @@ So we have two identical strings that intersects by first symbol "a".
       |
 ".....a...ba"
 
-We read max code from source, it is not available in current dictionary.
+We read last used code + 1 (node code) from source, it is not available in current dictionary.
 In this case next prefix equals to current prefix + first symbol of current prefix.
+
+This situation is possible only when current prefix equals to last used code.
+In other case we should know all symbols for target code.
 
 -----
 
