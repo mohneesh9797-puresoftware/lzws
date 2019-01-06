@@ -22,8 +22,12 @@ lzws_result_t lzws_decompressor_write_current_code(lzws_decompressor_state_t* st
     return LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  // lzws_code_fast_t current_code = state_ptr->current_code;
+  lzws_code_fast_t current_code = state_ptr->current_code;
+
   // LZWS_ALPHABET_LENGTH
+
+  state_ptr->prefix_code = current_code;
+  state_ptr->status      = LZWS_DECOMPRESSOR_READ_NEXT_CODE;
 
   return 0;
 }

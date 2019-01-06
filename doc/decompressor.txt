@@ -49,8 +49,11 @@ So we have two identical strings that intersects by first symbol "a".
 We read last used code + 1 (node code) from source, it is not available in current dictionary.
 In this case next prefix equals to current prefix + first symbol of current prefix.
 
-This situation is possible only when current prefix equals to last used code.
-In other case we should know all symbols for target code.
+When will this situation be possible?
+1. "a...ba...ba": current prefix code >= 257 and it equals to last used code.
+2. "aa": current prefix code <= 255 and code equals to 257.
+
+In all other cases we should be able to find all symbols for target code in dictionary.
 
 -----
 

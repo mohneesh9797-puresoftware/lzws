@@ -2,8 +2,10 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "read_code.h"
+#include "dictionary/wrapper.h"
+
 #include "common.h"
+#include "read_code.h"
 #include "utils.h"
 
 static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bits, uint_fast8_t byte, bool msb) {
@@ -139,32 +141,33 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
 }
 
 static inline lzws_result_t prepare_code_for_writing(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code) {
+  bool copy_first_symbol_to_last;
+
   // It is not possible to receive more than max code.
   // So we can compare code only with expected next code when dictionary is not full.
 
   if (lzws_decompressor_is_dictionary_full(state_ptr)) {
-    if (code >= LZWS_ALPHABET_LENGTH) {
-      // TODO prepare code for writing.
-    }
-    return 0;
-  }
+    copy_first_symbol_to_last = false;
+  } else {
+    lzws_code_fast_t last_used_code     = state_ptr->last_used_code;
+    lzws_code_fast_t expected_next_code = last_used_code + 1;
 
-  lzws_code_fast_t last_used_code     = state_ptr->last_used_code;
-  lzws_code_fast_t expected_next_code = last_used_code + 1;
-
-  if (code > expected_next_code) {
-    return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
-  }
-
-  if (code == expected_next_code) {
-    // Code can be equal to expected next code only when prefix code equals to last used code.
-    if (state_ptr->prefix_code != last_used_code) {
+    if (code > expected_next_code) {
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
     }
-    // TODO prepare special code for writing.
-  } else if (code >= LZWS_ALPHABET_LENGTH) {
-    // TODO prepare code for writing.
+
+    if (code == expected_next_code) {
+      // Code can be equal to expected next code only when prefix code equals to last used code.
+      if (state_ptr->prefix_code != last_used_code) {
+        return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+      }
+      copy_first_symbol_to_last = true;
+    } else {
+      copy_first_symbol_to_last = false;
+    }
   }
+
+  lzws_decompressor_prepare_code_for_writing_in_dictionary_wrapper(state_ptr, code, copy_first_symbol_to_last);
 
   return 0;
 }
@@ -177,9 +180,11 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  result = prepare_code_for_writing(state_ptr, code);
-  if (result != 0) {
-    return result;
+  if (code >= LZWS_ALPHABET_LENGTH) {
+    result = prepare_code_for_writing(state_ptr, code);
+    if (result != 0) {
+      return result;
+    }
   }
 
   state_ptr->current_code = code;
