@@ -42,16 +42,16 @@ It means that destination looks like "a...ba...bx".
 So "a...bx" is "a...ba".
 So we have two identical strings that intersects by first symbol "a".
 
-"a...ba....."
-      |
-".....a...ba"
+"...a...ba....."
+         |
+"........a...ba"
 
-We read last used code + 1 (node code) from source, it is not available in current dictionary.
+We read next code (last used code + 1) from source, it is not available in current dictionary.
 In this case next prefix equals to current prefix + first symbol of current prefix.
 
 When will this situation be possible?
-1. "a...ba...ba": current prefix code >= 257 and it equals to last used code.
-2. "aa": current prefix code <= 255 and code equals to 257.
+1. "abbb": current prefix code <= 255.
+2. "...a...ba...ba": current prefix code > 257 and it equals to last used code.
 
 In all other cases we should be able to find all symbols for target code in dictionary.
 
@@ -78,15 +78,15 @@ We need just one array for code mapping.
 It can be named as "previous_codes".
 
 Indexes of this array will be >= 257.
-Values are previous codes.
+Values are previous codes including symbols.
 Any code can be previous for other code except max code.
+
 Max code (2 ** 16) - 1 can't be previous code.
 So values will be between 0 and (2 ** 16) - 2.
-
 Undefined previous code will be equal to (2 ** 16) - 1.
-It is possible to use zero instead of max code as undefined previous code.
-We need just to increase each previous code value by 1 (offset constant).
-So we can use efficient calloc and memset for previous codes.
+
+We don't need to initialize or clear it.
+Algorithm will access only initialized codes.
 
 -----
 
@@ -116,8 +116,7 @@ Algorithm will access only initialized bytes.
 For example [97, 98, 257] -> "abab":
 
 Previous codes:
-0 (257) -> 98 (97)
-1 (258) -> 0
+0 (257) -> 97
 
 Last symbol by codes:
 0 (257) -> 'b'

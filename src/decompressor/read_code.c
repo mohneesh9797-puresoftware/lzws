@@ -147,6 +147,9 @@ static inline lzws_result_t prepare_code_for_writing(lzws_decompressor_state_t* 
   // So we can compare code only with expected next code when dictionary is not full.
 
   if (lzws_decompressor_is_dictionary_full(state_ptr)) {
+    if (code < LZWS_ALPHABET_LENGTH) {
+      return 0;
+    }
     copy_first_symbol_to_last = false;
   } else {
     lzws_code_fast_t last_used_code     = state_ptr->last_used_code;
@@ -167,7 +170,7 @@ static inline lzws_result_t prepare_code_for_writing(lzws_decompressor_state_t* 
     }
   }
 
-  lzws_decompressor_prepare_code_for_writing_in_dictionary_wrapper(state_ptr, code, copy_first_symbol_to_last);
+  // lzws_decompressor_prepare_code_for_writing_in_dictionary_wrapper(state_ptr, code, copy_first_symbol_to_last);
 
   return 0;
 }
@@ -180,11 +183,9 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  if (code >= LZWS_ALPHABET_LENGTH) {
-    result = prepare_code_for_writing(state_ptr, code);
-    if (result != 0) {
-      return result;
-    }
+  result = prepare_code_for_writing(state_ptr, code);
+  if (result != 0) {
+    return result;
   }
 
   state_ptr->current_code = code;
