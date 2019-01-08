@@ -23,8 +23,9 @@ lzws_result_t lzws_decompressor_write_current_code(lzws_decompressor_state_t* st
   }
 
   lzws_code_fast_t current_code = state_ptr->current_code;
-
-  // LZWS_ALPHABET_LENGTH
+  if (current_code < LZWS_ALPHABET_LENGTH) {
+    lzws_write_byte(destination_ptr, destination_length_ptr, current_code);
+  }
 
   state_ptr->prefix_code = current_code;
   state_ptr->status      = LZWS_DECOMPRESSOR_READ_NEXT_CODE;

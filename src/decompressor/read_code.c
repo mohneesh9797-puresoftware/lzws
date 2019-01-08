@@ -141,17 +141,13 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
 }
 
 static inline lzws_result_t prepare_code_for_writing(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code) {
-  bool copy_first_symbol_to_last;
+  lzws_code_fast_t prefix_code = state_ptr->prefix_code;
+  bool             is_prefix   = false;
 
   // It is not possible to receive more than max code.
   // So we can compare code only with expected next code when dictionary is not full.
 
-  if (lzws_decompressor_is_dictionary_full(state_ptr)) {
-    if (code < LZWS_ALPHABET_LENGTH) {
-      return 0;
-    }
-    copy_first_symbol_to_last = false;
-  } else {
+  if (!lzws_decompressor_is_dictionary_full(state_ptr)) {
     lzws_code_fast_t last_used_code     = state_ptr->last_used_code;
     lzws_code_fast_t expected_next_code = last_used_code + 1;
 
@@ -160,17 +156,17 @@ static inline lzws_result_t prepare_code_for_writing(lzws_decompressor_state_t* 
     }
 
     if (code == expected_next_code) {
-      // Code can be equal to expected next code only when prefix code equals to last used code.
-      if (state_ptr->prefix_code != last_used_code) {
+      // Code can be equal to expected next code only when prefix code is a symbol or equals to the last used code.
+      if (prefix_code >= LZWS_ALPHABET_LENGTH && prefix_code != last_used_code) {
         return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
       }
-      copy_first_symbol_to_last = true;
-    } else {
-      copy_first_symbol_to_last = false;
+
+      code      = prefix_code;
+      is_prefix = true;
     }
   }
 
-  // lzws_decompressor_prepare_code_for_writing_in_dictionary_wrapper(state_ptr, code, copy_first_symbol_to_last);
+  lzws_decompressor_prepare_code_for_writing_in_dictionary_wrapper(state_ptr, code, is_prefix);
 
   return 0;
 }
@@ -183,9 +179,11 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  result = prepare_code_for_writing(state_ptr, code);
-  if (result != 0) {
-    return result;
+  if (code >= LZWS_ALPHABET_LENGTH) {
+    result = prepare_code_for_writing(state_ptr, code);
+    if (result != 0) {
+      return result;
+    }
   }
 
   state_ptr->current_code = code;

@@ -13,8 +13,8 @@ typedef struct {
   lzws_code_t* previous_codes;
   uint8_t*     last_symbol_by_codes;
 
-  uint8_t*         output_buffer;
-  lzws_code_fast_t last_output_index;
+  uint8_t* output_buffer;
+  size_t   output_length;
 } lzws_decompressor_dictionary_t;
 
 #endif // LZWS_DECOMPRESSOR_DICTIONARY_COMMON_H

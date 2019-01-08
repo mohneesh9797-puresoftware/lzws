@@ -8,15 +8,12 @@
 
 #include "main.h"
 
-static inline size_t get_codes_length(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
-  return total_codes_length - dictionary_ptr->codes_length_offset;
-}
-
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, size_t total_codes_length) {
   // We won't store char codes and clear code.
-  dictionary_ptr->codes_length_offset = initial_used_code + 1;
+  lzws_code_fast_t codes_length_offset = initial_used_code + 1;
+  dictionary_ptr->codes_length_offset  = codes_length_offset;
 
-  size_t codes_length = get_codes_length(dictionary_ptr, total_codes_length);
+  size_t codes_length = total_codes_length - codes_length_offset;
 
   // Previous codes doesn't require default values.
   // Algorithm will access only initialized codes.
@@ -50,47 +47,43 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   dictionary_ptr->last_symbol_by_codes = last_symbol_by_codes;
   dictionary_ptr->output_buffer        = output_buffer;
 
-  // It is possible to keep last_output_index" uninitialized.
+  // It is possible to keep "output_length" uninitialized.
 
   return 0;
 }
 
-// void lzws_decompressor_prepare_code_for_writing_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code, bool copy_first_symbol_to_last) {
-//   lzws_code_fast_t last_output_index;
-//   if (copy_first_symbol_to_last) {
-//     last_output_index = 1;
-//   } else {
-//     last_output_index = 0;
-//   }
-//
-//   lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
-//
-//   lzws_code_t* previous_codes       = dictionary_ptr->previous_codes;
-//   uint8_t*     last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
-//
-//   uint8_t* output_buffer = dictionary_ptr->output_buffer;
-//
-//   uint8_t last_symbol;
-//
-//   while (true) {
-//     lzws_code_fast_t last_symbol_by_code_index = code - codes_length_offset;
-//     last_symbol                                = last_symbol_by_codes[last_symbol_by_code_index];
-//
-//     output_buffer[last_output_index] = last_symbol;
-//     last_output_index++;
-//
-//     lzws_code_fast_t previous_code_index = code - codes_length_offset;
-//     lzws_code_fast_t previous_code_value = previous_codes[previous_code_index];
-//     if (previous_code_value == LZWS_DECOMPRESSOR_DICTIONARY_UNDEFINED_PREVIOUS_CODE) {
-//       break;
-//     }
-//
-//     code = previous_code_value - LZWS_DECOMPRESSOR_DICTIONARY_PREVIOUS_CODE_OFFSET;
-//   }
-//
-//   if (copy_first_symbol_to_last) {
-//     output_buffer[0] = last_symbol;
-//   }
-//
-//   dictionary_ptr->last_output_index = last_output_index;
-// }
+void lzws_decompressor_prepare_code_for_writing_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code, bool is_prefix) {
+  // First symbol equals last symbol when code is a prefix.
+  // Output buffer is reversed.
+  // So we need to copy last symbol into the first position.
+
+  size_t output_length;
+  if (is_prefix) {
+    output_length = 1;
+  } else {
+    output_length = 0;
+  }
+
+  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
+
+  lzws_code_t* previous_codes       = dictionary_ptr->previous_codes;
+  uint8_t*     last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
+
+  uint8_t* output_buffer = dictionary_ptr->output_buffer;
+
+  while (code >= LZWS_ALPHABET_LENGTH) {
+    output_buffer[output_length] = last_symbol_by_codes[code - codes_length_offset];
+    output_length++;
+
+    code = previous_codes[code - codes_length_offset];
+  }
+
+  output_buffer[output_length] = code;
+  output_length++;
+
+  if (is_prefix) {
+    output_buffer[0] = code;
+  }
+
+  dictionary_ptr->output_length = output_length;
+}
