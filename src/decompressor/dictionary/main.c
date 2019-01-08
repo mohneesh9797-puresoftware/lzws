@@ -52,7 +52,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   return 0;
 }
 
-void lzws_decompressor_prepare_code_for_writing_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code, bool is_prefix) {
+static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code, bool is_prefix) {
   // First symbol equals last symbol when code is a prefix.
   // Output buffer is reversed.
   // So we need to copy last symbol into the first position.
@@ -72,10 +72,12 @@ void lzws_decompressor_prepare_code_for_writing_in_dictionary(lzws_decompressor_
   uint8_t* output_buffer = dictionary_ptr->output_buffer;
 
   while (code >= LZWS_ALPHABET_LENGTH) {
-    output_buffer[output_length] = last_symbol_by_codes[code - codes_length_offset];
+    lzws_code_fast_t code_index = code - codes_length_offset;
+
+    output_buffer[output_length] = last_symbol_by_codes[code_index];
     output_length++;
 
-    code = previous_codes[code - codes_length_offset];
+    code = previous_codes[code_index];
   }
 
   output_buffer[output_length] = code;
@@ -86,4 +88,25 @@ void lzws_decompressor_prepare_code_for_writing_in_dictionary(lzws_decompressor_
   }
 
   dictionary_ptr->output_length = output_length;
+
+  return code;
+}
+
+void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {
+  prepare_output(dictionary_ptr, code, false);
+}
+
+void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code) {
+  uint8_t first_symbol;
+  if (current_code == next_code) {
+    first_symbol = prepare_output(dictionary_ptr, prefix_code, true);
+  } else {
+    first_symbol = prepare_output(dictionary_ptr, current_code, false);
+  }
+
+  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
+  lzws_code_fast_t next_code_index     = next_code - codes_length_offset;
+
+  dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;
+  dictionary_ptr->previous_codes[next_code_index]       = prefix_code;
 }

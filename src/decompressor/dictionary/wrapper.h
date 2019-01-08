@@ -37,8 +37,12 @@ LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_dec
   return 0;
 }
 
-LZWS_INLINE void lzws_decompressor_prepare_code_for_writing_in_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code, bool is_prefix) {
-  lzws_decompressor_prepare_code_for_writing_in_dictionary(&state_ptr->dictionary, code, is_prefix);
+LZWS_INLINE void lzws_decompressor_write_code_to_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code) {
+  lzws_decompressor_write_code_to_dictionary(&state_ptr->dictionary, code);
+}
+
+LZWS_INLINE void lzws_decompressor_add_code_to_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code) {
+  lzws_decompressor_add_code_to_dictionary(&state_ptr->dictionary, prefix_code, current_code, next_code);
 }
 
 LZWS_INLINE void lzws_decompressor_free_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
