@@ -47,8 +47,6 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   dictionary_ptr->last_symbol_by_codes = last_symbol_by_codes;
   dictionary_ptr->output_buffer        = output_buffer;
 
-  // It is possible to keep "output_length" uninitialized.
-
   return 0;
 }
 
@@ -80,16 +78,18 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
     code = previous_codes[code_index];
   }
 
-  output_buffer[output_length] = code;
+  uint8_t first_symbol         = code;
+  output_buffer[output_length] = first_symbol;
   output_length++;
 
   if (is_prefix) {
-    output_buffer[0] = code;
+    // Last byte equals to first symbol.
+    output_buffer[0] = first_symbol;
   }
 
   dictionary_ptr->output_length = output_length;
 
-  return code;
+  return first_symbol;
 }
 
 void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {
@@ -97,12 +97,15 @@ void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* 
 }
 
 void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code) {
-  uint8_t first_symbol;
-  if (current_code == next_code) {
-    first_symbol = prepare_output(dictionary_ptr, prefix_code, true);
+  lzws_code_fast_t code;
+  bool             is_prefix = current_code == next_code;
+  if (is_prefix) {
+    code = prefix_code;
   } else {
-    first_symbol = prepare_output(dictionary_ptr, current_code, false);
+    code = current_code;
   }
+
+  uint8_t first_symbol = prepare_output(dictionary_ptr, code, is_prefix);
 
   lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
   lzws_code_fast_t next_code_index     = next_code - codes_length_offset;

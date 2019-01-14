@@ -4,7 +4,6 @@
 
 #include "dictionary/wrapper.h"
 
-#include "common.h"
 #include "header.h"
 #include "main.h"
 #include "read_code.h"
@@ -44,8 +43,8 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         result = lzws_decompressor_write_first_symbol(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE:
-        result = lzws_decompressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
+      case LZWS_DECOMPRESSOR_WRITE_DICTIONARY:
+        result = lzws_decompressor_write_dictionary(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
       default:
@@ -65,14 +64,14 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
     case LZWS_DECOMPRESSOR_READ_HEADER:
     case LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY:
     case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
-      // We have no prefix code and source remainder yet.
+      // We have no source remainder yet.
       return 0;
 
-      // case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
-      // case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
-      // case LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE:
-      // // We have prefix code and maybe source remainder.
-      // return lzws_decompressor_write_current_code_and_source_remainder(state_ptr, destination_ptr, destination_length_ptr);
+    case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
+    case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
+    case LZWS_DECOMPRESSOR_WRITE_DICTIONARY:
+      // Maybe we have source remainder.
+      return lzws_decompressor_verify_empty_source_remainder(state_ptr);
 
     default:
       return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;

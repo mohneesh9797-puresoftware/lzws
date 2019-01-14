@@ -2,9 +2,10 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#define LZWS_DECOMPRESSOR_READ_CODE_C
+
 #include "dictionary/wrapper.h"
 
-#include "common.h"
 #include "read_code.h"
 #include "utils.h"
 
@@ -158,9 +159,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   }
 
   if (lzws_decompressor_is_dictionary_full(state_ptr)) {
-    if (code >= LZWS_ALPHABET_LENGTH) {
-      lzws_decompressor_write_code_to_dictionary_wrapper(state_ptr, code);
-    }
+    lzws_decompressor_write_code_to_dictionary_wrapper(state_ptr, code);
   } else {
     lzws_code_fast_t prefix_code    = state_ptr->prefix_code;
     lzws_code_fast_t last_used_code = state_ptr->last_used_code;
@@ -174,8 +173,8 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     lzws_decompressor_add_code_to_dictionary_wrapper(state_ptr, prefix_code, code, next_code);
   }
 
-  state_ptr->current_code = code;
-  state_ptr->status       = LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE;
+  state_ptr->prefix_code = code;
+  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_DICTIONARY;
 
   return 0;
 }

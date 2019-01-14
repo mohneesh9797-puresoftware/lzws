@@ -8,6 +8,6 @@
 #include "state.h"
 
 lzws_result_t lzws_decompressor_write_first_symbol(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
-lzws_result_t lzws_decompressor_write_current_code(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
+lzws_result_t lzws_decompressor_write_dictionary(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 #endif // LZWS_DECOMPRESSOR_WRITE_H
