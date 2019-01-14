@@ -31,6 +31,12 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
   return 0;
 }
 
+void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr) {
+  state_ptr->last_used_code      = state_ptr->initial_used_code;
+  state_ptr->last_used_max_code  = lzws_get_bit_mask(LZWS_LOWEST_MAX_CODE_BITS);
+  state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
+}
+
 void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr) {
   lzws_decompressor_free_dictionary_wrapper(state_ptr);
 

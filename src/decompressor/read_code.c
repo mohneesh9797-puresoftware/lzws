@@ -158,19 +158,32 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  if (lzws_decompressor_is_dictionary_full(state_ptr)) {
-    lzws_decompressor_write_code_to_dictionary_wrapper(state_ptr, code);
-  } else {
-    lzws_code_fast_t prefix_code    = state_ptr->prefix_code;
-    lzws_code_fast_t last_used_code = state_ptr->last_used_code;
-    lzws_code_fast_t next_code      = get_next_code(state_ptr);
+  bool is_dictionary_full = lzws_decompressor_is_dictionary_full(state_ptr);
 
-    // Code can be equal to next code only when prefix code is a symbol or equals to the last used code.
-    if (code > next_code || (code == next_code && prefix_code >= LZWS_ALPHABET_LENGTH && prefix_code != last_used_code)) {
+  if (state_ptr->block_mode && code == LZWS_CLEAR_CODE) {
+    if (!is_dictionary_full) {
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
     }
 
-    lzws_decompressor_add_code_to_dictionary_wrapper(state_ptr, prefix_code, code, next_code);
+    lzws_decompressor_clear_state(state_ptr);
+
+    // It is possible to keep prefix_code as is.
+    // Algorithm won't touch it without reinitialization.
+
+    state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+
+    return 0;
+  }
+
+  if (is_dictionary_full) {
+    lzws_decompressor_write_code_to_dictionary_wrapper(state_ptr, code);
+  } else {
+    lzws_code_fast_t next_code = get_next_code(state_ptr);
+    if (code > next_code) {
+      return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+    }
+
+    lzws_decompressor_add_code_to_dictionary_wrapper(state_ptr, state_ptr->prefix_code, code, next_code);
   }
 
   state_ptr->prefix_code = code;

@@ -20,8 +20,7 @@ enum {
   LZWS_DECOMPRESSOR_READ_FIRST_CODE,
   LZWS_DECOMPRESSOR_READ_NEXT_CODE,
   LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL,
-  LZWS_DECOMPRESSOR_WRITE_DICTIONARY,
-  LZWS_DECOMPRESSOR_UNKNOWN_STATUS
+  LZWS_DECOMPRESSOR_WRITE_DICTIONARY
 };
 typedef uint_fast8_t lzws_decompressor_status_t;
 
@@ -47,16 +46,11 @@ typedef struct {
 } lzws_decompressor_state_t;
 
 lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb);
+void          lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr);
 void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
 
 LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr) {
   return state_ptr->last_used_code == state_ptr->max_code;
-}
-
-// Previous code will always be < max code.
-// So we can use max code as undefined previous code.
-LZWS_INLINE lzws_code_fast_t lzws_decompressor_get_undefined_previous_code(lzws_decompressor_state_t* state_ptr) {
-  return state_ptr->max_code;
 }
 
 #endif // LZWS_DECOMPRESSOR_STATE_H
