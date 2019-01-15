@@ -20,13 +20,13 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
+  lzws_code_fast_t initial_used_code = lzws_get_initial_used_code(block_mode);
+
   state_ptr->status = LZWS_COMPRESSOR_WRITE_HEADER;
 
   state_ptr->max_code_bits = max_code_bits;
   state_ptr->block_mode    = block_mode;
   state_ptr->msb           = msb;
-
-  lzws_code_fast_t initial_used_code = lzws_get_initial_used_code(block_mode);
 
   state_ptr->initial_used_code = initial_used_code;
   state_ptr->max_code          = lzws_get_bit_mask(max_code_bits);

@@ -35,6 +35,8 @@ void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr) {
   state_ptr->last_used_code      = state_ptr->initial_used_code;
   state_ptr->last_used_max_code  = lzws_get_bit_mask(LZWS_LOWEST_MAX_CODE_BITS);
   state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
+
+  // We don't need to clear dictionary.
 }
 
 void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr) {

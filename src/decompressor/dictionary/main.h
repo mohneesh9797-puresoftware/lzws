@@ -31,7 +31,6 @@ void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* di
 LZWS_INLINE bool lzws_decompressor_has_byte_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr) {
   return dictionary_ptr->output_length != 0;
 }
-
 LZWS_INLINE uint8_t lzws_decompressor_get_byte_from_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr) {
   return dictionary_ptr->output_buffer[--dictionary_ptr->output_length];
 }

@@ -52,7 +52,6 @@ LZWS_INLINE bool lzws_compressor_need_to_clear_by_ratio(lzws_compressor_state_t*
   }
 
   lzws_compressor_ratio_t* ratio_ptr = &state_ptr->ratio;
-
   if (ratio_ptr->new_source_length < LZWS_RATIO_SOURCE_CHECKPOINT_GAP) {
     return false;
   }

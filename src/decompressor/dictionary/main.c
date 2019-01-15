@@ -78,7 +78,8 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
     code = previous_codes[code_index];
   }
 
-  uint8_t first_symbol         = code;
+  uint8_t first_symbol = code;
+
   output_buffer[output_length] = first_symbol;
   output_length++;
 
@@ -96,9 +97,14 @@ void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* 
   prepare_output(dictionary_ptr, code, false);
 }
 
+// Example: (ab)(cde).
+// Prefix code - ab, current code - cde, next code - abc.
+// We can see that last symbol of next code equals to first symbol of current code.
+
 void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code) {
   lzws_code_fast_t code;
-  bool             is_prefix = current_code == next_code;
+
+  bool is_prefix = current_code == next_code;
   if (is_prefix) {
     code = prefix_code;
   } else {
@@ -107,9 +113,8 @@ void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* di
 
   uint8_t first_symbol = prepare_output(dictionary_ptr, code, is_prefix);
 
-  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
-  lzws_code_fast_t next_code_index     = next_code - codes_length_offset;
+  lzws_code_fast_t next_code_index = next_code - dictionary_ptr->codes_length_offset;
 
-  dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;
   dictionary_ptr->previous_codes[next_code_index]       = prefix_code;
+  dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;
 }

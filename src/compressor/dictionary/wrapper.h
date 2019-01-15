@@ -45,7 +45,6 @@ LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_
 LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol) {
   return lzws_compressor_get_next_code_from_dictionary(&state_ptr->dictionary, current_code, next_symbol);
 }
-
 LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_wrapper(lzws_compressor_state_t* state_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code) {
   lzws_compressor_save_next_code_to_dictionary(&state_ptr->dictionary, current_code, next_symbol, next_code);
 }

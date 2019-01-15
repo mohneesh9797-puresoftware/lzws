@@ -37,9 +37,8 @@ LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_
   size_t code_index = lzws_compressor_get_code_index(dictionary_ptr, current_code, next_symbol);
   return dictionary_ptr->next_codes[code_index];
 }
-
 LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code) {
-  size_t code_index = lzws_compressor_get_code_index(dictionary_ptr, current_code, next_symbol);
+  size_t code_index                      = lzws_compressor_get_code_index(dictionary_ptr, current_code, next_symbol);
   dictionary_ptr->next_codes[code_index] = next_code;
 }
 

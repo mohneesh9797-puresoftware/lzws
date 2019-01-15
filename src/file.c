@@ -31,11 +31,16 @@ static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer
   return 0;
 }
 
-static inline lzws_result_t allocate_buffers(uint8_t** source_buffer_ptr, size_t* source_buffer_length_ptr, uint8_t** destination_buffer_ptr, size_t* destination_buffer_length_ptr) {
+static inline lzws_result_t allocate_buffers(
+  uint8_t** source_buffer_ptr, size_t* source_buffer_length_ptr,
+  uint8_t** destination_buffer_ptr, size_t* destination_buffer_length_ptr,
+  size_t default_buffer_length) {
+  //
+
   uint8_t* source_buffer;
   size_t   source_buffer_length = *source_buffer_length_ptr;
 
-  lzws_result_t result = allocate_buffer(&source_buffer, &source_buffer_length, DEFAULT_SOURCE_BUFFER_LENGTH);
+  lzws_result_t result = allocate_buffer(&source_buffer, &source_buffer_length, default_buffer_length);
   if (result != 0) {
     return result;
   }
@@ -43,7 +48,7 @@ static inline lzws_result_t allocate_buffers(uint8_t** source_buffer_ptr, size_t
   uint8_t* destination_buffer;
   size_t   destination_buffer_length = *destination_buffer_length_ptr;
 
-  result = allocate_buffer(&destination_buffer, &destination_buffer_length, DEFAULT_DESTINATION_BUFFER_LENGTH);
+  result = allocate_buffer(&destination_buffer, &destination_buffer_length, default_buffer_length);
   if (result != 0) {
     // "source_buffer" was allocated, need to free it.
     free(source_buffer);
@@ -59,13 +64,13 @@ static inline lzws_result_t allocate_buffers(uint8_t** source_buffer_ptr, size_t
   return 0;
 }
 
-#define ALLOCATE_BUFFERS()                            \
-  result = allocate_buffers(                          \
-    &source_buffer, &source_buffer_length,            \
-    &destination_buffer, &destination_buffer_length); \
-                                                      \
-  if (result != 0) {                                  \
-    return result;                                    \
+#define ALLOCATE_BUFFERS(DEFAULT_BUFFER_LENGTH)      \
+  result = allocate_buffers(                         \
+    &source_buffer, &source_buffer_length,           \
+    &destination_buffer, &destination_buffer_length, \
+    DEFAULT_BUFFER_LENGTH);                          \
+  if (result != 0) {                                 \
+    return result;                                   \
   }
 
 // -- files --
@@ -167,7 +172,6 @@ static inline lzws_result_t flush_destination_buffer(
     source_file_ptr,                                       \
     source_buffer, source_buffer_length,                   \
     &source, &source_length);                              \
-                                                           \
   if (result == LZWS_FILE_READ_FINISHED) {                 \
     if (source_length != 0) {                              \
       /* Algorithm is not able to read all source data. */ \
@@ -184,7 +188,6 @@ static inline lzws_result_t flush_destination_buffer(
     destination_file_ptr,                          \
     destination_buffer, destination_buffer_length, \
     &destination, &destination_length);            \
-                                                   \
   if (result != 0) {                               \
     return result;                                 \
   }
@@ -192,7 +195,6 @@ static inline lzws_result_t flush_destination_buffer(
 #define WITH_READ_WRITE_BUFFERS(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
   while (true) {                                                                                  \
     result = (function)(__VA_ARGS__);                                                             \
-                                                                                                  \
     if (result == 0) {                                                                            \
       break;                                                                                      \
     } else if (result == NEEDS_MORE_SOURCE) {                                                     \
@@ -249,7 +251,7 @@ lzws_result_t lzws_file_compress(
 
   lzws_result_t result;
 
-  ALLOCATE_BUFFERS()
+  ALLOCATE_BUFFERS(LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_compressor_state_t* state_ptr;
   if (lzws_compressor_get_initial_state(&state_ptr, max_code_bits, block_mode, msb) != 0) {
@@ -306,7 +308,7 @@ lzws_result_t lzws_file_decompress(
 
   lzws_result_t result;
 
-  ALLOCATE_BUFFERS()
+  ALLOCATE_BUFFERS(LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_decompressor_state_t* state_ptr;
   if (lzws_decompressor_get_initial_state(&state_ptr, msb) != 0) {

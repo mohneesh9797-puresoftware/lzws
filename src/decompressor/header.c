@@ -39,11 +39,10 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
     return LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BITS;
   }
 
-  bool block_mode = (byte & LZWS_BLOCK_MODE) != 0;
+  bool             block_mode        = (byte & LZWS_BLOCK_MODE) != 0;
+  lzws_code_fast_t initial_used_code = lzws_get_initial_used_code(block_mode);
 
   state_ptr->block_mode = block_mode;
-
-  lzws_code_fast_t initial_used_code = lzws_get_initial_used_code(block_mode);
 
   state_ptr->initial_used_code = initial_used_code;
   state_ptr->max_code          = lzws_get_bit_mask(max_code_bits);

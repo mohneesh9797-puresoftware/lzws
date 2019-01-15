@@ -22,6 +22,7 @@ LZWS_INLINE lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_d
   if (state_ptr->source_remainder_bits != 0 && state_ptr->source_remainder != 0) {
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
   }
+
   return 0;
 }
 
