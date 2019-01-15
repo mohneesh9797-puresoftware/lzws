@@ -60,14 +60,14 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
   switch (state_ptr->status) {
     case LZWS_DECOMPRESSOR_READ_HEADER:
     case LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY:
-    case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
       // We have no source remainder yet.
       return 0;
 
+    case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
     case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
     case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
     case LZWS_DECOMPRESSOR_WRITE_DICTIONARY:
-      // Maybe we have source remainder.
+      // We may have source remainder.
       return lzws_decompressor_verify_empty_source_remainder(state_ptr);
 
     default:

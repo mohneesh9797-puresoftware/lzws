@@ -1,9 +1,9 @@
 # WIP
-Compressor is almost done, decompressor and tests are pending.
+Double hashing compressor.
 
 # LZW + Stream = LZWS
 
-LZW streaming compressor/decompressor (LZW + Stream = LZWS) based on LZW AB.
+LZW streaming compressor/decompressor based on LZW AB.
 
 It consists of library and cli tool.
 Cli tool should be compatible with original UNIX `compress`, [ncompress](https://github.com/vapier/ncompress) and [gzip unlzw](https://github.com/Distrotech/gzip/blob/distrotech-gzip/unlzw.c).
