@@ -44,7 +44,7 @@ LZWS_INLINE void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* d
   }
 
   if (block_mode) {
-    lzws_compressor_dictionary_index_t* used_indexes = dictionary_ptr->used_indexes;
+    lzws_compressor_dictionary_used_index_t* used_indexes = dictionary_ptr->used_indexes;
     if (used_indexes != NULL) {
       free(used_indexes);
     }

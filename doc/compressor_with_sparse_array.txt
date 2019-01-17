@@ -53,10 +53,9 @@ Practice shows that we need about 2040 dictionary clears.
 We need to clear 33.5 MB * 2040 times ~ 68 GB.
 Speed of memset is about 10 GB per second for modern pc with DDR-4.
 So we are loosing about 7 seconds just to clear sparse array.
+We need to find a smarter way to clear it.
 
-We need to find a smarter way to clear sparse array.
-
-We can store used sparse array indexes into separate array.
+We can store used sparse array indexes in separate array.
 Length of this array equals to codes length: ((2 ** 16) - 257)
 Size of used index is 4 bytes.
 So it will consume ((2 ** 16) - 257) * sizeof(used_index_t) ~ 261 KB.
@@ -66,8 +65,8 @@ We can use decompressor dictionary: previous codes and last symbol by codes.
 It requires ((2 ** 16) - 257) * sizeof(code_t) + ((2 ** 16) - 257) ~ 196 KB.
 
 But this solution is slower: we need to maintain more complex structure.
-We are using 33.5 MB sparse array.
-It would be weird to spare 65 KB.
+We are using 33.5 MB for sparse array.
+It would be weird try to save 65 KB.
 
 -----
 
