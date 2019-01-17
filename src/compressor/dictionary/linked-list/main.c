@@ -38,8 +38,8 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   size_t first_child_codes_length = get_first_child_codes_length(dictionary_ptr, total_codes_length);
 
   lzws_code_t* first_child_codes = lzws_allocate_array(
-    sizeof(lzws_code_t), first_child_codes_length,
-    &undefined_next_code, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES);
+    sizeof(lzws_code_t), first_child_codes_length, &undefined_next_code,
+    LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
   if (first_child_codes == NULL) {
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
@@ -47,8 +47,8 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   size_t next_sibling_codes_length = get_next_sibling_codes_length(dictionary_ptr, total_codes_length);
 
   lzws_code_t* next_sibling_codes = lzws_allocate_array(
-    sizeof(lzws_code_t), next_sibling_codes_length,
-    &undefined_next_code, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES);
+    sizeof(lzws_code_t), next_sibling_codes_length, &undefined_next_code,
+    LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
   if (next_sibling_codes == NULL) {
     // First child codes was allocated, need to free it.
     free(first_child_codes);
@@ -80,14 +80,14 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
   size_t first_child_codes_length = get_first_child_codes_length(dictionary_ptr, total_codes_length);
   lzws_fill_array(
     dictionary_ptr->first_child_codes,
-    sizeof(lzws_code_t), first_child_codes_length,
-    &undefined_next_code, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES);
+    sizeof(lzws_code_t), first_child_codes_length, &undefined_next_code,
+    LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
 
   size_t next_sibling_codes_length = get_next_sibling_codes_length(dictionary_ptr, total_codes_length);
   lzws_fill_array(
     dictionary_ptr->next_sibling_codes,
-    sizeof(lzws_code_t), next_sibling_codes_length,
-    &undefined_next_code, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES);
+    sizeof(lzws_code_t), next_sibling_codes_length, &undefined_next_code,
+    LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
 
   // We can keep last symbol by codes as is.
   // Algorithm will access only initialized symbols.

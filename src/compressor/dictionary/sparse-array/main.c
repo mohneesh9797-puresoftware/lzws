@@ -35,8 +35,8 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   size_t next_codes_length = get_next_codes_length(dictionary_ptr, total_codes_length);
 
   lzws_code_t* next_codes = lzws_allocate_array(
-    sizeof(lzws_code_t), next_codes_length,
-    &undefined_next_code, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IDENTICAL_BYTES);
+    sizeof(lzws_code_t), next_codes_length, &undefined_next_code,
+    LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
   if (next_codes == NULL) {
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
