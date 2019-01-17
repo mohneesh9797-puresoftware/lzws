@@ -50,7 +50,7 @@ static inline lzws_result_t allocate_buffers(
 
   result = allocate_buffer(&destination_buffer, &destination_buffer_length, default_buffer_length);
   if (result != 0) {
-    // "source_buffer" was allocated, need to free it.
+    // Source buffer was allocated, need to free it.
     free(source_buffer);
 
     return result;

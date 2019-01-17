@@ -7,10 +7,14 @@
 
 #include "../../../common.h"
 
-typedef struct {
-  lzws_code_fast_t codes_length_offset;
+typedef uint32_t lzws_compressor_dictionary_index_t;
 
-  lzws_code_t* next_codes;
+typedef struct {
+  lzws_code_t*                        next_codes;
+  lzws_compressor_dictionary_index_t* used_indexes;
+
+  lzws_code_fast_t next_codes_offset;
+  lzws_code_fast_t used_indexes_offset;
 } lzws_compressor_dictionary_t;
 
 #endif // LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_COMMON_H

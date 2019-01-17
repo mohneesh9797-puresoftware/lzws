@@ -19,7 +19,7 @@ LZWS_INLINE void lzws_decompressor_initialize_dictionary(lzws_decompressor_dicti
   dictionary_ptr->last_symbol_by_codes = NULL;
   dictionary_ptr->output_buffer        = NULL;
 
-  // It is possible to keep "output_length" uninitialized.
+  // It is possible to keep output length uninitialized.
   // Other data will be initialized during allocating of dictionary.
 }
 

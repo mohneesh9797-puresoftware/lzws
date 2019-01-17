@@ -21,7 +21,7 @@ bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* r
     return false;
   }
 
-  // We need to clear when "destination_length" * "new_source_length" - "source_length" * "new_destination_length" < 0.
+  // We need to clear when "destination_length * new_source_length - source_length * new_destination_length" < 0.
 
   mpz_t destination_and_new_source, source_and_new_destination;
   mpz_inits(destination_and_new_source, source_and_new_destination, NULL);

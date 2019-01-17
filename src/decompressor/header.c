@@ -26,7 +26,7 @@ lzws_result_t lzws_decompressor_read_magic_header(uint8_t** source_ptr, size_t* 
 }
 
 lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
-  // Reading 1 byte for "max_code_bits" and "block_mode".
+  // Reading 1 byte for max code bits and block mode.
   if (*source_length_ptr < 1) {
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
@@ -51,7 +51,7 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
   state_ptr->last_used_max_code  = lzws_get_bit_mask(LZWS_LOWEST_MAX_CODE_BITS);
   state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 
-  // It is possible to keep "prefix_code" uninitialized.
+  // It is possible to keep prefix code uninitialized.
 
   state_ptr->status = LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY;
 

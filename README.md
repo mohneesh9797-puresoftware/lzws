@@ -47,9 +47,9 @@ cmake .. \
 
 Testing performance:
 ```sh
-wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.18.20.tar.xz"
-tar xf linux-4.18.20.tar.xz
-tar cf linux.tar linux-4.18.20
+wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.20.3.tar.xz"
+tar xf linux-4.20.3.tar.xz
+tar cf linux.tar linux-4.20.3
 
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_COMPRESSOR_DICTIONARY="linked-list"
 make

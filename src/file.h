@@ -34,7 +34,7 @@ enum {
 
 #define LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 17) // 128 KB
 
-// "source_buffer_length" and "destination_buffer_length" can be equal to 0, it will use default values.
+// Source buffer length and destination buffer length can be equal to 0, it will use default values.
 
 lzws_result_t lzws_file_compress(
   FILE* source_file_ptr, size_t source_buffer_length,

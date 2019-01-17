@@ -8,10 +8,10 @@
 #include "../../common.h"
 
 typedef struct {
-  lzws_code_fast_t codes_length_offset;
-
   lzws_code_t* previous_codes;
   uint8_t*     last_symbol_by_codes;
+
+  lzws_code_fast_t codes_offset;
 
   uint8_t* output_buffer;
   size_t   output_length;

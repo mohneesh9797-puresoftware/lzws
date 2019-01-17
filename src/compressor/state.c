@@ -35,7 +35,7 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state_ptr->last_used_max_code  = lzws_get_bit_mask(LZWS_LOWEST_MAX_CODE_BITS);
   state_ptr->last_used_code_bits = LZWS_LOWEST_MAX_CODE_BITS;
 
-  // It is possible to keep "current_code" and "next_symbol" uninitialized.
+  // It is possible to keep current code and next symbol uninitialized.
 
   state_ptr->destination_remainder      = 0;
   state_ptr->destination_remainder_bits = 0;

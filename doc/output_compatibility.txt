@@ -61,7 +61,7 @@ We should store current code bits (9 bits).
 We received new symbol.
 We are trying to find code for next symbol in dictionary.
 If we found it we should keep code bits as is (9 bits).
-Codes from dictionary doesn't affect code bits.
+Codes from dictionary don't affect code bits.
 
 We added new code into dictionary and it requires 10 bits.
 We have to write current code with current code bits (9 bits).

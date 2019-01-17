@@ -17,7 +17,7 @@ lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size
 }
 
 lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
-  // Writing 1 byte for "max_code_bits" and "block_mode".
+  // Writing 1 byte for max code bits and block mode.
   if (*destination_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }

@@ -111,16 +111,34 @@ Algorithm will access only initialized bytes.
 
 -----
 
-For example [97, 98, 257] -> "abab":
+For example [97, 98, 257, 259, 98] -> "abababab":
+
+Imaginary dictionary:
+ab - 257
+ba - 258
+aba - 259
+abab - 260
 
 Previous codes:
 0 (257) -> 97
+1 (258) -> 98
+2 (259) -> 257
+3 (260) -> 259
 
 Last symbol by codes:
 0 (257) -> 'b'
+1 (258) -> 'a'
+2 (259) -> 'a'
+3 (260) -> 'b'
 
-Output buffer for 257 code:
-ba
+Output buffers (reversed):
+257 -> ba
+259 -> aba
+
+-----
+
+We don't need to clear dictionary.
+Algorithm will access only initialized data in all arrays.
 
 -----
 

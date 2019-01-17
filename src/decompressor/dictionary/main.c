@@ -10,33 +10,33 @@
 
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, size_t total_codes_length) {
   // We won't store char codes and clear code.
-  lzws_code_fast_t codes_length_offset = initial_used_code + 1;
-  dictionary_ptr->codes_length_offset  = codes_length_offset;
+  lzws_code_fast_t codes_offset = initial_used_code + 1;
+  dictionary_ptr->codes_offset  = codes_offset;
 
-  size_t codes_length = total_codes_length - codes_length_offset;
+  size_t codes_length = total_codes_length - codes_offset;
 
-  // Previous codes doesn't require default values.
+  // Previous codes don't require default values.
   // Algorithm will access only initialized codes.
   lzws_code_t* previous_codes = malloc(codes_length * sizeof(lzws_code_t));
   if (previous_codes == NULL) {
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
-  // Last symbol by codes doesn't require default values.
+  // Last symbol by codes don't require default values.
   // Algorithm will access only initialized symbols.
   uint8_t* last_symbol_by_codes = malloc(codes_length);
   if (last_symbol_by_codes == NULL) {
-    // "previous_codes" was allocated, need to free it.
+    // Previous codes was allocated, need to free it.
     free(previous_codes);
 
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
-  // Output buffer by codes doesn't require default values.
+  // Output buffer by codes don't require default values.
   // Algorithm will access only initialized buffer bytes.
   uint8_t* output_buffer = malloc(codes_length);
   if (output_buffer == NULL) {
-    // "previous_codes" and "last_symbol_by_codes" were allocated, need to free it.
+    // Previous codes and last symbol by codes were allocated, need to free it.
     free(previous_codes);
     free(last_symbol_by_codes);
 
@@ -62,7 +62,7 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
     output_length = 0;
   }
 
-  lzws_code_fast_t codes_length_offset = dictionary_ptr->codes_length_offset;
+  lzws_code_fast_t codes_offset = dictionary_ptr->codes_offset;
 
   lzws_code_t* previous_codes       = dictionary_ptr->previous_codes;
   uint8_t*     last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
@@ -70,7 +70,7 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
   uint8_t* output_buffer = dictionary_ptr->output_buffer;
 
   while (code >= LZWS_ALPHABET_LENGTH) {
-    lzws_code_fast_t code_index = code - codes_length_offset;
+    lzws_code_fast_t code_index = code - codes_offset;
 
     output_buffer[output_length] = last_symbol_by_codes[code_index];
     output_length++;
@@ -113,7 +113,7 @@ void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* di
 
   uint8_t first_symbol = prepare_output(dictionary_ptr, code, is_prefix);
 
-  lzws_code_fast_t next_code_index = next_code - dictionary_ptr->codes_length_offset;
+  lzws_code_fast_t next_code_index = next_code - dictionary_ptr->codes_offset;
 
   dictionary_ptr->previous_codes[next_code_index]       = prefix_code;
   dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;

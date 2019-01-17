@@ -33,7 +33,7 @@ typedef uint_fast16_t lzws_code_fast_t;
 
 #define LZWS_LOWEST_MAX_CODE_BITS 9
 #define LZWS_BIGGEST_MAX_CODE_BITS 16
-#define LZWS_MAX_CODE_BITS_MASK 0x1f // "max_code_bits" are the last bits, biggest value (16) requires 5 bits.
+#define LZWS_MAX_CODE_BITS_MASK 0x1f // Max code bits are the last bits, biggest value (16) requires 5 bits.
 #define LZWS_BLOCK_MODE 0x80
 
 #define LZWS_ALPHABET_LENGTH 256
