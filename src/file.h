@@ -32,7 +32,7 @@ enum {
 #define LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
 #endif
 
-#define LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 17) // 128 KB
+#define LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
 
 // Source buffer length and destination buffer length can be equal to 0, it will use default values.
 
