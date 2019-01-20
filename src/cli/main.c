@@ -4,7 +4,6 @@
 
 #include <getopt.h>
 
-#include "../common.h"
 #include "../file.h"
 
 static const char* help =
@@ -17,15 +16,17 @@ static const char* help =
   "  --max-code-bits (-b) = set max code bits (%u-%u) (%u by default) [compressor only]\n"
   "  --raw (-r) = raw mode, disable block mode (enabled by default) [compressor only]\n"
   "  --msb (-m) = enable most significant bit (least significant bit used by default)\n"
-  "  --help (-h) = print help\n";
+  "  --help (-h) = print help\n"
+  "  --quiet (-q) = do not print error messages\n";
 
-static const char*   short_options  = "db:rmh";
+static const char*   short_options  = "db:rmhq";
 static struct option long_options[] = {
   {"decompress", optional_argument, NULL, 'd'},
   {"max-code-bits", optional_argument, NULL, 'b'},
   {"raw", optional_argument, NULL, 'r'},
   {"msb", optional_argument, NULL, 'm'},
   {"help", optional_argument, NULL, 'h'},
+  {"quiet", optional_argument, NULL, 'q'},
   {NULL, 0, NULL, 0}};
 
 static inline void print_help() {
@@ -38,22 +39,26 @@ int main(int argc, char** argv) {
   uint_fast8_t max_code_bits = LZWS_BIGGEST_MAX_CODE_BITS;
   bool         block_mode    = true;
   bool         msb           = false;
+  bool         quiet         = false;
 
   int option;
 
   while ((option = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
     switch (option) {
+      case 'd':
+        is_compressor = false;
+        break;
       case 'b':
         max_code_bits = atoi(optarg);
         break;
-      case 'd':
-        is_compressor = false;
+      case 'r':
+        block_mode = false;
         break;
       case 'm':
         msb = true;
         break;
-      case 'r':
-        block_mode = false;
+      case 'q':
+        quiet = true;
         break;
       default:
         print_help();
@@ -62,11 +67,11 @@ int main(int argc, char** argv) {
   }
 
   if (is_compressor) {
-    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bits, block_mode, msb) != 0) {
+    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bits, block_mode, msb, quiet) != 0) {
       return 2;
     }
   } else {
-    if (lzws_file_decompress(stdin, 0, stdout, 0, msb) != 0) {
+    if (lzws_file_decompress(stdin, 0, stdout, 0, msb, quiet) != 0) {
       return 3;
     }
   }

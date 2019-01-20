@@ -32,7 +32,7 @@ static inline lzws_code_fast_t get_next_sibling_code_index(lzws_compressor_dicti
   return code - dictionary_ptr->next_sibling_codes_offset;
 }
 
-lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
+lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool quiet, size_t total_codes_length) {
   lzws_code_t undefined_next_code = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 
   size_t first_child_codes_length = get_first_child_codes_length(dictionary_ptr, total_codes_length);

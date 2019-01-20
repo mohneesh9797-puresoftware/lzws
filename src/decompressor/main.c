@@ -4,6 +4,9 @@
 
 #include "dictionary/wrapper.h"
 
+#include "../log.h"
+
+#include "common.h"
 #include "header.h"
 #include "main.h"
 #include "read_code.h"
@@ -45,6 +48,10 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         break;
 
       default:
+        if (!state_ptr->quiet) {
+          LZWS_PRINT_ERROR("received unknown status")
+        }
+
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
     }
 
@@ -71,6 +78,10 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
       return lzws_decompressor_verify_empty_source_remainder(state_ptr);
 
     default:
+      if (!state_ptr->quiet) {
+        LZWS_PRINT_ERROR("received unknown status")
+      }
+
       return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
   }
 }

@@ -5,20 +5,31 @@
 #include "header.h"
 #include "common.h"
 
-lzws_result_t lzws_decompressor_read_magic_header(uint8_t** source_ptr, size_t* source_length_ptr) {
+#include "../log.h"
+
+lzws_result_t lzws_decompressor_read_magic_header(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
   if (*source_length_ptr < 2) {
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
   uint_fast8_t byte;
-
   lzws_read_byte(source_ptr, source_length_ptr, &byte);
+
   if (byte != LZWS_MAGIC_HEADER_BYTE_0) {
+    if (!state_ptr->quiet) {
+      LZWS_PRINTF_ERROR("received invalid first magic header byte: %u", byte)
+    }
+
     return LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER;
   }
 
   lzws_read_byte(source_ptr, source_length_ptr, &byte);
+
   if (byte != LZWS_MAGIC_HEADER_BYTE_1) {
+    if (!state_ptr->quiet) {
+      LZWS_PRINTF_ERROR("received invalid second magic header byte: %u", byte)
+    }
+
     return LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER;
   }
 
@@ -36,6 +47,10 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
 
   uint_fast8_t max_code_bits = byte & LZWS_MAX_CODE_BITS_MASK;
   if (max_code_bits < LZWS_LOWEST_MAX_CODE_BITS || max_code_bits > LZWS_BIGGEST_MAX_CODE_BITS) {
+    if (!state_ptr->quiet) {
+      LZWS_PRINTF_ERROR("received invalid max code bits: %u", max_code_bits)
+    }
+
     return LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BITS;
   }
 

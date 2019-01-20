@@ -27,7 +27,7 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary_wrapper(lzws_compressor_s
 LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compressor_state_t* state_ptr) {
   size_t total_codes_length = lzws_compressor_get_total_codes_length(state_ptr);
 
-  lzws_result_t result = lzws_compressor_allocate_dictionary(&state_ptr->dictionary, total_codes_length, state_ptr->block_mode);
+  lzws_result_t result = lzws_compressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->block_mode, state_ptr->quiet, total_codes_length);
   if (result != 0) {
     return result;
   }

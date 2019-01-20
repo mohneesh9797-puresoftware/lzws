@@ -2,10 +2,11 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_DECOMPRESSOR_READ_CODE_C
-
 #include "dictionary/wrapper.h"
 
+#include "../log.h"
+
+#include "common.h"
 #include "read_code.h"
 #include "utils.h"
 
@@ -129,6 +130,10 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
   // So we can compare first code with alphabet length.
 
   if (code >= LZWS_ALPHABET_LENGTH) {
+    if (!state_ptr->quiet) {
+      LZWS_PRINTF_ERROR("received invalid first code: " FAST_CODE_FORMAT, code)
+    }
+
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
   }
 
@@ -159,9 +164,14 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   }
 
   bool is_dictionary_full = lzws_decompressor_is_dictionary_full(state_ptr);
+  bool quiet              = state_ptr->quiet;
 
   if (state_ptr->block_mode && code == LZWS_CLEAR_CODE) {
     if (!is_dictionary_full) {
+      if (!quiet) {
+        LZWS_PRINT_ERROR("received clear code when dictionary is not full")
+      }
+
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
     }
 
@@ -180,6 +190,10 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   } else {
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     if (code > next_code) {
+      if (!quiet) {
+        LZWS_PRINTF_ERROR("received code greater than next code: " FAST_CODE_FORMAT, code)
+      }
+
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
     }
 
@@ -188,6 +202,21 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
 
   state_ptr->prefix_code = code;
   state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_DICTIONARY;
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_state_t* state_ptr) {
+  uint_fast8_t source_remainder      = state_ptr->source_remainder;
+  uint_fast8_t source_remainder_bits = state_ptr->source_remainder_bits;
+
+  if (source_remainder_bits != 0 && source_remainder != 0) {
+    if (!state_ptr->quiet) {
+      LZWS_PRINTF_ERROR("source remainder is not empty, bits: %u, value: %u", source_remainder_bits, source_remainder)
+    }
+
+    return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
+  }
 
   return 0;
 }

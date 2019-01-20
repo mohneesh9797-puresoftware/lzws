@@ -26,6 +26,9 @@ typedef uint_fast8_t lzws_result_t;
 typedef uint16_t      lzws_code_t;
 typedef uint_fast16_t lzws_code_fast_t;
 
+#define CODE_FORMAT "%u"
+#define FAST_CODE_FORMAT "%lu"
+
 // External programs requires 2 byte magic header.
 // For example: https://github.com/apache/httpd/blob/trunk/modules/metadata/mod_mime_magic.c#L2060
 #define LZWS_MAGIC_HEADER_BYTE_0 0x1f // "\037" in base-8 number system.

@@ -27,7 +27,7 @@ LZWS_INLINE void lzws_decompressor_initialize_dictionary_wrapper(lzws_decompress
 LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
   size_t total_codes_length = lzws_decompressor_get_total_codes_length(state_ptr);
 
-  lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code, total_codes_length);
+  lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code, state_ptr->quiet, total_codes_length);
   if (result != 0) {
     return result;
   }

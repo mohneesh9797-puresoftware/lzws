@@ -28,7 +28,7 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionar
   }
 }
 
-lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length, bool block_mode);
+lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool block_mode, bool quiet, size_t total_codes_length);
 void          lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length);
 
 lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol);

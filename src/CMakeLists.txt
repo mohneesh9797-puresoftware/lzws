@@ -24,8 +24,8 @@ configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generate
 add_subdirectory ("compressor")
 add_subdirectory ("decompressor")
 
-set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "utils.h")
-set (SOURCES ${SOURCES} "common.c" "file.c" "generated_constants.c" "utils.c")
+set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "log.h" "utils.h")
+set (SOURCES ${SOURCES} "common.c" "file.c" "generated_constants.c" "log.c" "utils.c")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 

@@ -23,7 +23,7 @@ LZWS_INLINE void lzws_decompressor_initialize_dictionary(lzws_decompressor_dicti
   // Other data will be initialized during allocating of dictionary.
 }
 
-lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, size_t total_codes_length);
+lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, bool quiet, size_t total_codes_length);
 
 void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code);
 void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code);
