@@ -4,6 +4,7 @@
 
 #define LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_C
 
+#include "../../../log.h"
 #include "../../common.h"
 
 #include "main.h"
@@ -33,11 +34,17 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   lzws_code_t undefined_next_code = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 
   size_t next_codes_length = get_next_codes_length(dictionary_ptr, total_codes_length);
+  size_t next_codes_size   = sizeof(lzws_code_t) * next_codes_length;
 
   lzws_code_t* next_codes = lzws_allocate_array(
     sizeof(lzws_code_t), next_codes_length, &undefined_next_code,
     LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
+
   if (next_codes == NULL) {
+    if (!quiet) {
+      LZWS_PRINTF_ERROR("allocate array failed, next codes size: %zu", next_codes_size)
+    }
+
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
@@ -46,8 +53,14 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
     // Used indexes don't require default values.
     // Algorithm will access only initialized indexes.
-    lzws_compressor_dictionary_used_index_t* used_indexes = malloc(used_indexes_length * sizeof(lzws_compressor_dictionary_used_index_t));
+    size_t                                   used_indexes_size = used_indexes_length * sizeof(lzws_compressor_dictionary_used_index_t);
+    lzws_compressor_dictionary_used_index_t* used_indexes      = malloc(used_indexes_size);
+
     if (used_indexes == NULL) {
+      if (!quiet) {
+        LZWS_PRINTF_ERROR("malloc failed, used indexes size: %zu", used_indexes_size)
+      }
+
       // Next codes was allocated, need to free it.
       free(next_codes);
 

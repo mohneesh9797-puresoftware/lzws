@@ -4,6 +4,7 @@
 
 #define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_C
 
+#include "../../../log.h"
 #include "../../common.h"
 
 #include "main.h"
@@ -36,20 +37,32 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   lzws_code_t undefined_next_code = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 
   size_t first_child_codes_length = get_first_child_codes_length(dictionary_ptr, total_codes_length);
+  size_t first_child_codes_size   = sizeof(lzws_code_t) * first_child_codes_length;
 
   lzws_code_t* first_child_codes = lzws_allocate_array(
     sizeof(lzws_code_t), first_child_codes_length, &undefined_next_code,
     LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
+
   if (first_child_codes == NULL) {
+    if (!quiet) {
+      LZWS_PRINTF_ERROR("allocate array failed, first child codes size: %zu", first_child_codes_size)
+    }
+
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
   size_t next_sibling_codes_length = get_next_sibling_codes_length(dictionary_ptr, total_codes_length);
+  size_t next_sibling_codes_size   = sizeof(lzws_code_t) * next_sibling_codes_length;
 
   lzws_code_t* next_sibling_codes = lzws_allocate_array(
     sizeof(lzws_code_t), next_sibling_codes_length, &undefined_next_code,
     LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
+
   if (next_sibling_codes == NULL) {
+    if (!quiet) {
+      LZWS_PRINTF_ERROR("allocate array failed, next sibling codes size: %zu", next_sibling_codes_size)
+    }
+
     // First child codes was allocated, need to free it.
     free(first_child_codes);
 
@@ -58,8 +71,14 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
   // Last symbol by codes don't require default values.
   // Algorithm will access only initialized symbols.
-  uint8_t* last_symbol_by_codes = malloc(next_sibling_codes_length);
+  size_t   last_symbol_by_codes_size = next_sibling_codes_length;
+  uint8_t* last_symbol_by_codes      = malloc(last_symbol_by_codes_size);
+
   if (last_symbol_by_codes == NULL) {
+    if (!quiet) {
+      LZWS_PRINTF_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size)
+    }
+
     // First child codes and next sibling codes were allocated, need to free it.
     free(first_child_codes);
     free(next_sibling_codes);
@@ -112,6 +131,7 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_d
 
   do {
     lzws_code_fast_t next_sibling_code_index = get_next_sibling_code_index(dictionary_ptr, next_sibling_code);
+
     if (last_symbol_by_codes[next_sibling_code_index] == next_symbol) {
       // We found target next symbol.
       return next_sibling_code;
@@ -134,6 +154,7 @@ void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* 
 
   lzws_code_t*     first_child_codes = dictionary_ptr->first_child_codes;
   lzws_code_fast_t first_child_code  = first_child_codes[current_code_index];
+
   if (first_child_code == LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE) {
     // Adding first child.
     first_child_codes[current_code_index] = next_code;

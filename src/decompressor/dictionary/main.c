@@ -14,12 +14,13 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   lzws_code_fast_t codes_offset = initial_used_code + 1;
   dictionary_ptr->codes_offset  = codes_offset;
 
-  size_t codes_length        = total_codes_length - codes_offset;
-  size_t previous_codes_size = codes_length * sizeof(lzws_code_t);
+  size_t codes_length = total_codes_length - codes_offset;
 
   // Previous codes don't require default values.
   // Algorithm will access only initialized codes.
-  lzws_code_t* previous_codes = malloc(previous_codes_size);
+  size_t       previous_codes_size = codes_length * sizeof(lzws_code_t);
+  lzws_code_t* previous_codes      = malloc(previous_codes_size);
+
   if (previous_codes == NULL) {
     if (!quiet) {
       LZWS_PRINTF_ERROR("malloc failed, previous codes size: %zu", previous_codes_size)
@@ -28,11 +29,11 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
-  size_t last_symbol_by_codes_size = codes_length;
-
   // Last symbol by codes don't require default values.
   // Algorithm will access only initialized symbols.
-  uint8_t* last_symbol_by_codes = malloc(last_symbol_by_codes_size);
+  size_t   last_symbol_by_codes_size = codes_length;
+  uint8_t* last_symbol_by_codes      = malloc(last_symbol_by_codes_size);
+
   if (last_symbol_by_codes == NULL) {
     if (!quiet) {
       LZWS_PRINTF_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size)
@@ -44,11 +45,11 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
-  size_t output_size = codes_length;
-
   // Output buffer by codes don't require default values.
   // Algorithm will access only initialized buffer bytes.
+  size_t   output_size   = codes_length;
   uint8_t* output_buffer = malloc(output_size);
+
   if (output_buffer == NULL) {
     if (!quiet) {
       LZWS_PRINTF_ERROR("malloc failed, output size: %zu", output_size)

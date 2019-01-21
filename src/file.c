@@ -129,12 +129,14 @@ static inline lzws_result_t read_source_buffer(
 
   uint8_t* remaining_data        = *source_ptr;
   size_t   remaining_data_length = *source_length_ptr;
+
   if (remaining_data != source_buffer && remaining_data_length != 0) {
     memmove(source_buffer, remaining_data, remaining_data_length);
   }
 
   uint8_t* remaining_buffer        = source_buffer + remaining_data_length;
   size_t   remaining_buffer_length = source_buffer_length - remaining_data_length;
+
   if (remaining_buffer_length == 0) {
     // We want to read more data at once, than buffer has.
     if (!quiet) {
@@ -144,7 +146,8 @@ static inline lzws_result_t read_source_buffer(
     return LZWS_FILE_NOT_ENOUGH_SOURCE_BUFFER;
   }
 
-  size_t        data_length;
+  size_t data_length;
+
   lzws_result_t result = read_data(source_file_ptr, remaining_buffer, remaining_buffer_length, &data_length, quiet);
   if (result != 0) {
     return result;
@@ -284,7 +287,8 @@ static inline lzws_result_t compress_data(
 lzws_result_t lzws_file_compress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  uint_fast8_t max_code_bits, bool block_mode, bool msb, bool quiet) {
+  uint_fast8_t max_code_bits, bool block_mode,
+  bool msb, bool quiet, bool unaligned) {
   //
 
   uint8_t* source_buffer;
@@ -295,7 +299,7 @@ lzws_result_t lzws_file_compress(
   ALLOCATE_BUFFERS(LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_compressor_state_t* state_ptr;
-  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bits, block_mode, msb, quiet) != 0) {
+  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bits, block_mode, msb, quiet, unaligned) != 0) {
     free(source_buffer);
     free(destination_buffer);
 
@@ -344,7 +348,7 @@ static inline lzws_result_t decompress_data(
 lzws_result_t lzws_file_decompress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  bool msb, bool quiet) {
+  bool msb, bool quiet, bool unaligned) {
   //
 
   uint8_t* source_buffer;
@@ -355,7 +359,7 @@ lzws_result_t lzws_file_decompress(
   ALLOCATE_BUFFERS(LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_decompressor_state_t* state_ptr;
-  if (lzws_decompressor_get_initial_state(&state_ptr, msb, quiet) != 0) {
+  if (lzws_decompressor_get_initial_state(&state_ptr, msb, quiet, unaligned) != 0) {
     free(source_buffer);
     free(destination_buffer);
 

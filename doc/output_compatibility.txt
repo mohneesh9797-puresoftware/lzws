@@ -66,3 +66,27 @@ Codes from dictionary don't affect code bits.
 We added new code into dictionary and it requires 10 bits.
 We have to write current code with current code bits (9 bits).
 Than we can increase code bits (10 bits).
+
+-----
+
+https://github.com/vapier/ncompress/issues/5
+There is an ancient bug in original UNIX compress and all its derivatives: ncompress, windows port, ncompress and gzip.
+It was easier to implement output of bit group aligned by number of code bits multiplied by 8.
+When clear code appears or code bits changed this bit group was flushed into output right padded with zeroes.
+
+Example:
+We want to write 10 9 bit codes than 5 10 bit codes.
+We have to write 100 bits, than 44 zero bits, than 50 bits and than 6 zero bits.
+
+This bug exists for more than 35 years so it becomes a part of specification.
+We have to make our application compatible with this bug by default.
+So we can create feature named as "unaligned" which will provide output without "code_bits * 8" alignment.
+
+-----
+
+UNIX compress and his friends won't be able to decompress data compressed with "unaligned".
+Their decompressor will just bypass bits that it counts as zero padding.
+But "unaligned" output has no any padding bits except last byte.
+So they will just miss data.
+
+Is it possible to implement decompressor that will be able to decompress both "unaligned" and "aligned" data automatically?

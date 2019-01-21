@@ -39,11 +39,12 @@ enum {
 lzws_result_t lzws_file_compress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  uint_fast8_t max_code_bits, bool block_mode, bool msb, bool quiet);
+  uint_fast8_t max_code_bits, bool block_mode,
+  bool msb, bool quiet, bool unaligned);
 
 lzws_result_t lzws_file_decompress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  bool msb, bool quiet);
+  bool msb, bool quiet, bool unaligned);
 
 #endif // LZWS_FILE_H
