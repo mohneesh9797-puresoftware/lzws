@@ -89,4 +89,11 @@ Their decompressor will just bypass bits that it counts as zero padding.
 But "unaligned" output has no any padding bits except last byte.
 So they will just miss data.
 
-Is it possible to implement decompressor that will be able to decompress both "unaligned" and "aligned" data automatically?
+It is not possible to implement decompressor that will be able to decompress both "unaligned" and "aligned" data automatically.
+The problem is that right padding of bit group with zero will conflict with unaligned and aligned data.
+
+For example we want to output 7 9 bit codes and than 1 10 bit code.
+We need to write 63 bytes, than 9 zero bits, than 10 bit, than 6 zero bits.
+9 zero bits + first bit of 10 bit code can be read as 10 bit code.
+If remaining bits (9 last bits of 10 bit code) are zeroes, this data can decompressed in 2 ways.
+So automatic detection of "unaligned" or "aligned" data is not possible.
