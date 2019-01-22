@@ -107,7 +107,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   return 0;
 }
 
-lzws_result_t lzws_compressor_write_current_code_before_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_compressor_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
   lzws_result_t result = lzws_compressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {
     return result;
