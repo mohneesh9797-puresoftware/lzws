@@ -5,6 +5,7 @@
 #include "dictionary/wrapper.h"
 
 #include "../log.h"
+#include "../utils.h"
 
 #include "common.h"
 #include "read_code.h"

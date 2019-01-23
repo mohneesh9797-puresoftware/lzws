@@ -30,7 +30,9 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
   }
 
   while (true) {
-    switch (state_ptr->status) {
+    lzws_decompressor_status_t status = state_ptr->status;
+
+    switch (status) {
       case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
         result = lzws_decompressor_read_first_code(state_ptr, source_ptr, source_length_ptr);
         break;
@@ -49,7 +51,7 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 
       default:
         if (!state_ptr->quiet) {
-          LZWS_PRINT_ERROR("received unknown status")
+          LZWS_PRINTF_ERROR("unknown status: %u", status)
         }
 
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
@@ -64,22 +66,21 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 }
 
 lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
-  switch (state_ptr->status) {
+  lzws_decompressor_status_t status = state_ptr->status;
+
+  switch (status) {
     case LZWS_DECOMPRESSOR_READ_HEADER:
-    case LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY:
       // We have no source remainder yet.
       return 0;
 
     case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
     case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
-    case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
-    case LZWS_DECOMPRESSOR_WRITE_DICTIONARY:
       // We may have source remainder.
       return lzws_decompressor_verify_empty_source_remainder(state_ptr);
 
     default:
       if (!state_ptr->quiet) {
-        LZWS_PRINT_ERROR("received unknown status")
+        LZWS_PRINTF_ERROR("unknown status: %u", status)
       }
 
       return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;

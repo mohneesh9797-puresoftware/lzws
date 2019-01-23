@@ -7,6 +7,7 @@
 #include "dictionary/wrapper.h"
 
 #include "../log.h"
+#include "../utils.h"
 
 #include "common.h"
 #include "state.h"

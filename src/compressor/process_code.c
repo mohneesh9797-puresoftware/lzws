@@ -5,23 +5,19 @@
 #include "dictionary/wrapper.h"
 #include "ratio/main.h"
 
+#include "../utils.h"
+
 #include "process_code.h"
 #include "write.h"
 
-static inline void read_next_symbol(lzws_compressor_state_t* state_ptr) {
-  state_ptr->current_code = state_ptr->next_symbol;
-
-  // It is possible to keep next symbol as is.
-  // Algorithm won't touch it without reinitialization.
-
-  state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
-}
-
-static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr) {
-  if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
+static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr, bool* code_bits_incremented_ptr) {
+  bool code_bits_incremented = state_ptr->last_used_code == state_ptr->last_used_max_code;
+  if (code_bits_incremented) {
     uint_fast8_t last_used_code_bits = ++state_ptr->last_used_code_bits;
     state_ptr->last_used_max_code    = lzws_get_bit_mask(last_used_code_bits);
   }
+
+  *code_bits_incremented_ptr = code_bits_incremented;
 
   return ++state_ptr->last_used_code;
 }
@@ -33,26 +29,48 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
   }
 
   lzws_code_fast_t current_code = state_ptr->current_code;
+  uint_fast8_t     next_symbol  = state_ptr->next_symbol;
+
+  // We need to set current code to next symbol in all possible cases.
+  state_ptr->current_code = next_symbol;
+
+  // It is possible to keep next symbol as is.
+  // Algorithm won't touch it without reinitialization.
+
   if (state_ptr->block_mode && current_code == LZWS_CLEAR_CODE) {
     // We need to clear state after sending clear code.
     lzws_compressor_clear_state(state_ptr);
-    read_next_symbol(state_ptr);
+
+    if (state_ptr->unaligned) {
+      state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
+    } else {
+      state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
+    }
 
     return 0;
   }
 
-  if (!lzws_compressor_is_dictionary_full(state_ptr)) {
-    lzws_code_fast_t next_code = get_next_code(state_ptr);
-    lzws_compressor_save_next_code_to_dictionary_wrapper(state_ptr, current_code, state_ptr->next_symbol, next_code);
+  if (lzws_compressor_is_dictionary_full(state_ptr)) {
+    state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
 
-    if (lzws_compressor_is_dictionary_full(state_ptr)) {
-      // Dictionary become full.
-      // We need to clear ratio now.
-      lzws_compressor_clear_ratio(state_ptr);
-    }
+    return 0;
   }
 
-  read_next_symbol(state_ptr);
+  bool             code_bits_incremented;
+  lzws_code_fast_t next_code = get_next_code(state_ptr, &code_bits_incremented);
+  lzws_compressor_save_next_code_to_dictionary_wrapper(state_ptr, current_code, next_symbol, next_code);
+
+  if (lzws_compressor_is_dictionary_full(state_ptr)) {
+    // Dictionary become full.
+    // We need to clear ratio now.
+    lzws_compressor_clear_ratio(state_ptr);
+  }
+
+  if (state_ptr->unaligned || !code_bits_incremented) {
+    state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
+  } else {
+    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
+  }
 
   return 0;
 }

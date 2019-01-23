@@ -5,7 +5,8 @@
 #if !defined(LZWS_COMMON_H)
 #define LZWS_COMMON_H
 
-#include "utils.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMMON_C)

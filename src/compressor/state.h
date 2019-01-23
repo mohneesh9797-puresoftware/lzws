@@ -21,7 +21,9 @@ enum {
   LZWS_COMPRESSOR_READ_FIRST_SYMBOL,
   LZWS_COMPRESSOR_READ_NEXT_SYMBOL,
   LZWS_COMPRESSOR_PROCESS_CURRENT_CODE,
-  LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER
+  LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER,
+  LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT,
+  LZWS_COMPRESSOR_WRITE_ALIGNMENT
 };
 typedef uint_fast8_t lzws_compressor_status_t;
 
@@ -46,6 +48,8 @@ typedef struct {
 
   uint_fast8_t destination_remainder;
   uint_fast8_t destination_remainder_bits;
+
+  uint_fast8_t unaligned_destination_bits;
 
   lzws_compressor_dictionary_t dictionary;
   lzws_compressor_ratio_t      ratio;

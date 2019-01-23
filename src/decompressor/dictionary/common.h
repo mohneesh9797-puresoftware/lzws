@@ -5,6 +5,8 @@
 #if !defined(LZWS_DECOMPRESSOR_DICTIONARY_COMMON_H)
 #define LZWS_DECOMPRESSOR_DICTIONARY_COMMON_H
 
+#include <stdlib.h>
+
 #include "../../common.h"
 
 typedef struct {

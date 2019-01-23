@@ -5,6 +5,7 @@
 #define LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_C
 
 #include "../../../log.h"
+#include "../../../utils.h"
 #include "../../common.h"
 
 #include "main.h"
@@ -48,13 +49,15 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
+  lzws_compressor_dictionary_used_index_t* used_indexes;
+
   if (block_mode) {
     size_t used_indexes_length = get_used_indexes_length(dictionary_ptr, total_codes_length);
 
     // Used indexes don't require default values.
     // Algorithm will access only initialized indexes.
-    size_t                                   used_indexes_size = used_indexes_length * sizeof(lzws_compressor_dictionary_used_index_t);
-    lzws_compressor_dictionary_used_index_t* used_indexes      = malloc(used_indexes_size);
+    size_t used_indexes_size = used_indexes_length * sizeof(lzws_compressor_dictionary_used_index_t);
+    used_indexes             = malloc(used_indexes_size);
 
     if (used_indexes == NULL) {
       if (!quiet) {
@@ -66,11 +69,13 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
       return LZWS_COMPRESSOR_ALLOCATE_FAILED;
     }
-
-    dictionary_ptr->used_indexes = used_indexes;
   }
 
   dictionary_ptr->next_codes = next_codes;
+
+  if (block_mode) {
+    dictionary_ptr->used_indexes = used_indexes;
+  }
 
   return 0;
 }

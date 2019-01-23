@@ -2,9 +2,11 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "write.h"
+#include "../utils.h"
+
 #include "common.h"
 #include "utils.h"
+#include "write.h"
 
 static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bits_ptr, bool msb) {
   lzws_code_fast_t code      = *code_ptr;
@@ -140,6 +142,25 @@ lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_
 
   state_ptr->destination_remainder      = 0;
   state_ptr->destination_remainder_bits = 0;
+
+  return 0;
+}
+
+lzws_result_t lzws_compressor_write_destination_remainder_for_alignment(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+  lzws_result_t result = lzws_compressor_write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_COMPRESSOR_WRITE_ALIGNMENT;
+
+  return 0;
+}
+
+lzws_result_t lzws_compressor_write_alignment(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+  // TODO
+
+  state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
 
   return 0;
 }

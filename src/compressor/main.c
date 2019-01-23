@@ -38,7 +38,9 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
   }
 
   while (true) {
-    switch (state_ptr->status) {
+    lzws_compressor_status_t status = state_ptr->status;
+
+    switch (status) {
       case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
         result = lzws_compressor_read_next_symbol(state_ptr, source_ptr, source_length_ptr);
         break;
@@ -47,9 +49,17 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
         result = lzws_compressor_process_current_code(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
+      case LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT:
+        result = lzws_compressor_write_destination_remainder_for_alignment(state_ptr, destination_ptr, destination_length_ptr);
+        break;
+
+      case LZWS_COMPRESSOR_WRITE_ALIGNMENT:
+        result = lzws_compressor_write_alignment(state_ptr, destination_ptr, destination_length_ptr);
+        break;
+
       default:
         if (!state_ptr->quiet) {
-          LZWS_PRINT_ERROR("received unknown status")
+          LZWS_PRINTF_ERROR("unknown status: %u", status)
         }
 
         return LZWS_COMPRESSOR_UNKNOWN_STATUS;
@@ -65,14 +75,11 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
   lzws_result_t result;
 
   switch (state_ptr->status) {
-    case LZWS_COMPRESSOR_WRITE_HEADER:
-    case LZWS_COMPRESSOR_ALLOCATE_DICTIONARY:
     case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
       // We have no current code and destination remainder yet.
       return 0;
 
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
-    case LZWS_COMPRESSOR_PROCESS_CURRENT_CODE:
       // We have current code and maybe destination remainder.
       result = lzws_compressor_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
       if (result != 0) {
@@ -81,13 +88,15 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
       break;
   }
 
-  switch (state_ptr->status) {
+  lzws_compressor_status_t status = state_ptr->status;
+
+  switch (status) {
     case LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER:
       return lzws_compressor_write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
 
     default:
       if (!state_ptr->quiet) {
-        LZWS_PRINT_ERROR("received unknown status")
+        LZWS_PRINTF_ERROR("unknown status: %u", status)
       }
 
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;

@@ -4,10 +4,13 @@
 
 #define LZWS_COMPRESSOR_STATE_C
 
+#include <stdlib.h>
+
 #include "dictionary/wrapper.h"
 #include "ratio/main.h"
 
 #include "../log.h"
+#include "../utils.h"
 
 #include "common.h"
 #include "state.h"
@@ -53,6 +56,10 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
 
   state_ptr->destination_remainder      = 0;
   state_ptr->destination_remainder_bits = 0;
+
+  if (!unaligned) {
+    state_ptr->unaligned_destination_bits = 0;
+  }
 
   lzws_compressor_initialize_dictionary_wrapper(state_ptr);
   lzws_compressor_initialize_ratio(state_ptr);

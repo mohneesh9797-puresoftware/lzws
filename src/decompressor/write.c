@@ -4,6 +4,8 @@
 
 #include "dictionary/wrapper.h"
 
+#include "../utils.h"
+
 #include "common.h"
 #include "write.h"
 

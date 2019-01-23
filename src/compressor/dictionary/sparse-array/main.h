@@ -5,6 +5,8 @@
 #if !defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_H)
 #define LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_H
 
+#include <stdlib.h>
+
 #include "common.h"
 
 #undef LZWS_INLINE
