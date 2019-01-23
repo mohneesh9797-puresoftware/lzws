@@ -4,8 +4,6 @@
 
 #define LZWS_COMPRESSOR_STATE_C
 
-#include <stdlib.h>
-
 #include "dictionary/wrapper.h"
 #include "ratio/main.h"
 

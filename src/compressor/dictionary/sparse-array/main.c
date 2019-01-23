@@ -11,7 +11,7 @@
 #include "main.h"
 
 static inline size_t get_next_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
-  return (total_codes_length - dictionary_ptr->next_codes_offset) * LZWS_ALPHABET_LENGTH;
+  return (total_codes_length - dictionary_ptr->next_codes_offset) << LZWS_ALPHABET_BITS;
 }
 
 static inline size_t get_used_indexes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
@@ -19,12 +19,11 @@ static inline size_t get_used_indexes_length(lzws_compressor_dictionary_t* dicti
 }
 
 static inline lzws_compressor_dictionary_used_index_t get_next_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol) {
-  // We need to remove offset from code when it is not a char code.
-  if (current_code > LZWS_ALPHABET_LENGTH) {
+  if (current_code >= dictionary_ptr->first_non_char_code) {
     current_code -= dictionary_ptr->next_codes_offset;
   }
 
-  return current_code * LZWS_ALPHABET_LENGTH + next_symbol;
+  return (current_code << LZWS_ALPHABET_BITS) | next_symbol;
 }
 
 static inline lzws_code_fast_t get_index_of_used_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {

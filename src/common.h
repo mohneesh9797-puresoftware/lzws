@@ -41,6 +41,7 @@ typedef uint_fast16_t lzws_code_fast_t;
 #define LZWS_BLOCK_MODE 0x80
 
 #define LZWS_ALPHABET_LENGTH 256
+#define LZWS_ALPHABET_BITS 8
 #define LZWS_CLEAR_CODE 256
 #define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 

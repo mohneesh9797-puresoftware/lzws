@@ -5,6 +5,7 @@
 #define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_C
 
 #include "../../../log.h"
+#include "../../../utils.h"
 #include "../../common.h"
 
 #include "main.h"
@@ -21,8 +22,7 @@ static inline size_t get_next_sibling_codes_length(lzws_compressor_dictionary_t*
 }
 
 static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {
-  // We need to remove offset from code when it is not a char code.
-  if (code > LZWS_ALPHABET_LENGTH) {
+  if (code >= dictionary_ptr->first_non_char_code) {
     code -= dictionary_ptr->first_child_codes_offset;
   }
 

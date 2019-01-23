@@ -11,7 +11,7 @@
 
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, bool quiet, size_t total_codes_length) {
   // We won't store char codes and clear code.
-  lzws_code_fast_t codes_offset = initial_used_code + 1;
+  lzws_code_fast_t codes_offset = initial_used_code + 1; // aka "first_non_char_code".
   dictionary_ptr->codes_offset  = codes_offset;
 
   size_t codes_length = total_codes_length - codes_offset;
