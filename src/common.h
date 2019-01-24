@@ -32,16 +32,16 @@ typedef uint_fast16_t lzws_code_fast_t;
 
 // External programs requires 2 byte magic header.
 // For example: https://github.com/apache/httpd/blob/trunk/modules/metadata/mod_mime_magic.c#L2060
-#define LZWS_MAGIC_HEADER_BYTE_0 0x1f // "\037" in base-8 number system.
-#define LZWS_MAGIC_HEADER_BYTE_1 0x9d // "\235" in base-8 number system.
+#define LZWS_FIRST_MAGIC_HEADER_BYTE 0x1f  // "\037" in base-8 number system.
+#define LZWS_SECOND_MAGIC_HEADER_BYTE 0x9d // "\235" in base-8 number system.
 
-#define LZWS_LOWEST_MAX_CODE_BITS 9
-#define LZWS_BIGGEST_MAX_CODE_BITS 16
-#define LZWS_MAX_CODE_BITS_MASK 0x1f // Max code bits are the last bits, biggest value (16) requires 5 bits.
+#define LZWS_LOWEST_MAX_CODE_BIT_LENGTH 9
+#define LZWS_BIGGEST_MAX_CODE_BIT_LENGTH 16
+#define LZWS_MAX_CODE_BIT_MASK 0x1f // Max code bits are the last bits, biggest value (16) requires 5 bits.
 #define LZWS_BLOCK_MODE 0x80
 
 #define LZWS_ALPHABET_LENGTH 256
-#define LZWS_ALPHABET_BITS 8
+#define LZWS_ALPHABET_BIT_LENGTH 8
 #define LZWS_CLEAR_CODE 256
 #define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 

@@ -289,7 +289,7 @@ static inline lzws_result_t compress_data(
 lzws_result_t lzws_file_compress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  uint_fast8_t max_code_bits, bool block_mode,
+  uint_fast8_t max_code_bit_length, bool block_mode,
   bool msb, bool quiet, bool unaligned) {
   //
 
@@ -301,7 +301,7 @@ lzws_result_t lzws_file_compress(
   ALLOCATE_BUFFERS(LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_compressor_state_t* state_ptr;
-  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bits, block_mode, msb, quiet, unaligned) != 0) {
+  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, quiet, unaligned) != 0) {
     free(source_buffer);
     free(destination_buffer);
 

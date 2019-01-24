@@ -82,7 +82,7 @@ make package
 // Use it to be compatible with with original UNIX compress utility.
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr);
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bits, bool block_mode, bool msb);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bits_length, bool block_mode, bool msb);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
 
 lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
@@ -142,7 +142,7 @@ It is well documented.
 
 `ncompress` code is not user friendly.
 It is full of goto, inliners and it has no comments or any documentation.
-There are some issues with overflow and different code bits.
+There are some issues with overflow and different code bits length.
 It is very hard to fix it, you have to know all code history of this project, but it is not available.
 It looks almost impossible to modify it for streaming purposes.
 It has no tests.

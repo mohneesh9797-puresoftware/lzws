@@ -13,7 +13,7 @@ static const char* help =
   "Usage: lzws-cli [-%s] [< stdin] [> stdout]\n"
   "\n"
   "Options:\n"
-  "  --max-code-bits (-b) - set max code bits (%u-%u) (%u by default) [compressor only]\n"
+  "  --max-code-bit-length (-b) - set max code bit length (%u-%u) (%u used by default) [compressor only]\n"
   "  --decompress (-d) - decompress (compress by default)\n"
   "  --msb (-m) - enable most significant bit (least significant bit used by default)\n"
   "  --help (-h) - print help\n"
@@ -23,7 +23,7 @@ static const char* help =
 
 static const char*   short_options  = "b:dmhqru";
 static struct option long_options[] = {
-  {"max-code-bits", optional_argument, NULL, 'b'},
+  {"max-code-bit-length", optional_argument, NULL, 'b'},
   {"decompress", optional_argument, NULL, 'd'},
   {"msb", optional_argument, NULL, 'm'},
   {"help", optional_argument, NULL, 'h'},
@@ -33,24 +33,24 @@ static struct option long_options[] = {
   {NULL, 0, NULL, 0}};
 
 static inline void print_help() {
-  fprintf(stderr, help, short_options, LZWS_LOWEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS, LZWS_BIGGEST_MAX_CODE_BITS);
+  fprintf(stderr, help, short_options, LZWS_LOWEST_MAX_CODE_BIT_LENGTH, LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, LZWS_BIGGEST_MAX_CODE_BIT_LENGTH);
 }
 
 int main(int argc, char** argv) {
   bool is_compressor = true;
 
-  uint_fast8_t max_code_bits = LZWS_BIGGEST_MAX_CODE_BITS;
-  bool         block_mode    = true;
-  bool         msb           = false;
-  bool         quiet         = false;
-  bool         unaligned     = false;
+  uint_fast8_t max_code_bit_length = LZWS_BIGGEST_MAX_CODE_BIT_LENGTH;
+  bool         block_mode          = true;
+  bool         msb                 = false;
+  bool         quiet               = false;
+  bool         unaligned           = false;
 
   int option;
 
   while ((option = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
     switch (option) {
       case 'b':
-        max_code_bits = atoi(optarg);
+        max_code_bit_length = atoi(optarg);
         break;
       case 'd':
         is_compressor = false;
@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
   }
 
   if (is_compressor) {
-    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bits, block_mode, msb, quiet, unaligned) != 0) {
+    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bit_length, block_mode, msb, quiet, unaligned) != 0) {
       return 2;
     }
   } else {

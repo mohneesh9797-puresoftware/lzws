@@ -10,15 +10,15 @@
 
 #define PRINT(string) fwrite(string, 1, sizeof(string), stdout)
 
-static inline void print_reversed_byte(uint_fast8_t byte) {
-  uint_fast8_t reversed_byte = 0;
+static inline void print_bytes_with_reversed_bits(uint_fast8_t byte) {
+  uint_fast8_t byte_with_reversed_bits = 0;
 
   for (uint_fast8_t bit_index = 0; bit_index < 8; bit_index++) {
     uint_fast8_t bit_value = (byte >> bit_index) & 1;
-    reversed_byte |= bit_value << (7 - bit_index);
+    byte_with_reversed_bits |= bit_value << (7 - bit_index);
   }
 
-  printf("0x%02x", reversed_byte);
+  printf("0x%02x", byte_with_reversed_bits);
 }
 
 int main() {
@@ -34,7 +34,7 @@ int main() {
       }
     }
 
-    print_reversed_byte(index);
+    print_bytes_with_reversed_bits(index);
 
     if (index == 255) {
       break;

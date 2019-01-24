@@ -8,12 +8,12 @@
 #include <stdint.h>
 
 // Standard table to reverse single byte.
-extern const uint8_t LZWS_REVERSE_BITS[256];
+extern const uint8_t LZWS_BYTES_WITH_REVERSED_BITS[256];
 
 // Algorithm will try to access 2 ** 0 - 2 ** 16 only.
 extern const uint32_t LZWS_POWERS_OF_TWO[17];
 
 // Algorithm will try to access ((2 ** 0) - 1) - ((2 ** 16) - 1) only.
-extern const uint16_t LZWS_BIT_MASKS[17];
+extern const uint16_t LZWS_MASKS_FOR_LAST_BITS[17];
 
 #endif // LZWS_CONSTANTS_H

@@ -23,14 +23,14 @@ enum {
   LZWS_COMPRESSOR_PROCESS_CURRENT_CODE,
   LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER,
   LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT,
-  LZWS_COMPRESSOR_WRITE_ALIGNMENT
+  LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_FOR_ALIGNMENT
 };
 typedef uint_fast8_t lzws_compressor_status_t;
 
 typedef struct {
   lzws_compressor_status_t status;
 
-  uint_fast8_t max_code_bits;
+  uint_fast8_t max_code_bit_length;
   bool         block_mode;
   bool         msb;
   bool         quiet;
@@ -41,21 +41,22 @@ typedef struct {
 
   lzws_code_fast_t last_used_code;
   lzws_code_fast_t last_used_max_code;
-  uint_fast8_t     last_used_code_bits;
+  uint_fast8_t     last_used_code_bit_length;
 
   lzws_code_fast_t current_code;
   uint_fast8_t     next_symbol;
 
   uint_fast8_t destination_remainder;
-  uint_fast8_t destination_remainder_bits;
+  uint_fast8_t destination_remainder_bit_length;
 
-  uint_fast8_t unaligned_destination_bits;
+  uint_fast8_t unaligned_by_code_bit_length;
+  uint_fast8_t unaligned_destination_byte_length;
 
   lzws_compressor_dictionary_t dictionary;
   lzws_compressor_ratio_t      ratio;
 } lzws_compressor_state_t;
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bits, bool block_mode, bool msb, bool quiet, bool unaligned);
+lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned);
 void          lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);
 void          lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
 

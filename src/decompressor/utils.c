@@ -11,7 +11,7 @@ void lzws_decompressor_read_byte(lzws_decompressor_state_t* state, uint8_t** sou
   lzws_read_byte(source_ptr, source_length_ptr, &byte);
 
   if (state->msb) {
-    byte = lzws_reverse_byte(byte);
+    byte = lzws_get_byte_with_reversed_bits(byte);
   }
 
   *byte_ptr = byte;

@@ -15,7 +15,7 @@ void lzws_compressor_read_byte(lzws_compressor_state_t* state_ptr, uint8_t** sou
 
 void lzws_compressor_write_byte(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr, uint_fast8_t byte) {
   if (state_ptr->msb) {
-    byte = lzws_reverse_byte(byte);
+    byte = lzws_get_byte_with_reversed_bits(byte);
   }
 
   lzws_write_byte(destination_ptr, destination_length_ptr, byte);

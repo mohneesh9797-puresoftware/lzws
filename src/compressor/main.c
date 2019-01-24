@@ -53,8 +53,8 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
         result = lzws_compressor_write_destination_remainder_for_alignment(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
-      case LZWS_COMPRESSOR_WRITE_ALIGNMENT:
-        result = lzws_compressor_write_alignment(state_ptr, destination_ptr, destination_length_ptr);
+      case LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_FOR_ALIGNMENT:
+        result = lzws_compressor_write_padding_zeroes_for_alignment(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
       default:

@@ -18,24 +18,24 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE uint_fast8_t lzws_reverse_byte(uint_fast8_t byte) {
-  return LZWS_REVERSE_BITS[byte];
+LZWS_INLINE uint_fast8_t lzws_get_byte_with_reversed_bits(uint_fast8_t byte) {
+  return LZWS_BYTES_WITH_REVERSED_BITS[byte];
 }
 
 LZWS_INLINE uint_fast32_t lzws_get_power_of_two(uint_fast8_t power) {
   return LZWS_POWERS_OF_TWO[power];
 }
 
-LZWS_INLINE uint_fast16_t lzws_get_bit_mask(uint_fast8_t bits) {
-  return LZWS_BIT_MASKS[bits];
+LZWS_INLINE uint_fast16_t lzws_get_mask_for_last_bits(uint_fast8_t bit_length) {
+  return LZWS_MASKS_FOR_LAST_BITS[bit_length];
 }
 
-LZWS_INLINE size_t lzws_floor_bits_to_bytes(size_t bits) {
-  return bits >> 3;
+LZWS_INLINE size_t lzws_floor_bit_length_to_byte_length(size_t bit_length) {
+  return bit_length >> 3;
 }
 
-LZWS_INLINE size_t lzws_ceil_bits_to_bytes(size_t bits) {
-  return (bits + 7) >> 3;
+LZWS_INLINE size_t lzws_ceil_bit_length_to_byte_length(size_t bit_length) {
+  return (bit_length + 7) >> 3;
 }
 
 LZWS_INLINE void lzws_read_byte(uint8_t** source_ptr, size_t* source_length_ptr, uint_fast8_t* byte_ptr) {

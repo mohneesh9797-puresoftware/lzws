@@ -10,14 +10,14 @@ endif ()
 
 configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 
-include (GenerateReverseBitsTable)
-generate_reverse_bits_table ()
+include (GenerateBytesWithReversedBitsTable)
+generate_bytes_with_reversed_bits_table ()
 
 include (GeneratePowersOfTwoTable)
 generate_powers_of_two_table ()
 
-include (GenerateBitMasksTable)
-generate_bit_masks_table ()
+include (GenerateMasksForLastBitsTable)
+generate_masks_for_last_bits_table ()
 
 configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c")
 
