@@ -213,7 +213,7 @@ lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_
 
   if (source_remainder_bit_length != 0 && source_remainder != 0) {
     if (!state_ptr->quiet) {
-      LZWS_PRINTF_ERROR("source remainder is not empty, bits: %u, value: %u", source_remainder_bit_length, source_remainder)
+      LZWS_PRINTF_ERROR("source remainder is not empty, bit length: %u, value: %u", source_remainder_bit_length, source_remainder)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;

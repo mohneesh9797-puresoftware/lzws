@@ -4,7 +4,7 @@ LZW compression will not be effective with binary files.
 But there are many text files after binary image in tar.
 So we can reset dictionary and send clear code after binary file.
 
-Efficiency of compression can be measured as source bytes length / destination bytes length.
+Efficiency of compression can be measured as source byte length / destination byte length.
 This efficiency is known as compression ratio (or just ratio).
 This parameter changes during data processing.
 
@@ -55,19 +55,19 @@ It won't provide a big performance penalty.
 
 Ncompress counts ratio when:
 1. Dictionary is full.
-2. New source bytes length >= 10000.
+2. New source byte length >= 10000.
 3. We have written last code and switched to next prefix symbol.
 4. We have at least 1 source symbol pending that will use new dictionary.
 
 Dictionary is not full.
 We will increment new source length and new destination length.
-Dictionary become full after we have written last code + new source bytes length >= 10000.
+Dictionary become full after we have written last code + new source byte length >= 10000.
 We can't count ratio now because destination length is 0.
 So we will clear ratio and repeat procedure once again.
 
 Dictionary is full.
 We will increment new source length and new destination length.
-We have written last code + new source bytes length >= 10000 + there is at least 1 symbol pending.
+We have written last code + new source byte length >= 10000 + there is at least 1 symbol pending.
 We will count ratio now and think about clear.
 
 So this process can be split into 2 steps.
@@ -108,7 +108,7 @@ So we need to count amount of bytes required to write each dictionary code.
 8 bit codes (will be written as 9 bit codes): 256.
 9 bit codes: (2 ** 9) - 1 - 257 = 254.
 10 bit codes: (2 ** 10) - 1 - (2 ** 9) - 1 = 510.
-We can see than n bit codes amount equals (2 ** (n - 1)) - 2.
+We can see than n bit code length equals (2 ** (n - 1)) - 2.
 
 Total amount of bits:
   256 * 9 +

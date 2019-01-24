@@ -16,7 +16,7 @@ We will write last 8 bits "01100001" = 97 into first byte.
 The remainder bit is "0".
 
 98 equals "001100010".
-We will shift this code to the left by remainder bits length and add it.
+We will shift this code to the left by remainder bit length and add it.
 "(001100010 << 1) | 0" equals "0011000100".
 We will write last 8 bits "11000100" = 196 into second byte.
 The remainder bits are "00".

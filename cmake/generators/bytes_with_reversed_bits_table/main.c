@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BYTES_PER_LINE 16
-#define BYTES_GLUE ", "
+#define BYTE_LENGTH_PER_LINE 16
+#define BYTE_LENGTH_GLUE ", "
 #define LINE_PREFIX "  "
 #define LINE_TERMINATOR ",\n"
 
@@ -26,11 +26,11 @@ int main() {
 
   while (true) {
     if (index != 0) {
-      if (index % BYTES_PER_LINE == 0) {
+      if (index % BYTE_LENGTH_PER_LINE == 0) {
         PRINT(LINE_TERMINATOR);
         PRINT(LINE_PREFIX);
       } else {
-        PRINT(BYTES_GLUE);
+        PRINT(BYTE_LENGTH_GLUE);
       }
     }
 

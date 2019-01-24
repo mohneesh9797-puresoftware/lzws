@@ -16,7 +16,7 @@
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result_state_ptr, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned) {
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!quiet) {
-      LZWS_PRINTF_ERROR("invalid max code bits length: %u", max_code_bit_length)
+      LZWS_PRINTF_ERROR("invalid max code bit length: %u", max_code_bit_length)
     }
 
     return LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH;
