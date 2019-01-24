@@ -93,9 +93,14 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   // Code bit length will always be >= 8.
   // Destination remainder bit length will always be <= 7.
   // So destination byte length will always be >= 1.
+
   uint_fast8_t destination_byte_length = lzws_floor_bit_length_to_byte_length(code_bit_length + destination_remainder_bit_length);
   if (*destination_length_ptr < destination_byte_length) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
+  }
+
+  if (!state_ptr->unaligned) {
+    update_unaligned_destination_byte_length(state_ptr, destination_byte_length);
   }
 
   lzws_code_fast_t code                  = state_ptr->current_code;
@@ -105,7 +110,9 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   uint_fast8_t byte = get_byte_with_remainder(&code, &code_bit_length, destination_remainder, destination_remainder_bit_length, msb);
   lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
 
-  while (destination_byte_length != 1) {
+  destination_byte_length--;
+
+  while (destination_byte_length != 0) {
     byte = get_byte(&code, &code_bit_length, msb);
     lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
 
@@ -116,10 +123,6 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
 
   state_ptr->destination_remainder            = code;
   state_ptr->destination_remainder_bit_length = code_bit_length;
-
-  if (!state_ptr->unaligned) {
-    update_unaligned_destination_byte_length(state_ptr, destination_byte_length);
-  }
 
   return 0;
 }
@@ -145,6 +148,10 @@ lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
+  if (!state_ptr->unaligned) {
+    update_unaligned_destination_byte_length(state_ptr, 1);
+  }
+
   // Destination remainder is left padded with zeroes by default.
   uint_fast8_t destination_remainder = state_ptr->destination_remainder;
 
@@ -157,10 +164,6 @@ lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_
 
   state_ptr->destination_remainder            = 0;
   state_ptr->destination_remainder_bit_length = 0;
-
-  if (!state_ptr->unaligned) {
-    update_unaligned_destination_byte_length(state_ptr, 1);
-  }
 
   return 0;
 }
@@ -184,8 +187,9 @@ lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment(lzws_compressor
       return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
     }
 
-    lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
     update_unaligned_destination_byte_length(state_ptr, 1);
+
+    lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
   }
 
   state_ptr->unaligned_by_code_bit_length = state_ptr->last_used_code_bit_length;

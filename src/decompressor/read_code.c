@@ -89,6 +89,7 @@ lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, 
   // Target code bit length will always be >= 8.
   // Source remainder bit length will always be <= 7.
   // So source byte length will always be >= 1.
+
   uint_fast8_t source_byte_length = lzws_ceil_bit_length_to_byte_length(target_code_bit_length - source_remainder_bit_length);
   if (*source_length_ptr < source_byte_length) {
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;

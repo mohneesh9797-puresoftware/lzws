@@ -30,7 +30,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
 
   // We want to clear dictionary when there is at least one symbol that will use new dictionary.
   // So we should check whether we need to clear dictionary before reading this symbol.
-  //
+
   // Current code >= initial used code means that dictionary is still working on current source sequence.
   // We can't clear dictionary during source sequence.
   // We can ignore situation when current code equals clear code.
@@ -42,6 +42,18 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     state_ptr->current_code = LZWS_CLEAR_CODE;
 
     state_ptr->status = LZWS_COMPRESSOR_PROCESS_CURRENT_CODE;
+
+    return 0;
+  }
+
+  // We want to write alignment if there will be at least one code after it.
+  // So we should check whether we need to write alignment before reading new symbol.
+
+  // We can ignore situation when current code equals clear code.
+  // Here we want to check whether last used code bit length was increased after processing last code.
+
+  if (!state_ptr->unaligned && state_ptr->last_used_code_bit_length != state_ptr->unaligned_by_code_bit_length) {
+    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
 
     return 0;
   }
@@ -58,6 +70,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     // Algorithm won't touch it without reinitialization.
 
     // We don't need to change status, algorithm wants next symbol.
+
     return 0;
   }
 

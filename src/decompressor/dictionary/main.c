@@ -18,6 +18,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 
   // Previous codes don't require default values.
   // Algorithm will access only initialized codes.
+
   size_t       previous_codes_size = codes_length * sizeof(lzws_code_t);
   lzws_code_t* previous_codes      = malloc(previous_codes_size);
 
@@ -31,6 +32,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 
   // Last symbol by codes don't require default values.
   // Algorithm will access only initialized symbols.
+
   size_t   last_symbol_by_codes_size = codes_length;
   uint8_t* last_symbol_by_codes      = malloc(last_symbol_by_codes_size);
 
@@ -47,6 +49,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 
   // Output buffer by codes don't require default values.
   // Algorithm will access only initialized buffer data.
+
   size_t   output_size   = codes_length;
   uint8_t* output_buffer = malloc(output_size);
 

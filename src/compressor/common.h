@@ -7,6 +7,7 @@
 
 // Code can have any value, but next code will always be > 255.
 // So we can use zero as undefined next code.
+
 #define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE 0
 #define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO true
 #define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES true

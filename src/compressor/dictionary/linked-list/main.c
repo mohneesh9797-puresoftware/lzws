@@ -14,6 +14,7 @@ static inline size_t get_first_child_codes_length(lzws_compressor_dictionary_t* 
   // We are operating first child codes: current code -> next code.
   // Maximum next code is max code, maximum current code will be max code - 1.
   // So we don't need to store max code.
+
   return total_codes_length - dictionary_ptr->first_child_codes_offset - 1;
 }
 
@@ -71,6 +72,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
   // Last symbol by codes don't require default values.
   // Algorithm will access only initialized symbols.
+
   size_t   last_symbol_by_codes_size = next_sibling_codes_length;
   uint8_t* last_symbol_by_codes      = malloc(last_symbol_by_codes_size);
 

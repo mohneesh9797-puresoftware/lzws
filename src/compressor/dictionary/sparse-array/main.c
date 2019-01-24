@@ -55,6 +55,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
     // Used indexes don't require default values.
     // Algorithm will access only initialized indexes.
+
     size_t used_indexes_size = used_indexes_length * sizeof(lzws_compressor_dictionary_used_index_t);
     used_indexes             = malloc(used_indexes_size);
 
