@@ -15,13 +15,15 @@
 
 #define PRINT(string) fwrite(string, 1, sizeof(string), stdout)
 
-int main() {
+int main()
+{
   for (uint_fast8_t index = 0; index <= MAX_INDEX; index++) {
     if (index != 0) {
       if (index % BYTE_LENGTH_PER_LINE == 0) {
         PRINT(LINE_TERMINATOR);
         PRINT(LINE_PREFIX);
-      } else {
+      }
+      else {
         PRINT(BYTE_LENGTH_GLUE);
       }
     }

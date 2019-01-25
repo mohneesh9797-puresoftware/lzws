@@ -6,7 +6,8 @@
 
 #include "main.h"
 
-void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio_ptr) {
+void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio_ptr)
+{
   mpz_add_ui(ratio_ptr->source_length, ratio_ptr->source_length, ratio_ptr->new_source_length);
   ratio_ptr->new_source_length = 0;
 
@@ -14,7 +15,8 @@ void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio_ptr) {
   ratio_ptr->new_destination_length = 0;
 }
 
-bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio_ptr) {
+bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio_ptr)
+{
   // We don't need to clear when destination length equals to zero.
   // Source length won't be zero when destination length is not zero.
 

@@ -49,7 +49,8 @@ typedef uint_fast16_t lzws_code_fast_t;
 #define LZWS_INITIAL_USED_CODE 255
 #define LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE 256
 
-LZWS_INLINE lzws_code_fast_t lzws_get_initial_used_code(bool block_mode) {
+LZWS_INLINE lzws_code_fast_t lzws_get_initial_used_code(bool block_mode)
+{
   return block_mode ? LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE : LZWS_INITIAL_USED_CODE;
 }
 

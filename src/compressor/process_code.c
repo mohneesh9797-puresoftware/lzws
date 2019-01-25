@@ -10,7 +10,8 @@
 #include "process_code.h"
 #include "write.h"
 
-static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr) {
+static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr)
+{
   if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
     uint_fast8_t last_used_code_bit_length = ++state_ptr->last_used_code_bit_length;
     state_ptr->last_used_max_code          = lzws_get_mask_for_last_bits(last_used_code_bit_length);
@@ -19,7 +20,8 @@ static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr)
   return ++state_ptr->last_used_code;
 }
 
-lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
   lzws_result_t result = lzws_compressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {
     return result;
@@ -39,9 +41,10 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
     lzws_compressor_clear_state(state_ptr);
 
     // We need to write alignment after sending clear code.
-    if (state_ptr->unaligned) {
+    if (state_ptr->unaligned_bit_groups) {
       state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
-    } else {
+    }
+    else {
       state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
     }
 

@@ -16,15 +16,18 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr)
+{
   return state_ptr->max_code + 1;
 }
 
-LZWS_INLINE void lzws_decompressor_initialize_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE void lzws_decompressor_initialize_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+{
   lzws_decompressor_initialize_dictionary(&state_ptr->dictionary);
 }
 
-LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+{
   size_t total_codes_length = lzws_decompressor_get_total_codes_length(state_ptr);
 
   lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code, state_ptr->quiet, total_codes_length);
@@ -37,21 +40,26 @@ LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_dec
   return 0;
 }
 
-LZWS_INLINE void lzws_decompressor_write_code_to_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code) {
+LZWS_INLINE void lzws_decompressor_write_code_to_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t code)
+{
   lzws_decompressor_write_code_to_dictionary(&state_ptr->dictionary, code);
 }
-LZWS_INLINE void lzws_decompressor_add_code_to_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code) {
+LZWS_INLINE void lzws_decompressor_add_code_to_dictionary_wrapper(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code)
+{
   lzws_decompressor_add_code_to_dictionary(&state_ptr->dictionary, prefix_code, current_code, next_code);
 }
 
-LZWS_INLINE bool lzws_decompressor_has_byte_in_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE bool lzws_decompressor_has_byte_in_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+{
   return lzws_decompressor_has_byte_in_dictionary(&state_ptr->dictionary);
 }
-LZWS_INLINE uint8_t lzws_decompressor_get_byte_from_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE uint8_t lzws_decompressor_get_byte_from_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+{
   return lzws_decompressor_get_byte_from_dictionary(&state_ptr->dictionary);
 }
 
-LZWS_INLINE void lzws_decompressor_free_dictionary_wrapper(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE void lzws_decompressor_free_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+{
   lzws_decompressor_free_dictionary(&state_ptr->dictionary);
 }
 

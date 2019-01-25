@@ -7,7 +7,8 @@
 #include "common.h"
 #include "header.h"
 
-lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
   if (*destination_length_ptr < 2) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
@@ -18,7 +19,8 @@ lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size
   return 0;
 }
 
-lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
   // Writing first byte for max code bit length and block mode.
   if (*destination_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;

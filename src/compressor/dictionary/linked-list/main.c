@@ -10,7 +10,8 @@
 
 #include "main.h"
 
-static inline size_t get_first_child_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
+static inline size_t get_first_child_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+{
   // We are operating first child codes: current code -> next code.
   // Maximum next code is max code, maximum current code will be max code - 1.
   // So we don't need to store max code.
@@ -18,11 +19,13 @@ static inline size_t get_first_child_codes_length(lzws_compressor_dictionary_t* 
   return total_codes_length - dictionary_ptr->first_child_codes_offset - 1;
 }
 
-static inline size_t get_next_sibling_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
+static inline size_t get_next_sibling_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+{
   return total_codes_length - dictionary_ptr->next_sibling_codes_offset;
 }
 
-static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {
+static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
+{
   if (code >= dictionary_ptr->first_non_char_code) {
     code -= dictionary_ptr->first_child_codes_offset;
   }
@@ -30,11 +33,13 @@ static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictio
   return code;
 }
 
-static inline lzws_code_fast_t get_next_sibling_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {
+static inline lzws_code_fast_t get_next_sibling_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
+{
   return code - dictionary_ptr->next_sibling_codes_offset;
 }
 
-lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool quiet, size_t total_codes_length) {
+lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool quiet, size_t total_codes_length)
+{
   lzws_code_t undefined_next_code = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 
   size_t first_child_codes_length = get_first_child_codes_length(dictionary_ptr, total_codes_length);
@@ -95,7 +100,8 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   return 0;
 }
 
-void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length) {
+void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+{
   lzws_code_t undefined_next_code = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 
   size_t first_child_codes_length = get_first_child_codes_length(dictionary_ptr, total_codes_length);
@@ -114,7 +120,8 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
   // Algorithm will access only initialized symbols.
 }
 
-lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol) {
+lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol)
+{
   lzws_code_fast_t current_code_index = get_first_child_code_index(dictionary_ptr, current_code);
 
   lzws_code_fast_t first_child_code = dictionary_ptr->first_child_codes[current_code_index];
@@ -146,7 +153,8 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_d
   return LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 }
 
-void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code) {
+void lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code)
+{
   lzws_code_fast_t next_code_index = get_next_sibling_code_index(dictionary_ptr, next_code);
 
   // We need to store next symbol for next code.

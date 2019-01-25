@@ -13,7 +13,10 @@
 #include "common.h"
 #include "state.h"
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result_state_ptr, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned) {
+lzws_result_t lzws_compressor_get_initial_state(
+  lzws_compressor_state_t** result_state_ptr,
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned_bit_groups)
+{
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!quiet) {
       LZWS_PRINTF_ERROR("invalid max code bit length: %u", max_code_bit_length)
@@ -37,11 +40,11 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
 
   state_ptr->status = LZWS_COMPRESSOR_WRITE_HEADER;
 
-  state_ptr->max_code_bit_length = max_code_bit_length;
-  state_ptr->block_mode          = block_mode;
-  state_ptr->msb                 = msb;
-  state_ptr->quiet               = quiet;
-  state_ptr->unaligned           = unaligned;
+  state_ptr->max_code_bit_length  = max_code_bit_length;
+  state_ptr->block_mode           = block_mode;
+  state_ptr->msb                  = msb;
+  state_ptr->quiet                = quiet;
+  state_ptr->unaligned_bit_groups = unaligned_bit_groups;
 
   state_ptr->initial_used_code = initial_used_code;
   state_ptr->max_code          = lzws_get_mask_for_last_bits(max_code_bit_length);
@@ -55,7 +58,7 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   state_ptr->destination_remainder            = 0;
   state_ptr->destination_remainder_bit_length = 0;
 
-  if (!unaligned) {
+  if (!unaligned_bit_groups) {
     state_ptr->unaligned_by_code_bit_length      = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
     state_ptr->unaligned_destination_byte_length = 0;
   }
@@ -68,7 +71,8 @@ lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** result
   return 0;
 }
 
-void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr) {
+void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr)
+{
   state_ptr->last_used_code            = state_ptr->initial_used_code;
   state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
   state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
@@ -77,7 +81,8 @@ void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr) {
   lzws_compressor_clear_ratio(state_ptr);
 }
 
-void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr) {
+void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr)
+{
   lzws_compressor_free_dictionary_wrapper(state_ptr);
   lzws_compressor_free_ratio(state_ptr);
 

@@ -30,7 +30,7 @@ typedef struct {
   bool block_mode;
   bool msb;
   bool quiet;
-  bool unaligned;
+  bool unaligned_bit_groups;
 
   lzws_code_fast_t initial_used_code;
   lzws_code_fast_t max_code;
@@ -47,11 +47,12 @@ typedef struct {
   lzws_decompressor_dictionary_t dictionary;
 } lzws_decompressor_state_t;
 
-lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb, bool quiet, bool unaligned);
+lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb, bool quiet, bool unaligned_bit_groups);
 void          lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr);
 void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
 
-LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr) {
+LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr)
+{
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 

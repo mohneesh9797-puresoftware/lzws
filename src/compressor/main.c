@@ -13,7 +13,8 @@
 #include "read_symbol.h"
 #include "write.h"
 
-lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
   lzws_result_t result;
 
   if (state_ptr->status == LZWS_COMPRESSOR_WRITE_HEADER) {
@@ -71,7 +72,8 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
   }
 }
 
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
   lzws_result_t result;
 
   switch (state_ptr->status) {

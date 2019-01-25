@@ -24,7 +24,8 @@ typedef struct {
   };
 } data_t;
 
-noreturn void func() {
+noreturn void func()
+{
   log(alignof(double));
   log(u8"fit");
 
@@ -37,6 +38,7 @@ noreturn void func() {
   exit(0);
 }
 
-int main() {
+int main()
+{
   func();
 }

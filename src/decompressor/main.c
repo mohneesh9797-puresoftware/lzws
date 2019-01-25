@@ -12,7 +12,8 @@
 #include "read_code.h"
 #include "write.h"
 
-lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr) {
+lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
   lzws_result_t result;
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_READ_HEADER) {
@@ -65,7 +66,8 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
   return 0;
 }
 
-lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr) {
+lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr)
+{
   lzws_decompressor_status_t status = state_ptr->status;
 
   switch (status) {

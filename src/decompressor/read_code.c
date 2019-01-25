@@ -11,13 +11,15 @@
 #include "read_code.h"
 #include "utils.h"
 
-static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_length, uint_fast8_t byte, bool msb) {
+static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_length, uint_fast8_t byte, bool msb)
+{
   lzws_code_fast_t code = *code_ptr;
 
   if (msb) {
     // Code is sitting on the top.
     code = (code << 8) | byte;
-  } else {
+  }
+  else {
     // Code is sitting on the bottom.
     code = (byte << code_bit_length) | code;
   }
@@ -28,9 +30,8 @@ static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_le
 static inline void add_byte_with_remainder(
   lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_length, uint_fast8_t target_code_bit_length,
   uint_fast8_t byte, uint_fast8_t* source_remainder_ptr, uint_fast8_t* source_remainder_bit_length_ptr,
-  bool msb) {
-  //
-
+  bool msb)
+{
   uint_fast8_t code_part_bit_length = target_code_bit_length - code_bit_length;
   if (code_part_bit_length == 8) {
     add_byte(code_ptr, code_bit_length, byte, msb);
@@ -56,7 +57,8 @@ static inline void add_byte_with_remainder(
 
     // Code is sitting on the top.
     code = (code << code_part_bit_length) | code_part;
-  } else {
+  }
+  else {
     // Taking last bits from byte.
     code_part = byte & lzws_get_mask_for_last_bits(code_part_bit_length);
 
@@ -72,7 +74,8 @@ static inline void add_byte_with_remainder(
   *source_remainder_bit_length_ptr = source_remainder_bit_length;
 }
 
-static inline uint_fast8_t get_target_code_bit_length(lzws_decompressor_state_t* state_ptr) {
+static inline uint_fast8_t get_target_code_bit_length(lzws_decompressor_state_t* state_ptr)
+{
   uint_fast8_t last_used_code_bit_length = state_ptr->last_used_code_bit_length;
 
   if (lzws_decompressor_is_dictionary_full(state_ptr) || state_ptr->last_used_code != state_ptr->last_used_max_code) {
@@ -82,7 +85,8 @@ static inline uint_fast8_t get_target_code_bit_length(lzws_decompressor_state_t*
   return last_used_code_bit_length + 1;
 }
 
-lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, lzws_code_fast_t* code_ptr) {
+lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, lzws_code_fast_t* code_ptr)
+{
   uint_fast8_t target_code_bit_length      = get_target_code_bit_length(state_ptr);
   uint_fast8_t source_remainder_bit_length = state_ptr->source_remainder_bit_length;
 
@@ -120,7 +124,8 @@ lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, 
   return 0;
 }
 
-lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+{
   lzws_code_fast_t code;
 
   lzws_result_t result = lzws_decompressor_read_code(state_ptr, source_ptr, source_length_ptr, &code);
@@ -148,7 +153,8 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
   return 0;
 }
 
-static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_ptr) {
+static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_ptr)
+{
   if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
     uint_fast8_t last_used_code_bit_length = ++state_ptr->last_used_code_bit_length;
     state_ptr->last_used_max_code          = lzws_get_mask_for_last_bits(last_used_code_bit_length);
@@ -157,7 +163,8 @@ static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_pt
   return ++state_ptr->last_used_code;
 }
 
-lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+{
   lzws_code_fast_t code;
 
   lzws_result_t result = lzws_decompressor_read_code(state_ptr, source_ptr, source_length_ptr, &code);
@@ -189,7 +196,8 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
 
   if (is_dictionary_full) {
     lzws_decompressor_write_code_to_dictionary_wrapper(state_ptr, code);
-  } else {
+  }
+  else {
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     if (code > next_code) {
       if (!quiet) {
@@ -208,7 +216,8 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   return 0;
 }
 
-lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_state_t* state_ptr) {
+lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_state_t* state_ptr)
+{
   uint_fast8_t source_remainder            = state_ptr->source_remainder;
   uint_fast8_t source_remainder_bit_length = state_ptr->source_remainder_bit_length;
 

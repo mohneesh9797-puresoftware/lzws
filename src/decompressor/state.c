@@ -12,7 +12,8 @@
 #include "common.h"
 #include "state.h"
 
-lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb, bool quiet, bool unaligned) {
+lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb, bool quiet, bool unaligned_bit_groups)
+{
   size_t                     state_size = sizeof(lzws_decompressor_state_t);
   lzws_decompressor_state_t* state_ptr  = malloc(state_size);
 
@@ -26,9 +27,9 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
   state_ptr->status = LZWS_DECOMPRESSOR_READ_HEADER;
 
-  state_ptr->msb       = msb;
-  state_ptr->quiet     = quiet;
-  state_ptr->unaligned = unaligned;
+  state_ptr->msb                  = msb;
+  state_ptr->quiet                = quiet;
+  state_ptr->unaligned_bit_groups = unaligned_bit_groups;
 
   state_ptr->source_remainder            = 0;
   state_ptr->source_remainder_bit_length = 0;
@@ -42,7 +43,8 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
   return 0;
 }
 
-void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr) {
+void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr)
+{
   state_ptr->last_used_code            = state_ptr->initial_used_code;
   state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
   state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
@@ -50,7 +52,8 @@ void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr) {
   // We don't need to clear dictionary.
 }
 
-void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr) {
+void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr)
+{
   lzws_decompressor_free_dictionary_wrapper(state_ptr);
 
   free(state_ptr);

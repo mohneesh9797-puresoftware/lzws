@@ -9,7 +9,8 @@
 #include "read_symbol.h"
 #include "utils.h"
 
-lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+{
   if (*source_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
@@ -23,7 +24,8 @@ lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state_p
   return 0;
 }
 
-lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr) {
+lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+{
   if (*source_length_ptr < 1) {
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
@@ -52,7 +54,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   // We can ignore situation when current code equals clear code.
   // Here we want to check whether last used code bit length was increased after processing last code.
 
-  if (!state_ptr->unaligned && state_ptr->last_used_code_bit_length != state_ptr->unaligned_by_code_bit_length) {
+  if (!state_ptr->unaligned_bit_groups && state_ptr->last_used_code_bit_length != state_ptr->unaligned_by_code_bit_length) {
     state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
 
     return 0;

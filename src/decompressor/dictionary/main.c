@@ -9,7 +9,8 @@
 
 #include "main.h"
 
-lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, bool quiet, size_t total_codes_length) {
+lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t initial_used_code, bool quiet, size_t total_codes_length)
+{
   // We won't store char codes and clear code.
   lzws_code_fast_t codes_offset = initial_used_code + 1; // aka "first_non_char_code".
   dictionary_ptr->codes_offset  = codes_offset;
@@ -72,7 +73,8 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   return 0;
 }
 
-static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code, bool is_prefix) {
+static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code, bool is_prefix)
+{
   // First symbol equals last symbol when code is a prefix.
   // Output buffer is reversed.
   // So we need to copy last symbol into the first position.
@@ -80,7 +82,8 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
   size_t output_length;
   if (is_prefix) {
     output_length = 1;
-  } else {
+  }
+  else {
     output_length = 0;
   }
 
@@ -115,7 +118,8 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
   return first_symbol;
 }
 
-void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code) {
+void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
+{
   prepare_output(dictionary_ptr, code, false);
 }
 
@@ -123,13 +127,15 @@ void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* 
 // Prefix code - ab, current code - cde, next code - abc.
 // We can see that last symbol of next code equals to first symbol of current code.
 
-void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code) {
+void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code)
+{
   lzws_code_fast_t code;
 
   bool is_prefix = current_code == next_code;
   if (is_prefix) {
     code = prefix_code;
-  } else {
+  }
+  else {
     code = current_code;
   }
 

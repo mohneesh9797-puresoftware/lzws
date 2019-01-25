@@ -19,7 +19,7 @@ static const char* help =
   "  --help (-h) - print help\n"
   "  --quiet (-q) - do not print error messages (disabled by default)\n"
   "  --raw (-r) - raw mode, disable block mode (enabled by default) [compressor only]\n"
-  "  --unaligned (-u) - unaligned bit groups (incompatible with original UNIX compress) (disabled by default)\n";
+  "  --unaligned-bit-groups (-u) - unaligned bit groups (incompatible with original UNIX compress) (disabled by default)\n";
 
 static const char*   short_options  = "b:dmhqru";
 static struct option long_options[] = {
@@ -29,21 +29,23 @@ static struct option long_options[] = {
   {"help", optional_argument, NULL, 'h'},
   {"quiet", optional_argument, NULL, 'q'},
   {"raw", optional_argument, NULL, 'r'},
-  {"unaligned", optional_argument, NULL, 'u'},
+  {"unaligned-bit-groups", optional_argument, NULL, 'u'},
   {NULL, 0, NULL, 0}};
 
-static inline void print_help() {
+static inline void print_help()
+{
   fprintf(stderr, help, short_options, LZWS_LOWEST_MAX_CODE_BIT_LENGTH, LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, LZWS_BIGGEST_MAX_CODE_BIT_LENGTH);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   bool is_compressor = true;
 
-  uint_fast8_t max_code_bit_length = LZWS_BIGGEST_MAX_CODE_BIT_LENGTH;
-  bool         block_mode          = true;
-  bool         msb                 = false;
-  bool         quiet               = false;
-  bool         unaligned           = false;
+  uint_fast8_t max_code_bit_length  = LZWS_BIGGEST_MAX_CODE_BIT_LENGTH;
+  bool         block_mode           = true;
+  bool         msb                  = false;
+  bool         quiet                = false;
+  bool         unaligned_bit_groups = false;
 
   int option;
 
@@ -65,7 +67,7 @@ int main(int argc, char** argv) {
         block_mode = false;
         break;
       case 'u':
-        unaligned = true;
+        unaligned_bit_groups = true;
         break;
       default:
         print_help();
@@ -74,11 +76,12 @@ int main(int argc, char** argv) {
   }
 
   if (is_compressor) {
-    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bit_length, block_mode, msb, quiet, unaligned) != 0) {
+    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bit_length, block_mode, msb, quiet, unaligned_bit_groups) != 0) {
       return 2;
     }
-  } else {
-    if (lzws_file_decompress(stdin, 0, stdout, 0, msb, quiet, unaligned) != 0) {
+  }
+  else {
+    if (lzws_file_decompress(stdin, 0, stdout, 0, msb, quiet, unaligned_bit_groups) != 0) {
       return 3;
     }
   }

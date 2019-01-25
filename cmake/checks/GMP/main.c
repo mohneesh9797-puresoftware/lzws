@@ -1,7 +1,8 @@
 #include <assert.h>
 #include <gmp.h>
 
-int main() {
+int main()
+{
   mpz_t a, b, c, r1, r2;
   mpz_inits(a, b, c, r1, r2, NULL);
 

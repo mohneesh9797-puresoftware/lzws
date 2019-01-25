@@ -17,7 +17,8 @@
 
 // -- utils --
 
-static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer_length_ptr, size_t default_buffer_length, bool quiet) {
+static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer_length_ptr, size_t default_buffer_length, bool quiet)
+{
   size_t buffer_length = *buffer_length_ptr;
   if (buffer_length == 0) {
     buffer_length = default_buffer_length;
@@ -41,9 +42,8 @@ static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer
 static inline lzws_result_t allocate_buffers(
   uint8_t** source_buffer_ptr, size_t* source_buffer_length_ptr,
   uint8_t** destination_buffer_ptr, size_t* destination_buffer_length_ptr,
-  size_t default_buffer_length, bool quiet) {
-  //
-
+  size_t default_buffer_length, bool quiet)
+{
   uint8_t* source_buffer;
   size_t   source_buffer_length = *source_buffer_length_ptr;
 
@@ -83,7 +83,8 @@ static inline lzws_result_t allocate_buffers(
 
 // -- files --
 
-static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_buffer_length, size_t* data_length_ptr, bool quiet) {
+static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_buffer_length, size_t* data_length_ptr, bool quiet)
+{
   size_t read_length = fread(data_buffer, 1, data_buffer_length, data_file_ptr);
   if (read_length == 0 && feof(data_file_ptr)) {
     return LZWS_FILE_READ_FINISHED;
@@ -102,7 +103,8 @@ static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer,
   return 0;
 }
 
-static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_length, bool quiet) {
+static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_length, bool quiet)
+{
   size_t written_length = fwrite(data_buffer, 1, data_length, data_file_ptr);
   if (written_length != data_length) {
     if (!quiet) {
@@ -126,9 +128,8 @@ static inline lzws_result_t read_source_buffer(
   FILE*    source_file_ptr,
   uint8_t* source_buffer, size_t source_buffer_length,
   uint8_t** source_ptr, size_t* source_length_ptr,
-  bool quiet) {
-  //
-
+  bool quiet)
+{
   uint8_t* remaining_data        = *source_ptr;
   size_t   remaining_data_length = *source_length_ptr;
 
@@ -169,9 +170,8 @@ static inline lzws_result_t flush_destination_buffer(
   FILE*    destination_file_ptr,
   uint8_t* destination_buffer, size_t destination_buffer_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  bool quiet) {
-  //
-
+  bool quiet)
+{
   size_t data_length = destination_buffer_length - *destination_length_ptr;
   if (data_length == 0) {
     // We want to write more data at once, than buffer has.
@@ -215,8 +215,8 @@ static inline lzws_result_t flush_destination_buffer(
     }                                                   \
                                                         \
     break;                                              \
-                                                        \
-  } else if (result != 0) {                             \
+  }                                                     \
+  else if (result != 0) {                               \
     return result;                                      \
   }
 
@@ -237,11 +237,14 @@ static inline lzws_result_t flush_destination_buffer(
     result = (function)(__VA_ARGS__);                                                             \
     if (result == 0) {                                                                            \
       break;                                                                                      \
-    } else if (result == NEEDS_MORE_SOURCE) {                                                     \
+    }                                                                                             \
+    else if (result == NEEDS_MORE_SOURCE) {                                                       \
       READ_MORE_SOURCE(FAILED)                                                                    \
-    } else if (result == NEEDS_MORE_DESTINATION) {                                                \
+    }                                                                                             \
+    else if (result == NEEDS_MORE_DESTINATION) {                                                  \
       FLUSH_DESTINATION_BUFFER()                                                                  \
-    } else {                                                                                      \
+    }                                                                                             \
+    else {                                                                                        \
       return FAILED;                                                                              \
     }                                                                                             \
   }
@@ -249,9 +252,8 @@ static inline lzws_result_t flush_destination_buffer(
 static inline lzws_result_t write_remaining_destination_buffer(
   FILE*    destination_file_ptr,
   uint8_t* destination_buffer, size_t destination_buffer_length, size_t destination_length,
-  bool quiet) {
-  //
-
+  bool quiet)
+{
   size_t data_length = destination_buffer_length - destination_length;
   if (data_length == 0) {
     return 0;
@@ -269,9 +271,8 @@ static inline lzws_result_t compress_data(
   lzws_compressor_state_t* state_ptr,
   FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
   FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length,
-  bool quiet) {
-  //
-
+  bool quiet)
+{
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
   uint8_t* destination        = destination_buffer;
@@ -290,9 +291,8 @@ lzws_result_t lzws_file_compress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
   uint_fast8_t max_code_bit_length, bool block_mode,
-  bool msb, bool quiet, bool unaligned) {
-  //
-
+  bool msb, bool quiet, bool unaligned_bit_groups)
+{
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
 
@@ -301,7 +301,7 @@ lzws_result_t lzws_file_compress(
   ALLOCATE_BUFFERS(LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_compressor_state_t* state_ptr;
-  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, quiet, unaligned) != 0) {
+  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, quiet, unaligned_bit_groups) != 0) {
     free(source_buffer);
     free(destination_buffer);
 
@@ -330,9 +330,8 @@ static inline lzws_result_t decompress_data(
   lzws_decompressor_state_t* state_ptr,
   FILE* source_file_ptr, uint8_t* source_buffer, size_t source_buffer_length,
   FILE* destination_file_ptr, uint8_t* destination_buffer, size_t destination_buffer_length,
-  bool quiet) {
-  //
-
+  bool quiet)
+{
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
   uint8_t* destination        = destination_buffer;
@@ -350,9 +349,8 @@ static inline lzws_result_t decompress_data(
 lzws_result_t lzws_file_decompress(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  bool msb, bool quiet, bool unaligned) {
-  //
-
+  bool msb, bool quiet, bool unaligned_bit_groups)
+{
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
 
@@ -361,7 +359,7 @@ lzws_result_t lzws_file_decompress(
   ALLOCATE_BUFFERS(LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_decompressor_state_t* state_ptr;
-  if (lzws_decompressor_get_initial_state(&state_ptr, msb, quiet, unaligned) != 0) {
+  if (lzws_decompressor_get_initial_state(&state_ptr, msb, quiet, unaligned_bit_groups) != 0) {
     free(source_buffer);
     free(destination_buffer);
 
