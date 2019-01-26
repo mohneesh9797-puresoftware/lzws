@@ -123,8 +123,8 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
 lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol)
 {
   lzws_code_fast_t current_code_index = get_first_child_code_index(dictionary_ptr, current_code);
+  lzws_code_fast_t first_child_code   = dictionary_ptr->first_child_codes[current_code_index];
 
-  lzws_code_fast_t first_child_code = dictionary_ptr->first_child_codes[current_code_index];
   if (first_child_code == LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE) {
     // First child is not found.
     return LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;

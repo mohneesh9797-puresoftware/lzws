@@ -33,6 +33,7 @@ static inline void add_byte_with_remainder(
   bool msb)
 {
   uint_fast8_t code_part_bit_length = target_code_bit_length - code_bit_length;
+
   if (code_part_bit_length == 8) {
     add_byte(code_ptr, code_bit_length, byte, msb);
 
@@ -95,6 +96,7 @@ lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, 
   // So source byte length will always be >= 1.
 
   uint_fast8_t source_byte_length = lzws_ceil_bit_length_to_byte_length(target_code_bit_length - source_remainder_bit_length);
+
   if (*source_length_ptr < source_byte_length) {
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
@@ -199,6 +201,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   }
   else {
     lzws_code_fast_t next_code = get_next_code(state_ptr);
+
     if (code > next_code) {
       if (!quiet) {
         LZWS_LOG_ERROR("received code greater than next code: " FAST_CODE_FORMAT, code)

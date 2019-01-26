@@ -27,6 +27,7 @@ lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state_ptr, u
   }
 
   uint_fast8_t byte = state_ptr->max_code_bit_length;
+
   if (state_ptr->block_mode) {
     byte = byte | LZWS_BLOCK_MODE;
   }

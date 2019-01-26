@@ -39,6 +39,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   // So we can compare current code with alphabet length.
 
   lzws_code_fast_t current_code = state_ptr->current_code;
+
   if (current_code < LZWS_ALPHABET_LENGTH && lzws_compressor_need_to_clear_by_ratio(state_ptr)) {
     state_ptr->next_symbol  = current_code;
     state_ptr->current_code = LZWS_CLEAR_CODE;
@@ -64,6 +65,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   lzws_compressor_read_byte(state_ptr, source_ptr, source_length_ptr, &symbol);
 
   lzws_code_fast_t next_code = lzws_compressor_get_next_code_from_dictionary_wrapper(state_ptr, current_code, symbol);
+
   if (next_code != LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE) {
     // We found next code, it becomes new current code.
     state_ptr->current_code = next_code;

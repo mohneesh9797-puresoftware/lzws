@@ -99,6 +99,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   // So destination byte length will always be >= 1.
 
   uint_fast8_t destination_byte_length = lzws_floor_bit_length_to_byte_length(code_bit_length + destination_remainder_bit_length);
+
   if (*destination_length_ptr < destination_byte_length) {
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
@@ -146,6 +147,7 @@ lzws_result_t lzws_compressor_flush_current_code(lzws_compressor_state_t* state_
 lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   uint_fast8_t destination_remainder_bit_length = state_ptr->destination_remainder_bit_length;
+
   if (destination_remainder_bit_length == 0) {
     return 0;
   }

@@ -86,6 +86,7 @@ LZWS_INLINE void* lzws_allocate_array(uint_fast8_t size_of_item, size_t length, 
   }
 
   void* array = malloc(size);
+
   if (array == NULL) {
     return NULL;
   }

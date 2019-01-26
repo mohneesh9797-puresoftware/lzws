@@ -40,11 +40,11 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
     // We need to clear state after sending clear code.
     lzws_compressor_clear_state(state_ptr);
 
-    // We need to write alignment after sending clear code.
     if (state_ptr->unaligned_bit_groups) {
       state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
     }
     else {
+      // We need to write alignment after sending clear code.
       state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
     }
 

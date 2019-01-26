@@ -129,9 +129,9 @@ void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* 
 
 void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code)
 {
-  lzws_code_fast_t code;
-
   bool is_prefix = current_code == next_code;
+
+  lzws_code_fast_t code;
   if (is_prefix) {
     code = prefix_code;
   }
