@@ -60,7 +60,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
 
       default:
         if (!state_ptr->quiet) {
-          LZWS_PRINTF_ERROR("unknown status: %u", status)
+          LZWS_LOG_ERROR("unknown status: %u", status)
         }
 
         return LZWS_COMPRESSOR_UNKNOWN_STATUS;
@@ -98,7 +98,7 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
 
     default:
       if (!state_ptr->quiet) {
-        LZWS_PRINTF_ERROR("unknown status: %u", status)
+        LZWS_LOG_ERROR("unknown status: %u", status)
       }
 
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;

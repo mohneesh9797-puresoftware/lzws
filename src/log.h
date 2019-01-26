@@ -14,20 +14,11 @@
 #define LZWS_INLINE inline
 #endif
 
-#define _LZWS_PRINT_HEADER(target) \
-  fprintf(target, "%s %s:%u - ", __func__, __FILE__, __LINE__);
-
-#define _LZWS_PRINT(target, text) \
-  _LZWS_PRINT_HEADER(target)      \
-  fputs(text, target);            \
+#define _LZWS_LOG(target, ...)                                                \
+  fprintf(target, "%s %s:%u - ", __func__, __RELATIVE_FILE_PATH__, __LINE__); \
+  fprintf(target, __VA_ARGS__);                                               \
   fputs("\n", target);
 
-#define _LZWS_PRINTF(target, ...) \
-  _LZWS_PRINT_HEADER(target)      \
-  fprintf(target, __VA_ARGS__);   \
-  fputs("\n", target);
-
-#define LZWS_PRINT_ERROR(text) _LZWS_PRINT(stderr, text)
-#define LZWS_PRINTF_ERROR(...) _LZWS_PRINTF(stderr, __VA_ARGS__)
+#define LZWS_LOG_ERROR(...) _LZWS_LOG(stderr, __VA_ARGS__)
 
 #endif // LZWS_LOG_H

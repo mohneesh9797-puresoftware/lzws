@@ -8,7 +8,6 @@
 #include <stdio.h>
 
 #include "common.h"
-#include "config.h"
 
 // Possible results:
 enum {

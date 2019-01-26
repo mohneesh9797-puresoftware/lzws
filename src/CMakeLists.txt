@@ -24,8 +24,24 @@ configure_file ("generated_constants.c.in" "${CMAKE_CURRENT_SOURCE_DIR}/generate
 add_subdirectory ("compressor")
 add_subdirectory ("decompressor")
 
-set (HEADERS ${HEADERS} "common.h" "config.h" "constants.h" "file.h" "log.h" "utils.h")
-set (SOURCES ${SOURCES} "common.c" "file.c" "generated_constants.c" "log.c" "utils.c")
+set (HEADERS ${HEADERS}
+  "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/config.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/constants.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/file.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/log.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/utils.h"
+)
+set (SOURCES ${SOURCES}
+  "${CMAKE_CURRENT_SOURCE_DIR}/common.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/file.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/log.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/utils.c"
+)
+
+include (DefineRelativeFilePaths)
+cmake_define_relative_file_paths ("${SOURCES}")
 
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 

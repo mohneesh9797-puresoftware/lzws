@@ -27,7 +27,7 @@ static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer
   uint8_t* buffer = malloc(buffer_length);
   if (buffer == NULL) {
     if (!quiet) {
-      LZWS_PRINTF_ERROR("malloc failed, buffer length: %zu", buffer_length)
+      LZWS_LOG_ERROR("malloc failed, buffer length: %zu", buffer_length)
     }
 
     return LZWS_FILE_ALLOCATE_FAILED;
@@ -92,7 +92,7 @@ static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer,
 
   if (read_length != data_buffer_length && ferror(data_file_ptr)) {
     if (!quiet) {
-      LZWS_PRINT_ERROR("read file failed")
+      LZWS_LOG_ERROR("read file failed")
     }
 
     return LZWS_FILE_READ_FAILED;
@@ -108,7 +108,7 @@ static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer
   size_t written_length = fwrite(data_buffer, 1, data_length, data_file_ptr);
   if (written_length != data_length) {
     if (!quiet) {
-      LZWS_PRINT_ERROR("write file failed")
+      LZWS_LOG_ERROR("write file failed")
     }
 
     return LZWS_FILE_WRITE_FAILED;
@@ -143,7 +143,7 @@ static inline lzws_result_t read_source_buffer(
   if (remaining_buffer_length == 0) {
     // We want to read more data at once, than buffer has.
     if (!quiet) {
-      LZWS_PRINTF_ERROR("not enough source buffer, length: %zu", source_buffer_length)
+      LZWS_LOG_ERROR("not enough source buffer, length: %zu", source_buffer_length)
     }
 
     return LZWS_FILE_NOT_ENOUGH_SOURCE_BUFFER;
@@ -176,7 +176,7 @@ static inline lzws_result_t flush_destination_buffer(
   if (data_length == 0) {
     // We want to write more data at once, than buffer has.
     if (!quiet) {
-      LZWS_PRINTF_ERROR("not enough destination buffer, length: %zu", destination_buffer_length)
+      LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length)
     }
 
     return LZWS_FILE_NOT_ENOUGH_DESTINATION_BUFFER;
@@ -196,28 +196,28 @@ static inline lzws_result_t flush_destination_buffer(
 // It is better to wrap function calls that reads and writes something.
 
 // We can read more source from file.
-#define READ_MORE_SOURCE(FAILED)                        \
-  result = read_source_buffer(                          \
-    source_file_ptr,                                    \
-    source_buffer, source_buffer_length,                \
-    &source, &source_length,                            \
-    quiet);                                             \
-                                                        \
-  if (result == LZWS_FILE_READ_FINISHED) {              \
-    if (source_length != 0) {                           \
-      /* Algorithm is not able to read all source. */   \
-      /* It means that algorithm is broken. */          \
-      if (!quiet) {                                     \
-        LZWS_PRINT_ERROR("not able to read all source") \
-      }                                                 \
-                                                        \
-      return FAILED;                                    \
-    }                                                   \
-                                                        \
-    break;                                              \
-  }                                                     \
-  else if (result != 0) {                               \
-    return result;                                      \
+#define READ_MORE_SOURCE(FAILED)                      \
+  result = read_source_buffer(                        \
+    source_file_ptr,                                  \
+    source_buffer, source_buffer_length,              \
+    &source, &source_length,                          \
+    quiet);                                           \
+                                                      \
+  if (result == LZWS_FILE_READ_FINISHED) {            \
+    if (source_length != 0) {                         \
+      /* Algorithm is not able to read all source. */ \
+      /* It means that algorithm is broken. */        \
+      if (!quiet) {                                   \
+        LZWS_LOG_ERROR("not able to read all source") \
+      }                                               \
+                                                      \
+      return FAILED;                                  \
+    }                                                 \
+                                                      \
+    break;                                            \
+  }                                                   \
+  else if (result != 0) {                             \
+    return result;                                    \
   }
 
 // We can flush destination buffer into file.

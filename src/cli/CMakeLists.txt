@@ -1,4 +1,7 @@
-set (SOURCES "main.c")
+set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.c")
+
+include (DefineRelativeFilePaths)
+cmake_define_relative_file_paths ("${SOURCES}")
 
 set (CLI_NAME "${LZWS_TARGET}-cli")
 set (CLI_NAME_STATIC "${CLI_NAME}-static")

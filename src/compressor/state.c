@@ -19,7 +19,7 @@ lzws_result_t lzws_compressor_get_initial_state(
 {
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!quiet) {
-      LZWS_PRINTF_ERROR("invalid max code bit length: %u", max_code_bit_length)
+      LZWS_LOG_ERROR("invalid max code bit length: %u", max_code_bit_length)
     }
 
     return LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH;
@@ -30,7 +30,7 @@ lzws_result_t lzws_compressor_get_initial_state(
 
   if (state_ptr == NULL) {
     if (!quiet) {
-      LZWS_PRINTF_ERROR("malloc failed, state size: %zu", state_size)
+      LZWS_LOG_ERROR("malloc failed, state size: %zu", state_size)
     }
 
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;

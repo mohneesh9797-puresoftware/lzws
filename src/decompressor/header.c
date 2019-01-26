@@ -19,7 +19,7 @@ lzws_result_t lzws_decompressor_read_magic_header(lzws_decompressor_state_t* sta
 
   if (byte != LZWS_FIRST_MAGIC_HEADER_BYTE) {
     if (!state_ptr->quiet) {
-      LZWS_PRINTF_ERROR("received invalid first magic header byte: %u", byte)
+      LZWS_LOG_ERROR("received invalid first magic header byte: %u", byte)
     }
 
     return LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER;
@@ -29,7 +29,7 @@ lzws_result_t lzws_decompressor_read_magic_header(lzws_decompressor_state_t* sta
 
   if (byte != LZWS_SECOND_MAGIC_HEADER_BYTE) {
     if (!state_ptr->quiet) {
-      LZWS_PRINTF_ERROR("received invalid second magic header byte: %u", byte)
+      LZWS_LOG_ERROR("received invalid second magic header byte: %u", byte)
     }
 
     return LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER;
@@ -51,7 +51,7 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
   uint_fast8_t max_code_bit_length = byte & LZWS_MAX_CODE_BIT_MASK;
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!state_ptr->quiet) {
-      LZWS_PRINTF_ERROR("received invalid max code bit length: %u", max_code_bit_length)
+      LZWS_LOG_ERROR("received invalid max code bit length: %u", max_code_bit_length)
     }
 
     return LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH;

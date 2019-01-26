@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "config.h"
+
 #undef LZWS_INLINE
 #if defined(LZWS_COMMON_C)
 #define LZWS_INLINE

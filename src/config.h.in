@@ -4,3 +4,8 @@
 
 #cmakedefine LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST
 #cmakedefine LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY
+
+// Relative file path will be provide during each source file compilation.
+#ifndef __RELATIVE_FILE_PATH__
+#define __RELATIVE_FILE_PATH__ __FILE__
+#endif

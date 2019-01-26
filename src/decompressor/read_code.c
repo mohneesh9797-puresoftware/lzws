@@ -138,7 +138,7 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
 
   if (code >= LZWS_ALPHABET_LENGTH) {
     if (!state_ptr->quiet) {
-      LZWS_PRINTF_ERROR("received invalid first code: " FAST_CODE_FORMAT, code)
+      LZWS_LOG_ERROR("received invalid first code: " FAST_CODE_FORMAT, code)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
@@ -178,7 +178,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   if (state_ptr->block_mode && code == LZWS_CLEAR_CODE) {
     if (!is_dictionary_full) {
       if (!quiet) {
-        LZWS_PRINT_ERROR("received clear code when dictionary is not full")
+        LZWS_LOG_ERROR("received clear code when dictionary is not full")
       }
 
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
@@ -201,7 +201,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     if (code > next_code) {
       if (!quiet) {
-        LZWS_PRINTF_ERROR("received code greater than next code: " FAST_CODE_FORMAT, code)
+        LZWS_LOG_ERROR("received code greater than next code: " FAST_CODE_FORMAT, code)
       }
 
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
@@ -223,7 +223,7 @@ lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_
 
   if (source_remainder_bit_length != 0 && source_remainder != 0) {
     if (!state_ptr->quiet) {
-      LZWS_PRINTF_ERROR("source remainder is not empty, bit length: %u, value: %u", source_remainder_bit_length, source_remainder)
+      LZWS_LOG_ERROR("source remainder is not empty, bit length: %u, value: %u", source_remainder_bit_length, source_remainder)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;

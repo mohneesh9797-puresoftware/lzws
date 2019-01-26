@@ -19,7 +19,7 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
   if (state_ptr == NULL) {
     if (!quiet) {
-      LZWS_PRINTF_ERROR("malloc failed, state size: %zu", state_size)
+      LZWS_LOG_ERROR("malloc failed, state size: %zu", state_size)
     }
 
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
