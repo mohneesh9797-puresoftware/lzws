@@ -35,7 +35,7 @@ LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_dec
     return result;
   }
 
-  state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+  state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE;
 
   return 0;
 }

@@ -11,7 +11,6 @@
 #include "process_code.h"
 #include "read_symbol.h"
 #include "write_alignment.h"
-#include "write_code.h"
 #include "write_header.h"
 #include "write_remainder.h"
 

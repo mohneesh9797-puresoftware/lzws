@@ -82,7 +82,7 @@ static inline uint_fast8_t get_byte_with_remainder(
   return byte;
 }
 
-lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+lzws_result_t lzws_compressor_write_code(lzws_compressor_state_t* state_ptr, lzws_code_fast_t code, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   uint_fast8_t code_bit_length                  = state_ptr->last_used_code_bit_length;
   uint_fast8_t destination_remainder_bit_length = state_ptr->destination_remainder_bit_length;
@@ -101,9 +101,8 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
     lzws_compressor_update_unaligned_destination_byte_length(state_ptr, destination_byte_length);
   }
 
-  lzws_code_fast_t code                  = state_ptr->current_code;
-  uint_fast8_t     destination_remainder = state_ptr->destination_remainder;
-  bool             msb                   = state_ptr->msb;
+  uint_fast8_t destination_remainder = state_ptr->destination_remainder;
+  bool         msb                   = state_ptr->msb;
 
   uint_fast8_t byte = get_byte_with_remainder(&code, &code_bit_length, destination_remainder, destination_remainder_bit_length, msb);
   lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
@@ -117,22 +116,8 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
     destination_byte_length--;
   }
 
-  // We should keep current code as is.
-
   state_ptr->destination_remainder            = code;
   state_ptr->destination_remainder_bit_length = code_bit_length;
-
-  return 0;
-}
-
-lzws_result_t lzws_compressor_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
-{
-  lzws_result_t result = lzws_compressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
-  if (result != 0) {
-    return result;
-  }
-
-  state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER;
 
   return 0;
 }

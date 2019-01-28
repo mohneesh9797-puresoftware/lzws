@@ -8,7 +8,7 @@
 
 #include "common.h"
 #include "main.h"
-#include "read_code.h"
+#include "process_code.h"
 #include "read_header.h"
 #include "read_remainder.h"
 #include "write_symbol.h"
@@ -35,12 +35,12 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     lzws_decompressor_status_t status = state_ptr->status;
 
     switch (status) {
-      case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
-        result = lzws_decompressor_read_first_code(state_ptr, source_ptr, source_length_ptr);
+      case LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE:
+        result = lzws_decompressor_process_first_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
-        result = lzws_decompressor_read_next_code(state_ptr, source_ptr, source_length_ptr);
+      case LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE:
+        result = lzws_decompressor_process_next_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
       case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
@@ -83,8 +83,8 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr)
       // We have no source remainder yet.
       return 0;
 
-    case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
-    case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
+    case LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE:
+    case LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE:
       // We may have source remainder.
       return lzws_decompressor_verify_empty_source_remainder(state_ptr);
 

@@ -3,6 +3,7 @@ add_subdirectory ("dictionary")
 set (HEADERS ${HEADERS}
   "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/main.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/process_code.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/read_alignment.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/read_code.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/read_header.h"
@@ -15,6 +16,7 @@ set (HEADERS ${HEADERS} PARENT_SCOPE)
 
 set (SOURCES ${SOURCES}
   "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/process_code.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/read_alignment.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/read_code.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/read_header.c"
