@@ -8,7 +8,7 @@
 #include "../utils.h"
 
 #include "process_code.h"
-#include "write.h"
+#include "write_code.h"
 
 static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr)
 {
@@ -44,7 +44,7 @@ lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* stat
       state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
     }
     else {
-      // We need to write alignment after sending clear code.
+      // We need to write destination remainder and padding zeroes after sending clear code.
       state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
     }
 

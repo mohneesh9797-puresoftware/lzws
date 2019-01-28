@@ -20,7 +20,9 @@ enum {
   LZWS_DECOMPRESSOR_READ_FIRST_CODE,
   LZWS_DECOMPRESSOR_READ_NEXT_CODE,
   LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL,
-  LZWS_DECOMPRESSOR_WRITE_DICTIONARY
+  LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FROM_DICTIONARY,
+  LZWS_DECOMPRESSOR_VERIFY_EMPTY_SOURCE_REMAINDER_FOR_ALIGNMENT,
+  LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT
 };
 typedef uint_fast8_t lzws_decompressor_status_t;
 
@@ -44,6 +46,9 @@ typedef struct {
   uint_fast8_t source_remainder;
   uint_fast8_t source_remainder_bit_length;
 
+  uint_fast8_t unaligned_by_code_bit_length;
+  uint_fast8_t unaligned_source_byte_length;
+
   lzws_decompressor_dictionary_t dictionary;
 } lzws_decompressor_state_t;
 
@@ -54,6 +59,13 @@ void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr)
 LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr)
 {
   return state_ptr->last_used_code == state_ptr->max_code;
+}
+
+// Source byte length can be aligned by unaligned by code bit length * 8.
+
+LZWS_INLINE void lzws_compressor_update_unaligned_source_byte_length(lzws_decompressor_state_t* state_ptr, uint_fast8_t source_byte_length)
+{
+  state_ptr->unaligned_source_byte_length = (state_ptr->unaligned_source_byte_length + source_byte_length) % state_ptr->unaligned_by_code_bit_length;
 }
 
 #endif // LZWS_DECOMPRESSOR_STATE_H

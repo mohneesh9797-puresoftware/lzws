@@ -5,7 +5,7 @@
 #include "../utils.h"
 
 #include "common.h"
-#include "header.h"
+#include "write_header.h"
 
 lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr)
 {

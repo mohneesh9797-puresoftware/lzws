@@ -49,13 +49,13 @@ LZWS_INLINE void lzws_decompressor_add_code_to_dictionary_wrapper(lzws_decompres
   lzws_decompressor_add_code_to_dictionary(&state_ptr->dictionary, prefix_code, current_code, next_code);
 }
 
-LZWS_INLINE bool lzws_decompressor_has_byte_in_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+LZWS_INLINE bool lzws_decompressor_has_symbol_in_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
 {
-  return lzws_decompressor_has_byte_in_dictionary(&state_ptr->dictionary);
+  return lzws_decompressor_has_symbol_in_dictionary(&state_ptr->dictionary);
 }
-LZWS_INLINE uint8_t lzws_decompressor_get_byte_from_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+LZWS_INLINE uint8_t lzws_decompressor_get_symbol_from_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
 {
-  return lzws_decompressor_get_byte_from_dictionary(&state_ptr->dictionary);
+  return lzws_decompressor_get_symbol_from_dictionary(&state_ptr->dictionary);
 }
 
 LZWS_INLINE void lzws_decompressor_free_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)

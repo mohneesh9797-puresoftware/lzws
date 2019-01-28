@@ -6,7 +6,7 @@
 #include "../utils.h"
 
 #include "common.h"
-#include "header.h"
+#include "read_header.h"
 
 lzws_result_t lzws_decompressor_read_magic_header(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
@@ -66,9 +66,7 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
   state_ptr->initial_used_code = initial_used_code;
   state_ptr->max_code          = lzws_get_mask_for_last_bits(max_code_bit_length);
 
-  state_ptr->last_used_code            = initial_used_code;
-  state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
-  state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->last_used_code = initial_used_code;
 
   // It is possible to keep prefix code uninitialized.
 

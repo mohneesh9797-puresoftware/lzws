@@ -29,11 +29,11 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code);
 void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code);
 
-LZWS_INLINE bool lzws_decompressor_has_byte_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr)
+LZWS_INLINE bool lzws_decompressor_has_symbol_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr)
 {
   return dictionary_ptr->output_length != 0;
 }
-LZWS_INLINE uint8_t lzws_decompressor_get_byte_from_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr)
+LZWS_INLINE uint8_t lzws_decompressor_get_symbol_from_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr)
 {
   return dictionary_ptr->output_buffer[--dictionary_ptr->output_length];
 }

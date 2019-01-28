@@ -65,4 +65,11 @@ LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* sta
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 
+// Destination byte length can be aligned by unaligned by code bit length * 8.
+
+LZWS_INLINE void lzws_compressor_update_unaligned_destination_byte_length(lzws_compressor_state_t* state_ptr, uint_fast8_t destination_byte_length)
+{
+  state_ptr->unaligned_destination_byte_length = (state_ptr->unaligned_destination_byte_length + destination_byte_length) % state_ptr->unaligned_by_code_bit_length;
+}
+
 #endif // LZWS_COMPRESSOR_STATE_H

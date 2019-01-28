@@ -109,7 +109,7 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
   output_length++;
 
   if (is_prefix) {
-    // Last byte equals to first symbol.
+    // Last symbol equals to first symbol.
     output_buffer[0] = first_symbol;
   }
 

@@ -31,8 +31,16 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
   state_ptr->quiet                = quiet;
   state_ptr->unaligned_bit_groups = unaligned_bit_groups;
 
+  state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
+  state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+
   state_ptr->source_remainder            = 0;
   state_ptr->source_remainder_bit_length = 0;
+
+  if (!unaligned_bit_groups) {
+    state_ptr->unaligned_by_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+    state_ptr->unaligned_source_byte_length = 0;
+  }
 
   // Other data will be initialized during reading of header.
 

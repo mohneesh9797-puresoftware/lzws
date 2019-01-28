@@ -7,10 +7,11 @@
 #include "../log.h"
 
 #include "common.h"
-#include "header.h"
 #include "main.h"
 #include "read_code.h"
-#include "write.h"
+#include "read_header.h"
+#include "read_remainder.h"
+#include "write_symbol.h"
 
 lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
@@ -46,8 +47,15 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         result = lzws_decompressor_write_first_symbol(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_WRITE_DICTIONARY:
-        result = lzws_decompressor_write_dictionary(state_ptr, destination_ptr, destination_length_ptr);
+      case LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FROM_DICTIONARY:
+        result = lzws_decompressor_write_symbols_from_dictionary(state_ptr, destination_ptr, destination_length_ptr);
+        break;
+
+      case LZWS_DECOMPRESSOR_VERIFY_EMPTY_SOURCE_REMAINDER_FOR_ALIGNMENT:
+        result = lzws_decompressor_verify_empty_source_remainder_for_alignment(state_ptr);
+        break;
+
+      case LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT:
         break;
 
       default:

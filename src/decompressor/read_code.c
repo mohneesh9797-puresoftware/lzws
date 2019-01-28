@@ -191,7 +191,13 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     // It is possible to keep prefix_code as is.
     // Algorithm won't touch it without reinitialization.
 
-    state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+    if (state_ptr->unaligned_bit_groups) {
+      state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+    }
+    else {
+      // We need to verify empty source remainder and read padding zeroes after receiving clear code.
+      state_ptr->status = LZWS_DECOMPRESSOR_VERIFY_EMPTY_SOURCE_REMAINDER_FOR_ALIGNMENT;
+    }
 
     return 0;
   }
@@ -214,23 +220,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   }
 
   state_ptr->prefix_code = code;
-  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_DICTIONARY;
-
-  return 0;
-}
-
-lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_state_t* state_ptr)
-{
-  uint_fast8_t source_remainder            = state_ptr->source_remainder;
-  uint_fast8_t source_remainder_bit_length = state_ptr->source_remainder_bit_length;
-
-  if (source_remainder_bit_length != 0 && source_remainder != 0) {
-    if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("source remainder is not empty, bit length: %u, value: %u", source_remainder_bit_length, source_remainder)
-    }
-
-    return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
-  }
+  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FROM_DICTIONARY;
 
   return 0;
 }
