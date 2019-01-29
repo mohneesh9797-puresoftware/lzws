@@ -94,11 +94,13 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
 
   uint8_t* output_buffer = dictionary_ptr->output_buffer;
 
+  lzws_code_fast_t code_index;
+
   // It is not possible to receive clear code during code sequence.
   // So we can compare first code with alphabet length.
 
   while (code >= LZWS_ALPHABET_LENGTH) {
-    lzws_code_fast_t code_index = code - codes_offset;
+    code_index = code - codes_offset;
 
     output_buffer[output_length] = last_symbol_by_codes[code_index];
     output_length++;

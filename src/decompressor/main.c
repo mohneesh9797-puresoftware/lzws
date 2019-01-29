@@ -32,8 +32,10 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     }
   }
 
+  lzws_decompressor_status_t status;
+
   while (true) {
-    lzws_decompressor_status_t status = state_ptr->status;
+    status = state_ptr->status;
 
     switch (status) {
       case LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE:

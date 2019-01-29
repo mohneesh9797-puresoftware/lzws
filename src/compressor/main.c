@@ -39,8 +39,10 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
     }
   }
 
+  lzws_compressor_status_t status;
+
   while (true) {
-    lzws_compressor_status_t status = state_ptr->status;
+    status = state_ptr->status;
 
     switch (status) {
       case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:

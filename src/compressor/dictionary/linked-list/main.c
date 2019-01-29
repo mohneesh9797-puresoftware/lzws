@@ -138,8 +138,10 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_d
   // We know that first child code is not undefined, so it is better to use do + while for it.
   lzws_code_fast_t next_sibling_code = first_child_code;
 
+  lzws_code_fast_t next_sibling_code_index;
+
   do {
-    lzws_code_fast_t next_sibling_code_index = get_next_sibling_code_index(dictionary_ptr, next_sibling_code);
+    next_sibling_code_index = get_next_sibling_code_index(dictionary_ptr, next_sibling_code);
 
     if (last_symbol_by_codes[next_sibling_code_index] == next_symbol) {
       // We found target next symbol.

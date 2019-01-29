@@ -92,9 +92,11 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
 
   size_t used_indexes_length = get_used_indexes_length(dictionary_ptr, total_codes_length);
 
+  lzws_compressor_dictionary_used_index_t used_index;
+
   for (lzws_code_fast_t index_of_used_index = 0; index_of_used_index < used_indexes_length; index_of_used_index++) {
-    lzws_compressor_dictionary_used_index_t used_index = used_indexes[index_of_used_index];
-    next_codes[used_index]                             = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
+    used_index             = used_indexes[index_of_used_index];
+    next_codes[used_index] = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
   }
 
   // We can keep used indexes as is.
