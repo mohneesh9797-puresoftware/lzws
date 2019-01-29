@@ -13,8 +13,8 @@ lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzws_write_byte(destination_ptr, destination_length_ptr, LZWS_FIRST_MAGIC_HEADER_BYTE);
-  lzws_write_byte(destination_ptr, destination_length_ptr, LZWS_SECOND_MAGIC_HEADER_BYTE);
+  lzws_write_byte(LZWS_FIRST_MAGIC_HEADER_BYTE, destination_ptr, destination_length_ptr);
+  lzws_write_byte(LZWS_SECOND_MAGIC_HEADER_BYTE, destination_ptr, destination_length_ptr);
 
   return 0;
 }
@@ -32,7 +32,7 @@ lzws_result_t lzws_compressor_write_header(lzws_compressor_state_t* state_ptr, u
     byte = byte | LZWS_BLOCK_MODE;
   }
 
-  lzws_write_byte(destination_ptr, destination_length_ptr, byte);
+  lzws_write_byte(byte, destination_ptr, destination_length_ptr);
 
   state_ptr->status = LZWS_COMPRESSOR_ALLOCATE_DICTIONARY;
 

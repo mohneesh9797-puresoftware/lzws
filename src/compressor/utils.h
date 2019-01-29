@@ -7,7 +7,7 @@
 
 #include "state.h"
 
-void lzws_compressor_read_byte(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint_fast8_t* byte_ptr);
-void lzws_compressor_write_byte(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr, uint_fast8_t byte);
+void lzws_compressor_read_byte(lzws_compressor_state_t* state_ptr, uint_fast8_t* byte_ptr, uint8_t** source_ptr, size_t* source_length_ptr);
+void lzws_compressor_write_byte(lzws_compressor_state_t* state_ptr, uint_fast8_t byte, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 #endif // LZWS_COMPRESSOR_UTILS_H

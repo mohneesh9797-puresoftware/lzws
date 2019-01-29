@@ -16,7 +16,7 @@ lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state_p
   }
 
   uint_fast8_t symbol;
-  lzws_compressor_read_byte(state_ptr, source_ptr, source_length_ptr, &symbol);
+  lzws_compressor_read_byte(state_ptr, &symbol, source_ptr, source_length_ptr);
 
   state_ptr->current_code = symbol;
   state_ptr->status       = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
@@ -62,7 +62,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   }
 
   uint_fast8_t symbol;
-  lzws_compressor_read_byte(state_ptr, source_ptr, source_length_ptr, &symbol);
+  lzws_compressor_read_byte(state_ptr, &symbol, source_ptr, source_length_ptr);
 
   lzws_code_fast_t next_code = lzws_compressor_get_next_code_from_dictionary_wrapper(state_ptr, current_code, symbol);
 

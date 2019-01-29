@@ -15,7 +15,7 @@ lzws_result_t lzws_decompressor_write_first_symbol(lzws_decompressor_state_t* st
     return LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  lzws_write_byte(destination_ptr, destination_length_ptr, state_ptr->prefix_code);
+  lzws_write_byte(state_ptr->prefix_code, destination_ptr, destination_length_ptr);
 
   state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE;
 
@@ -30,7 +30,7 @@ lzws_result_t lzws_decompressor_write_symbols_from_dictionary(lzws_decompressor_
     }
 
     uint8_t symbol = lzws_decompressor_get_symbol_from_dictionary_wrapper(state_ptr);
-    lzws_write_byte(destination_ptr, destination_length_ptr, symbol);
+    lzws_write_byte(symbol, destination_ptr, destination_length_ptr);
   }
 
   state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE;

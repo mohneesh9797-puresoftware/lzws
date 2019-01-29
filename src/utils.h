@@ -43,14 +43,14 @@ LZWS_INLINE size_t lzws_ceil_bit_length_to_byte_length(size_t bit_length)
   return (bit_length + 7) >> 3;
 }
 
-LZWS_INLINE void lzws_read_byte(uint8_t** source_ptr, size_t* source_length_ptr, uint_fast8_t* byte_ptr)
+LZWS_INLINE void lzws_read_byte(uint_fast8_t* byte_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
   *byte_ptr = **source_ptr;
   (*source_ptr)++;
   (*source_length_ptr)--;
 }
 
-LZWS_INLINE void lzws_write_byte(uint8_t** destination_ptr, size_t* destination_length_ptr, uint_fast8_t byte)
+LZWS_INLINE void lzws_write_byte(uint_fast8_t byte, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   **destination_ptr = byte;
   (*destination_ptr)++;

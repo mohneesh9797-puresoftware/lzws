@@ -26,7 +26,8 @@ static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_le
 
 static inline void add_byte_with_remainder(
   lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_length, uint_fast8_t target_code_bit_length,
-  uint_fast8_t byte, uint_fast8_t* source_remainder_ptr, uint_fast8_t* source_remainder_bit_length_ptr,
+  uint_fast8_t  byte,
+  uint_fast8_t* source_remainder_ptr, uint_fast8_t* source_remainder_bit_length_ptr,
   bool msb)
 {
   uint_fast8_t code_part_bit_length = target_code_bit_length - code_bit_length;
@@ -98,6 +99,10 @@ lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, 
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
+  if (!state_ptr->unaligned_bit_groups) {
+    lzws_decompressor_update_unaligned_source_byte_length(state_ptr, source_byte_length);
+  }
+
   lzws_code_fast_t code            = state_ptr->source_remainder;
   uint_fast8_t     code_bit_length = source_remainder_bit_length;
   bool             msb             = state_ptr->msb;
@@ -105,17 +110,18 @@ lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, 
   uint_fast8_t byte;
 
   while (source_byte_length != 1) {
-    lzws_decompressor_read_byte(state_ptr, source_ptr, source_length_ptr, &byte);
+    lzws_decompressor_read_byte(state_ptr, &byte, source_ptr, source_length_ptr);
     add_byte(&code, code_bit_length, byte, msb);
 
     code_bit_length += 8;
     source_byte_length--;
   }
 
-  lzws_decompressor_read_byte(state_ptr, source_ptr, source_length_ptr, &byte);
+  lzws_decompressor_read_byte(state_ptr, &byte, source_ptr, source_length_ptr);
   add_byte_with_remainder(
     &code, code_bit_length, target_code_bit_length,
-    byte, &state_ptr->source_remainder, &state_ptr->source_remainder_bit_length,
+    byte,
+    &state_ptr->source_remainder, &state_ptr->source_remainder_bit_length,
     msb);
 
   *code_ptr = code;

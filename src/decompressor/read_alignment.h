@@ -7,4 +7,6 @@
 
 #include "state.h"
 
+lzws_result_t lzws_decompressor_read_padding_zeroes_for_alignment(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr);
+
 #endif // LZWS_DECOMPRESSOR_READ_ALIGNMENT_H

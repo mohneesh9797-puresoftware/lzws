@@ -30,7 +30,7 @@ LZWS_INLINE lzws_result_t lzws_decompressor_allocate_dictionary_wrapper(lzws_dec
 {
   size_t total_codes_length = lzws_decompressor_get_total_codes_length(state_ptr);
 
-  lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->initial_used_code, state_ptr->quiet, total_codes_length);
+  lzws_result_t result = lzws_decompressor_allocate_dictionary(&state_ptr->dictionary, total_codes_length, state_ptr->initial_used_code, state_ptr->quiet);
   if (result != 0) {
     return result;
   }

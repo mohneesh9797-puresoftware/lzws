@@ -105,13 +105,13 @@ lzws_result_t lzws_compressor_write_code(lzws_compressor_state_t* state_ptr, lzw
   bool         msb                   = state_ptr->msb;
 
   uint_fast8_t byte = get_byte_with_remainder(&code, &code_bit_length, destination_remainder, destination_remainder_bit_length, msb);
-  lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
+  lzws_compressor_write_byte(state_ptr, byte, destination_ptr, destination_length_ptr);
 
   destination_byte_length--;
 
   while (destination_byte_length != 0) {
     byte = get_byte(&code, &code_bit_length, msb);
-    lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, byte);
+    lzws_compressor_write_byte(state_ptr, byte, destination_ptr, destination_length_ptr);
 
     destination_byte_length--;
   }

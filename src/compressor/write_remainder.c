@@ -30,7 +30,7 @@ lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_
     destination_remainder <<= 8 - destination_remainder_bit_length;
   }
 
-  lzws_compressor_write_byte(state_ptr, destination_ptr, destination_length_ptr, destination_remainder);
+  lzws_compressor_write_byte(state_ptr, destination_remainder, destination_ptr, destination_length_ptr);
 
   state_ptr->destination_remainder            = 0;
   state_ptr->destination_remainder_bit_length = 0;

@@ -30,7 +30,7 @@ LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compr
 {
   size_t total_codes_length = lzws_compressor_get_total_codes_length(state_ptr);
 
-  lzws_result_t result = lzws_compressor_allocate_dictionary(&state_ptr->dictionary, state_ptr->block_mode, state_ptr->quiet, total_codes_length);
+  lzws_result_t result = lzws_compressor_allocate_dictionary(&state_ptr->dictionary, total_codes_length, state_ptr->block_mode, state_ptr->quiet);
   if (result != 0) {
     return result;
   }

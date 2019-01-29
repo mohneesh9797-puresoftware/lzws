@@ -9,6 +9,7 @@
 #include "common.h"
 #include "main.h"
 #include "process_code.h"
+#include "read_alignment.h"
 #include "read_header.h"
 #include "read_remainder.h"
 #include "write_symbol.h"
@@ -56,6 +57,7 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         break;
 
       case LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT:
+        result = lzws_decompressor_read_padding_zeroes_for_alignment(state_ptr, source_ptr, source_length_ptr);
         break;
 
       default:

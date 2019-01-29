@@ -34,7 +34,7 @@ static inline lzws_code_fast_t get_index_of_used_index(lzws_compressor_dictionar
   return code - dictionary_ptr->used_indexes_offset;
 }
 
-lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool block_mode, bool quiet, size_t total_codes_length)
+lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length, bool block_mode, bool quiet)
 {
   lzws_code_t undefined_next_code = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
 
