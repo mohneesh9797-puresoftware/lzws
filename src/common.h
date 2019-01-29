@@ -49,12 +49,12 @@ typedef uint_fast16_t lzws_code_fast_t;
 #define LZWS_RATIO_SOURCE_CHECKPOINT_GAP 10000
 
 // Clear code can be used only in block mode.
-#define LZWS_INITIAL_USED_CODE 255
-#define LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE 256
+#define LZWS_FIRST_NON_CHAR_CODE 256
+#define LZWS_FIRST_NON_CHAR_CODE_IN_BLOCK_MODE 257
 
-LZWS_INLINE lzws_code_fast_t lzws_get_initial_used_code(bool block_mode)
+LZWS_INLINE lzws_code_fast_t lzws_get_first_non_char_code(bool block_mode)
 {
-  return block_mode ? LZWS_INITIAL_USED_CODE_IN_BLOCK_MODE : LZWS_INITIAL_USED_CODE;
+  return block_mode ? LZWS_FIRST_NON_CHAR_CODE_IN_BLOCK_MODE : LZWS_FIRST_NON_CHAR_CODE;
 }
 
 #endif // LZWS_COMMON_H

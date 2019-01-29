@@ -53,7 +53,7 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
 void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr)
 {
-  state_ptr->last_used_code            = state_ptr->initial_used_code;
+  state_ptr->last_used_code            = state_ptr->first_non_char_code - 1;
   state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
   state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
 

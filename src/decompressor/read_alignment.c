@@ -21,13 +21,13 @@ lzws_result_t lzws_decompressor_read_padding_zeroes_for_alignment(lzws_decompres
   }
 
   if (state_ptr->unaligned_by_code_bit_length > state_ptr->last_used_code_bit_length) {
-    // We have written alignment after clear code.
+    // Alignment was written after clear code.
     // Now we need to process first code.
 
     state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE;
   }
   else {
-    // We have written alignment after increasing last used code bit length.
+    // Alignment was written after increasing last used code bit length.
     // Now we need to process next code.
 
     state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE;

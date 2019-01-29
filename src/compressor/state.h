@@ -36,7 +36,7 @@ typedef struct {
   bool         quiet;
   bool         unaligned_bit_groups;
 
-  lzws_code_fast_t initial_used_code;
+  lzws_code_fast_t first_non_char_code;
   lzws_code_fast_t max_code;
 
   lzws_code_fast_t last_used_code;

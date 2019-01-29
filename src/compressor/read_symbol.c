@@ -33,7 +33,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   // We want to clear dictionary when there is at least one symbol that will use new dictionary.
   // So we should check whether we need to clear dictionary before reading this symbol.
 
-  // Current code >= initial used code means that dictionary is still working on current source sequence.
+  // Current code >= first non char code means that dictionary is still working on current source sequence.
   // We can't clear dictionary during source sequence.
   // We can ignore situation when current code equals clear code.
   // So we can compare current code with alphabet length.

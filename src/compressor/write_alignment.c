@@ -22,7 +22,7 @@ lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment(lzws_compressor
 
   state_ptr->unaligned_by_code_bit_length = state_ptr->last_used_code_bit_length;
 
-  // We have written alignment after clear code or after increasing last used code bit length.
+  // Alignment was written after clear code or after increasing of last used code bit length.
   // It doesn't matter, now we need to read next symbol.
 
   state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;

@@ -58,15 +58,15 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
     return LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH;
   }
 
-  bool             block_mode        = (byte & LZWS_BLOCK_MODE) != 0;
-  lzws_code_fast_t initial_used_code = lzws_get_initial_used_code(block_mode);
+  bool             block_mode          = (byte & LZWS_BLOCK_MODE) != 0;
+  lzws_code_fast_t first_non_char_code = lzws_get_first_non_char_code(block_mode);
 
   state_ptr->block_mode = block_mode;
 
-  state_ptr->initial_used_code = initial_used_code;
-  state_ptr->max_code          = lzws_get_mask_for_last_bits(max_code_bit_length);
+  state_ptr->first_non_char_code = first_non_char_code;
+  state_ptr->max_code            = lzws_get_mask_for_last_bits(max_code_bit_length);
 
-  state_ptr->last_used_code = initial_used_code;
+  state_ptr->last_used_code = first_non_char_code - 1;
 
   // It is possible to keep prefix code uninitialized.
 

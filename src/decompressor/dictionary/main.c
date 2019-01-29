@@ -9,10 +9,10 @@
 
 #include "main.h"
 
-lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t initial_used_code, bool quiet)
+lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t first_non_char_code, bool quiet)
 {
   // We won't store char codes and clear code.
-  lzws_code_fast_t codes_offset = initial_used_code + 1; // aka "first_non_char_code".
+  lzws_code_fast_t codes_offset = first_non_char_code;
   dictionary_ptr->codes_offset  = codes_offset;
 
   size_t codes_length = total_codes_length - codes_offset;
@@ -93,6 +93,9 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
   uint8_t*     last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
 
   uint8_t* output_buffer = dictionary_ptr->output_buffer;
+
+  // It is not possible to receive clear code during code sequence.
+  // So we can compare first code with alphabet length.
 
   while (code >= LZWS_ALPHABET_LENGTH) {
     lzws_code_fast_t code_index = code - codes_offset;
