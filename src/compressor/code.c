@@ -4,9 +4,9 @@
 
 #include "../utils.h"
 
+#include "code.h"
 #include "common.h"
 #include "utils.h"
-#include "write_code.h"
 
 static inline uint_fast8_t get_byte(lzws_code_fast_t* code_ptr, uint_fast8_t* code_bit_length_ptr, bool msb)
 {

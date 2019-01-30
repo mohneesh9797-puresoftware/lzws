@@ -6,7 +6,7 @@
 #include "ratio/main.h"
 
 #include "common.h"
-#include "read_symbol.h"
+#include "symbol.h"
 #include "utils.h"
 
 lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
@@ -49,18 +49,6 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     return 0;
   }
 
-  // We want to write alignment if there will be at least one code after it.
-  // So we should check whether we need to write alignment before reading new symbol.
-
-  // We can ignore situation when current code equals clear code.
-  // Here we want to check whether last used code bit length was increased after processing last code.
-
-  if (!state_ptr->unaligned_bit_groups && state_ptr->last_used_code_bit_length != state_ptr->unaligned_by_code_bit_length) {
-    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
-
-    return 0;
-  }
-
   uint_fast8_t symbol;
   lzws_compressor_read_byte(state_ptr, &symbol, source_ptr, source_length_ptr);
 
@@ -79,6 +67,13 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   }
 
   // We can't find next code, we need to process current code.
+  // We should check whether we need to write alignment because there will be at least one code after it.
+
+  if (!state_ptr->unaligned_bit_groups && lzws_compressor_need_to_write_alignment(state_ptr)) {
+    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
+
+    return 0;
+  }
 
   state_ptr->next_symbol = symbol;
   state_ptr->status      = LZWS_COMPRESSOR_PROCESS_CURRENT_CODE;

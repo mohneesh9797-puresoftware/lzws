@@ -7,8 +7,8 @@
 
 #include "../utils.h"
 
-#include "process_code.h"
-#include "write_code.h"
+#include "code.h"
+#include "current_code.h"
 
 static inline lzws_result_t write_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {

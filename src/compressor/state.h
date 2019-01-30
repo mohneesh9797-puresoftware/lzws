@@ -72,4 +72,9 @@ LZWS_INLINE void lzws_compressor_update_unaligned_destination_byte_length(lzws_c
   state_ptr->unaligned_destination_byte_length = (state_ptr->unaligned_destination_byte_length + destination_byte_length) % state_ptr->unaligned_by_code_bit_length;
 }
 
+LZWS_INLINE bool lzws_compressor_need_to_write_alignment(lzws_compressor_state_t* state_ptr)
+{
+  return state_ptr->last_used_code_bit_length != state_ptr->unaligned_by_code_bit_length;
+}
+
 #endif // LZWS_COMPRESSOR_STATE_H
