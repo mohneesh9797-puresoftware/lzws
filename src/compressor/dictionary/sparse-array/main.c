@@ -22,7 +22,7 @@ static inline size_t get_used_indexes_length(lzws_compressor_dictionary_t* dicti
 
 static inline lzws_compressor_dictionary_used_index_t get_next_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol)
 {
-  if (current_code >= dictionary_ptr->first_non_char_code) {
+  if (current_code >= dictionary_ptr->first_free_code) {
     current_code -= dictionary_ptr->next_codes_offset;
   }
 

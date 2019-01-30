@@ -26,7 +26,7 @@ static inline size_t get_next_sibling_codes_length(lzws_compressor_dictionary_t*
 
 static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
 {
-  if (code >= dictionary_ptr->first_non_char_code) {
+  if (code >= dictionary_ptr->first_free_code) {
     code -= dictionary_ptr->first_child_codes_offset;
   }
 

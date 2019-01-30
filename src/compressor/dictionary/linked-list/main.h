@@ -16,19 +16,19 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_non_char_code)
+LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code)
 {
   dictionary_ptr->first_child_codes    = NULL;
   dictionary_ptr->next_sibling_codes   = NULL;
   dictionary_ptr->last_symbol_by_codes = NULL;
 
-  dictionary_ptr->first_non_char_code = first_non_char_code;
+  dictionary_ptr->first_free_code = first_free_code;
 
   // We won't store clear code.
-  dictionary_ptr->first_child_codes_offset = first_non_char_code - LZWS_ALPHABET_LENGTH;
+  dictionary_ptr->first_child_codes_offset = first_free_code - LZWS_ALPHABET_LENGTH;
 
   // We won't store char codes and clear code.
-  dictionary_ptr->next_sibling_codes_offset = first_non_char_code;
+  dictionary_ptr->next_sibling_codes_offset = first_free_code;
 }
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length, bool quiet);

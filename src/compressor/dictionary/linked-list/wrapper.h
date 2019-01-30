@@ -23,7 +23,7 @@ LZWS_INLINE size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_
 
 LZWS_INLINE void lzws_compressor_initialize_dictionary_wrapper(lzws_compressor_state_t* state_ptr)
 {
-  lzws_compressor_initialize_dictionary(&state_ptr->dictionary, state_ptr->first_non_char_code);
+  lzws_compressor_initialize_dictionary(&state_ptr->dictionary, state_ptr->first_free_code);
 }
 
 LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compressor_state_t* state_ptr)

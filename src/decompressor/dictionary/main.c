@@ -9,10 +9,10 @@
 
 #include "main.h"
 
-lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t first_non_char_code, bool quiet)
+lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t first_free_code, bool quiet)
 {
   // We won't store char codes and clear code.
-  lzws_code_fast_t codes_offset = first_non_char_code;
+  lzws_code_fast_t codes_offset = first_free_code;
   dictionary_ptr->codes_offset  = codes_offset;
 
   size_t codes_length = total_codes_length - codes_offset;
