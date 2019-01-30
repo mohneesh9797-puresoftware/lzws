@@ -21,7 +21,7 @@ lzws_result_t lzws_decompressor_process_first_code(lzws_decompressor_state_t* st
   }
 
   // It is not possible to receive clear code as first code.
-  // So we can compare first code with alphabet length.
+  // So we need to compare first code with alphabet length.
 
   if (code >= LZWS_ALPHABET_LENGTH) {
     if (!state_ptr->quiet) {

@@ -81,7 +81,7 @@ Second array:
 
 -----
 
-So we covered dictionary with 2 arrays: horizontal and vertical.
+So we covered dictionary into 2 arrays: horizontal and vertical.
 How to name them? Terminology is important.
 Lets use "first_child_codes" as first array and "next_sibling_codes" as second (from DOM terminology).
 
