@@ -44,7 +44,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     state_ptr->next_symbol  = current_code;
     state_ptr->current_code = LZWS_CLEAR_CODE;
 
-    state_ptr->status = LZWS_COMPRESSOR_PROCESS_CURRENT_CODE;
+    state_ptr->status = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
 
     return 0;
   }
@@ -66,7 +66,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     return 0;
   }
 
-  // We can't find next code, we need to process current code.
+  // We can't find next code, we need to write current code.
   // We should check whether we need to write alignment because there will be at least one code after it.
 
   if (!state_ptr->unaligned_bit_groups && lzws_compressor_need_to_write_alignment(state_ptr)) {
@@ -76,7 +76,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   }
 
   state_ptr->next_symbol = symbol;
-  state_ptr->status      = LZWS_COMPRESSOR_PROCESS_CURRENT_CODE;
+  state_ptr->status      = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
 
   return 0;
 }

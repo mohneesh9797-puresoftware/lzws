@@ -25,7 +25,7 @@ static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr)
   return ++state_ptr->last_used_code;
 }
 
-lzws_result_t lzws_compressor_process_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   lzws_result_t result = write_current_code(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {
