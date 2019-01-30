@@ -63,8 +63,11 @@ lzws_result_t lzws_compressor_get_initial_state(
     state_ptr->unaligned_destination_byte_length = 0;
   }
 
+  if (block_mode) {
+    lzws_compressor_initialize_ratio(state_ptr);
+  }
+
   lzws_compressor_initialize_dictionary_wrapper(state_ptr);
-  lzws_compressor_initialize_ratio(state_ptr);
 
   *result_state_ptr = state_ptr;
 
@@ -77,14 +80,20 @@ void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr)
   state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
   state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
 
+  if (state_ptr->block_mode) {
+    lzws_compressor_clear_ratio(state_ptr);
+  }
+
   lzws_compressor_clear_dictionary_wrapper(state_ptr);
-  lzws_compressor_clear_ratio(state_ptr);
 }
 
 void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr)
 {
+  if (state_ptr->block_mode) {
+    lzws_compressor_free_ratio(state_ptr);
+  }
+
   lzws_compressor_free_dictionary_wrapper(state_ptr);
-  lzws_compressor_free_ratio(state_ptr);
 
   free(state_ptr);
 }

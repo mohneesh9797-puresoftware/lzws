@@ -30,6 +30,8 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     return LZWS_COMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
+  lzws_code_fast_t current_code = state_ptr->current_code;
+
   // We want to clear dictionary when there is at least one symbol that will use new dictionary.
   // So we should check whether we need to clear dictionary before reading this symbol.
 
@@ -38,9 +40,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   // We can ignore situation when current code equals clear code.
   // So we can compare current code with alphabet length.
 
-  lzws_code_fast_t current_code = state_ptr->current_code;
-
-  if (current_code < LZWS_ALPHABET_LENGTH && lzws_compressor_need_to_clear_by_ratio(state_ptr)) {
+  if (state_ptr->block_mode && current_code < LZWS_ALPHABET_LENGTH && lzws_compressor_need_to_clear_by_ratio(state_ptr)) {
     state_ptr->next_symbol  = current_code;
     state_ptr->current_code = LZWS_CLEAR_CODE;
 

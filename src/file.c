@@ -5,8 +5,8 @@
 #include <string.h>
 
 #include "compressor/common.h"
+#include "compressor/header.h"
 #include "compressor/main.h"
-#include "compressor/write_header.h"
 
 #include "decompressor/common.h"
 #include "decompressor/main.h"

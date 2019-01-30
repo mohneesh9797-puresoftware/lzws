@@ -52,8 +52,8 @@ typedef struct {
   uint_fast8_t unaligned_by_code_bit_length;
   uint_fast8_t unaligned_destination_byte_length;
 
-  lzws_compressor_dictionary_t dictionary;
   lzws_compressor_ratio_t      ratio;
+  lzws_compressor_dictionary_t dictionary;
 } lzws_compressor_state_t;
 
 lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned);
