@@ -61,10 +61,9 @@ LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t*
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 
-// Source byte length can be aligned by unaligned by code bit length * 8.
-
 LZWS_INLINE void lzws_decompressor_update_unaligned_source_byte_length(lzws_decompressor_state_t* state_ptr, uint_fast8_t source_byte_length)
 {
+  // Source byte length can be aligned by unaligned by code bit length * 8.
   state_ptr->unaligned_source_byte_length = (state_ptr->unaligned_source_byte_length + source_byte_length) % state_ptr->unaligned_by_code_bit_length;
 }
 

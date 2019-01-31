@@ -15,7 +15,7 @@ lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment_wrapper(lzws_co
 
   uint_fast8_t byte = 0;
 
-  while (alignment_ptr->unaligned_destination_byte_length != 0) {
+  while (alignment_ptr->destination_byte_length != 0) {
     if (*destination_length_ptr < 1) {
       return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
     }
@@ -25,12 +25,22 @@ lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment_wrapper(lzws_co
     lzws_compressor_write_byte(state_ptr, byte, destination_ptr, destination_length_ptr);
   }
 
-  lzws_compressor_set_last_used_code_bit_length_to_alignment(alignment_ptr, state_ptr->last_used_code_bit_length);
+  uint_fast8_t last_used_code_bit_length = state_ptr->last_used_code_bit_length;
 
-  // Alignment was written after clear code or after increasing of last used code bit length.
-  // It doesn't matter, now we need to read next symbol.
+  if (alignment_ptr->last_used_code_bit_length > last_used_code_bit_length) {
+    // Alignment was written after current code (clear code).
+    // So we need to read first symbol.
 
-  state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
+    state_ptr->status = LZWS_COMPRESSOR_READ_FIRST_SYMBOL;
+  }
+  else {
+    // Alignment was written before current code (after increasing last used code bit length).
+    // So we need to write current code.
+
+    state_ptr->status = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
+  }
+
+  lzws_compressor_set_last_used_code_bit_length_to_alignment(alignment_ptr, last_used_code_bit_length);
 
   return 0;
 }

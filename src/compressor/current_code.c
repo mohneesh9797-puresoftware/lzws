@@ -38,7 +38,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   // We need to set current code to next symbol in all possible cases.
   state_ptr->current_code = next_symbol;
 
-  // It is possible to keep next symbol as is.
+  // It is possible to keep next symbol in state as is.
   // Algorithm won't touch it without reinitialization.
 
   if (state_ptr->block_mode && current_code == LZWS_CLEAR_CODE) {

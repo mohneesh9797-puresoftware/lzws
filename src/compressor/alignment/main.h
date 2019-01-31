@@ -16,27 +16,26 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_compressor_initialize_alignment(lzws_compressor_alignment_t* alignment_ptr)
+LZWS_INLINE void lzws_compressor_initialize_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
 {
-  alignment_ptr->unaligned_by_code_bit_length      = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
-  alignment_ptr->unaligned_destination_byte_length = 0;
+  alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
+  alignment_ptr->destination_byte_length   = 0;
 }
 
 LZWS_INLINE void lzws_compressor_set_last_used_code_bit_length_to_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
 {
-  alignment_ptr->unaligned_by_code_bit_length = last_used_code_bit_length;
+  alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
 }
 
 LZWS_INLINE void lzws_compressor_add_destination_byte_length_to_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t destination_byte_length)
 {
-  // Destination byte length can be aligned by unaligned by code bit length * 8.
-
-  alignment_ptr->unaligned_destination_byte_length = (alignment_ptr->unaligned_destination_byte_length + destination_byte_length) % alignment_ptr->unaligned_by_code_bit_length;
+  // Destination byte length can be aligned by last used code bit length * 8.
+  alignment_ptr->destination_byte_length = (alignment_ptr->destination_byte_length + destination_byte_length) % alignment_ptr->last_used_code_bit_length;
 }
 
 LZWS_INLINE bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
 {
-  return alignment_ptr->unaligned_by_code_bit_length != last_used_code_bit_length;
+  return alignment_ptr->last_used_code_bit_length != last_used_code_bit_length;
 }
 
 #endif // LZWS_COMPRESSOR_ALIGNMENT_MAIN_H

@@ -31,7 +31,7 @@ lzws_result_t lzws_decompressor_process_first_code(lzws_decompressor_state_t* st
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
   }
 
-  // It is possible to keep current code as is.
+  // It is possible to keep current code in state as is.
   // Algorithm won't touch it without reinitialization.
 
   state_ptr->prefix_code = code;
@@ -73,7 +73,7 @@ lzws_result_t lzws_decompressor_process_next_code(lzws_decompressor_state_t* sta
 
     lzws_decompressor_clear_state(state_ptr);
 
-    // It is possible to keep prefix_code as is.
+    // It is possible to keep prefix code in state as is.
     // Algorithm won't touch it without reinitialization.
 
     if (state_ptr->unaligned_bit_groups) {

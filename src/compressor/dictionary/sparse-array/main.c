@@ -107,7 +107,7 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
     next_codes[used_index] = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
   }
 
-  // We can keep used indexes as is.
+  // We can keep used indexes in dictionary as is.
   // Algorithm will access only initialized indexes.
 }
 

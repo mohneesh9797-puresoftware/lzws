@@ -59,7 +59,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
     // We found next code, it becomes new current code.
     state_ptr->current_code = next_code;
 
-    // It is possible to keep next symbol as is.
+    // It is possible to keep next symbol in state as is.
     // Algorithm won't touch it without reinitialization.
 
     // We don't need to change status, algorithm wants next symbol.
@@ -68,8 +68,8 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   }
 
   // We can't find next code, we need to write current code.
-  // We should check whether we need to write alignment because there will be at least one code after it.
 
+  // We should check whether we need to write alignment because there will be at least one code after it.
   if (lzws_compressor_need_to_write_alignment_wrapper(state_ptr)) {
     state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
 

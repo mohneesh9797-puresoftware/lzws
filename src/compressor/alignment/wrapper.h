@@ -19,7 +19,7 @@
 LZWS_INLINE void lzws_compressor_initialize_alignment_wrapper(lzws_compressor_state_t* state_ptr)
 {
   if (!state_ptr->unaligned_bit_groups) {
-    lzws_compressor_initialize_alignment(&state_ptr->alignment);
+    lzws_compressor_initialize_alignment(&state_ptr->alignment, state_ptr->last_used_code_bit_length);
   }
 }
 

@@ -122,7 +122,7 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
     sizeof(lzws_code_t), next_sibling_codes_length, &undefined_next_code,
     LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
 
-  // We can keep last symbol by codes as is.
+  // We can keep last symbol by codes in dictionary as is.
   // Algorithm will access only initialized symbols.
 }
 
