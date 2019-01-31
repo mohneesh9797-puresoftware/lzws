@@ -29,9 +29,9 @@ lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment_wrapper(lzws_co
 
   if (alignment_ptr->last_used_code_bit_length > last_used_code_bit_length) {
     // Alignment was written after current code (clear code).
-    // So we need to read first symbol.
+    // So we need to read next symbol.
 
-    state_ptr->status = LZWS_COMPRESSOR_READ_FIRST_SYMBOL;
+    state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
   }
   else {
     // Alignment was written before current code (after increasing last used code bit length).
