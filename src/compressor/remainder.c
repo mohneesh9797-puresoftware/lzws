@@ -2,8 +2,10 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "remainder.h"
+#include "alignment/wrapper.h"
+
 #include "common.h"
+#include "remainder.h"
 #include "utils.h"
 
 lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
@@ -18,9 +20,7 @@ lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  if (!state_ptr->unaligned_bit_groups) {
-    lzws_compressor_update_unaligned_destination_byte_length(state_ptr, 1);
-  }
+  lzws_compressor_add_destination_byte_length_to_alignment_wrapper(state_ptr, 1);
 
   // Destination remainder is left padded with zeroes by default.
   uint_fast8_t destination_remainder = state_ptr->destination_remainder;

@@ -16,11 +16,6 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_t* state_ptr)
-{
-  return state_ptr->max_code + 1;
-}
-
 LZWS_INLINE void lzws_compressor_initialize_dictionary_wrapper(lzws_compressor_state_t* state_ptr)
 {
   lzws_compressor_initialize_dictionary(&state_ptr->dictionary, state_ptr->first_free_code);
@@ -43,16 +38,18 @@ LZWS_INLINE lzws_result_t lzws_compressor_allocate_dictionary_wrapper(lzws_compr
 LZWS_INLINE void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* state_ptr)
 {
   size_t total_codes_length = lzws_compressor_get_total_codes_length(state_ptr);
+
   lzws_compressor_clear_dictionary(&state_ptr->dictionary, total_codes_length);
 }
 
 LZWS_INLINE lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary_wrapper(lzws_compressor_state_t* state_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol)
 {
-  return lzws_compressor_get_next_code_from_dictionary(&state_ptr->dictionary, current_code, next_symbol);
+  return lzws_compressor_get_next_code_from_dictionary(&state_ptr->dictionary, state_ptr->first_free_code, current_code, next_symbol);
 }
+
 LZWS_INLINE void lzws_compressor_save_next_code_to_dictionary_wrapper(lzws_compressor_state_t* state_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code)
 {
-  lzws_compressor_save_next_code_to_dictionary(&state_ptr->dictionary, current_code, next_symbol, next_code);
+  lzws_compressor_save_next_code_to_dictionary(&state_ptr->dictionary, state_ptr->first_free_code, current_code, next_symbol, next_code);
 }
 
 LZWS_INLINE void lzws_compressor_free_dictionary_wrapper(lzws_compressor_state_t* state_ptr)

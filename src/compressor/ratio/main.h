@@ -5,7 +5,9 @@
 #if !defined(LZWS_COMPRESSOR_RATIO_MAIN_H)
 #define LZWS_COMPRESSOR_RATIO_MAIN_H
 
-#include "../state.h"
+#include "../../common.h"
+
+#include "common.h"
 
 #undef LZWS_INLINE
 #if defined(LZWS_COMPRESSOR_RATIO_MAIN_C)
@@ -14,53 +16,37 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE void lzws_compressor_initialize_ratio(lzws_compressor_state_t* state_ptr)
+LZWS_INLINE void lzws_compressor_initialize_ratio(lzws_compressor_ratio_t* ratio_ptr)
 {
-  lzws_compressor_ratio_t* ratio_ptr = &state_ptr->ratio;
-
   ratio_ptr->new_source_length      = 0;
   ratio_ptr->new_destination_length = 0;
 
   mpz_inits(ratio_ptr->source_length, ratio_ptr->destination_length, NULL);
 }
 
-LZWS_INLINE void lzws_compressor_add_source_symbol_to_ratio(lzws_compressor_state_t* state_ptr)
+LZWS_INLINE void lzws_compressor_add_source_symbol_to_ratio(lzws_compressor_ratio_t* ratio_ptr)
 {
-  state_ptr->ratio.new_source_length++;
+  ratio_ptr->new_source_length++;
 }
 
-LZWS_INLINE void lzws_compressor_add_destination_symbol_to_ratio(lzws_compressor_state_t* state_ptr)
+LZWS_INLINE void lzws_compressor_add_destination_symbol_to_ratio(lzws_compressor_ratio_t* ratio_ptr)
 {
-  state_ptr->ratio.new_destination_length++;
+  ratio_ptr->new_destination_length++;
 }
 
-bool lzws_compressor_calculate_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio_ptr);
-void lzws_compressor_calculate_clear_ratio(lzws_compressor_ratio_t* ratio_ptr);
+bool lzws_compressor_need_to_clear_by_ratio(lzws_compressor_ratio_t* ratio_ptr);
 
-LZWS_INLINE bool lzws_compressor_need_to_clear_by_ratio(lzws_compressor_state_t* state_ptr)
+LZWS_INLINE void lzws_compressor_clear_ratio(lzws_compressor_ratio_t* ratio_ptr)
 {
-  if (!lzws_compressor_is_dictionary_full(state_ptr)) {
-    return false;
-  }
+  mpz_add_ui(ratio_ptr->source_length, ratio_ptr->source_length, ratio_ptr->new_source_length);
+  ratio_ptr->new_source_length = 0;
 
-  lzws_compressor_ratio_t* ratio_ptr = &state_ptr->ratio;
-
-  if (ratio_ptr->new_source_length < LZWS_RATIO_SOURCE_CHECKPOINT_GAP) {
-    return false;
-  }
-
-  return lzws_compressor_calculate_need_to_clear_by_ratio(ratio_ptr);
+  mpz_add_ui(ratio_ptr->destination_length, ratio_ptr->destination_length, ratio_ptr->new_destination_length);
+  ratio_ptr->new_destination_length = 0;
 }
 
-LZWS_INLINE void lzws_compressor_clear_ratio(lzws_compressor_state_t* state_ptr)
+LZWS_INLINE void lzws_compressor_free_ratio(lzws_compressor_ratio_t* ratio_ptr)
 {
-  lzws_compressor_calculate_clear_ratio(&state_ptr->ratio);
-}
-
-LZWS_INLINE void lzws_compressor_free_ratio(lzws_compressor_state_t* state_ptr)
-{
-  lzws_compressor_ratio_t* ratio_ptr = &state_ptr->ratio;
-
   mpz_clears(ratio_ptr->source_length, ratio_ptr->destination_length, NULL);
 }
 

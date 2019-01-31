@@ -10,6 +10,8 @@
 
 #include "main.h"
 
+// -- codes length --
+
 static inline size_t get_next_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
 {
   return (total_codes_length - dictionary_ptr->next_codes_offset) << LZWS_ALPHABET_BIT_LENGTH;
@@ -20,9 +22,13 @@ static inline size_t get_used_indexes_length(lzws_compressor_dictionary_t* dicti
   return total_codes_length - dictionary_ptr->used_indexes_offset;
 }
 
-static inline lzws_compressor_dictionary_used_index_t get_next_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol)
+// -- code index --
+
+static inline lzws_compressor_dictionary_used_index_t get_next_code_index(
+  lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code,
+  lzws_code_fast_t current_code, uint_fast8_t next_symbol)
 {
-  if (current_code >= dictionary_ptr->first_free_code) {
+  if (current_code >= first_free_code) {
     current_code -= dictionary_ptr->next_codes_offset;
   }
 
@@ -33,6 +39,8 @@ static inline lzws_code_fast_t get_index_of_used_index(lzws_compressor_dictionar
 {
   return code - dictionary_ptr->used_indexes_offset;
 }
+
+// -- implementation --
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length, bool block_mode, bool quiet)
 {
@@ -103,17 +111,20 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
   // Algorithm will access only initialized indexes.
 }
 
-lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol)
+lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(
+  lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code,
+  lzws_code_fast_t current_code, uint_fast8_t next_symbol)
 {
-  lzws_compressor_dictionary_used_index_t code_index = get_next_code_index(dictionary_ptr, current_code, next_symbol);
+  lzws_compressor_dictionary_used_index_t code_index = get_next_code_index(dictionary_ptr, first_free_code, current_code, next_symbol);
+
   return dictionary_ptr->next_codes[code_index];
 }
 
 void lzws_compressor_save_next_code_to_dictionary(
-  lzws_compressor_dictionary_t* dictionary_ptr, bool block_mode,
+  lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code, bool block_mode,
   lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code)
 {
-  lzws_compressor_dictionary_used_index_t code_index = get_next_code_index(dictionary_ptr, current_code, next_symbol);
+  lzws_compressor_dictionary_used_index_t code_index = get_next_code_index(dictionary_ptr, first_free_code, current_code, next_symbol);
 
   if (block_mode) {
     lzws_code_fast_t index_of_used_index              = get_index_of_used_index(dictionary_ptr, next_code);

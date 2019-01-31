@@ -1,0 +1,15 @@
+// LZW streaming compressor based on LZW AB.
+// Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
+// Distributed under the BSD Software License (see LICENSE).
+
+#if !defined(LZWS_COMPRESSOR_ALIGNMENT_COMMON_H)
+#define LZWS_COMPRESSOR_ALIGNMENT_COMMON_H
+
+#include <stdint.h>
+
+typedef struct {
+  uint_fast8_t unaligned_by_code_bit_length;
+  uint_fast8_t unaligned_destination_byte_length;
+} lzws_compressor_alignment_t;
+
+#endif // LZWS_COMPRESSOR_ALIGNMENT_COMMON_H

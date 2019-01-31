@@ -12,7 +12,6 @@ typedef struct {
   lzws_code_t* next_sibling_codes;
   uint8_t*     last_symbol_by_codes;
 
-  lzws_code_fast_t first_free_code;
   lzws_code_fast_t first_child_codes_offset;
   lzws_code_fast_t next_sibling_codes_offset;
 } lzws_compressor_dictionary_t;

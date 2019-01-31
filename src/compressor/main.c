@@ -2,11 +2,11 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "alignment/wrapper.h"
 #include "dictionary/wrapper.h"
 
 #include "../log.h"
 
-#include "alignment.h"
 #include "common.h"
 #include "current_code.h"
 #include "header.h"
@@ -58,7 +58,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
         break;
 
       case LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_FOR_ALIGNMENT:
-        result = lzws_compressor_write_padding_zeroes_for_alignment(state_ptr, destination_ptr, destination_length_ptr);
+        result = lzws_compressor_write_padding_zeroes_for_alignment_wrapper(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
       default:

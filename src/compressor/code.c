@@ -2,6 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "alignment/wrapper.h"
+
 #include "../utils.h"
 
 #include "code.h"
@@ -97,9 +99,7 @@ lzws_result_t lzws_compressor_write_code(lzws_compressor_state_t* state_ptr, lzw
     return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
   }
 
-  if (!state_ptr->unaligned_bit_groups) {
-    lzws_compressor_update_unaligned_destination_byte_length(state_ptr, destination_byte_length);
-  }
+  lzws_compressor_add_destination_byte_length_to_alignment_wrapper(state_ptr, destination_byte_length);
 
   uint_fast8_t destination_remainder = state_ptr->destination_remainder;
   bool         msb                   = state_ptr->msb;

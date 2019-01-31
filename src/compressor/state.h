@@ -5,6 +5,7 @@
 #if !defined(LZWS_COMPRESSOR_STATE_H)
 #define LZWS_COMPRESSOR_STATE_H
 
+#include "alignment/common.h"
 #include "dictionary/common.h"
 #include "ratio/common.h"
 
@@ -49,32 +50,26 @@ typedef struct {
   uint_fast8_t destination_remainder;
   uint_fast8_t destination_remainder_bit_length;
 
-  uint_fast8_t unaligned_by_code_bit_length;
-  uint_fast8_t unaligned_destination_byte_length;
-
-  lzws_compressor_ratio_t      ratio;
+  lzws_compressor_alignment_t  alignment;
   lzws_compressor_dictionary_t dictionary;
+  lzws_compressor_ratio_t      ratio;
 } lzws_compressor_state_t;
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned);
-void          lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);
-void          lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
+lzws_result_t lzws_compressor_get_initial_state(
+  lzws_compressor_state_t** state_ptr,
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned);
+
+void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);
+void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
 
 LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state_ptr)
 {
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 
-// Destination byte length can be aligned by unaligned by code bit length * 8.
-
-LZWS_INLINE void lzws_compressor_update_unaligned_destination_byte_length(lzws_compressor_state_t* state_ptr, uint_fast8_t destination_byte_length)
+LZWS_INLINE size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_t* state_ptr)
 {
-  state_ptr->unaligned_destination_byte_length = (state_ptr->unaligned_destination_byte_length + destination_byte_length) % state_ptr->unaligned_by_code_bit_length;
-}
-
-LZWS_INLINE bool lzws_compressor_need_to_write_alignment(lzws_compressor_state_t* state_ptr)
-{
-  return state_ptr->last_used_code_bit_length != state_ptr->unaligned_by_code_bit_length;
+  return state_ptr->max_code + 1;
 }
 
 #endif // LZWS_COMPRESSOR_STATE_H

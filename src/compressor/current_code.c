@@ -3,7 +3,7 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "dictionary/wrapper.h"
-#include "ratio/main.h"
+#include "ratio/wrapper.h"
 
 #include "../utils.h"
 
@@ -60,10 +60,10 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     lzws_compressor_save_next_code_to_dictionary_wrapper(state_ptr, current_code, next_symbol, next_code);
 
-    if (state_ptr->block_mode && lzws_compressor_is_dictionary_full(state_ptr)) {
+    if (lzws_compressor_is_dictionary_full(state_ptr)) {
       // Dictionary become full.
       // We need to clear ratio now.
-      lzws_compressor_clear_ratio(state_ptr);
+      lzws_compressor_clear_ratio_wrapper(state_ptr);
     }
   }
 

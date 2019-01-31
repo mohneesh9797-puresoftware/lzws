@@ -2,8 +2,9 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "alignment/wrapper.h"
 #include "dictionary/wrapper.h"
-#include "ratio/main.h"
+#include "ratio/wrapper.h"
 
 #include "common.h"
 #include "symbol.h"
@@ -40,7 +41,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   // We can ignore situation when current code equals clear code.
   // So we can compare current code with alphabet length.
 
-  if (state_ptr->block_mode && current_code < LZWS_ALPHABET_LENGTH && lzws_compressor_need_to_clear_by_ratio(state_ptr)) {
+  if (current_code < LZWS_ALPHABET_LENGTH && lzws_compressor_need_to_clear_by_ratio_wrapper(state_ptr)) {
     state_ptr->next_symbol  = current_code;
     state_ptr->current_code = LZWS_CLEAR_CODE;
 
@@ -69,7 +70,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
   // We can't find next code, we need to write current code.
   // We should check whether we need to write alignment because there will be at least one code after it.
 
-  if (!state_ptr->unaligned_bit_groups && lzws_compressor_need_to_write_alignment(state_ptr)) {
+  if (lzws_compressor_need_to_write_alignment_wrapper(state_ptr)) {
     state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
 
     return 0;

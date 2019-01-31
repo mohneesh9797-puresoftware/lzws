@@ -13,7 +13,6 @@ typedef struct {
   lzws_code_t*                             next_codes;
   lzws_compressor_dictionary_used_index_t* used_indexes;
 
-  lzws_code_fast_t first_free_code;
   lzws_code_fast_t next_codes_offset;
   lzws_code_fast_t used_indexes_offset;
 } lzws_compressor_dictionary_t;

@@ -22,8 +22,6 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionar
   dictionary_ptr->next_sibling_codes   = NULL;
   dictionary_ptr->last_symbol_by_codes = NULL;
 
-  dictionary_ptr->first_free_code = first_free_code;
-
   // We won't store clear code.
   dictionary_ptr->first_child_codes_offset = first_free_code - LZWS_ALPHABET_LENGTH;
 
@@ -34,8 +32,13 @@ LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionar
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length, bool quiet);
 void          lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length);
 
-lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol);
-void             lzws_compressor_save_next_code_to_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code);
+lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(
+  lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code,
+  lzws_code_fast_t current_code, uint_fast8_t next_symbol);
+
+void lzws_compressor_save_next_code_to_dictionary(
+  lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code,
+  lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code);
 
 LZWS_INLINE void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary_ptr)
 {
