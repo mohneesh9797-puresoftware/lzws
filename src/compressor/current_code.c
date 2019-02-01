@@ -75,7 +75,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
 
 lzws_result_t lzws_compressor_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
-  // We should check whether we need to write alignment because there will be at least one code after it.
+  // We should check whether we need to write alignment (there will be at least one code after it).
   if (lzws_compressor_need_to_write_alignment_wrapper(state_ptr)) {
     state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
 
