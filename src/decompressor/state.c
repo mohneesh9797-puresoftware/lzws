@@ -14,9 +14,9 @@
 
 lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb, bool quiet, bool unaligned_bit_groups)
 {
-  size_t                     state_size = sizeof(lzws_decompressor_state_t);
-  lzws_decompressor_state_t* state_ptr  = malloc(state_size);
+  size_t state_size = sizeof(lzws_decompressor_state_t);
 
+  lzws_decompressor_state_t* state_ptr = malloc(state_size);
   if (state_ptr == NULL) {
     if (!quiet) {
       LZWS_LOG_ERROR("malloc failed, state size: %zu", state_size)

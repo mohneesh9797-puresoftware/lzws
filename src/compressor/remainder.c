@@ -11,7 +11,6 @@
 lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   uint_fast8_t destination_remainder_bit_length = state_ptr->destination_remainder_bit_length;
-
   if (destination_remainder_bit_length == 0) {
     return 0;
   }

@@ -12,9 +12,9 @@ lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_
   uint_fast8_t source_remainder            = state_ptr->source_remainder;
   uint_fast8_t source_remainder_bit_length = state_ptr->source_remainder_bit_length;
 
-  if (source_remainder_bit_length != 0 && source_remainder != 0) {
+  if (source_remainder != 0 && source_remainder_bit_length != 0) {
     if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("source remainder is not empty, bit length: %u, value: %u", source_remainder_bit_length, source_remainder)
+      LZWS_LOG_ERROR("source remainder is not empty, value: %u, bit length: %u", source_remainder, source_remainder_bit_length)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;

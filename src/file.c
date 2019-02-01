@@ -20,13 +20,11 @@
 static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer_length_ptr, size_t default_buffer_length, bool quiet)
 {
   size_t buffer_length = *buffer_length_ptr;
-
   if (buffer_length == 0) {
     buffer_length = default_buffer_length;
   }
 
   uint8_t* buffer = malloc(buffer_length);
-
   if (buffer == NULL) {
     if (!quiet) {
       LZWS_LOG_ERROR("malloc failed, buffer length: %zu", buffer_length)
@@ -88,7 +86,6 @@ static inline lzws_result_t allocate_buffers(
 static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_buffer_length, size_t* data_length_ptr, bool quiet)
 {
   size_t read_length = fread(data_buffer, 1, data_buffer_length, data_file_ptr);
-
   if (read_length == 0 && feof(data_file_ptr)) {
     return LZWS_FILE_READ_FINISHED;
   }
@@ -109,7 +106,6 @@ static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer,
 static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_length, bool quiet)
 {
   size_t written_length = fwrite(data_buffer, 1, data_length, data_file_ptr);
-
   if (written_length != data_length) {
     if (!quiet) {
       LZWS_LOG_ERROR("write file failed")
@@ -142,9 +138,7 @@ static inline lzws_result_t read_source_buffer(
     memmove(source_buffer, remaining_data, remaining_data_length);
   }
 
-  uint8_t* remaining_buffer        = source_buffer + remaining_data_length;
-  size_t   remaining_buffer_length = source_buffer_length - remaining_data_length;
-
+  size_t remaining_buffer_length = source_buffer_length - remaining_data_length;
   if (remaining_buffer_length == 0) {
     // We want to read more data at once, than buffer has.
     if (!quiet) {
@@ -154,7 +148,8 @@ static inline lzws_result_t read_source_buffer(
     return LZWS_FILE_NOT_ENOUGH_SOURCE_BUFFER;
   }
 
-  size_t data_length;
+  uint8_t* remaining_buffer = source_buffer + remaining_data_length;
+  size_t   data_length;
 
   lzws_result_t result = read_data(source_file_ptr, remaining_buffer, remaining_buffer_length, &data_length, quiet);
   if (result != 0) {
@@ -179,7 +174,6 @@ static inline lzws_result_t flush_destination_buffer(
   bool quiet)
 {
   size_t data_length = destination_buffer_length - *destination_length_ptr;
-
   if (data_length == 0) {
     // We want to write more data at once, than buffer has.
     if (!quiet) {
@@ -214,7 +208,6 @@ static inline lzws_result_t flush_destination_buffer(
     if (source_length != 0) {                         \
       /* Algorithm is not able to read all source. */ \
       /* It means that algorithm is broken. */        \
-                                                      \
       if (!quiet) {                                   \
         LZWS_LOG_ERROR("not able to read all source") \
       }                                               \
@@ -263,7 +256,6 @@ static inline lzws_result_t write_remaining_destination_buffer(
   bool quiet)
 {
   size_t data_length = destination_buffer_length - destination_length;
-
   if (data_length == 0) {
     return 0;
   }
@@ -311,7 +303,8 @@ lzws_result_t lzws_file_compress(
 
   lzws_compressor_state_t* state_ptr;
 
-  if (lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, quiet, unaligned_bit_groups) != 0) {
+  result = lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, quiet, unaligned_bit_groups);
+  if (result != 0) {
     free(source_buffer);
     free(destination_buffer);
 
@@ -370,7 +363,8 @@ lzws_result_t lzws_file_decompress(
 
   lzws_decompressor_state_t* state_ptr;
 
-  if (lzws_decompressor_get_initial_state(&state_ptr, msb, quiet, unaligned_bit_groups) != 0) {
+  result = lzws_decompressor_get_initial_state(&state_ptr, msb, quiet, unaligned_bit_groups);
+  if (result != 0) {
     free(source_buffer);
     free(destination_buffer);
 

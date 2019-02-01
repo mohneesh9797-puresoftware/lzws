@@ -26,9 +26,9 @@ lzws_result_t lzws_compressor_get_initial_state(
     return LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH;
   }
 
-  size_t                   state_size = sizeof(lzws_compressor_state_t);
-  lzws_compressor_state_t* state_ptr  = malloc(state_size);
+  size_t state_size = sizeof(lzws_compressor_state_t);
 
+  lzws_compressor_state_t* state_ptr = malloc(state_size);
   if (state_ptr == NULL) {
     if (!quiet) {
       LZWS_LOG_ERROR("malloc failed, state size: %zu", state_size)

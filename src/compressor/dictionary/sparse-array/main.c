@@ -70,8 +70,8 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
     // Algorithm will access only initialized indexes.
 
     size_t used_indexes_size = used_indexes_length * sizeof(lzws_compressor_dictionary_used_index_t);
-    used_indexes             = malloc(used_indexes_size);
 
+    used_indexes = malloc(used_indexes_size);
     if (used_indexes == NULL) {
       if (!quiet) {
         LZWS_LOG_ERROR("malloc failed, used indexes size: %zu", used_indexes_size)
@@ -101,7 +101,6 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
   size_t used_indexes_length = get_used_indexes_length(dictionary_ptr, total_codes_length);
 
   lzws_compressor_dictionary_used_index_t used_index;
-
   for (lzws_code_fast_t index_of_used_index = 0; index_of_used_index < used_indexes_length; index_of_used_index++) {
     used_index             = used_indexes[index_of_used_index];
     next_codes[used_index] = LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;

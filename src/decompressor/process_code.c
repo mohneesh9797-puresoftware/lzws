@@ -22,7 +22,6 @@ lzws_result_t lzws_decompressor_process_first_code(lzws_decompressor_state_t* st
 
   // It is not possible to receive clear code as first code.
   // So we need to compare first code with alphabet length.
-
   if (code >= LZWS_ALPHABET_LENGTH) {
     if (!state_ptr->quiet) {
       LZWS_LOG_ERROR("received invalid first code: " FAST_CODE_FORMAT, code)
@@ -92,7 +91,6 @@ lzws_result_t lzws_decompressor_process_next_code(lzws_decompressor_state_t* sta
   }
   else {
     lzws_code_fast_t next_code = get_next_code(state_ptr);
-
     if (code > next_code) {
       if (!quiet) {
         LZWS_LOG_ERROR("received code greater than next code: " FAST_CODE_FORMAT, code)

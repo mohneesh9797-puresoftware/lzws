@@ -34,7 +34,6 @@ typedef uint_fast16_t lzws_code_fast_t;
 
 // External programs requires 2 byte magic header.
 // For example: https://github.com/apache/httpd/blob/b4ee699ea355271bb560248e5f89cca72623a0cf/modules/metadata/mod_mime_magic.c#L2060
-
 #define LZWS_FIRST_MAGIC_HEADER_BYTE 0x1f  // "\037" in base-8 number system.
 #define LZWS_SECOND_MAGIC_HEADER_BYTE 0x9d // "\235" in base-8 number system.
 

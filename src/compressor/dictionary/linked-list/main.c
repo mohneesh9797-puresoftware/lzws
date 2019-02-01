@@ -17,7 +17,6 @@ static inline size_t get_first_child_codes_length(lzws_compressor_dictionary_t* 
   // We are operating first child codes: current code -> next code.
   // Maximum next code is max code, maximum current code will be max code - 1.
   // So we don't need to store max code.
-
   return total_codes_length - dictionary_ptr->first_child_codes_offset - 1;
 }
 
@@ -84,9 +83,9 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   // Last symbol by codes don't require default values.
   // Algorithm will access only initialized symbols.
 
-  size_t   last_symbol_by_codes_size = next_sibling_codes_length;
-  uint8_t* last_symbol_by_codes      = malloc(last_symbol_by_codes_size);
+  size_t last_symbol_by_codes_size = next_sibling_codes_length;
 
+  uint8_t* last_symbol_by_codes = malloc(last_symbol_by_codes_size);
   if (last_symbol_by_codes == NULL) {
     if (!quiet) {
       LZWS_LOG_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size)
@@ -131,8 +130,8 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(
   lzws_code_fast_t current_code, uint_fast8_t next_symbol)
 {
   lzws_code_fast_t current_code_index = get_first_child_code_index(dictionary_ptr, first_free_code, current_code);
-  lzws_code_fast_t first_child_code   = dictionary_ptr->first_child_codes[current_code_index];
 
+  lzws_code_fast_t first_child_code = dictionary_ptr->first_child_codes[current_code_index];
   if (first_child_code == LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE) {
     // First child is not found.
     return LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE;
@@ -144,13 +143,12 @@ lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(
   uint8_t*     last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
 
   // We know that first child code is not undefined, so it is better to use do + while for it.
-  lzws_code_fast_t next_sibling_code = first_child_code;
 
+  lzws_code_fast_t next_sibling_code = first_child_code;
   lzws_code_fast_t next_sibling_code_index;
 
   do {
     next_sibling_code_index = get_next_sibling_code_index(dictionary_ptr, next_sibling_code);
-
     if (last_symbol_by_codes[next_sibling_code_index] == next_symbol) {
       // We found target next symbol.
       return next_sibling_code;
@@ -174,12 +172,13 @@ void lzws_compressor_save_next_code_to_dictionary(
 
   lzws_code_fast_t current_code_index = get_first_child_code_index(dictionary_ptr, first_free_code, current_code);
 
-  lzws_code_t*     first_child_codes = dictionary_ptr->first_child_codes;
-  lzws_code_fast_t first_child_code  = first_child_codes[current_code_index];
+  lzws_code_t* first_child_codes = dictionary_ptr->first_child_codes;
 
+  lzws_code_fast_t first_child_code = first_child_codes[current_code_index];
   if (first_child_code == LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE) {
     // Adding first child.
     first_child_codes[current_code_index] = next_code;
+
     return;
   }
 

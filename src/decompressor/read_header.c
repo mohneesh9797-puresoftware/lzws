@@ -51,7 +51,6 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
   lzws_read_byte(&byte, source_ptr, source_length_ptr);
 
   uint_fast8_t max_code_bit_length = byte & LZWS_MAX_CODE_BIT_MASK;
-
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!state_ptr->quiet) {
       LZWS_LOG_ERROR("received invalid max code bit length: %u", max_code_bit_length)
