@@ -9,8 +9,8 @@
 #include "compressor/main.h"
 
 #include "decompressor/common.h"
+#include "decompressor/header.h"
 #include "decompressor/main.h"
-#include "decompressor/read_header.h"
 
 #include "file.h"
 #include "log.h"

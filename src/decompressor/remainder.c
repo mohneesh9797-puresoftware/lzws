@@ -5,7 +5,7 @@
 #include "../log.h"
 
 #include "common.h"
-#include "read_remainder.h"
+#include "remainder.h"
 
 lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_state_t* state_ptr)
 {

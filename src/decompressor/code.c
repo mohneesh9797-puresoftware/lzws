@@ -4,8 +4,8 @@
 
 #include "../utils.h"
 
+#include "code.h"
 #include "common.h"
-#include "read_code.h"
 #include "utils.h"
 
 static inline void add_byte(lzws_code_fast_t* code_ptr, uint_fast8_t code_bit_length, uint_fast8_t byte, bool msb)

@@ -4,8 +4,8 @@
 
 #include "../log.h"
 
+#include "alignment.h"
 #include "common.h"
-#include "read_alignment.h"
 #include "utils.h"
 
 lzws_result_t lzws_decompressor_read_padding_zeroes_for_alignment(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)

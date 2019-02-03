@@ -6,13 +6,13 @@
 
 #include "../log.h"
 
+#include "alignment.h"
 #include "common.h"
+#include "header.h"
 #include "main.h"
 #include "process_code.h"
-#include "read_alignment.h"
-#include "read_header.h"
-#include "read_remainder.h"
-#include "write_symbol.h"
+#include "remainder.h"
+#include "symbol.h"
 
 lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {

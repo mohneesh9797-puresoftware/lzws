@@ -7,7 +7,7 @@
 #include "../utils.h"
 
 #include "common.h"
-#include "write_symbol.h"
+#include "symbol.h"
 
 lzws_result_t lzws_decompressor_write_first_symbol(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
