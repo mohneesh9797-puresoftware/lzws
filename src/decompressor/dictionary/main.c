@@ -9,6 +9,15 @@
 
 #include "main.h"
 
+// -- code index --
+
+static inline lzws_code_fast_t get_code_index(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
+{
+  return code - dictionary_ptr->codes_offset;
+}
+
+// -- implementation --
+
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t first_free_code, bool quiet)
 {
   // We won't store char codes and clear code.
@@ -100,7 +109,7 @@ static inline uint8_t prepare_output(lzws_decompressor_dictionary_t* dictionary_
   // So we need to compare code with codes offset.
 
   while (code >= codes_offset) {
-    code_index = code - codes_offset;
+    code_index = get_code_index(dictionary_ptr, code);
 
     output_buffer[output_length] = last_symbol_by_codes[code_index];
     output_length++;
@@ -144,9 +153,8 @@ void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* di
     code = current_code;
   }
 
-  uint8_t first_symbol = prepare_output(dictionary_ptr, code, is_prefix);
-
-  lzws_code_fast_t next_code_index = next_code - dictionary_ptr->codes_offset;
+  lzws_code_fast_t next_code_index = get_code_index(dictionary_ptr, next_code);
+  uint8_t          first_symbol    = prepare_output(dictionary_ptr, code, is_prefix);
 
   dictionary_ptr->previous_codes[next_code_index]       = prefix_code;
   dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;

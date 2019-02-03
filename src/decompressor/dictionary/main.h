@@ -33,6 +33,7 @@ LZWS_INLINE bool lzws_decompressor_has_symbol_in_dictionary(lzws_decompressor_di
 {
   return dictionary_ptr->output_length != 0;
 }
+
 LZWS_INLINE uint8_t lzws_decompressor_get_symbol_from_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr)
 {
   return dictionary_ptr->output_buffer[--dictionary_ptr->output_length];
