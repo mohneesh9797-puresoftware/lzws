@@ -2,11 +2,11 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#if !defined(LZWS_DECOMPRESSOR_READ_CODE_H)
-#define LZWS_DECOMPRESSOR_READ_CODE_H
+#if !defined(LZWS_DECOMPRESSOR_CODE_H)
+#define LZWS_DECOMPRESSOR_CODE_H
 
 #include "state.h"
 
 lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t* code_ptr, uint8_t** source_ptr, size_t* source_length_ptr);
 
-#endif // LZWS_DECOMPRESSOR_READ_CODE_H
+#endif // LZWS_DECOMPRESSOR_CODE_H
