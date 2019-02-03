@@ -69,7 +69,7 @@ lzws_result_t lzws_compressor_read_next_symbol(lzws_compressor_state_t* state_pt
 
   // We should check whether we need to write alignment (there will be at least one code after it).
   if (lzws_compressor_need_to_write_alignment_wrapper(state_ptr)) {
-    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
+    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_CURRENT_CODE;
 
     return 0;
   }

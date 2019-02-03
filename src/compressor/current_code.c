@@ -43,15 +43,15 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
   // Algorithm won't touch it without reinitialization.
 
   if (state_ptr->block_mode && current_code == LZWS_CLEAR_CODE) {
-    // We need to clear state after sending clear code.
+    // We need to clear state after writing clear code.
     lzws_compressor_clear_state(state_ptr);
 
     if (state_ptr->unaligned_bit_groups) {
       state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
     }
     else {
-      // We need to write destination remainder and padding zeroes after sending clear code.
-      state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
+      // We need to write alignment after writing clear code (there will be at least one code after it).
+      state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_READ_NEXT_SYMBOL;
     }
 
     return 0;

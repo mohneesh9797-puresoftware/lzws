@@ -9,7 +9,7 @@
 
 #include "wrapper.h"
 
-lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment_wrapper(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+static inline lzws_result_t write_padding_zeroes(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   lzws_compressor_alignment_t* alignment_ptr = &state_ptr->alignment;
 
@@ -25,19 +25,19 @@ lzws_result_t lzws_compressor_write_padding_zeroes_for_alignment_wrapper(lzws_co
     lzws_compressor_write_byte(state_ptr, byte, destination_ptr, destination_length_ptr);
   }
 
-  uint_fast8_t last_used_code_bit_length = state_ptr->last_used_code_bit_length;
-  if (alignment_ptr->last_used_code_bit_length > last_used_code_bit_length) {
-    // Alignment was written after current code (clear code).
-    // So we need to read next symbol.
-    state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
-  }
-  else {
-    // Alignment was written before current code (after increasing last used code bit length).
-    // So we need to write current code.
-    state_ptr->status = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
+  alignment_ptr->last_used_code_bit_length = state_ptr->last_used_code_bit_length;
+
+  return 0;
+}
+
+lzws_result_t lzws_compressor_write_padding_zeroes_before_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  lzws_result_t result = write_padding_zeroes(state_ptr, destination_ptr, destination_length_ptr);
+  if (result != 0) {
+    return result;
   }
 
-  alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
+  state_ptr->status = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
 
   return 0;
 }
