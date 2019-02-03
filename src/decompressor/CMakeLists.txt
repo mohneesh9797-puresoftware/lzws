@@ -1,7 +1,7 @@
+add_subdirectory ("alignment")
 add_subdirectory ("dictionary")
 
 set (HEADERS ${HEADERS}
-  "${CMAKE_CURRENT_SOURCE_DIR}/alignment.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/code.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/header.h"
@@ -15,7 +15,6 @@ set (HEADERS ${HEADERS}
 set (HEADERS ${HEADERS} PARENT_SCOPE)
 
 set (SOURCES ${SOURCES}
-  "${CMAKE_CURRENT_SOURCE_DIR}/alignment.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/code.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/header.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/main.c"

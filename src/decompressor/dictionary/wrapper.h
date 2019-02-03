@@ -16,11 +16,6 @@
 #define LZWS_INLINE inline
 #endif
 
-LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr)
-{
-  return state_ptr->max_code + 1;
-}
-
 LZWS_INLINE void lzws_decompressor_initialize_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
 {
   lzws_decompressor_initialize_dictionary(&state_ptr->dictionary);

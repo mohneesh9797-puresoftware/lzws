@@ -2,6 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "alignment/wrapper.h"
+
 #include "../utils.h"
 
 #include "code.h"
@@ -97,9 +99,7 @@ lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, 
     return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
   }
 
-  if (!state_ptr->unaligned_bit_groups) {
-    lzws_decompressor_update_unaligned_source_byte_length(state_ptr, source_byte_length);
-  }
+  lzws_decompressor_add_source_byte_length_to_alignment_wrapper(state_ptr, source_byte_length);
 
   lzws_code_fast_t code            = state_ptr->source_remainder;
   uint_fast8_t     code_bit_length = source_remainder_bit_length;

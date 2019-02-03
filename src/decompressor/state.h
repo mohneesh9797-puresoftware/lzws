@@ -5,6 +5,7 @@
 #if !defined(LZWS_DECOMPRESSOR_STATE_H)
 #define LZWS_DECOMPRESSOR_STATE_H
 
+#include "alignment/common.h"
 #include "dictionary/common.h"
 
 #undef LZWS_INLINE
@@ -46,9 +47,7 @@ typedef struct {
   uint_fast8_t source_remainder;
   uint_fast8_t source_remainder_bit_length;
 
-  uint_fast8_t unaligned_by_code_bit_length;
-  uint_fast8_t unaligned_source_byte_length;
-
+  lzws_decompressor_alignment_t  alignment;
   lzws_decompressor_dictionary_t dictionary;
 } lzws_decompressor_state_t;
 
@@ -61,10 +60,9 @@ LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t*
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 
-LZWS_INLINE void lzws_decompressor_update_unaligned_source_byte_length(lzws_decompressor_state_t* state_ptr, uint_fast8_t source_byte_length)
+LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr)
 {
-  // Source byte length can be aligned by unaligned by code bit length * 8.
-  state_ptr->unaligned_source_byte_length = (state_ptr->unaligned_source_byte_length + source_byte_length) % state_ptr->unaligned_by_code_bit_length;
+  return state_ptr->max_code + 1;
 }
 
 #endif // LZWS_DECOMPRESSOR_STATE_H

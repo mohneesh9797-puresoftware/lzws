@@ -4,6 +4,7 @@
 
 #define LZWS_DECOMPRESSOR_STATE_C
 
+#include "alignment/wrapper.h"
 #include "dictionary/wrapper.h"
 
 #include "../log.h"
@@ -37,13 +38,9 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
   state_ptr->source_remainder            = 0;
   state_ptr->source_remainder_bit_length = 0;
 
-  if (!unaligned_bit_groups) {
-    state_ptr->unaligned_by_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
-    state_ptr->unaligned_source_byte_length = 0;
-  }
-
   // Other data will be initialized during reading of header.
 
+  lzws_decompressor_initialize_alignment_wrapper(state_ptr);
   lzws_decompressor_initialize_dictionary_wrapper(state_ptr);
 
   *result_state_ptr = state_ptr;
