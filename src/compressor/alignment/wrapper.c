@@ -54,7 +54,7 @@ lzws_result_t lzws_compressor_write_padding_zeroes_before_current_code(lzws_comp
   return 0;
 }
 
-lzws_result_t lzws_compressor_write_padding_zeroes_before_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+lzws_result_t lzws_compressor_flush_padding_zeroes_before_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   lzws_result_t result = write_padding_zeroes(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {

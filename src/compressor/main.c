@@ -98,15 +98,15 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
 
   lzws_result_t result;
 
-  if (state_ptr->status == LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_FLUSH_CURRENT_CODE) {
-    result = lzws_compressor_write_destination_remainder_before_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
+  if (state_ptr->status == LZWS_COMPRESSOR_FLUSH_DESTINATION_REMAINDER_BEFORE_CURRENT_CODE) {
+    result = lzws_compressor_flush_destination_remainder_before_current_code(state_ptr, destination_ptr, destination_length_ptr);
     if (result != 0) {
       return result;
     }
   }
 
-  if (state_ptr->status == LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_FLUSH_CURRENT_CODE) {
-    result = lzws_compressor_write_padding_zeroes_before_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
+  if (state_ptr->status == LZWS_COMPRESSOR_FLUSH_PADDING_ZEROES_BEFORE_CURRENT_CODE) {
+    result = lzws_compressor_flush_padding_zeroes_before_current_code(state_ptr, destination_ptr, destination_length_ptr);
     if (result != 0) {
       return result;
     }
