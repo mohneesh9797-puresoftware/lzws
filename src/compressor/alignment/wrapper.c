@@ -30,6 +30,18 @@ static inline lzws_result_t write_padding_zeroes(lzws_compressor_state_t* state_
   return 0;
 }
 
+lzws_result_t lzws_compressor_write_padding_zeroes_before_read_next_symbol(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  lzws_result_t result = write_padding_zeroes(state_ptr, destination_ptr, destination_length_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_COMPRESSOR_READ_NEXT_SYMBOL;
+
+  return 0;
+}
+
 lzws_result_t lzws_compressor_write_padding_zeroes_before_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   lzws_result_t result = write_padding_zeroes(state_ptr, destination_ptr, destination_length_ptr);
@@ -38,6 +50,18 @@ lzws_result_t lzws_compressor_write_padding_zeroes_before_current_code(lzws_comp
   }
 
   state_ptr->status = LZWS_COMPRESSOR_WRITE_CURRENT_CODE;
+
+  return 0;
+}
+
+lzws_result_t lzws_compressor_write_padding_zeroes_before_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  lzws_result_t result = write_padding_zeroes(state_ptr, destination_ptr, destination_length_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_COMPRESSOR_FLUSH_CURRENT_CODE;
 
   return 0;
 }

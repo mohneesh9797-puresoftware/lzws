@@ -8,7 +8,7 @@
 #include "remainder.h"
 #include "utils.h"
 
-lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+static inline lzws_result_t write_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   uint_fast8_t destination_remainder_bit_length = state_ptr->destination_remainder_bit_length;
   if (destination_remainder_bit_length == 0) {
@@ -37,9 +37,21 @@ lzws_result_t lzws_compressor_write_destination_remainder(lzws_compressor_state_
   return 0;
 }
 
+lzws_result_t lzws_compressor_write_destination_remainder_before_read_next_symbol(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  lzws_result_t result = write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_READ_NEXT_SYMBOL;
+
+  return 0;
+}
+
 lzws_result_t lzws_compressor_write_destination_remainder_before_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
-  lzws_result_t result = lzws_compressor_write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
+  lzws_result_t result = write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {
     return result;
   }
@@ -47,4 +59,23 @@ lzws_result_t lzws_compressor_write_destination_remainder_before_current_code(lz
   state_ptr->status = LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_CURRENT_CODE;
 
   return 0;
+}
+
+lzws_result_t lzws_compressor_write_destination_remainder_before_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  lzws_result_t result = write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_FLUSH_CURRENT_CODE;
+
+  return 0;
+}
+
+lzws_result_t lzws_compressor_flush_destination_remainder(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  // We don't need to change status after flushing destination remainder.
+  // Algorithm has finished.
+  return write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
 }

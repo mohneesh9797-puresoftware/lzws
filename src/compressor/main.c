@@ -53,8 +53,16 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
         result = lzws_compressor_write_current_code(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
+      case LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_READ_NEXT_SYMBOL:
+        result = lzws_compressor_write_destination_remainder_before_read_next_symbol(state_ptr, destination_ptr, destination_length_ptr);
+        break;
+
       case LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_CURRENT_CODE:
         result = lzws_compressor_write_destination_remainder_before_current_code(state_ptr, destination_ptr, destination_length_ptr);
+        break;
+
+      case LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_READ_NEXT_SYMBOL:
+        result = lzws_compressor_write_padding_zeroes_before_read_next_symbol(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
       case LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_CURRENT_CODE:
@@ -86,18 +94,39 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
 
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
       // We have current code and maybe destination remainder.
-      result = lzws_compressor_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
+      result = lzws_compressor_process_eof_symbol(state_ptr);
       if (result != 0) {
         return result;
       }
       break;
   }
 
+  if (state_ptr->status == LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_FLUSH_CURRENT_CODE) {
+    result = lzws_compressor_write_destination_remainder_before_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
+    if (result != 0) {
+      return result;
+    }
+  }
+
+  if (state_ptr->status == LZWS_COMPRESSOR_WRITE_PADDING_ZEROES_BEFORE_FLUSH_CURRENT_CODE) {
+    result = lzws_compressor_write_padding_zeroes_before_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
+    if (result != 0) {
+      return result;
+    }
+  }
+
+  if (state_ptr->status == LZWS_COMPRESSOR_FLUSH_CURRENT_CODE) {
+    result = lzws_compressor_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
+    if (result != 0) {
+      return result;
+    }
+  }
+
   lzws_compressor_status_t status = state_ptr->status;
 
   switch (status) {
-    case LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER:
-      return lzws_compressor_write_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
+    case LZWS_COMPRESSOR_FLUSH_DESTINATION_REMAINDER:
+      return lzws_compressor_flush_destination_remainder(state_ptr, destination_ptr, destination_length_ptr);
 
     default:
       if (!state_ptr->quiet) {

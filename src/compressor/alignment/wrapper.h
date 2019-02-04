@@ -39,6 +39,8 @@ LZWS_INLINE bool lzws_compressor_need_to_write_alignment_wrapper(lzws_compressor
   return lzws_compressor_need_to_write_alignment(&state_ptr->alignment, state_ptr->last_used_code_bit_length);
 }
 
+lzws_result_t lzws_compressor_write_padding_zeroes_before_read_next_symbol(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 lzws_result_t lzws_compressor_write_padding_zeroes_before_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
+lzws_result_t lzws_compressor_write_padding_zeroes_before_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 #endif // LZWS_COMPRESSOR_ALIGNMENT_WRAPPER_H

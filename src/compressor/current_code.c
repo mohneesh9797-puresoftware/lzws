@@ -2,7 +2,6 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "alignment/wrapper.h"
 #include "dictionary/wrapper.h"
 #include "ratio/wrapper.h"
 
@@ -75,19 +74,12 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
 
 lzws_result_t lzws_compressor_flush_current_code(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
-  // We should check whether we need to write alignment (there will be at least one code after it).
-  if (lzws_compressor_need_to_write_alignment_wrapper(state_ptr)) {
-    state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_FOR_ALIGNMENT;
-
-    return 0;
-  }
-
   lzws_result_t result = write_current_code(state_ptr, destination_ptr, destination_length_ptr);
   if (result != 0) {
     return result;
   }
 
-  state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER;
+  state_ptr->status = LZWS_COMPRESSOR_FLUSH_DESTINATION_REMAINDER;
 
   return 0;
 }
