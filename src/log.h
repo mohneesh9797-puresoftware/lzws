@@ -14,6 +14,11 @@
 #define LZWS_INLINE inline
 #endif
 
+// Relative file path will be provided during each source file compilation.
+#ifndef __RELATIVE_FILE_PATH__
+#define __RELATIVE_FILE_PATH__ __FILE__
+#endif
+
 #define _LZWS_LOG(target, ...)                                                \
   fprintf(target, "%s %s:%u - ", __func__, __RELATIVE_FILE_PATH__, __LINE__); \
   fprintf(target, __VA_ARGS__);                                               \
