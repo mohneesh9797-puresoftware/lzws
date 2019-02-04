@@ -1,5 +1,5 @@
 # WIP
-Double hashing compressor.
+Compatibility alignment.
 
 # LZW + Stream = LZWS
 
