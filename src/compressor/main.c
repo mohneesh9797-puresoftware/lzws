@@ -85,8 +85,6 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
 
 lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
-  lzws_result_t result;
-
   switch (state_ptr->status) {
     case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
       // We have no current code and destination remainder yet.
@@ -94,12 +92,11 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
 
     case LZWS_COMPRESSOR_READ_NEXT_SYMBOL:
       // We have current code and maybe destination remainder.
-      result = lzws_compressor_process_eof_symbol(state_ptr);
-      if (result != 0) {
-        return result;
-      }
+      lzws_compressor_process_eof_before_next_symbol(state_ptr);
       break;
   }
+
+  lzws_result_t result;
 
   if (state_ptr->status == LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_FLUSH_CURRENT_CODE) {
     result = lzws_compressor_write_destination_remainder_before_flush_current_code(state_ptr, destination_ptr, destination_length_ptr);
