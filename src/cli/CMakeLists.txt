@@ -3,17 +3,24 @@ set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.c")
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths ("${SOURCES}")
 
-set (CLI_NAME "${LZWS_TARGET}-cli")
-set (CLI_NAME_STATIC "${CLI_NAME}-static")
-
 if (LZWS_SHARED)
-  add_executable (${CLI_NAME} ${SOURCES})
-  target_link_libraries (${CLI_NAME} ${LIB_NAME})
-  install (TARGETS ${CLI_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  set (CLI_TARGET "${LZWS_TARGET}-cli")
+  set (CLI_NAME ${LZWS_TARGET})
+
+  add_executable (${CLI_TARGET} ${SOURCES})
+  target_link_libraries (${CLI_TARGET} ${LIB_TARGET})
+
+  set_target_properties (${CLI_TARGET} PROPERTIES OUTPUT_NAME ${CLI_NAME})
+  install (TARGETS ${CLI_TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif ()
 
 if (LZWS_STATIC)
-  add_executable (${CLI_NAME_STATIC} ${SOURCES})
-  target_link_libraries (${CLI_NAME_STATIC} ${LIB_NAME_STATIC})
-  install (TARGETS ${CLI_NAME_STATIC} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  set (STATIC_CLI_TARGET "${LZWS_TARGET}-static-cli")
+  set (STATIC_CLI_NAME "${LZWS_TARGET}-static")
+
+  add_executable (${STATIC_CLI_TARGET} ${SOURCES})
+  target_link_libraries (${STATIC_CLI_TARGET} ${STATIC_LIB_TARGET})
+
+  set_target_properties (${STATIC_CLI_TARGET} PROPERTIES OUTPUT_NAME ${STATIC_CLI_NAME})
+  install (TARGETS ${STATIC_CLI_TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif ()

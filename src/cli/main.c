@@ -10,7 +10,7 @@
 static const char* help =
   "Overview: LZWS cli tool\n"
   "\n"
-  "Usage: lzws-cli [-%s] [< stdin] [> stdout]\n"
+  "Usage: lzws [-%s] [< stdin] [> stdout]\n"
   "\n"
   "Options:\n"
   "  --max-code-bit-length (-b) - set max code bit length (%u-%u) (%u used by default) [compressor only]\n"

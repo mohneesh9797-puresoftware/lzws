@@ -25,7 +25,7 @@ Project depends on [GMP](https://gmplib.org). You can build it with cmake. It is
 cd build
 cmake ..
 make
-echo -n "TOBEORNOTTOBEORTOBEORNOT" | ./src/cli/lzws-cli | ./src/cli/lzws-cli -d
+echo -n "TOBEORNOTTOBEORTOBEORNOT" | ./src/cli/lzws | ./src/cli/lzws -d
 ```
 
 Debug build:
@@ -54,8 +54,8 @@ tar cf linux.tar linux-4.20.3
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_COMPRESSOR_DICTIONARY="linked-list"
 make
 
-time ./src/cli/lzws-cli-static < linux.tar > linux.tar.Z
-time ./src/cli/lzws-cli-static -d < linux.tar.Z > linux.tar.new
+time ./src/cli/lzws < linux.tar > linux.tar.Z
+time ./src/cli/lzws -d < linux.tar.Z > linux.tar.new
 sha256sum linux.tar && sha256sum linux.tar.new && sha256sum linux.tar.Z
 ```
 
