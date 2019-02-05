@@ -61,8 +61,8 @@ lzws_result_t lzws_compressor_get_initial_state(
 
   // It is possible to keep current code and next symbol uninitialized.
 
-  state_ptr->destination_remainder            = 0;
-  state_ptr->destination_remainder_bit_length = 0;
+  state_ptr->remainder            = 0;
+  state_ptr->remainder_bit_length = 0;
 
   lzws_compressor_initialize_alignment_wrapper(state_ptr);
   lzws_compressor_initialize_dictionary_wrapper(state_ptr);

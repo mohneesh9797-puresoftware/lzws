@@ -50,7 +50,7 @@ lzws_result_t lzws_compressor_write_current_code(lzws_compressor_state_t* state_
     }
     else {
       // We need to write alignment after writing clear code (there will be at least one code after it).
-      state_ptr->status = LZWS_COMPRESSOR_WRITE_DESTINATION_REMAINDER_BEFORE_READ_NEXT_SYMBOL;
+      state_ptr->status = LZWS_COMPRESSOR_WRITE_REMAINDER_BEFORE_READ_NEXT_SYMBOL;
     }
 
     return 0;
@@ -79,7 +79,7 @@ lzws_result_t lzws_compressor_flush_current_code(lzws_compressor_state_t* state_
     return result;
   }
 
-  state_ptr->status = LZWS_COMPRESSOR_FLUSH_DESTINATION_REMAINDER;
+  state_ptr->status = LZWS_COMPRESSOR_FLUSH_REMAINDER;
 
   return 0;
 }
