@@ -83,9 +83,12 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr)
   lzws_decompressor_status_t status = state_ptr->status;
 
   switch (status) {
-    case LZWS_DECOMPRESSOR_READ_HEADER:                      // We have no remainder yet.
-    case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE: // Remainder is already verified.
-    case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE:  // Remainder is already verified.
+    case LZWS_DECOMPRESSOR_READ_HEADER:
+      // We have no remainder yet.
+    case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE:
+      // Remainder is already verified.
+    case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE:
+      // Remainder is already verified.
       return 0;
 
     case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
