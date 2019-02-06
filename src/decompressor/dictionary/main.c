@@ -9,6 +9,13 @@
 
 #include "main.h"
 
+// -- codes length --
+
+static inline size_t get_codes_length(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+{
+  return total_codes_length - dictionary_ptr->codes_offset;
+}
+
 // -- code index --
 
 static inline lzws_code_fast_t get_code_index(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
@@ -21,10 +28,9 @@ static inline lzws_code_fast_t get_code_index(lzws_decompressor_dictionary_t* di
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t first_free_code, bool quiet)
 {
   // We won't store char codes and clear code.
-  lzws_code_fast_t codes_offset = first_free_code;
-  dictionary_ptr->codes_offset  = codes_offset;
+  dictionary_ptr->codes_offset = first_free_code;
 
-  size_t codes_length = total_codes_length - codes_offset;
+  size_t codes_length = get_codes_length(dictionary_ptr, total_codes_length);
 
   // Previous codes don't require default values.
   // Algorithm will access only initialized codes.

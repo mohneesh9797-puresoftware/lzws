@@ -80,15 +80,8 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
       return 0;
     }
 
-    result = lzws_decompressor_verify_empty_remainder(state_ptr);
-    if (result != 0) {
-      return result;
-    }
-
     // We need to read alignment after reading clear code.
-    state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE;
-
-    return 0;
+    return lzws_decompressor_verify_zero_remainder_before_read_first_code(state_ptr);
   }
 
   if (is_dictionary_full) {
@@ -108,7 +101,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   }
 
   state_ptr->prefix_code = code;
-  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FROM_DICTIONARY;
+  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE_SYMBOLS;
 
   return 0;
 }

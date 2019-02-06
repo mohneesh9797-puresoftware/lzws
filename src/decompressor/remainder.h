@@ -7,6 +7,8 @@
 
 #include "state.h"
 
-lzws_result_t lzws_decompressor_verify_empty_remainder(lzws_decompressor_state_t* state_ptr);
+lzws_result_t lzws_decompressor_verify_zero_remainder(lzws_decompressor_state_t* state_ptr);
+lzws_result_t lzws_decompressor_verify_zero_remainder_before_read_first_code(lzws_decompressor_state_t* state_ptr);
+lzws_result_t lzws_decompressor_verify_zero_remainder_before_read_next_code(lzws_decompressor_state_t* state_ptr);
 
 #endif // LZWS_DECOMPRESSOR_REMAINDER_H

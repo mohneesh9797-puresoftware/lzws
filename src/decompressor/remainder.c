@@ -7,18 +7,42 @@
 #include "common.h"
 #include "remainder.h"
 
-lzws_result_t lzws_decompressor_verify_empty_remainder(lzws_decompressor_state_t* state_ptr)
+lzws_result_t lzws_decompressor_verify_zero_remainder(lzws_decompressor_state_t* state_ptr)
 {
   uint_fast8_t remainder            = state_ptr->remainder;
   uint_fast8_t remainder_bit_length = state_ptr->remainder_bit_length;
 
-  if (remainder != 0 && remainder_bit_length != 0) {
+  if (remainder_bit_length != 0 && remainder != 0) {
     if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("remainder is not empty, value: %u, bit length: %u", remainder, remainder_bit_length)
+      LZWS_LOG_ERROR("remainder is not zero, value: %u, bit length: %u", remainder, remainder_bit_length)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
   }
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_verify_zero_remainder_before_read_first_code(lzws_decompressor_state_t* state_ptr)
+{
+  lzws_result_t result = lzws_decompressor_verify_zero_remainder(state_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE;
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_verify_zero_remainder_before_read_next_code(lzws_decompressor_state_t* state_ptr)
+{
+  lzws_result_t result = lzws_decompressor_verify_zero_remainder(state_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE;
 
   return 0;
 }
