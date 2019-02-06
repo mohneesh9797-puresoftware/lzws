@@ -14,7 +14,7 @@ lzws_result_t lzws_decompressor_verify_zero_remainder(lzws_decompressor_state_t*
 
   if (remainder_bit_length != 0 && remainder != 0) {
     if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("remainder is not zero, value: %u, bit length: %u", remainder, remainder_bit_length)
+      LZWS_LOG_ERROR("remainder is not zero, bit length: %u, value: %u", remainder_bit_length, remainder)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;

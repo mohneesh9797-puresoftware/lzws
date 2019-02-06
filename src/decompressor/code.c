@@ -73,20 +73,9 @@ static inline void add_byte_with_remainder(
   *remainder_bit_length_ptr = remainder_bit_length;
 }
 
-static inline uint_fast8_t get_target_code_bit_length(lzws_decompressor_state_t* state_ptr)
-{
-  uint_fast8_t last_used_code_bit_length = state_ptr->last_used_code_bit_length;
-
-  if (lzws_decompressor_is_dictionary_full(state_ptr) || state_ptr->last_used_code != state_ptr->last_used_max_code) {
-    return last_used_code_bit_length;
-  }
-
-  return last_used_code_bit_length + 1;
-}
-
 lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t* code_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
-  uint_fast8_t target_code_bit_length = get_target_code_bit_length(state_ptr);
+  uint_fast8_t target_code_bit_length = state_ptr->last_used_code_bit_length;
   uint_fast8_t remainder_bit_length   = state_ptr->remainder_bit_length;
 
   // Target code bit length will always be >= 8.

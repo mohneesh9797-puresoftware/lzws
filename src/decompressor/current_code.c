@@ -101,7 +101,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
   }
 
   state_ptr->prefix_code = code;
-  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_CURRENT_CODE_SYMBOLS;
+  state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FOR_CURRENT_CODE;
 
   return 0;
 }

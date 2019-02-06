@@ -2,11 +2,13 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "alignment/wrapper.h"
 #include "dictionary/wrapper.h"
 
 #include "../utils.h"
 
 #include "common.h"
+#include "remainder.h"
 #include "symbol.h"
 
 lzws_result_t lzws_decompressor_write_first_symbol(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
@@ -22,7 +24,7 @@ lzws_result_t lzws_decompressor_write_first_symbol(lzws_decompressor_state_t* st
   return 0;
 }
 
-lzws_result_t lzws_decompressor_write_current_code_symbols(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+lzws_result_t lzws_decompressor_write_symbols_for_current_code(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   uint8_t symbol;
 
@@ -33,6 +35,11 @@ lzws_result_t lzws_decompressor_write_current_code_symbols(lzws_decompressor_sta
 
     symbol = lzws_decompressor_get_symbol_from_dictionary_wrapper(state_ptr);
     lzws_write_byte(symbol, destination_ptr, destination_length_ptr);
+  }
+
+  // We need to check whether we need to read alignment.
+  if (lzws_decompressor_need_to_read_alignment_wrapper(state_ptr)) {
+    return lzws_decompressor_verify_zero_remainder_before_read_next_code(state_ptr);
   }
 
   state_ptr->status = LZWS_DECOMPRESSOR_READ_NEXT_CODE;
