@@ -33,4 +33,14 @@ LZWS_INLINE bool lzws_decompressor_need_to_read_alignment(lzws_decompressor_alig
   return alignment_ptr->last_used_code_bit_length != last_used_code_bit_length;
 }
 
+LZWS_INLINE bool lzws_decompressor_need_to_read_alignment_byte(lzws_decompressor_alignment_t* alignment_ptr)
+{
+  return alignment_ptr->source_byte_length != 0;
+}
+
+LZWS_INLINE void lzws_decompressor_reset_alignment_after_reading(lzws_decompressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+{
+  alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
+}
+
 #endif // LZWS_DECOMPRESSOR_ALIGNMENT_MAIN_H

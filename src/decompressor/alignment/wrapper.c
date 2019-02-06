@@ -10,13 +10,13 @@
 
 #include "wrapper.h"
 
-lzws_result_t lzws_decompressor_read_padding_zeroes_for_alignment_wrapper(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
   lzws_decompressor_alignment_t* alignment_ptr = &state_ptr->alignment;
 
   uint_fast8_t byte;
 
-  while (alignment_ptr->source_byte_length != 0) {
+  while (lzws_decompressor_need_to_read_alignment_byte(alignment_ptr)) {
     if (*source_length_ptr < 1) {
       return LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE;
     }
@@ -34,19 +34,31 @@ lzws_result_t lzws_decompressor_read_padding_zeroes_for_alignment_wrapper(lzws_d
     }
   }
 
-  uint_fast8_t last_used_code_bit_length = state_ptr->last_used_code_bit_length;
-  if (alignment_ptr->last_used_code_bit_length > last_used_code_bit_length) {
-    // Alignment was read after current code (clear code).
-    // Now we need to process first code.
-    state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE;
-  }
-  else {
-    // Alignment was read before current code (after increasing last used code bit length).
-    // Now we need to process next code.
-    state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE;
+  lzws_decompressor_reset_alignment_after_reading(alignment_ptr, state_ptr->last_used_code_bit_length);
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_read_alignment_before_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+{
+  lzws_result_t result = read_alignment(state_ptr, source_ptr, source_length_ptr);
+  if (result != 0) {
+    return result;
   }
 
-  alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
+  state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+
+  return 0;
+}
+
+lzws_result_t lzws_decompressor_read_alignment_before_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+{
+  lzws_result_t result = read_alignment(state_ptr, source_ptr, source_length_ptr);
+  if (result != 0) {
+    return result;
+  }
+
+  state_ptr->status = LZWS_DECOMPRESSOR_READ_NEXT_CODE;
 
   return 0;
 }

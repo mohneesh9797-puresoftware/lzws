@@ -33,4 +33,14 @@ LZWS_INLINE bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignme
   return alignment_ptr->last_used_code_bit_length != last_used_code_bit_length;
 }
 
+LZWS_INLINE bool lzws_compressor_need_to_write_alignment_byte(lzws_compressor_alignment_t* alignment_ptr)
+{
+  return alignment_ptr->destination_byte_length != 0;
+}
+
+LZWS_INLINE void lzws_compressor_reset_alignment_after_writing(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+{
+  alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
+}
+
 #endif // LZWS_COMPRESSOR_ALIGNMENT_MAIN_H

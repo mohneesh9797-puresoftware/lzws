@@ -39,6 +39,7 @@ LZWS_INLINE bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompres
   return lzws_decompressor_need_to_read_alignment(&state_ptr->alignment, state_ptr->last_used_code_bit_length);
 }
 
-lzws_result_t lzws_decompressor_read_padding_zeroes_for_alignment_wrapper(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr);
+lzws_result_t lzws_decompressor_read_alignment_before_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr);
+lzws_result_t lzws_decompressor_read_alignment_before_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr);
 
 #endif // LZWS_DECOMPRESSOR_ALIGNMENT_WRAPPER_H

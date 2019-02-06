@@ -18,12 +18,12 @@
 enum {
   LZWS_DECOMPRESSOR_READ_HEADER = 1,
   LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY,
-  LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE,
-  LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE,
+  LZWS_DECOMPRESSOR_READ_FIRST_CODE,
+  LZWS_DECOMPRESSOR_READ_NEXT_CODE,
   LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL,
   LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FROM_DICTIONARY,
-  LZWS_DECOMPRESSOR_VERIFY_EMPTY_REMAINDER_FOR_ALIGNMENT,
-  LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT
+  LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE,
+  LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE
 };
 typedef uint_fast8_t lzws_decompressor_status_t;
 
@@ -58,6 +58,11 @@ void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr)
 LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr)
 {
   return state_ptr->last_used_code == state_ptr->max_code;
+}
+
+LZWS_INLINE lzws_code_fast_t lzws_decompressor_get_initial_used_code(lzws_decompressor_state_t* state_ptr)
+{
+  return state_ptr->first_free_code - 1;
 }
 
 LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr)

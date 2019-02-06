@@ -8,9 +8,9 @@
 #include "../log.h"
 
 #include "common.h"
+#include "current_code.h"
 #include "header.h"
 #include "main.h"
-#include "process_code.h"
 #include "remainder.h"
 #include "symbol.h"
 
@@ -38,12 +38,12 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     status = state_ptr->status;
 
     switch (status) {
-      case LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE:
-        result = lzws_decompressor_process_first_code(state_ptr, source_ptr, source_length_ptr);
+      case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
+        result = lzws_decompressor_read_first_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE:
-        result = lzws_decompressor_process_next_code(state_ptr, source_ptr, source_length_ptr);
+      case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
+        result = lzws_decompressor_read_next_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
       case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
@@ -54,12 +54,12 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         result = lzws_decompressor_write_symbols_from_dictionary(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_VERIFY_EMPTY_REMAINDER_FOR_ALIGNMENT:
-        result = lzws_decompressor_verify_empty_remainder_for_alignment(state_ptr);
+      case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE:
+        result = lzws_decompressor_read_alignment_before_first_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT:
-        result = lzws_decompressor_read_padding_zeroes_for_alignment_wrapper(state_ptr, source_ptr, source_length_ptr);
+      case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE:
+        result = lzws_decompressor_read_alignment_before_next_code(state_ptr, source_ptr, source_length_ptr);
         break;
 
       default:

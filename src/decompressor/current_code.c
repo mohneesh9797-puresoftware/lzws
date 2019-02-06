@@ -9,9 +9,10 @@
 
 #include "code.h"
 #include "common.h"
-#include "process_code.h"
+#include "current_code.h"
+#include "remainder.h"
 
-lzws_result_t lzws_decompressor_process_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
   lzws_code_fast_t code;
 
@@ -30,9 +31,6 @@ lzws_result_t lzws_decompressor_process_first_code(lzws_decompressor_state_t* st
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
   }
 
-  // It is possible to keep current code in state as is.
-  // Algorithm won't touch it without reinitialization.
-
   state_ptr->prefix_code = code;
   state_ptr->status      = LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL;
 
@@ -49,7 +47,7 @@ static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_pt
   return ++state_ptr->last_used_code;
 }
 
-lzws_result_t lzws_decompressor_process_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
   lzws_code_fast_t code;
 
@@ -70,18 +68,25 @@ lzws_result_t lzws_decompressor_process_next_code(lzws_decompressor_state_t* sta
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
     }
 
+    // We need to clear state after reading clear code.
     lzws_decompressor_clear_state(state_ptr);
 
     // It is possible to keep prefix code in state as is.
     // Algorithm won't touch it without reinitialization.
 
     if (state_ptr->unaligned_bit_groups) {
-      state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE;
+      state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+
+      return 0;
     }
-    else {
-      // We need to verify empty remainder and read padding zeroes after receiving clear code.
-      state_ptr->status = LZWS_DECOMPRESSOR_VERIFY_EMPTY_REMAINDER_FOR_ALIGNMENT;
+
+    result = lzws_decompressor_verify_empty_remainder(state_ptr);
+    if (result != 0) {
+      return result;
     }
+
+    // We need to read alignment after reading clear code.
+    state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE;
 
     return 0;
   }

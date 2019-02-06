@@ -15,7 +15,7 @@ static inline lzws_result_t write_alignment(lzws_compressor_state_t* state_ptr, 
 
   uint_fast8_t byte = 0;
 
-  while (alignment_ptr->destination_byte_length != 0) {
+  while (lzws_compressor_need_to_write_alignment_byte(alignment_ptr)) {
     if (*destination_length_ptr < 1) {
       return LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION;
     }
@@ -25,7 +25,7 @@ static inline lzws_result_t write_alignment(lzws_compressor_state_t* state_ptr, 
     lzws_compressor_write_byte(state_ptr, byte, destination_ptr, destination_length_ptr);
   }
 
-  alignment_ptr->last_used_code_bit_length = state_ptr->last_used_code_bit_length;
+  lzws_compressor_reset_alignment_after_writing(alignment_ptr, state_ptr->last_used_code_bit_length);
 
   return 0;
 }
