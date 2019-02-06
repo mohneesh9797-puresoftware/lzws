@@ -7,14 +7,14 @@
 #include "common.h"
 #include "remainder.h"
 
-lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_state_t* state_ptr)
+lzws_result_t lzws_decompressor_verify_empty_remainder(lzws_decompressor_state_t* state_ptr)
 {
-  uint_fast8_t source_remainder            = state_ptr->source_remainder;
-  uint_fast8_t source_remainder_bit_length = state_ptr->source_remainder_bit_length;
+  uint_fast8_t remainder            = state_ptr->remainder;
+  uint_fast8_t remainder_bit_length = state_ptr->remainder_bit_length;
 
-  if (source_remainder != 0 && source_remainder_bit_length != 0) {
+  if (remainder != 0 && remainder_bit_length != 0) {
     if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("source remainder is not empty, value: %u, bit length: %u", source_remainder, source_remainder_bit_length)
+      LZWS_LOG_ERROR("remainder is not empty, value: %u, bit length: %u", remainder, remainder_bit_length)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
@@ -23,9 +23,9 @@ lzws_result_t lzws_decompressor_verify_empty_source_remainder(lzws_decompressor_
   return 0;
 }
 
-lzws_result_t lzws_decompressor_verify_empty_source_remainder_for_alignment(lzws_decompressor_state_t* state_ptr)
+lzws_result_t lzws_decompressor_verify_empty_remainder_for_alignment(lzws_decompressor_state_t* state_ptr)
 {
-  lzws_result_t result = lzws_decompressor_verify_empty_source_remainder(state_ptr);
+  lzws_result_t result = lzws_decompressor_verify_empty_remainder(state_ptr);
   if (result != 0) {
     return result;
   }

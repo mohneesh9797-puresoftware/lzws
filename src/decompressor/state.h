@@ -22,7 +22,7 @@ enum {
   LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE,
   LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL,
   LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FROM_DICTIONARY,
-  LZWS_DECOMPRESSOR_VERIFY_EMPTY_SOURCE_REMAINDER_FOR_ALIGNMENT,
+  LZWS_DECOMPRESSOR_VERIFY_EMPTY_REMAINDER_FOR_ALIGNMENT,
   LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT
 };
 typedef uint_fast8_t lzws_decompressor_status_t;
@@ -44,8 +44,8 @@ typedef struct {
 
   lzws_code_fast_t prefix_code;
 
-  uint_fast8_t source_remainder;
-  uint_fast8_t source_remainder_bit_length;
+  uint_fast8_t remainder;
+  uint_fast8_t remainder_bit_length;
 
   lzws_decompressor_alignment_t  alignment;
   lzws_decompressor_dictionary_t dictionary;

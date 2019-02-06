@@ -79,8 +79,8 @@ lzws_result_t lzws_decompressor_process_next_code(lzws_decompressor_state_t* sta
       state_ptr->status = LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE;
     }
     else {
-      // We need to verify empty source remainder and read padding zeroes after receiving clear code.
-      state_ptr->status = LZWS_DECOMPRESSOR_VERIFY_EMPTY_SOURCE_REMAINDER_FOR_ALIGNMENT;
+      // We need to verify empty remainder and read padding zeroes after receiving clear code.
+      state_ptr->status = LZWS_DECOMPRESSOR_VERIFY_EMPTY_REMAINDER_FOR_ALIGNMENT;
     }
 
     return 0;

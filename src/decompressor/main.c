@@ -54,8 +54,8 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         result = lzws_decompressor_write_symbols_from_dictionary(state_ptr, destination_ptr, destination_length_ptr);
         break;
 
-      case LZWS_DECOMPRESSOR_VERIFY_EMPTY_SOURCE_REMAINDER_FOR_ALIGNMENT:
-        result = lzws_decompressor_verify_empty_source_remainder_for_alignment(state_ptr);
+      case LZWS_DECOMPRESSOR_VERIFY_EMPTY_REMAINDER_FOR_ALIGNMENT:
+        result = lzws_decompressor_verify_empty_remainder_for_alignment(state_ptr);
         break;
 
       case LZWS_DECOMPRESSOR_READ_PADDING_ZEROES_FOR_ALIGNMENT:
@@ -84,13 +84,13 @@ lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr)
 
   switch (status) {
     case LZWS_DECOMPRESSOR_READ_HEADER:
-      // We have no source remainder yet.
+      // We have no remainder yet.
       return 0;
 
     case LZWS_DECOMPRESSOR_PROCESS_FIRST_CODE:
     case LZWS_DECOMPRESSOR_PROCESS_NEXT_CODE:
-      // We may have source remainder.
-      return lzws_decompressor_verify_empty_source_remainder(state_ptr);
+      // We may have remainder.
+      return lzws_decompressor_verify_empty_remainder(state_ptr);
 
     default:
       if (!state_ptr->quiet) {
