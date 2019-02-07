@@ -39,12 +39,21 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
 
 static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_ptr)
 {
-  if (state_ptr->last_used_code == state_ptr->last_used_max_code) {
-    uint_fast8_t last_used_code_bit_length = ++state_ptr->last_used_code_bit_length;
-    state_ptr->last_used_max_code          = lzws_get_mask_for_last_bits(last_used_code_bit_length);
+  lzws_code_fast_t next_code = state_ptr->free_code;
+
+  if (next_code == state_ptr->max_code) {
+    state_ptr->free_code = LZWS_UNDEFINED_FREE_CODE;
+  }
+  else {
+    state_ptr->free_code++;
+
+    if (next_code == state_ptr->max_free_code_for_bit_length) {
+      uint_fast8_t free_code_bit_length       = ++state_ptr->free_code_bit_length;
+      state_ptr->max_free_code_for_bit_length = lzws_get_mask_for_last_bits(free_code_bit_length);
+    }
   }
 
-  return ++state_ptr->last_used_code;
+  return next_code;
 }
 
 lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)

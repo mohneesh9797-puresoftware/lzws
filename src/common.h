@@ -51,6 +51,8 @@ typedef uint_fast16_t lzws_code_fast_t;
 #define LZWS_FIRST_FREE_CODE 256
 #define LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE 257
 
+#define LZWS_UNDEFINED_FREE_CODE 0
+
 LZWS_INLINE lzws_code_fast_t lzws_get_first_free_code(bool block_mode)
 {
   return block_mode ? LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE : LZWS_FIRST_FREE_CODE;

@@ -16,9 +16,9 @@
 
 static inline void reset_last_used_data(lzws_compressor_state_t* state_ptr)
 {
-  state_ptr->last_used_code            = lzws_compressor_get_initial_used_code(state_ptr);
-  state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
-  state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->last_used_code                    = lzws_compressor_get_initial_used_code(state_ptr);
+  state_ptr->last_used_code_bit_length         = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->max_last_used_code_for_bit_length = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
 }
 
 lzws_result_t lzws_compressor_get_initial_state(
@@ -44,8 +44,6 @@ lzws_result_t lzws_compressor_get_initial_state(
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
-  lzws_code_fast_t first_free_code = lzws_get_first_free_code(block_mode);
-
   state_ptr->status = LZWS_COMPRESSOR_WRITE_HEADER;
 
   state_ptr->max_code_bit_length  = max_code_bit_length;
@@ -54,7 +52,7 @@ lzws_result_t lzws_compressor_get_initial_state(
   state_ptr->quiet                = quiet;
   state_ptr->unaligned_bit_groups = unaligned_bit_groups;
 
-  state_ptr->first_free_code = first_free_code;
+  state_ptr->first_free_code = lzws_get_first_free_code(block_mode);
   state_ptr->max_code        = lzws_get_mask_for_last_bits(max_code_bit_length);
 
   reset_last_used_data(state_ptr);

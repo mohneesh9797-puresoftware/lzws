@@ -75,7 +75,7 @@ static inline void add_byte_with_remainder(
 
 lzws_result_t lzws_decompressor_read_code(lzws_decompressor_state_t* state_ptr, lzws_code_fast_t* code_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {
-  uint_fast8_t target_code_bit_length = state_ptr->last_used_code_bit_length;
+  uint_fast8_t target_code_bit_length = state_ptr->free_code_bit_length;
   uint_fast8_t remainder_bit_length   = state_ptr->remainder_bit_length;
 
   // Target code bit length will always be >= 8.

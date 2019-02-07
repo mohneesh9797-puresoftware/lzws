@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 typedef struct {
-  uint_fast8_t last_used_code_bit_length;
+  uint_fast8_t free_code_bit_length;
   uint_fast8_t source_byte_length;
 } lzws_decompressor_alignment_t;
 

@@ -34,7 +34,7 @@ static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr,
     }
   }
 
-  lzws_decompressor_reset_alignment_after_reading(alignment_ptr, state_ptr->last_used_code_bit_length);
+  lzws_decompressor_reset_alignment_after_reading(alignment_ptr, state_ptr->free_code_bit_length);
 
   return 0;
 }

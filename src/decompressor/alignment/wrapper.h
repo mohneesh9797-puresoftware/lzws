@@ -19,7 +19,7 @@
 LZWS_INLINE void lzws_decompressor_initialize_alignment_wrapper(lzws_decompressor_state_t* state_ptr)
 {
   if (!state_ptr->unaligned_bit_groups) {
-    lzws_decompressor_initialize_alignment(&state_ptr->alignment, state_ptr->last_used_code_bit_length);
+    lzws_decompressor_initialize_alignment(&state_ptr->alignment, state_ptr->free_code_bit_length);
   }
 }
 
@@ -36,7 +36,7 @@ LZWS_INLINE bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompres
     return false;
   }
 
-  return lzws_decompressor_need_to_read_alignment(&state_ptr->alignment, state_ptr->last_used_code_bit_length);
+  return lzws_decompressor_need_to_read_alignment(&state_ptr->alignment, state_ptr->free_code_bit_length);
 }
 
 lzws_result_t lzws_decompressor_read_alignment_before_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr);

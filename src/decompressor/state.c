@@ -32,8 +32,8 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
   state_ptr->quiet                = quiet;
   state_ptr->unaligned_bit_groups = unaligned_bit_groups;
 
-  state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
-  state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->free_code_bit_length         = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->max_free_code_for_bit_length = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
 
   state_ptr->remainder            = 0;
   state_ptr->remainder_bit_length = 0;
@@ -50,9 +50,9 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
 
 void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr)
 {
-  state_ptr->last_used_code            = lzws_decompressor_get_initial_used_code(state_ptr);
-  state_ptr->last_used_max_code        = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
-  state_ptr->last_used_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->free_code                    = state_ptr->first_free_code;
+  state_ptr->free_code_bit_length         = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
+  state_ptr->max_free_code_for_bit_length = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
 
   // We don't need to clear dictionary.
 }

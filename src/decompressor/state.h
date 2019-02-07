@@ -38,9 +38,9 @@ typedef struct {
   lzws_code_fast_t first_free_code;
   lzws_code_fast_t max_code;
 
-  lzws_code_fast_t last_used_code;
-  lzws_code_fast_t last_used_max_code;
-  uint_fast8_t     last_used_code_bit_length;
+  lzws_code_fast_t free_code;
+  uint_fast8_t     free_code_bit_length;
+  lzws_code_fast_t max_free_code_for_bit_length;
 
   lzws_code_fast_t prefix_code;
 
@@ -57,12 +57,7 @@ void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr)
 
 LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr)
 {
-  return state_ptr->last_used_code == state_ptr->max_code;
-}
-
-LZWS_INLINE lzws_code_fast_t lzws_decompressor_get_initial_used_code(lzws_decompressor_state_t* state_ptr)
-{
-  return state_ptr->first_free_code - 1;
+  return state_ptr->free_code == LZWS_UNDEFINED_FREE_CODE;
 }
 
 LZWS_INLINE size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr)
