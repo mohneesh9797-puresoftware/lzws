@@ -7,10 +7,15 @@
 lzws_result_t lzws_compress_string(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  uint_fast8_t max_code_bit_length, bool block_mode,
-  bool msb, bool unaligned_bit_groups, bool quiet);
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
+{
+  return 0;
+}
 
 lzws_result_t lzws_decompress_string(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  bool msb, bool unaligned_bit_groups, bool quiet);
+  bool msb, bool unaligned_bit_groups, bool quiet)
+{
+  return 0;
+}
