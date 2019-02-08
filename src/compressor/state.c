@@ -23,7 +23,7 @@ static inline void reset_last_used_data(lzws_compressor_state_t* state_ptr)
 
 lzws_result_t lzws_compressor_get_initial_state(
   lzws_compressor_state_t** result_state_ptr,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned_bit_groups)
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!quiet) {
@@ -49,8 +49,8 @@ lzws_result_t lzws_compressor_get_initial_state(
   state_ptr->max_code_bit_length  = max_code_bit_length;
   state_ptr->block_mode           = block_mode;
   state_ptr->msb                  = msb;
-  state_ptr->quiet                = quiet;
   state_ptr->unaligned_bit_groups = unaligned_bit_groups;
+  state_ptr->quiet                = quiet;
 
   state_ptr->first_free_code = lzws_get_first_free_code(block_mode);
   state_ptr->max_code        = lzws_get_mask_for_last_bits(max_code_bit_length);

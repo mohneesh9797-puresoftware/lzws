@@ -39,8 +39,8 @@ typedef struct {
   uint_fast8_t max_code_bit_length;
   bool         block_mode;
   bool         msb;
-  bool         quiet;
   bool         unaligned_bit_groups;
+  bool         quiet;
 
   lzws_code_fast_t first_free_code;
   lzws_code_fast_t max_code;
@@ -62,7 +62,7 @@ typedef struct {
 
 lzws_result_t lzws_compressor_get_initial_state(
   lzws_compressor_state_t** state_ptr,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool quiet, bool unaligned);
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
 
 void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);
 void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);

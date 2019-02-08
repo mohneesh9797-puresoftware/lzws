@@ -13,7 +13,7 @@
 #include "common.h"
 #include "state.h"
 
-lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb, bool quiet, bool unaligned_bit_groups)
+lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   size_t state_size = sizeof(lzws_decompressor_state_t);
 
@@ -29,8 +29,8 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
   state_ptr->status = LZWS_DECOMPRESSOR_READ_HEADER;
 
   state_ptr->msb                  = msb;
-  state_ptr->quiet                = quiet;
   state_ptr->unaligned_bit_groups = unaligned_bit_groups;
+  state_ptr->quiet                = quiet;
 
   state_ptr->free_code_bit_length         = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
   state_ptr->max_free_code_for_bit_length = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);

@@ -30,6 +30,7 @@ set (HEADERS ${HEADERS}
   "${CMAKE_CURRENT_SOURCE_DIR}/constants.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/file.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/log.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/string.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/utils.h"
 )
 set (SOURCES ${SOURCES}
@@ -37,6 +38,7 @@ set (SOURCES ${SOURCES}
   "${CMAKE_CURRENT_SOURCE_DIR}/file.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/log.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/string.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/utils.c"
 )
 

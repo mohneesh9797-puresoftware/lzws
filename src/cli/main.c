@@ -44,8 +44,8 @@ int main(int argc, char** argv)
   uint_fast8_t max_code_bit_length  = LZWS_BIGGEST_MAX_CODE_BIT_LENGTH;
   bool         block_mode           = true;
   bool         msb                  = false;
-  bool         quiet                = false;
   bool         unaligned_bit_groups = false;
+  bool         quiet                = false;
 
   int option;
 
@@ -76,12 +76,12 @@ int main(int argc, char** argv)
   }
 
   if (is_compressor) {
-    if (lzws_file_compress(stdin, 0, stdout, 0, max_code_bit_length, block_mode, msb, quiet, unaligned_bit_groups) != 0) {
+    if (lzws_compress_file(stdin, 0, stdout, 0, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet) != 0) {
       return 2;
     }
   }
   else {
-    if (lzws_file_decompress(stdin, 0, stdout, 0, msb, quiet, unaligned_bit_groups) != 0) {
+    if (lzws_decompress_file(stdin, 0, stdout, 0, msb, unaligned_bit_groups, quiet) != 0) {
       return 3;
     }
   }

@@ -288,11 +288,10 @@ static inline lzws_result_t compress_data(
   return write_remaining_destination_buffer(destination_file_ptr, destination_buffer, destination_buffer_length, destination_length, quiet);
 }
 
-lzws_result_t lzws_file_compress(
+lzws_result_t lzws_compress_file(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  uint_fast8_t max_code_bit_length, bool block_mode,
-  bool msb, bool quiet, bool unaligned_bit_groups)
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
@@ -303,7 +302,7 @@ lzws_result_t lzws_file_compress(
 
   lzws_compressor_state_t* state_ptr;
 
-  result = lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, quiet, unaligned_bit_groups);
+  result = lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet);
   if (result != 0) {
     free(source_buffer);
     free(destination_buffer);
@@ -349,10 +348,10 @@ static inline lzws_result_t decompress_data(
   return write_remaining_destination_buffer(destination_file_ptr, destination_buffer, destination_buffer_length, destination_length, quiet);
 }
 
-lzws_result_t lzws_file_decompress(
+lzws_result_t lzws_decompress_file(
   FILE* source_file_ptr, size_t source_buffer_length,
   FILE* destination_file_ptr, size_t destination_buffer_length,
-  bool msb, bool quiet, bool unaligned_bit_groups)
+  bool msb, bool unaligned_bit_groups, bool quiet)
 {
   uint8_t* source_buffer;
   uint8_t* destination_buffer;
@@ -363,7 +362,7 @@ lzws_result_t lzws_file_decompress(
 
   lzws_decompressor_state_t* state_ptr;
 
-  result = lzws_decompressor_get_initial_state(&state_ptr, msb, quiet, unaligned_bit_groups);
+  result = lzws_decompressor_get_initial_state(&state_ptr, msb, unaligned_bit_groups, quiet);
   if (result != 0) {
     free(source_buffer);
     free(destination_buffer);
