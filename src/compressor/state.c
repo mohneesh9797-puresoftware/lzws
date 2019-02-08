@@ -16,7 +16,7 @@
 
 static inline void reset_last_used_data(lzws_compressor_state_t* state_ptr)
 {
-  state_ptr->last_used_code                    = lzws_compressor_get_first_used_code(state_ptr);
+  state_ptr->last_used_code                    = state_ptr->first_free_code - 1;
   state_ptr->last_used_code_bit_length         = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
   state_ptr->max_last_used_code_for_bit_length = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
 }

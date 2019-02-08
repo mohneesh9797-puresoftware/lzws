@@ -14,7 +14,7 @@ enum {
   LZWS_COMPRESSOR_UNKNOWN_STATUS
 };
 
-// Code can have any value, but next code will always be > 255.
+// Code can have any value, but next code will always be > alphabet length.
 // So we can use zero as undefined next code.
 #define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE 0
 #define LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO true

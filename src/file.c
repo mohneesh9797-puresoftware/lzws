@@ -299,7 +299,7 @@ lzws_result_t lzws_file_compress(
 
   lzws_result_t result;
 
-  ALLOCATE_BUFFERS(LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
+  ALLOCATE_BUFFERS(LZWS_FILE_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_compressor_state_t* state_ptr;
 
@@ -359,7 +359,7 @@ lzws_result_t lzws_file_decompress(
 
   lzws_result_t result;
 
-  ALLOCATE_BUFFERS(LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH)
+  ALLOCATE_BUFFERS(LZWS_FILE_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH)
 
   lzws_decompressor_state_t* state_ptr;
 

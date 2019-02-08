@@ -26,12 +26,12 @@ enum {
 // So we can use bigger buffers for faster implementation.
 
 #if defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST)
-#define LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 15) // 32 KB
+#define LZWS_FILE_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 15) // 32 KB
 #elif defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY)
-#define LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
+#define LZWS_FILE_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
 #endif
 
-#define LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
+#define LZWS_FILE_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
 
 // Source buffer length and destination buffer length can be equal to 0.
 // In this case it will be replaced with default values.

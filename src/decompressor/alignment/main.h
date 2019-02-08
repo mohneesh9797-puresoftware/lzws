@@ -24,7 +24,7 @@ LZWS_INLINE void lzws_decompressor_initialize_alignment(lzws_decompressor_alignm
 
 LZWS_INLINE void lzws_decompressor_add_source_byte_length_to_alignment(lzws_decompressor_alignment_t* alignment_ptr, uint_fast8_t source_byte_length)
 {
-  // Source byte length can be aligned by last used code bit length * 8.
+  // Source byte length can be aligned by free code bit length * 8.
   alignment_ptr->source_byte_length = (alignment_ptr->source_byte_length + source_byte_length) % alignment_ptr->free_code_bit_length;
 }
 
