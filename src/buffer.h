@@ -11,7 +11,8 @@
 
 // Possible results:
 enum {
-  LZWS_BUFFER_ALLOCATE_FAILED = 1
+  LZWS_BUFFER_ALLOCATE_FAILED = 1,
+  LZWS_BUFFER_REALLOCATE_FAILED
 };
 
 // Compressor/decompressor dictionary implementations has different speed.
@@ -26,7 +27,9 @@ enum {
 
 #define LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
 
-lzws_result_t lzws_allocate_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
-lzws_result_t lzws_allocate_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+lzws_result_t lzws_create_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+lzws_result_t lzws_create_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+
+lzws_result_t lzws_resize_buffer(uint8_t** buffer_ptr, size_t buffer_length, bool quiet);
 
 #endif // LZWS_BUFFER_H

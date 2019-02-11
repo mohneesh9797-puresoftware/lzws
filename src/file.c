@@ -232,18 +232,18 @@ lzws_result_t lzws_compress_file(
 
   uint8_t* source_buffer;
 
-  result = lzws_allocate_buffer_for_compressor(&source_buffer, &source_buffer_length, quiet);
+  result = lzws_create_buffer_for_compressor(&source_buffer, &source_buffer_length, quiet);
   if (result != 0) {
-    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+    return LZWS_FILE_CREATE_BUFFER_FAILED;
   }
 
   uint8_t* destination_buffer;
 
-  result = lzws_allocate_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
+  result = lzws_create_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
   if (result != 0) {
     free(source_buffer);
 
-    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+    return LZWS_FILE_CREATE_BUFFER_FAILED;
   }
 
   lzws_compressor_state_t* state_ptr;
@@ -303,18 +303,18 @@ lzws_result_t lzws_decompress_file(
 
   uint8_t* source_buffer;
 
-  result = lzws_allocate_buffer_for_decompressor(&source_buffer, &source_buffer_length, quiet);
+  result = lzws_create_buffer_for_decompressor(&source_buffer, &source_buffer_length, quiet);
   if (result != 0) {
-    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+    return LZWS_FILE_CREATE_BUFFER_FAILED;
   }
 
   uint8_t* destination_buffer;
 
-  result = lzws_allocate_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
+  result = lzws_create_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
   if (result != 0) {
     free(source_buffer);
 
-    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+    return LZWS_FILE_CREATE_BUFFER_FAILED;
   }
 
   lzws_decompressor_state_t* state_ptr;
