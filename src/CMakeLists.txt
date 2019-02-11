@@ -25,6 +25,7 @@ add_subdirectory ("compressor")
 add_subdirectory ("decompressor")
 
 set (HEADERS ${HEADERS}
+  "${CMAKE_CURRENT_SOURCE_DIR}/buffer.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/common.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/config.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/constants.h"
@@ -34,6 +35,7 @@ set (HEADERS ${HEADERS}
   "${CMAKE_CURRENT_SOURCE_DIR}/utils.h"
 )
 set (SOURCES ${SOURCES}
+  "${CMAKE_CURRENT_SOURCE_DIR}/buffer.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/common.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/file.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c"

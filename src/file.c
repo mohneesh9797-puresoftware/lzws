@@ -12,74 +12,9 @@
 #include "decompressor/header.h"
 #include "decompressor/main.h"
 
+#include "buffer.h"
 #include "file.h"
 #include "log.h"
-
-// -- utils --
-
-static inline lzws_result_t allocate_buffer(uint8_t** buffer_ptr, size_t* buffer_length_ptr, size_t default_buffer_length, bool quiet)
-{
-  size_t buffer_length = *buffer_length_ptr;
-  if (buffer_length == 0) {
-    buffer_length = default_buffer_length;
-  }
-
-  uint8_t* buffer = malloc(buffer_length);
-  if (buffer == NULL) {
-    if (!quiet) {
-      LZWS_LOG_ERROR("malloc failed, buffer length: %zu", buffer_length)
-    }
-
-    return LZWS_FILE_ALLOCATE_FAILED;
-  }
-
-  *buffer_ptr        = buffer;
-  *buffer_length_ptr = buffer_length;
-
-  return 0;
-}
-
-static inline lzws_result_t allocate_buffers(
-  uint8_t** source_buffer_ptr, size_t* source_buffer_length_ptr,
-  uint8_t** destination_buffer_ptr, size_t* destination_buffer_length_ptr,
-  size_t default_buffer_length, bool quiet)
-{
-  uint8_t* source_buffer;
-  size_t   source_buffer_length = *source_buffer_length_ptr;
-
-  lzws_result_t result = allocate_buffer(&source_buffer, &source_buffer_length, default_buffer_length, quiet);
-  if (result != 0) {
-    return result;
-  }
-
-  uint8_t* destination_buffer;
-  size_t   destination_buffer_length = *destination_buffer_length_ptr;
-
-  result = allocate_buffer(&destination_buffer, &destination_buffer_length, default_buffer_length, quiet);
-  if (result != 0) {
-    // Source buffer was allocated, need to free it.
-    free(source_buffer);
-
-    return result;
-  }
-
-  *source_buffer_ptr             = source_buffer;
-  *source_buffer_length_ptr      = source_buffer_length;
-  *destination_buffer_ptr        = destination_buffer;
-  *destination_buffer_length_ptr = destination_buffer_length;
-
-  return 0;
-}
-
-#define ALLOCATE_BUFFERS(DEFAULT_BUFFER_LENGTH)      \
-  result = allocate_buffers(                         \
-    &source_buffer, &source_buffer_length,           \
-    &destination_buffer, &destination_buffer_length, \
-    DEFAULT_BUFFER_LENGTH, quiet);                   \
-                                                     \
-  if (result != 0) {                                 \
-    return result;                                   \
-  }
 
 // -- files --
 
@@ -293,12 +228,23 @@ lzws_result_t lzws_compress_file(
   FILE* destination_file_ptr, size_t destination_buffer_length,
   uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
 {
-  uint8_t* source_buffer;
-  uint8_t* destination_buffer;
-
   lzws_result_t result;
 
-  ALLOCATE_BUFFERS(LZWS_FILE_COMPRESSOR_DEFAULT_BUFFER_LENGTH)
+  uint8_t* source_buffer;
+
+  result = lzws_allocate_buffer_for_compressor(&source_buffer, &source_buffer_length, quiet);
+  if (result != 0) {
+    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+  }
+
+  uint8_t* destination_buffer;
+
+  result = lzws_allocate_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
+  if (result != 0) {
+    free(source_buffer);
+
+    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+  }
 
   lzws_compressor_state_t* state_ptr;
 
@@ -353,12 +299,23 @@ lzws_result_t lzws_decompress_file(
   FILE* destination_file_ptr, size_t destination_buffer_length,
   bool msb, bool unaligned_bit_groups, bool quiet)
 {
-  uint8_t* source_buffer;
-  uint8_t* destination_buffer;
-
   lzws_result_t result;
 
-  ALLOCATE_BUFFERS(LZWS_FILE_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH)
+  uint8_t* source_buffer;
+
+  result = lzws_allocate_buffer_for_decompressor(&source_buffer, &source_buffer_length, quiet);
+  if (result != 0) {
+    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+  }
+
+  uint8_t* destination_buffer;
+
+  result = lzws_allocate_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
+  if (result != 0) {
+    free(source_buffer);
+
+    return LZWS_FILE_ALLOCATE_BUFFER_FAILED;
+  }
 
   lzws_decompressor_state_t* state_ptr;
 

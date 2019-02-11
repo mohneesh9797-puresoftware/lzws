@@ -11,7 +11,7 @@
 
 // Possible results:
 enum {
-  LZWS_FILE_ALLOCATE_FAILED = 1,
+  LZWS_FILE_ALLOCATE_BUFFER_FAILED = 1,
   LZWS_FILE_COMPRESSOR_FAILED,
   LZWS_FILE_DECOMPRESSOR_FAILED,
   LZWS_FILE_NOT_ENOUGH_SOURCE_BUFFER,
@@ -20,18 +20,6 @@ enum {
   LZWS_FILE_READ_FAILED,
   LZWS_FILE_WRITE_FAILED
 };
-
-// Compressor dictionary implementations has different speed.
-// Buffers shouldn't be a bottleneck.
-// So we can use bigger buffers for faster implementation.
-
-#if defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST)
-#define LZWS_FILE_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 15) // 32 KB
-#elif defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY)
-#define LZWS_FILE_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
-#endif
-
-#define LZWS_FILE_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
 
 // Source buffer length and destination buffer length can be equal to 0.
 // In this case it will be replaced with default values.
