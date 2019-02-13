@@ -72,3 +72,7 @@ endif ()
 if (LZWS_CLI)
   add_subdirectory ("cli")
 endif ()
+
+if (LZWS_TESTS)
+  add_subdirectory ("tests")
+endif ()

@@ -1,5 +1,5 @@
 # WIP
-Compatibility alignment.
+Tests.
 
 # LZW + Stream = LZWS
 

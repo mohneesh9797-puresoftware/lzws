@@ -54,8 +54,8 @@ static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer
 
 // -- buffers --
 
-// We have source buffer, we read some data from file into it.
-// Algorithm has read some data from buffer.
+// We have read some data from file into source buffer.
+// Algorithm has read some data from this buffer.
 // We need to move remaining data to the top of the buffer.
 // Than we need to read more data from file into remaining part of the buffer.
 // Than algorithm can use same buffer again.
@@ -97,8 +97,7 @@ static inline lzws_result_t read_source_buffer(
   return 0;
 }
 
-// We have destination buffer.
-// Algorithm has written some data into it.
+// Algorithm has written some data into destination buffer.
 // We need to write this data into file.
 // Than algorithm can use same buffer again.
 
@@ -129,9 +128,6 @@ static inline lzws_result_t flush_destination_buffer(
   return 0;
 }
 
-// It is better to wrap function calls that reads and writes something.
-
-// We can read more source from file.
 #define READ_MORE_SOURCE(FAILED)                      \
   result = read_source_buffer(                        \
     source_file_ptr,                                  \
@@ -156,7 +152,6 @@ static inline lzws_result_t flush_destination_buffer(
     return result;                                    \
   }
 
-// We can flush destination buffer into file.
 #define FLUSH_DESTINATION_BUFFER()                 \
   result = flush_destination_buffer(               \
     destination_file_ptr,                          \
@@ -167,6 +162,8 @@ static inline lzws_result_t flush_destination_buffer(
   if (result != 0) {                               \
     return result;                                 \
   }
+
+// It is better to wrap function calls that reads and writes something.
 
 #define WITH_READ_WRITE_BUFFERS(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
   while (true) {                                                                                  \

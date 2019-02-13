@@ -91,11 +91,11 @@ if (
   set (CMAKE_INTERPROCEDURAL_OPTIMIZATION true CACHE BOOL "status of IPO switch")
 endif ()
 
-add_subdirectory ("src")
-
-if (${LZWS_TESTS})
-  add_subdirectory ("tests")
+if (LZWS_TESTS)
+  enable_testing ()
 endif ()
+
+add_subdirectory ("src")
 
 include (CPackConfig.cmake)
 include (CPack)

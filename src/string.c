@@ -16,13 +16,17 @@
 
 // -- buffer --
 
+// Destination consist of data and buffer tail.
+// Algorithm has written some data into destination buffer.
+// We need to increase destination and use its tail as destination buffer.
+
 static inline lzws_result_t increase_destination_buffer(
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  uint8_t** remaining_destination_ptr, size_t* remaining_destination_length_ptr, size_t destination_buffer_length,
+  uint8_t** destination_buffer_ptr, size_t* destination_buffer_length_ptr, size_t initial_destination_buffer_length,
   bool quiet)
 {
-  size_t remaining_destination_length = *remaining_destination_length_ptr;
-  if (remaining_destination_length == destination_buffer_length) {
+  size_t destination_buffer_length = *destination_buffer_length_ptr;
+  if (destination_buffer_length == initial_destination_buffer_length) {
     // We want to write more data at once, than buffer has.
     if (!quiet) {
       LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length)
@@ -33,34 +37,36 @@ static inline lzws_result_t increase_destination_buffer(
 
   size_t destination_length = *destination_length_ptr;
 
-  lzws_result_t result = lzws_resize_buffer(destination_ptr, destination_length + destination_buffer_length, quiet);
+  lzws_result_t result = lzws_resize_buffer(destination_ptr, destination_length + initial_destination_buffer_length, quiet);
   if (result != 0) {
     return LZWS_STRING_RESIZE_BUFFER_FAILED;
   }
 
-  *remaining_destination_ptr        = *destination_ptr + destination_length;
-  *remaining_destination_length_ptr = destination_buffer_length;
+  *destination_buffer_ptr        = *destination_ptr + destination_length;
+  *destination_buffer_length_ptr = initial_destination_buffer_length;
 
   return 0;
 }
 
-#define INCREASE_DESTINATION_BUFFER()                                                 \
-  result = increase_destination_buffer(                                               \
-    destination_ptr, destination_length_ptr,                                          \
-    &remaining_destination, &remaining_destination_length, destination_buffer_length, \
-    quiet);                                                                           \
-                                                                                      \
-  if (result != 0) {                                                                  \
-    return result;                                                                    \
+#define INCREASE_DESTINATION_BUFFER()                                                   \
+  result = increase_destination_buffer(                                                 \
+    destination_ptr, destination_length_ptr,                                            \
+    &destination_buffer, &destination_buffer_length, initial_destination_buffer_length, \
+    quiet);                                                                             \
+                                                                                        \
+  if (result != 0) {                                                                    \
+    return result;                                                                      \
   }
 
-static inline void flush_destination_buffer(size_t* destination_length_ptr, size_t remaining_destination_length, size_t destination_buffer_length)
+static inline void flush_destination_buffer(size_t* destination_length_ptr, size_t destination_buffer_length, size_t initial_destination_buffer_length)
 {
-  *destination_length_ptr += destination_buffer_length - remaining_destination_length;
+  *destination_length_ptr += initial_destination_buffer_length - destination_buffer_length;
 }
 
 #define FLUSH_DESTINATION_BUFFER() \
-  flush_destination_buffer(destination_length_ptr, remaining_destination_length, destination_buffer_length);
+  flush_destination_buffer(destination_length_ptr, destination_buffer_length, initial_destination_buffer_length);
+
+// It is better to wrap function calls that writes something.
 
 #define WITH_WRITE_BUFFER(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
   while (true) {                                                                            \
@@ -96,17 +102,16 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
 static inline lzws_result_t compress_data(
   lzws_compressor_state_t* state_ptr,
   uint8_t* source, size_t source_length,
-  uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t* destination_buffer, size_t destination_buffer_length,
+  uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t* destination_buffer, size_t initial_destination_buffer_length,
   bool quiet)
 {
   lzws_result_t result;
 
-  uint8_t* remaining_destination        = destination_buffer;
-  size_t   remaining_destination_length = destination_buffer_length;
+  size_t destination_buffer_length = initial_destination_buffer_length;
 
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &remaining_destination, &remaining_destination_length)
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &remaining_destination, &remaining_destination_length)
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_flush_compressor, state_ptr, &remaining_destination, &remaining_destination_length)
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length)
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length)
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_flush_compressor, state_ptr, &destination_buffer, &destination_buffer_length)
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
 }
@@ -160,16 +165,15 @@ lzws_result_t lzws_compress_string(
 static inline lzws_result_t decompress_data(
   lzws_decompressor_state_t* state_ptr,
   uint8_t* source, size_t source_length,
-  uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t* destination_buffer, size_t destination_buffer_length,
+  uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t* destination_buffer, size_t initial_destination_buffer_length,
   bool quiet)
 {
   lzws_result_t result;
 
-  uint8_t* remaining_destination        = destination_buffer;
-  size_t   remaining_destination_length = destination_buffer_length;
+  size_t destination_buffer_length = initial_destination_buffer_length;
 
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
-  DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &remaining_destination, &remaining_destination_length);
+  DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_flush_decompressor, state_ptr);
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
