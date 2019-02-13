@@ -1,13 +1,10 @@
-set (SOURCES
-  "${CMAKE_CURRENT_SOURCE_DIR}/invalid.c"
-  "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
-)
+set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.c")
 
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths ("${SOURCES}")
 
 if (LZWS_SHARED)
-  set (TEST_NAME "test-file")
+  set (TEST_NAME "test-basic")
   set (TEST_TARGET "${LZWS_TARGET}-${TEST_NAME}")
 
   add_executable (${TEST_TARGET} ${SOURCES})
@@ -19,7 +16,7 @@ if (LZWS_SHARED)
 endif ()
 
 if (LZWS_STATIC)
-  set (TEST_NAME "static-test-file")
+  set (TEST_NAME "static-test-basic")
   set (TEST_TARGET "${LZWS_TARGET}-${TEST_NAME}")
 
   add_executable (${TEST_TARGET} ${SOURCES})
