@@ -12,11 +12,11 @@
 static const uint8_t max_code_bit_lengths[] = {
   LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1,
   LZWS_BIGGEST_MAX_CODE_BIT_LENGTH + 1};
-static const size_t max_code_bit_length_size = sizeof(max_code_bit_lengths) / sizeof(uint8_t);
+#define MAX_CODE_BIT_LENGTH_SIZE sizeof(max_code_bit_lengths) / sizeof(uint8_t)
 
 lzws_result_t lzws_test_invalid_max_code_bit_length()
 {
-  for (size_t index = 0; index < max_code_bit_length_size; index++) {
+  for (size_t index = 0; index < MAX_CODE_BIT_LENGTH_SIZE; index++) {
     uint8_t max_code_bit_length = max_code_bit_lengths[index];
 
     lzws_compressor_state_t* state;
