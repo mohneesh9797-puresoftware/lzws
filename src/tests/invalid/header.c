@@ -8,15 +8,15 @@
 #include "header.h"
 
 #define MAGIC_HEADER_SIZE 2
+#define MAGIC_HEADER_LENGTH sizeof(magic_headers) / (sizeof(uint8_t) * MAGIC_HEADER_SIZE)
 static const uint8_t magic_headers[][MAGIC_HEADER_SIZE] = {
   {LZWS_FIRST_MAGIC_HEADER_BYTE + 1, LZWS_SECOND_MAGIC_HEADER_BYTE},
   {LZWS_FIRST_MAGIC_HEADER_BYTE, LZWS_SECOND_MAGIC_HEADER_BYTE + 1}};
-#define MAGIC_HEADER_LENGTH sizeof(magic_headers) / (sizeof(uint8_t) * MAGIC_HEADER_SIZE)
 
-static const uint8_t max_code_bit_length_header = (LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1) | LZWS_BLOCK_MODE;
 #define MAX_CODE_BIT_LENGTH_HEADER_SIZE sizeof(max_code_bit_length_header)
+static const uint8_t max_code_bit_length_header = (LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1) | LZWS_BLOCK_MODE;
 
-static inline lzws_result_t test_decompressor(lzws_decompressor_state_t* state_ptr)
+static inline lzws_result_t test_data(lzws_decompressor_state_t* state_ptr)
 {
   for (size_t index = 0; index < MAGIC_HEADER_LENGTH; index++) {
     uint8_t* magic_header      = (uint8_t*)magic_headers[index];
@@ -45,7 +45,7 @@ lzws_result_t lzws_test_invalid_header()
     return 1;
   }
 
-  lzws_result_t result = test_decompressor(state_ptr);
+  lzws_result_t result = test_data(state_ptr);
   lzws_decompressor_free_state(state_ptr);
 
   return result;

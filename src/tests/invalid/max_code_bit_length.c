@@ -9,19 +9,19 @@
 
 #include "max_code_bit_length.h"
 
+#define MAX_CODE_BIT_LENGTH_SIZE sizeof(max_code_bit_lengths) / sizeof(uint8_t)
 static const uint8_t max_code_bit_lengths[] = {
   LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1,
   LZWS_BIGGEST_MAX_CODE_BIT_LENGTH + 1};
-#define MAX_CODE_BIT_LENGTH_SIZE sizeof(max_code_bit_lengths) / sizeof(uint8_t)
 
 lzws_result_t lzws_test_invalid_max_code_bit_length()
 {
   for (size_t index = 0; index < MAX_CODE_BIT_LENGTH_SIZE; index++) {
     uint8_t max_code_bit_length = max_code_bit_lengths[index];
 
-    lzws_compressor_state_t* state;
+    lzws_compressor_state_t* state_ptr;
 
-    if (lzws_compressor_get_initial_state(&state, max_code_bit_length, false, false, false, false) != LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
+    if (lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, false, false, false, false) != LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
       return 1;
     }
 
