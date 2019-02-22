@@ -4,7 +4,6 @@
 
 #define LZWS_DECOMPRESSOR_ALIGNMENT_WRAPPER_C
 
-#include "../../log.h"
 #include "../common.h"
 #include "../utils.h"
 
@@ -25,13 +24,9 @@ static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr,
 
     lzws_decompressor_read_byte(state_ptr, &byte, source_ptr, source_length_ptr);
 
-    if (byte != 0) {
-      if (!state_ptr->quiet) {
-        LZWS_LOG_ERROR("received non zero padding byte")
-      }
-
-      return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
-    }
+    // Some compress implementations writes random bits from uninitialized buffer as alignment bits.
+    // There is no guarantee that alignment bits will be zeroes.
+    // So in terms of 100% compatibility decompressor have to just ignore alignment bit values.
   }
 
   lzws_decompressor_reset_alignment_after_reading(alignment_ptr, state_ptr->free_code_bit_length);
