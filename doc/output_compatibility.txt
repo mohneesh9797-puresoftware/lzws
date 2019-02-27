@@ -97,3 +97,9 @@ We need to write 63 bytes, than 9 zero bits, than 10 bit, than 6 zero bits.
 9 zero bits + first bit of 10 bit code can be read as 10 bit code.
 If remaining bits (9 last bits of 10 bit code) are zeroes, this data can decompressed in 2 ways.
 So automatic detection of "unaligned" or "aligned" data is not possible.
+
+-----
+
+Some UNIX compress implementations writes random bits from uninitialized buffer as alignment bits.
+There is no guarantee that alignment bits will be zeroes.
+So in terms of 100% compatibility decompressor have to just ignore alignment bit values.
