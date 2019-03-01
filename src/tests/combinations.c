@@ -4,18 +4,20 @@
 
 #include "combinations.h"
 
-#define BLOCK_MODE_VALUES_LENGTH 2
 static const bool block_mode_values[] = {true, false};
+#define BLOCK_MODE_VALUES_LENGTH 2
 
-#define MSB_VALUES_LENGTH 2
 static const bool msb_values[] = {true, false};
+#define MSB_VALUES_LENGTH 2
 
-#define UNALIGNED_BIT_GROUP_VALUES_LENGTH 2
 static const bool unaligned_bit_group_values[] = {true, false};
+#define UNALIGNED_BIT_GROUP_VALUES_LENGTH 2
 
 #define QUIET false
 
-static inline lzws_result_t test_compressor(uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, lzws_test_compressor_t* function_ptr, va_list args)
+// -- compressor --
+
+static inline lzws_result_t test_compressor(lzws_test_compressor_t function, va_list args, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups)
 {
   lzws_compressor_state_t* state_ptr;
 
@@ -24,18 +26,15 @@ static inline lzws_result_t test_compressor(uint_fast8_t max_code_bit_length, bo
     return result;
   }
 
-  (*function_ptr)(state_ptr, args);
+  function(state_ptr, args);
 
   lzws_compressor_free_state(state_ptr);
 
   return 0;
 }
 
-lzws_result_t lzws_test_compressor_combinations(lzws_test_compressor_t* function_ptr, ...)
+static inline lzws_result_t process_compressor_combinations(lzws_test_compressor_t function, va_list args)
 {
-  va_list args;
-  va_start(args, function_ptr);
-
   for (uint_fast8_t max_code_bit_length = LZWS_LOWEST_MAX_CODE_BIT_LENGTH; max_code_bit_length <= LZWS_BIGGEST_MAX_CODE_BIT_LENGTH; max_code_bit_length++) {
     for (size_t index = 0; index < BLOCK_MODE_VALUES_LENGTH; index++) {
       bool block_mode = block_mode_values[index];
@@ -46,10 +45,8 @@ lzws_result_t lzws_test_compressor_combinations(lzws_test_compressor_t* function
         for (size_t kndex = 0; kndex < UNALIGNED_BIT_GROUP_VALUES_LENGTH; kndex++) {
           bool unaligned_bit_groups = unaligned_bit_group_values[kndex];
 
-          lzws_result_t result = test_compressor(max_code_bit_length, block_mode, msb, unaligned_bit_groups, function_ptr, args);
+          lzws_result_t result = test_compressor(function, args, max_code_bit_length, block_mode, msb, unaligned_bit_groups);
           if (result != 0) {
-            va_end(args);
-
             return result;
           }
         }
@@ -57,12 +54,24 @@ lzws_result_t lzws_test_compressor_combinations(lzws_test_compressor_t* function
     }
   }
 
-  va_end(args);
-
   return 0;
 }
 
-static inline lzws_result_t test_decompressor(bool msb, bool unaligned_bit_groups, lzws_test_decompressor_t* function_ptr, va_list args)
+lzws_result_t lzws_test_compressor_combinations(lzws_test_compressor_t function, ...)
+{
+  va_list args;
+  va_start(args, function);
+
+  lzws_result_t result = process_compressor_combinations(function, args);
+
+  va_end(args);
+
+  return result;
+}
+
+// -- decompressor --
+
+static inline lzws_result_t test_decompressor(lzws_test_decompressor_t function, va_list args, bool msb, bool unaligned_bit_groups)
 {
   lzws_decompressor_state_t* state_ptr;
 
@@ -71,34 +80,70 @@ static inline lzws_result_t test_decompressor(bool msb, bool unaligned_bit_group
     return result;
   }
 
-  (*function_ptr)(state_ptr, args);
+  function(state_ptr, args);
 
   lzws_decompressor_free_state(state_ptr);
 
   return 0;
 }
 
-lzws_result_t lzws_test_decompressor_combinations(lzws_test_decompressor_t* function_ptr, ...)
+lzws_result_t process_decompressor_combinations(lzws_test_decompressor_t function, va_list args)
 {
-  va_list args;
-  va_start(args, function_ptr);
-
   for (size_t index = 0; index < MSB_VALUES_LENGTH; index++) {
     bool msb = msb_values[index];
 
     for (size_t jndex = 0; jndex < UNALIGNED_BIT_GROUP_VALUES_LENGTH; jndex++) {
       bool unaligned_bit_groups = unaligned_bit_group_values[jndex];
 
-      lzws_result_t result = test_decompressor(msb, unaligned_bit_groups, function_ptr, args);
+      lzws_result_t result = test_decompressor(function, args, msb, unaligned_bit_groups);
       if (result != 0) {
-        va_end(args);
-
         return result;
       }
     }
   }
 
+  return 0;
+}
+
+lzws_result_t lzws_test_decompressor_combinations(lzws_test_decompressor_t function, ...)
+{
+  va_list args;
+  va_start(args, function);
+
+  lzws_result_t result = process_decompressor_combinations(function, args);
+
   va_end(args);
 
-  return 0;
+  return result;
+}
+
+// -- compressor and decompressor --
+
+static inline lzws_result_t test_combination_with_compressor_and_decompressor(lzws_compressor_state_t* compressor_state_ptr, va_list args)
+{
+  lzws_decompressor_state_t*              decompressor_state_ptr = va_arg(args, lzws_decompressor_state_t*);
+  lzws_test_compressor_and_decompressor_t function               = va_arg(args, lzws_test_compressor_and_decompressor_t);
+  va_list*                                function_args          = va_arg(args, va_list*);
+
+  return function(compressor_state_ptr, decompressor_state_ptr, *function_args);
+}
+
+static inline lzws_result_t test_compressor_combinations_with_decompressor(lzws_decompressor_state_t* decompressor_state_ptr, va_list args)
+{
+  lzws_test_compressor_and_decompressor_t function      = va_arg(args, lzws_test_compressor_and_decompressor_t);
+  va_list*                                function_args = va_arg(args, va_list*);
+
+  return lzws_test_compressor_combinations(test_combination_with_compressor_and_decompressor, decompressor_state_ptr, function, function_args);
+}
+
+lzws_result_t lzws_test_compressor_and_decompressor_combinations(lzws_test_compressor_and_decompressor_t function, ...)
+{
+  va_list function_args;
+  va_start(function_args, function);
+
+  lzws_result_t result = lzws_test_decompressor_combinations(test_compressor_combinations_with_decompressor, function, &function_args);
+
+  va_end(function_args);
+
+  return result;
 }

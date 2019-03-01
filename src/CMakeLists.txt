@@ -31,6 +31,7 @@ set (HEADERS ${HEADERS}
   "${CMAKE_CURRENT_SOURCE_DIR}/constants.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/file.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/log.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/macro.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/string.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/utils.h"
 )
