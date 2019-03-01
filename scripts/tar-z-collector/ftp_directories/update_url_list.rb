@@ -70,10 +70,6 @@ end
 def get_urls_from_search_endpoint(search_endpoint)
   urls = []
 
-  # We need to filter firectories only.
-  # File urls have point after "/".
-  url_regexp = %r{/[^.]*$}
-
   uri = URI "#{search_endpoint}/search"
   params = { q: SEARCH_TEXT, format: 'json' }
   page = 1
@@ -102,22 +98,29 @@ def get_urls_from_search_endpoint(search_endpoint)
       break
     end
 
-    if results.empty?
-      STDERR.puts "finished on page: #{page}, search endpoint: #{search_endpoint}"
+    new_urls = results
+      .map { |result| result['url'] }
+      .reject { |url| urls.include?(url) }
+
+    if new_urls.empty?
+      STDERR.puts "finished search endpoint: #{search_endpoint}, page: #{page}"
       break
     end
 
-    filtered_urls = results
-      .map { |result| result['url'] }
-      .select { |url| url =~ url_regexp && !urls.include?(url) }
+    STDERR.puts "received #{new_urls.length} urls from search endpoint: #{search_endpoint}, page: #{page}"
 
-    STDERR.puts "received #{filtered_urls.length} urls from search endpoint: #{search_endpoint}, page: #{page}"
-
-    urls += filtered_urls
+    urls += new_urls
     page += 1
   end
 
-  urls
+  # We need to filter firectories only.
+  # File urls have point after "/".
+  url_regexp = %r{/[^.]*$}
+
+  filtered_urls = urls.select { |url| url =~ url_regexp }
+  STDERR.puts "received #{filtered_urls.length} filtered urls from search endpoint: #{search_endpoint}"
+
+  filtered_urls
 end
 
 def get_urls
