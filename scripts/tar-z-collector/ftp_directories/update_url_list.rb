@@ -3,7 +3,7 @@
 require 'net/http'
 require 'json'
 
-SEARCH_TEXT = '".tar.Z" ftp'.freeze
+SEARCH_TEXT = '"tar.Z" "ftp"'.freeze
 
 # https://github.com/asciimoo/searx/wiki/Searx-instances
 STATS_ENDPOINTS = %w[
