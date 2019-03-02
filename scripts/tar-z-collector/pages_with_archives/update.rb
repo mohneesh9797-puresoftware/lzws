@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
-require "net/http"
 require "json"
+
+require "../query"
 
 # https://github.com/asciimoo/searx/wiki/Searx-instances
 STATS_ENDPOINTS = %w[
@@ -10,52 +11,42 @@ STATS_ENDPOINTS = %w[
 ]
 .freeze
 
-TARGET_EXTENSION = "tar.Z".freeze
+TARGET_ARCHIVE_EXTENSION = "tar.Z".freeze
 
 def get_search_text
   # "tar.Z" index|directory|listing|ftp
   [
-    "\"#{TARGET_EXTENSION}\"",
+    "\"#{TARGET_ARCHIVE_EXTENSION}\"",
     %w[index directory listing ftp].shuffle.join("|")
   ]
   .shuffle.join " "
 end
 
-# -- query --
-
-TIMEOUT = 60 # seconds
-HTTP_OPTIONS = {
-  :open_timeout  => TIMEOUT,
-  :ssl_timeout   => TIMEOUT,
-  :read_timeout  => TIMEOUT,
-  :write_timeout => TIMEOUT
-}
-.freeze
-
-def query(uri)
-  options = HTTP_OPTIONS.merge(
-    :use_ssl => uri.scheme == "https"
-  )
-
-  begin
-    response = Net::HTTP.start(uri.host, uri.port, options) { |http| http.get uri }
-  rescue StandardError => error
-    raise "query failed, error: #{error}"
-  end
-
-  raise "query failed, code: #{response.code}" unless response.is_a? Net::HTTPSuccess
-
-  response.body
-end
-
 # -- stats --
 
 # <a href="https://searx.at">https://searx.at</a>
-SEARCH_ENDPOINT_REGEXP = %r{<a\s*href=['"](.+?)['"]>\1<\/a>}.freeze
+SEARCH_ENDPOINT_REGEXP = Regexp.new(
+  "
+    <a
+      \s*
+      href\s*=\s*
+        ['\"]
+          (.+?)
+        ['\"]
+      \s*
+    >
+      \s*
+      \1
+      \s*
+    </a>
+  ",
+  Regexp::MULTILINE | Regexp::EXTENDED
+)
+.freeze
 
 def get_search_endpoints_from_stats(stats_endpoint)
   uri = URI stats_endpoint
-  data = query uri
+  data = get_http_content uri
 
   search_endpoints = data.scan(SEARCH_ENDPOINT_REGEXP).flatten
   STDERR.puts "received #{search_endpoints.length} search endpoints from stats endpoint: #{stats_endpoint}"
@@ -93,7 +84,7 @@ def get_urls_from_search_endpoint(search_endpoint)
     uri.query = URI.encode_www_form params
 
     begin
-      data = query uri
+      data = get_http_content uri
     rescue StandardError => error
       STDERR.puts error
       break
@@ -134,7 +125,7 @@ end
 
 def get_urls
   urls = get_search_endpoints
-    .shuffle
+    .shuffle.slice(0..2)
     .map { |search_endpoint| get_urls_from_search_endpoint search_endpoint }
     .flatten
     .sort
@@ -149,27 +140,37 @@ end
 # -- filter --
 
 # href="*.tar.Z"
-DIRECTORY_URL_REGEXP = Regexp.new "href=['\"].+?#{Regexp.quote(TARGET_EXTENSION)}['\"]"
+PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
+  "
+    href\s*=\s*
+      ['\"]
+        .+?
+        #{Regexp.quote(TARGET_ARCHIVE_EXTENSION)}
+      ['\"]
+  ",
+  Regexp::MULTILINE | Regexp::EXTENDED
+)
+.freeze
 
-def directory_url?(url)
+def page_with_archives?(url)
   uri = URI url
 
   begin
-    data = query uri
+    data = get_http_content uri
   rescue StandardError => error
     STDERR.puts error
     return false
   end
 
-  data =~ DIRECTORY_URL_REGEXP
+  data =~ PAGE_WITH_ARCHIVES_REGEXP
 end
 
-def check_directory_url(url)
+def check_page_with_archives(url)
   STDERR.puts "-----"
-  STDERR.puts "processing url: #{url}"
+  STDERR.puts "processing page with archives, url: #{url}"
 
-  result = directory_url? url
-  STDERR.puts result ? "url is valid" : "url is invalid"
+  result = page_with_archives? url
+  STDERR.puts "page is #{result ? 'valid' : 'invalid'}"
 
   result
 end
@@ -177,7 +178,7 @@ end
 def get_filtered_urls(urls)
   filtered_urls = urls
     .shuffle
-    .select { |url| check_directory_url url }
+    .select { |url| check_page_with_archives url }
 
   STDERR.puts "-----"
   STDERR.puts "received #{filtered_urls.length} filtered urls"
