@@ -28,16 +28,16 @@ end
 SEARCH_ENDPOINT_REGEXP = Regexp.new(
   "
     <a
-      \s*
-      href\s*=\s*
+      [[:space:]]*
+      href[[:space:]]*=[[:space:]]*
         ['\"]
           (.+?)
         ['\"]
-      \s*
+      [[:space:]]*
     >
-      \s*
-      \1
-      \s*
+      [[:space:]]*
+      \\1
+      [[:space:]]*
     </a>
   ",
   Regexp::MULTILINE | Regexp::EXTENDED
@@ -142,7 +142,7 @@ end
 # href="*.tar.Z"
 PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
-    href\s*=\s*
+    href[[:space:]]*=[[:space:]]*
       ['\"]
         .+?
         #{Regexp.quote(TARGET_ARCHIVE_EXTENSION)}
