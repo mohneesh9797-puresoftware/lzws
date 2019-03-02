@@ -1,4 +1,4 @@
 build/*
 src/config.h
 src/generated_constants.c
-scripts/tar-z-collector/url_list/url.list.tmp
+scripts/tar-z-collector/pages_with_archives/url.list.tmp
