@@ -134,7 +134,7 @@ end
 
 def get_urls
   urls = get_search_endpoints
-    .shuffle.slice(0..2)
+    .shuffle
     .map { |search_endpoint| get_urls_from_search_endpoint search_endpoint }
     .flatten
     .sort
