@@ -18,12 +18,12 @@ def get_search_text
     "\"#{TARGET_EXTENSION}\"",
     %w[index directory listing].shuffle.join("|")
   ]
-  .shuffle.join(" ")
+  .shuffle.join " "
 end
 
 # -- query --
 
-TIMEOUT = 30 # seconds
+TIMEOUT = 60 # seconds
 HTTP_OPTIONS = {
   :open_timeout  => TIMEOUT,
   :ssl_timeout   => TIMEOUT,
@@ -114,7 +114,7 @@ def get_urls_from_search_endpoint(search_endpoint)
 
     new_urls = results
       .map { |result| result["url"] }
-      .reject { |url| urls.include?(url) }
+      .reject { |url| urls.include? url }
 
     if new_urls.empty?
       STDERR.puts "finished on page: #{page}"
@@ -134,7 +134,7 @@ end
 
 def get_urls
   urls = get_search_endpoints
-    .shuffle
+    .shuffle.slice(0..2)
     .map { |search_endpoint| get_urls_from_search_endpoint search_endpoint }
     .flatten
     .sort
@@ -174,8 +174,8 @@ def check_directory_url(url)
   result
 end
 
-def get_filtered_urls
-  filtered_urls = get_urls
+def get_filtered_urls(urls)
+  filtered_urls = urls
     .shuffle
     .select { |url| check_directory_url url }
 
@@ -185,4 +185,14 @@ def get_filtered_urls
   filtered_urls
 end
 
-puts get_filtered_urls.join("\n")
+old_urls = STDIN
+  .read
+  .split("\n")
+  .map(&:strip)
+  .reject(&:empty?)
+
+new_urls      = get_urls - old_urls
+filtered_urls = get_filtered_urls new_urls
+
+all_urls = (old_urls + filtered_urls).sort.uniq
+puts all_urls.join("\n")
