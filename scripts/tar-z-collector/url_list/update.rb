@@ -149,7 +149,7 @@ end
 # -- filter --
 
 # href="*.tar.Z"
-DIRECTORY_URL_REGEXP = Regexp.new "href=['\"].+?#{TARGET_EXTENSION}['\"]"
+DIRECTORY_URL_REGEXP = Regexp.new "href=['\"].+?#{Regexp.quote(TARGET_EXTENSION)}['\"]"
 
 def directory_url?(url)
   uri = URI url
