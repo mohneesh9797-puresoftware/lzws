@@ -13,10 +13,10 @@ STATS_ENDPOINTS = %w[
 TARGET_EXTENSION = "tar.Z".freeze
 
 def get_search_text
-  # "tar.Z" index|directory|listing
+  # "tar.Z" index|directory|listing|ftp
   [
     "\"#{TARGET_EXTENSION}\"",
-    %w[index directory listing].shuffle.join("|")
+    %w[index directory listing ftp].shuffle.join("|")
   ]
   .shuffle.join " "
 end
