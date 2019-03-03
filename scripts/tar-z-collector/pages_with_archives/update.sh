@@ -3,4 +3,5 @@ set -e
 
 cd "$(dirname $0)"
 
-torsocks "./update.rb" "./url.list" "./bad_url.list"
+touch "bad_url.list"
+torsocks "./update.rb" "url.list" "bad_url.list"

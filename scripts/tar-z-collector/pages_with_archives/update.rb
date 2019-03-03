@@ -118,7 +118,7 @@ def get_urls_from_search_endpoint(search_endpoint)
     page += 1
   end
 
-  STDERR.puts "received #{urls.length} urls from search endpoint: #{search_endpoint}"
+  STDERR.puts "received #{urls.length} urls"
 
   urls
 end
@@ -132,7 +132,7 @@ def get_urls
     .uniq
 
   STDERR.puts "-----"
-  STDERR.puts "received #{urls.length} urls"
+  STDERR.puts "received #{urls.length} urls from all search endpoints"
 
   urls
 end
@@ -205,7 +205,7 @@ end
 
 def get_filtered_urls(urls)
   filtered_urls = urls
-    .shuffle
+    .shuffle.slice(0...10)
     .select { |url| check_page_with_archives url }
 
   STDERR.puts "-----"
@@ -237,8 +237,8 @@ bad_urls = read_urls bad_urls_path
 new_urls      = get_urls - urls - bad_urls
 filtered_urls = get_filtered_urls new_urls
 
-urls     += filtered_urls
-bad_urls += new_urls - filtered_urls
+urls     = (urls + filtered_urls).sort.uniq
+bad_urls = (bad_urls + (new_urls - filtered_urls)).sort.uniq
 
 write_urls urls_path, urls
 write_urls bad_urls_path, bad_urls
