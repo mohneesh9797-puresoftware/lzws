@@ -70,17 +70,17 @@ end
 def get_file_or_listing_from_ftp(uri)
   process_ftp(uri) do |ftp|
     # We don't know whether uri path is file or listing.
-    # We can try to get file for the first time.
+    # We can try to get listing for the first time.
 
     path = uri.path
 
     begin
-      file = ftp.getbinaryfile path, nil
-      return file, false
+      ftp.chdir path
+      return ftp.list, true
     rescue StandardError # rubocop:disable Lint/HandleExceptions
     end
 
-    ftp.chdir path
-    return ftp.list, true
+    file = ftp.getbinaryfile path, nil
+    return file, false
   end
 end

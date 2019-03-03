@@ -31,7 +31,7 @@ SEARCH_ENDPOINT_REGEXP = Regexp.new(
       [[:space:]]*
       href[[:space:]]*=[[:space:]]*
         ['\"]
-          (.+?)
+          ([^'\"]+)
         ['\"]
       [[:space:]]*
     >
@@ -40,7 +40,7 @@ SEARCH_ENDPOINT_REGEXP = Regexp.new(
       [[:space:]]*
     </a>
   ",
-  Regexp::MULTILINE | Regexp::EXTENDED
+  Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
 )
 .freeze
 
@@ -125,7 +125,7 @@ end
 
 def get_urls
   urls = get_search_endpoints
-    .shuffle
+    .shuffle.slice(0...3)
     .map { |search_endpoint| get_urls_from_search_endpoint search_endpoint }
     .flatten
     .sort
@@ -144,25 +144,53 @@ PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
     href[[:space:]]*=[[:space:]]*
       ['\"]
-        .+?
+        [^'\"]+?
+        \.
         #{Regexp.quote(TARGET_ARCHIVE_EXTENSION)}
       ['\"]
   ",
-  Regexp::MULTILINE | Regexp::EXTENDED
+  Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
+)
+.freeze
+
+# -r--r--r--  1 257  7070  337967 Jul 29  1992 *.tar.Z
+LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
+  "
+    \.
+    #{Regexp.quote(TARGET_ARCHIVE_EXTENSION)}
+  ",
+  Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
 )
 .freeze
 
 def page_with_archives?(url)
   uri = URI url
 
-  begin
-    data = get_http_content uri
-  rescue StandardError => error
-    STDERR.puts error
-    return false
-  end
+  case uri.scheme
+  when "ftp"
+    begin
+      data, is_listing = get_file_or_listing_from_ftp uri
+    rescue StandardError => error
+      STDERR.puts error
+      return false
+    end
 
-  data =~ PAGE_WITH_ARCHIVES_REGEXP
+    regexp = is_listing ? LISTING_WITH_ARCHIVES_REGEXP : PAGE_WITH_ARCHIVES_REGEXP
+    data =~ regexp
+
+  when "http", "https"
+    begin
+      data = get_http_content uri
+    rescue StandardError => error
+      STDERR.puts error
+      return false
+    end
+
+    data =~ PAGE_WITH_ARCHIVES_REGEXP
+
+  else
+    raise "uknown page uri scheme: #{scheme}"
+  end
 end
 
 def check_page_with_archives(url)
@@ -186,14 +214,31 @@ def get_filtered_urls(urls)
   filtered_urls
 end
 
-old_urls = STDIN
-  .read
-  .split("\n")
-  .map(&:strip)
-  .reject(&:empty?)
+# -- files --
 
-new_urls      = get_urls - old_urls
+def read_urls(path)
+  File
+    .read(path)
+    .split("\n")
+    .map(&:strip)
+    .reject(&:empty?)
+end
+
+def write_urls(path, urls)
+  File.write path, urls.join("\n")
+end
+
+urls_path     = ARGV[0]
+bad_urls_path = ARGV[1]
+
+urls     = read_urls urls_path
+bad_urls = read_urls bad_urls_path
+
+new_urls      = get_urls - urls - bad_urls
 filtered_urls = get_filtered_urls new_urls
 
-all_urls = (old_urls + filtered_urls).sort.uniq
-puts all_urls.join("\n")
+urls     += filtered_urls
+bad_urls += new_urls - filtered_urls
+
+write_urls urls_path, urls
+write_urls bad_urls_path, bad_urls

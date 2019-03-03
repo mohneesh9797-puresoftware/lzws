@@ -3,5 +3,4 @@ set -e
 
 cd "$(dirname $0)"
 
-proxychains -f "../proxychains.conf" "./update.rb" < "./url.list" > "./url.list.tmp"
-mv "./url.list.tmp" "./url.list"
+torsocks "./update.rb" "./url.list" "./bad_url.list"
