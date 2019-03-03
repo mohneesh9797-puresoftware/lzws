@@ -172,24 +172,25 @@ def page_with_archives?(url)
       data, is_listing = get_file_or_listing_from_ftp uri
     rescue StandardError => error
       STDERR.puts error
-      return false
+      return false, true
     end
 
     regexp = is_listing ? LISTING_WITH_ARCHIVES_REGEXP : PAGE_WITH_ARCHIVES_REGEXP
-    data =~ regexp
+    [data =~ regexp, false]
 
   when "http", "https"
     begin
       data = get_http_content uri
     rescue StandardError => error
       STDERR.puts error
-      return false
+      return false, true
     end
 
-    data =~ PAGE_WITH_ARCHIVES_REGEXP
+    [data =~ PAGE_WITH_ARCHIVES_REGEXP, false]
 
   else
-    raise "uknown page uri scheme: #{scheme}"
+    STDERR.puts "uknown page uri scheme: #{scheme}"
+    return false, true
   end
 end
 
@@ -197,21 +198,27 @@ def check_page_with_archives(url)
   STDERR.puts "-----"
   STDERR.puts "processing page with archives, url: #{url}"
 
-  result = page_with_archives? url
+  result, is_error = page_with_archives? url
   STDERR.puts "page is #{result ? 'valid' : 'invalid'}"
 
-  result
+  [result, is_error]
 end
 
 def get_filtered_urls(urls)
+  filtered_invalid_urls = []
+
   filtered_urls = urls
     .shuffle
-    .select { |url| check_page_with_archives url }
+    .select do |url|
+      result, is_error = check_page_with_archives url
+      filtered_invalid_urls << url unless is_error
+      result
+    end
 
   STDERR.puts "-----"
   STDERR.puts "received #{filtered_urls.length} filtered urls"
 
-  filtered_urls
+  [filtered_urls, filtered_invalid_urls]
 end
 
 # -- files --
@@ -228,17 +235,17 @@ def write_urls(path, urls)
   File.write path, urls.join("\n")
 end
 
-urls_path     = ARGV[0]
-bad_urls_path = ARGV[1]
+urls_path         = ARGV[0]
+invalid_urls_path = ARGV[1]
 
-urls     = read_urls urls_path
-bad_urls = read_urls bad_urls_path
+urls         = read_urls urls_path
+invalid_urls = read_urls invalid_urls_path
 
-new_urls      = get_urls - urls - bad_urls
-filtered_urls = get_filtered_urls new_urls
+new_urls                             = get_urls - urls - invalid_urls
+filtered_urls, filtered_invalid_urls = get_filtered_urls new_urls
 
-urls     = (urls + filtered_urls).sort.uniq
-bad_urls = (bad_urls + (new_urls - filtered_urls)).sort.uniq
+urls         = (urls + filtered_urls).sort.uniq
+invalid_urls = (invalid_urls + filtered_invalid_urls).sort.uniq
 
 write_urls urls_path, urls
-write_urls bad_urls_path, bad_urls
+write_urls invalid_urls_path, invalid_urls
