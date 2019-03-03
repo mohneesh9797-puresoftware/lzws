@@ -125,7 +125,7 @@ end
 
 def get_urls
   urls = get_search_endpoints
-    .shuffle.slice(0...3)
+    .shuffle
     .map { |search_endpoint| get_urls_from_search_endpoint search_endpoint }
     .flatten
     .sort
@@ -205,7 +205,7 @@ end
 
 def get_filtered_urls(urls)
   filtered_urls = urls
-    .shuffle.slice(0...10)
+    .shuffle
     .select { |url| check_page_with_archives url }
 
   STDERR.puts "-----"
