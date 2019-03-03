@@ -73,11 +73,15 @@ def get_urls_from_search_endpoint(search_endpoint)
   STDERR.puts "-----"
   STDERR.puts "processing search endpoint: #{search_endpoint}"
 
-  urls = []
+  begin
+    uri = URI "#{search_endpoint}/search"
+  rescue StandardError
+    STDERR.puts "invalid url"
+  end
 
-  uri = URI "#{search_endpoint}/search"
+  urls   = []
   params = { :q => get_search_text, :format => "json" }
-  page = 1
+  page   = 1
 
   loop do
     params[:pageno] = page
@@ -164,7 +168,12 @@ LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
 .freeze
 
 def page_with_archives?(url)
-  uri = URI url
+  begin
+    uri = URI url
+  rescue StandardError
+    STDERR.puts "invalid url"
+    return false, true
+  end
 
   case uri.scheme
   when "ftp"
