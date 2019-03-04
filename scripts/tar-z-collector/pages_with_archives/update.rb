@@ -109,7 +109,7 @@ def get_urls_from_search_endpoint(search_endpoint)
 
     begin
       data = JSON.parse data
-    rescue StandardError # ignoring big error message
+    rescue StandardError # Ignoring big error message.
       STDERR.puts "failed to parse json"
       break
     end
@@ -133,6 +133,17 @@ def get_urls_from_search_endpoint(search_endpoint)
 
     urls += new_urls
     page += 1
+  end
+
+  # Ignoring invalid urls.
+  urls = urls.select do |url|
+    begin
+      URI url
+    rescue StandardError
+      false
+    else
+      true
+    end
   end
 
   STDERR.puts "received #{urls.length} urls"
@@ -244,9 +255,14 @@ end
 
 # -- files --
 
+# Data Format:
+# {url} #{digest}\n
+# ...
+
+# Several urls can have the same digest.
+
 def read_urls_hash(path)
-  data = File.read(path)
-  data
+  File.read(path)
     .split("\n")
     .map(&:strip)
     .reject(&:empty?)
@@ -257,8 +273,10 @@ end
 def write_urls_hash(path, urls_hash)
   data = urls_hash
     .map { |values| values.join(" ") }
+    .sort
     .join("\n")
   File.write path, data
+
   nil
 end
 
