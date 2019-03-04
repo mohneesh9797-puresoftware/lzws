@@ -58,9 +58,6 @@ StringLiterals:
 Style/AccessModifierDeclarations:
   EnforcedStyle: inline
 
-Style/AndOr:
-  Enabled: false
-
 Style/CaseEquality:
   Enabled: false
 
