@@ -26,7 +26,11 @@ static inline lzws_result_t test_compressor(lzws_test_compressor_t function, va_
     return result;
   }
 
-  function(state_ptr, args);
+  // We need to copy arguments for each function call.
+  va_list args_copy;
+  va_copy(args_copy, args);
+
+  function(state_ptr, args_copy);
 
   lzws_compressor_free_state(state_ptr);
 
@@ -80,7 +84,11 @@ static inline lzws_result_t test_decompressor(lzws_test_decompressor_t function,
     return result;
   }
 
-  function(state_ptr, args);
+  // We need to copy arguments for each function call.
+  va_list args_copy;
+  va_copy(args_copy, args);
+
+  function(state_ptr, args_copy);
 
   lzws_decompressor_free_state(state_ptr);
 
@@ -125,7 +133,11 @@ static inline lzws_result_t test_combination_with_compressor_and_decompressor(lz
   lzws_test_compressor_and_decompressor_t function               = va_arg(args, lzws_test_compressor_and_decompressor_t);
   va_list*                                function_args          = va_arg(args, va_list*);
 
-  return function(compressor_state_ptr, decompressor_state_ptr, *function_args);
+  // We need to copy arguments for each function call.
+  va_list function_args_copy;
+  va_copy(function_args_copy, *function_args);
+
+  return function(compressor_state_ptr, decompressor_state_ptr, function_args_copy);
 }
 
 static inline lzws_result_t test_compressor_combinations_with_decompressor(lzws_decompressor_state_t* decompressor_state_ptr, va_list args)
