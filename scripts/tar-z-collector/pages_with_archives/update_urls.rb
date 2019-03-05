@@ -24,11 +24,15 @@ SEARCH_ENDPOINT_REGEXP = Regexp.new(
       [[:space:]]*
       href[[:space:]]*=[[:space:]]*
         (?:
-          '([^']+)'
+            '
+            ([^']+)
+            '
           |
-          \"([^\"]+)\"
+            \"
+            ([^\"]+)
+            \"
           |
-          ([^[:space:]>]+)
+            ([^[:space:]>]+)
         )
       [[:space:]]*
     >
@@ -190,11 +194,19 @@ PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
     href[[:space:]]*=[[:space:]]*
       (?:
-        '[^']+(?=#{ARCHIVE_POSTFIX_FOR_REGEXP}')
+          '
+          [^']+
+          #{ARCHIVE_POSTFIX_FOR_REGEXP}
+          '
         |
-        \"[^\"]+(?=#{ARCHIVE_POSTFIX_FOR_REGEXP}\")
+          \"
+          [^\"]+
+          #{ARCHIVE_POSTFIX_FOR_REGEXP}
+          \"
         |
-        [^[:space:]>]+(?=#{ARCHIVE_POSTFIX_FOR_REGEXP}[[:space:]>])
+          [^[:space:]>]+
+          #{ARCHIVE_POSTFIX_FOR_REGEXP}
+          [[:space:]>]
       )
   ",
   Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
@@ -204,7 +216,13 @@ PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
 # -r--r--r--  1 257  7070  337967 Jul 29  1992 *.tar.Z
 LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
-    [^[:space:]]+(?=#{ARCHIVE_POSTFIX_FOR_REGEXP})
+    [^[:space:]]+
+    #{ARCHIVE_POSTFIX_FOR_REGEXP}
+    (?:
+      [[:space:]]
+      |
+      \\Z
+    )
   ",
   Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
 )
