@@ -3,6 +3,8 @@ require "net/ftp"
 
 TIMEOUT = 60 # seconds
 
+# -- http --
+
 HTTP_OPTIONS =
   %i[
     open_timeout
@@ -15,18 +17,6 @@ HTTP_OPTIONS =
   .map { |timeout| [timeout, TIMEOUT] }
   .to_h
   .freeze
-
-FTP_OPTIONS =
-  %i[
-    open_timeout
-    read_timeout
-    ssl_handshake_timeout
-  ]
-  .map { |timeout| [timeout, TIMEOUT] }
-  .to_h
-  .freeze
-
-# -- http --
 
 def get_http_content(uri)
   options = HTTP_OPTIONS.merge(
@@ -45,6 +35,16 @@ def get_http_content(uri)
 end
 
 # -- ftp --
+
+FTP_OPTIONS =
+  %i[
+    open_timeout
+    read_timeout
+    ssl_handshake_timeout
+  ]
+  .map { |timeout| [timeout, TIMEOUT] }
+  .to_h
+  .freeze
 
 def process_ftp(uri, &_block)
   options = FTP_OPTIONS.merge(
@@ -76,11 +76,12 @@ def get_file_or_listing_from_ftp(uri)
 
     begin
       ftp.chdir path
-      return ftp.list, true
+      data = ftp.list.join "\n"
+      return data, true
     rescue StandardError # rubocop:disable Lint/HandleExceptions
     end
 
-    file = ftp.getbinaryfile path, nil
-    return file, false
+    data = ftp.getbinaryfile path, nil
+    return data, false
   end
 end
