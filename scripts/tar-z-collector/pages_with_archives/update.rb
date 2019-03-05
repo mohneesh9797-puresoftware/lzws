@@ -13,6 +13,7 @@ STATS_ENDPOINTS = %w[
 .freeze
 
 TARGET_ARCHIVE_EXTENSION = "tar.Z".freeze
+TARGET_ARCHIVE_POSTFIX   = ".#{TARGET_ARCHIVE_EXTENSION}".freeze
 
 def get_search_text
   # "tar.Z" index|directory|listing|ftp
@@ -26,19 +27,31 @@ end
 
 # -- stats --
 
+# <a href='https://searx.at'>https://searx.at</a>
 # <a href="https://searx.at">https://searx.at</a>
+# <a href=https://searx.at>https://searx.at</a>
 SEARCH_ENDPOINT_REGEXP = Regexp.new(
   "
     <a
       [[:space:]]*
       href[[:space:]]*=[[:space:]]*
-        ['\"]
-          ([^'\"]+)
-        ['\"]
+        (?:
+          '([^']+)'
+          |
+          \"([^\"]+)\"
+          |
+          ([^[:space:]>]+)
+        )
       [[:space:]]*
     >
       [[:space:]]*
-      \\1
+      (?:
+        \\1
+        |
+        \\2
+        |
+        \\3
+      )
       [[:space:]]*
     </a>
   ",
@@ -53,7 +66,7 @@ def get_search_endpoints_from_stats_endpoint(stats_endpoint)
     uri  = URI stats_endpoint
     data = get_http_content uri
 
-    search_endpoints = data.scan(SEARCH_ENDPOINT_REGEXP).flatten
+    search_endpoints = data.scan(SEARCH_ENDPOINT_REGEXP).flatten.compact
 
   rescue StandardError => error
     STDERR.puts error
@@ -166,15 +179,19 @@ end
 
 # -- filter --
 
+# href='*.tar.Z'
 # href="*.tar.Z"
+# href=*.tar.Z
 PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
     href[[:space:]]*=[[:space:]]*
-      ['\"]
-        [^'\"]+?
-        \.
-        #{Regexp.quote(TARGET_ARCHIVE_EXTENSION)}
-      ['\"]
+      (?:
+        '[^']+(?=#{Regexp.quote(TARGET_ARCHIVE_POSTFIX)})'
+        |
+        \"[^\"]+(?=#{Regexp.quote(TARGET_ARCHIVE_POSTFIX)})\"
+        |
+        [^[:space:]>]+(?=#{Regexp.quote(TARGET_ARCHIVE_POSTFIX)})
+      )
   ",
   Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
 )
@@ -182,11 +199,8 @@ PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
 
 # -r--r--r--  1 257  7070  337967 Jul 29  1992 *.tar.Z
 LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
-  "
-    \.
-    #{Regexp.quote(TARGET_ARCHIVE_EXTENSION)}
-  ",
-  Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
+  Regexp.quote(TARGET_ARCHIVE_POSTFIX),
+  Regexp::IGNORECASE | Regexp::MULTILINE
 )
 .freeze
 
