@@ -5,7 +5,8 @@
 # Several urls can have the same digest.
 
 def read_urls_hash(path)
-  File.read(path)
+  File
+    .read(path)
     .split("\n")
     .map(&:strip)
     .reject(&:empty?)
