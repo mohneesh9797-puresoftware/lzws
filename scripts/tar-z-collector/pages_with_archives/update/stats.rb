@@ -43,12 +43,12 @@ SEARCH_ENDPOINT_REGEXP = Regexp.new(
 )
 .freeze
 
-def get_search_endpoints_from_endpoint(endpoint)
+def get_search_endpoints_from_endpoint(endpoint:)
   STDERR.puts "- processing stats endpoint: #{endpoint}"
 
   begin
     uri  = URI endpoint
-    data = get_http_content uri
+    data = get_http_content :uri => uri
 
     search_endpoints = data.scan(SEARCH_ENDPOINT_REGEXP).flatten.compact
 
@@ -65,7 +65,7 @@ end
 def get_search_endpoints
   search_endpoints = ENDPOINTS
     .shuffle
-    .map { |endpoint| get_search_endpoints_from_endpoint endpoint }
+    .map { |endpoint| get_search_endpoints_from_endpoint :endpoint => endpoint }
     .flatten
     .sort
     .uniq

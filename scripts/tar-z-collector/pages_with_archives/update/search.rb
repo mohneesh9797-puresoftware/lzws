@@ -5,7 +5,7 @@ require_relative "../../common/query"
 require_relative "stats"
 
 # We can try to receive all pages from single search endpoint one-by-one.
-# But this search endpoint will return 429 error code (too many requests).
+# But search endpoint will can return 429 error code (too many requests).
 # We can make a queue of search endpoints and process endpoints one-by-one instead.
 # This method provides better results.
 
@@ -19,7 +19,7 @@ def get_text
   .join(" ")
 end
 
-def get_urls_from_endpoint(endpoint, page, urls)
+def read_next_urls_from_endpoint(endpoint:, page:, urls:)
   STDERR.puts "- processing search endpoint: #{endpoint}, page: #{page}"
 
   begin
@@ -33,7 +33,7 @@ def get_urls_from_endpoint(endpoint, page, urls)
   uri.query = URI.encode_www_form params
 
   begin
-    data = get_http_content uri
+    data = get_http_content :uri => uri
   rescue StandardError => error
     STDERR.puts error
     return nil
@@ -82,7 +82,11 @@ def get_urls
     new_queue = []
 
     queue.each do |data|
-      new_urls = get_urls_from_endpoint data[:endpoint], data[:page], data[:urls]
+      new_urls = read_next_urls_from_endpoint(
+        :endpoint => data[:endpoint],
+        :page     => data[:page],
+        :urls     => data[:urls]
+      )
       next if new_urls.nil?
 
       data[:page] += 1

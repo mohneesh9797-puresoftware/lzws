@@ -1,4 +1,4 @@
-def read_page_digests(path)
+def read_digest_list(path)
   File
     .read(path)
     .split("\n")
@@ -6,8 +6,8 @@ def read_page_digests(path)
     .reject(&:empty?)
 end
 
-def write_page_digests(path, page_digests)
-  data = page_digests.join "\n"
+def write_digest_list(path, digest_list)
+  data = digest_list.join "\n"
   File.write path, data
 
   nil

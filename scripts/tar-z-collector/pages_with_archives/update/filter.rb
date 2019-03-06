@@ -45,7 +45,7 @@ LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
 )
 .freeze
 
-def page_with_archives?(url, urls_hash, invalid_urls_hash)
+def page_with_archives?(url:, url_hash:, invalid_url_hash:)
   STDERR.puts "- checking page, url: #{url}"
 
   begin
@@ -53,11 +53,11 @@ def page_with_archives?(url, urls_hash, invalid_urls_hash)
 
     case uri.scheme
     when "ftp"
-      data, is_listing = get_file_or_listing_from_ftp uri
+      data, is_listing = get_file_or_listing_from_ftp :uri => uri
       regexp           = is_listing ? LISTING_WITH_ARCHIVES_REGEXP : PAGE_WITH_ARCHIVES_REGEXP
 
     when "http", "https"
-      data   = get_http_content uri
+      data   = get_http_content :uri => uri
       regexp = PAGE_WITH_ARCHIVES_REGEXP
 
     else
@@ -66,20 +66,20 @@ def page_with_archives?(url, urls_hash, invalid_urls_hash)
 
   rescue StandardError => error
     STDERR.puts error
-    return false
+    return nil
   end
 
-  result = data =~ regexp
+  result = !(data =~ regexp).nil?
   digest = Digest::SHA256.hexdigest data
 
   STDERR.puts "page is #{result ? 'valid' : 'invalid'}"
 
   if result
-    adding_to_hash     = urls_hash
-    removing_from_hash = invalid_urls_hash
+    adding_to_hash     = url_hash
+    removing_from_hash = invalid_url_hash
   else
-    adding_to_hash     = invalid_urls_hash
-    removing_from_hash = urls_hash
+    adding_to_hash     = invalid_url_hash
+    removing_from_hash = url_hash
   end
 
   adding_to_hash[url] = digest
@@ -88,18 +88,21 @@ def page_with_archives?(url, urls_hash, invalid_urls_hash)
   result
 end
 
-def filter_urls(urls_hash, invalid_urls_hash)
+def filter_urls(url_hash:, invalid_url_hash:)
   urls_length         = 0
   invalid_urls_length = 0
 
   urls = get_urls
     .shuffle
-    .reject { |url| urls_hash.key?(url) || invalid_urls_hash.key?(url) }
+    .reject { |url| url_hash.key?(url) || invalid_url_hash.key?(url) }
 
   STDERR.puts "-- filtering #{urls.length} urls"
 
   urls.each do |url|
-    if page_with_archives? url, urls_hash, invalid_urls_hash
+    result = page_with_archives? :url => url, :url_hash => url_hash, :invalid_url_hash => invalid_url_hash
+    next if result.nil?
+
+    if result
       urls_length += 1
     else
       invalid_urls_length += 1

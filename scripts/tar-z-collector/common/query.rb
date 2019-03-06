@@ -18,7 +18,7 @@ HTTP_OPTIONS =
   .to_h
   .freeze
 
-def get_http_content(uri)
+def get_http_content(uri:)
   options = HTTP_OPTIONS.merge(
     :use_ssl => uri.scheme == "https"
   )
@@ -46,7 +46,7 @@ FTP_OPTIONS =
   .to_h
   .freeze
 
-def process_ftp(uri, &_block)
+def process_ftp(uri:, &_block)
   options = FTP_OPTIONS.merge(
     :port => uri.port
   )
@@ -61,14 +61,14 @@ def process_ftp(uri, &_block)
   end
 end
 
-def get_file_from_ftp(uri)
-  process_ftp(uri) do |ftp|
+def get_file_from_ftp(uri:)
+  process_ftp(:uri => uri) do |ftp|
     return ftp.getbinaryfile uri.path, nil
   end
 end
 
-def get_file_or_listing_from_ftp(uri)
-  process_ftp(uri) do |ftp|
+def get_file_or_listing_from_ftp(uri:)
+  process_ftp(:uri => uri) do |ftp|
     # We don't know whether uri path is file or listing.
     # We can try to get listing for the first time.
 
