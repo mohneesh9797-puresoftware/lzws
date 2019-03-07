@@ -10,10 +10,10 @@ require_relative "stats"
 # This method provides better results.
 
 def get_text
-  # "tar.Z" index|directory|listing|ftp
+  # "tar.Z" index|directory|listing|ftp|file|archive
   [
     "\"#{ARCHIVE_EXTENSION}\"",
-    %w[index directory listing ftp].shuffle.join("|")
+    %w[index directory listing ftp file archive].shuffle.join("|")
   ]
   .shuffle
   .join(" ")

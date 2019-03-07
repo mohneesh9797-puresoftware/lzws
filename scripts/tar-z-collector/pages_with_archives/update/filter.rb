@@ -1,3 +1,4 @@
+require "colorize"
 require "digest"
 
 require_relative "../../common/data"
@@ -45,8 +46,8 @@ LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
 )
 .freeze
 
-def page_with_archives?(url:, url_hash:, invalid_url_hash:)
-  STDERR.puts "- checking page, url: #{url}"
+def page_with_archives?(percent:, url:, url_hash:, invalid_url_hash:)
+  STDERR.puts "- #{percent}% checking page, url: #{url}"
 
   begin
     uri = URI url
@@ -72,7 +73,8 @@ def page_with_archives?(url:, url_hash:, invalid_url_hash:)
   result = !(data =~ regexp).nil?
   digest = Digest::SHA256.hexdigest data
 
-  STDERR.puts "page is #{result ? 'valid' : 'invalid'}"
+  result_text = result ? "valid".light_green : "invalid"
+  STDERR.puts "page is #{result_text}"
 
   if result
     adding_to_hash     = url_hash
@@ -98,8 +100,17 @@ def filter_urls(url_hash:, invalid_url_hash:)
 
   STDERR.puts "-- filtering #{urls.length} urls"
 
-  urls.each do |url|
-    result = page_with_archives? :url => url, :url_hash => url_hash, :invalid_url_hash => invalid_url_hash
+  max_index = urls.length - 1
+
+  urls.each_with_index do |url, index|
+    percent = ((index.to_f / max_index) * 100).round PERCENT_ROUND_LENGTH
+
+    result = page_with_archives?(
+      :percent          => percent,
+      :url              => url,
+      :url_hash         => url_hash,
+      :invalid_url_hash => invalid_url_hash
+    )
     next if result.nil?
 
     if result
