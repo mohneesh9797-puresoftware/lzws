@@ -15,6 +15,7 @@ ftp://ftp.uvsq.fr/pub/linux/sunsite/devel/lang/smalltalkx/!INDEX.html f6b3534bba
 ftp://tug.ctan.org/u/ma/hohn/linux/misc/00dir.html dc929ab1d652c7bd8fb9f1a609d27950e35bba605d67951c3a2cc1f727f04bb4
 http://78.108.103.11/MIRROR/GraphicsMagick/delegates/ 7a866689196bc7b77b1988301491f994fc93a2835df446a832b60899a932b79b
 http://abcis.cbs.cnrs.fr/DOWNLOAD/gifa_v4/ a2c3197504ad39bd965d72b9dd649cef6b7e154caa01ef484b00996d4d9f9330
+http://abcis.cbs.cnrs.fr/DOWNLOAD/gifa_v4_old/ 79c4b526b317ed5c1084b67554cbeac9a4ecda8c3055097552e67a6bdf52c467
 http://aima.cs.berkeley.edu/lisp/doc/old-install.html f0e3bcc8aa404e0b42a20c3dfe1001fb9a0d5813b82861f84edfbed6ef563129
 http://aminet.net/misc/unix dc2bf6fa594a8e5d869def9b39c783e0cc5448216a335a717ddddcb6b7e9ecb5
 http://aminet.net/package/misc/unix/mpack-1.5 d495058a4d66b5d22946c0b0c53a490ac2ec4a46ea80ba315e077a09930d7d2a
@@ -62,6 +63,7 @@ http://ftp.esrf.eu/pub/expg/idl/ 01876b2d5b4e4d4310698345df46650b666ccbe3148dc93
 http://ftp.esrf.eu/pub/expg/idl/xop/ 523553c0cd179b6ddb2f225d76c46515e5ccfb499d5e4fde3642b3e910edd86e
 http://ftp.esrf.eu/pub/scisoft/xop2.0/Unix/ f7ab072729d456ce6727c44e846d044c0b7343feabe155967b04c73a58191181
 http://ftp.esrf.fr/pub/scisoft/xop2.0/Extensions/PROW/ 8545a44677ec0df5793c3b78616f9e14645fa1386a872458df076b3e6a97852b
+http://ftp.fau.de/pub/ripe.net/tools/mrouted-3.8/ftp.parc.xerox.com/ 7aa19484b6c00f1f901c5f03098d7489c2fb9daf32b448eea27d00c88ec8f002
 http://ftp.fernuni-hagen.de/ftp-dir/pub/unix/ntp/ 587103c66c78e44b6a50eb4f50930715ad850b11af70b8b1700e65bb5cb19957
 http://ftp.free.fr/pub/linux/kernel/Historic/v0.99/ 0f72bbaab2b7724119784799f155c776d834a27dd4919a77e1ac026992488133
 http://ftp.funet.fi/index/RolePlaying/INDEX.html 8bc4f1dde04f29f25621a5733a0dc7b8c7466d11d800f0689ec6256792aa92bd
@@ -108,8 +110,10 @@ http://ftp.metu.edu.tr/pub/mirrors/ftp.x.org/contrib/book_examples/ 673da49ae1b0
 http://ftp.metu.edu.tr/pub/mirrors/ftp.x.org/contrib/widgets/ 03243e850fdad9bf6aa2648281a8cbd59829915758e4c61541c5c775ef32e407
 http://ftp.nl.freebsd.org/editors/NEdit/v5_5/executables/ d82dcab11f03e267a79b3c18867a42ec3be86be54aab75839084626fbd30d269
 http://ftp.osuosl.org/pub/nslu2/sources/?C=M 4690d6555524ed892a09e07a7e55c39676570c3aa131cbadea4051b16d86f847
+http://ftp.porcupine.org/pub/security/ c532ee800ceb0e0551cf603cb46a1aaa85368385036934fa3e50d7c11bd735d5
 http://ftp.porcupine.org/pub/security/index.html c532ee800ceb0e0551cf603cb46a1aaa85368385036934fa3e50d7c11bd735d5
 http://ftp.riken.jp/Linux/kernel.org/linux/kernel/Historic/v0.99/ cb705af07679999a49f5d4e63ad5e1ff887125bf646550d53573c198bda72efa
+http://ftp.riken.jp/net/sendmail/past-releases/ 1ab5b8a56e337889f68fc4577b37abc5eb25800bb0df6824dc2151acbb119e0e
 http://ftp.st.ryukoku.ac.jp/pub/published/oreilly/xbook/motif/ f01eb9086d86284a1104994f491ae75932467fd827cb53c3c1c74bae7e982e00
 http://ftp.st.ryukoku.ac.jp/pub/published/oreilly/xbook/xlib/ 45b5e6c3d848509639bd1dc0aff4775e57cbed9d8f354c0ee5d2d5855b9c8070
 http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/vendor/sun/freeware/SOURCES/ 47fe20b14221c73da2c7f019f87eb32fb17212ffc2508d50ca2a7f7ba8c954d6
@@ -231,6 +235,7 @@ http://www.emaillab.org/mutt/downloadtools.html 66248c936d381a9155858f7c2f952a73
 http://www.esrf.eu/UsersAndScience/Experiments/MX/Software/PXSOFT/XDS/XDS_html_doc/index.html 71befe3f4dc0059589accf70e390d4371e74acb547dd2fd997b5fc035f6986ff
 http://www.eulesoft.de/ 0cdb3d4becb6d87865504a2d716f62510c42f3e200b7575511a29dc4ce1f5587
 http://www.faqs.org/faqs/compression-faq/part1/section-2.html 6097133a48c2ffb177dec413f77259129bc6376fda774f91ee1cc46a790061ae
+http://www.faqs.org/faqs/fonts-faq/metafont-list/ fdde2c583173b29d2e4e99770aa046b7b2232bebb4de2bcaf1a4a93c721a2f91
 http://www.faqs.org/faqs/ftp-list/faq/ ee12a4c2b428d9e7ad46c45fb749218a2873f88a2275f434c6119f630ce65eba
 http://www.grappa.univ-lille3.fr/FAQ-LaTeX/24.1.html 352a4d5dea7f6b527411f1d0d84c6bc2fdbfb5faaf0e665087a955568a0ecad7
 http://www.hboehm.info/gc/gc_source/historical/ 8181e59dfb1d692d8c6c199a759dfcf26b6cbd1cf7274eb8cba1bd1fc18a0441
@@ -242,10 +247,12 @@ http://www.if.usp.br/pub/unix/util/ 8a80b6a414c97daebae3b39da77d9bc759f6294ddb62
 http://www.ifarchive.org/indexes/if-archive/games/adventions/others/ aa24a8ed963317318edfff206d42b7c2cdfb4f7a274ef5da76fdd1a846b729e1
 http://www.ifarchive.org/indexes/if-archive/rec.games.int-fiction/ 3dc4bb38cc4fe1d0bffbcd01a23965c900ba8acaf4965ed7f3680ef4d744be63
 http://www.ifarchive.org/indexes/if-archive/shells/ 5ed13f31c4d3022caa7251a5ce6d331fede1c79b556d77a79efb14b52ca9cb9e
+http://www.ifarchive.org/indexes/if-archiveXgamesXtads.html c6e1dca0a737cfafbfee1427a1f2f315936e3622d004952307be5347470a0242
 http://www.infodrom.org/~joey/Vortraege/1999-06-27-mande.html 230668c93b7aba6427b10de8ed22873f8fc80c2b18a61413f12bda64bf7a52f7
 http://www.ipac10.org/tcl/faq5-c.html 376d91e0c28c9cfd5450d3a1aedf31aa57aeb2a8297b6c5efef528b76161f397
 http://www.kermitproject.org/ck90.html d74114b6010cf62818c61357d26b8b65a4baff314dbbd4af8f17d6555306aada
 http://www.kermitproject.org/ckdaily.html 1ba4ec4c148458b1edfdbdee64bf818e9dc4ce408a10f2be9bdf28194cccff92
+http://www.kip.uni-heidelberg.de/~weis/software/ a832cda859077ef2f03a79edcce8f6bfef73095c4315105df51618744c94feb9
 http://www.limbas.org/wiki/Tools 5f47ef4e23d48fca7d88dfcd9e20416579bbdc6061c0b796613eaff96324fadd
 http://www.lmd.jussieu.fr/~flott/polytechnique.html 9fceaa8797895af987c386c2f26de44972eb05930d229a5000a3d943832c295f
 http://www.math.pitt.edu/~bard/bardware/ 5e87d1340103199fea77825bd5191e40662bce97662db4890ebcc6ca64bbcb89
@@ -358,6 +365,7 @@ https://japan.xilinx.com/support/answers/1050.html 3d90fbde7a38e1c06dcb3352e2d73
 https://japan.xilinx.com/support/answers/3067.html c20d02defb995ccb4b83a50bad01664368ec931e30ac2a534af10c1282dc6eb9
 https://japan.xilinx.com/support/answers/4060.html 3cf9ed05a022de7c8eea518e773ddf19c976620d1ecfef702e03fcd689a68403
 https://japan.xilinx.com/support/answers/619.html 4a74b6e4e43157ebc6ba7ba4a7d993555483ca1d8e54bdbacd349d70f7b13036
+https://japan.xilinx.com/support/answers/893.html f63cc0111b5dc5c59330fcf9f9a58954fbef1db6147a660d6ba67d4074b743c5
 https://kdd.ics.uci.edu/databases/faces/ 7d9e7c0d82380f95e0b1573a96426c654433f85cffd7308a0d18f432d5c39fa6
 https://kilin.clas.kitasato-u.ac.jp/howto/majordomo/install_majordomo.v1.html 4ddea1dad135394a81c72e1fc602a12db380b344aed4a7fa16d538863c342c7f
 https://linuxjf.osdn.jp/JFdocs/Filesystems-HOWTO-3.html 69d82caff292833f66d02f404ac005a71a2a4589cb85ba8166487fb4e35dfe26
@@ -369,6 +377,7 @@ https://lynx.invisible-island.net/lynx2.8.7/ 58d4bc88a180732dbbe8ab1a6543c2aa253
 https://lynx.invisible-island.net/lynx2.8.7/index.html 58d4bc88a180732dbbe8ab1a6543c2aa253023b2a5f83df2d257bdece2136b4f
 https://lynx.invisible-island.net/lynx2.8.9/ d56cc403ce2e64e5411b9574efeb6c7a8938265a7e6bf5d4b671c662ce3e4741
 https://minix1.woodhull.com/pub/contrib/ cd45be711e348cdb893bda4993701ceb60f32bb92335363ea6ec866a5054b701
+https://mirror.math.princeton.edu/pub/oldlinux/Linux.old/bin-src/ c0820ec5ac04474e6c94b43828ca8cf6d61de3db877648a0fa3f62b0efc5d477
 https://mirror.math.princeton.edu/pub/oldlinux/Linux.old/gnu/ 5d8d5f49eb912f7f20cd245b187179e643671f4929d883780af9b76f2bda1ca1
 https://mirror.math.princeton.edu/pub/oldlinux/Linux.old/gnu/bash/ c0551c1cd783bc19ec06e1271f350f2b8d75445bf801cae445d4d19664d384a5
 https://mirror.sobukus.de/files/src/cdrtools/ b965346554e9fbbe40879567dbee0fe32189db08a1714d18593f90ebffcf5184
@@ -396,6 +405,7 @@ https://support.hdfgroup.org/ftp/HDF/releases/ 8799065787a682ea711e0f5fb75bc318d
 https://tools.tropos.de/ ccced6eeb746d12535fcdc6653a97da613432cd812d81dc3246d14365c78aa7f
 https://ubiquitous-intelligence.org/vis5d/ b9e3a31d49673bb84932c3de9e661ab274f39b2653fd95cd1a15d484fc729790
 https://users.aalto.fi/~pat/old/cover/?C=S;O=D 8f4c0f34b919de15f33804c2a62133edab79b666bd379a133a6abd795949623e
+https://web.stanford.edu/~cantwell/AA283_Course_Material/CEAforIntelMac/CEAexec/CEA+Fortran%20copy/CEAguiDownload-unix.html 0abe2e23da675ad9b3d207f1d260c4e3d14c94cc3eb94e3ae6d3ba1b01ad02fc
 https://web.warwick.ac.uk/ftp/misc/ 1ea99f9c959e1ee5ac8beffebeb10e4a2230604749f5a89299dc283448ad299d
 https://web.warwick.ac.uk/ftp/solaris2/ cb2033737eca18cded2fbd10e06eb21782f8e70438d5763665a3d2131332f0dd
 https://web.warwick.ac.uk/ftp/x11/ 864963813de89c453cd7027663073d92df13d25de67d3a4141c98c7333db2bd3
@@ -412,10 +422,12 @@ https://www.cpan.org/src/misc/?C=N;O=D ac1325e9167f1668db709cc799649e0735c757c9c
 https://www.cs.bu.edu/ftp/pub/adb/ 159a8fb8a2d6bd52a2a469b8eeb1e5c2e2730ca54cfbedabf39550ae3a321ccb
 https://www.cs.cmu.edu/afs/cs/project/mach/public/src/ 2f2c0007f5faa7873d5fde86f2c1801dc8b2e719a7c1eb5ef7b4dd1becb3c6fb
 https://www.cs.cmu.edu/afs/cs/usr/bsy/www/ftp.html 6e77764005d87a343ce95d84264b74bfb1c84ad176dc721101addb9598dadd8a
+https://www.cs.indiana.edu/ftp/faces/web_hits/1998/06refs.html 525bd73ab26aacc880546996c7907ecd08de75f6f0286e143e1c6c23fabc3e85
 https://www.cs.utexas.edu/ftp/boyer/ a97b1e806e95f2736fdf0e7f040112f13bf3c48ec39f994f035f9a6bf65da210
 https://www.cs.utexas.edu/ftp/predator/ dc8708bdaabb4f1a46d19e91b117cf0cfafd7038bf50c9dd88ddaf5c3be36019
 https://www.cs.utexas.edu/ftp/qsim/qsim/ 47d6e27499fdc76c06a60448f764c236ec985fa3faeafa72a74a851f88e3d425
 https://www.cs.vu.nl/pub/amoeba/amoeba5.3/thirdp/?C=M;O=A 401e6ef57973043be14cc362d12459c506c4b58436c9c7c64ca70ed9dcd84d50
+https://www.cs.vu.nl/pub/amoeba/amoeba5.3/thirdp/?C=S;O=A 862f276a293cd448f1e486249db7a00a7f2129c9351ff08520ef3cab7619e50a
 https://www.dcc-servers.net/dcc/source/ aa806d15df8d7874424bf54b8a6e65ff670204ce03d70a10bd0e4bb30091e0f9
 https://www.dell.com/support/home/fi/fi/jppad1/drivers/driversdetails?driverid=r34404&lwp=rt 04e21458a8c7291ad5a2133e1259bf8c60e021ae0b4f571834803df4e8207dd0
 https://www.eblong.com/zarf/ftp/?C=M;O=A 7c4326bfca7ce9ea08c638b26af2ce6979c4e71106bea119fabaa1c91d90f625
