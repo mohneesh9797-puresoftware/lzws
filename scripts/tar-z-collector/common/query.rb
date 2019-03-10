@@ -1,5 +1,6 @@
 require "net/http"
 require "net/ftp"
+require "uri"
 
 TIMEOUT = 60 # seconds
 

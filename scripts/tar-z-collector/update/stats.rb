@@ -1,7 +1,10 @@
-require_relative "../../common/query"
+require "uri"
+
+require_relative "../common/format"
+require_relative "../common/query"
 
 # https://github.com/asciimoo/searx/wiki/Searx-instances
-ENDPOINTS = %w[
+STATS_URLS = %w[
   https://stats.searx.xyz
   https://stats.searx.xyz/tor.html
 ]
@@ -10,7 +13,7 @@ ENDPOINTS = %w[
 # <a href='https://searx.at'>https://searx.at</a>
 # <a href="https://searx.at">https://searx.at</a>
 # <a href=https://searx.at>https://searx.at</a>
-SEARCH_ENDPOINT_REGEXP = Regexp.new(
+SEARCH_URL_REGEXP = Regexp.new(
   "
     <a
       [[:space:]]*
@@ -43,34 +46,35 @@ SEARCH_ENDPOINT_REGEXP = Regexp.new(
 )
 .freeze
 
-def get_search_endpoints_from_endpoint(endpoint:)
-  STDERR.puts "- processing stats endpoint: #{endpoint}"
+def get_search_urls_from_stats_url(stats_url:)
+  STDERR.puts "- processing stats url: #{stats_url}"
 
   begin
-    uri  = URI endpoint
+    uri  = URI stats_url
     data = get_http_content :uri => uri
 
-    search_endpoints = data.scan(SEARCH_ENDPOINT_REGEXP).flatten.compact
+    search_urls = data.scan(SEARCH_URL_REGEXP).flatten.compact
 
   rescue StandardError => error
     STDERR.puts error
     return []
   end
 
-  STDERR.puts "received #{search_endpoints.length} search endpoints"
+  text = colorize_length :length => search_urls.length
+  STDERR.puts "received #{text} search urls"
 
-  search_endpoints
+  search_urls
 end
 
-def get_search_endpoints
-  search_endpoints = ENDPOINTS
+def get_search_urls
+  search_urls = STATS_URLS
     .shuffle
-    .map { |endpoint| get_search_endpoints_from_endpoint :endpoint => endpoint }
-    .flatten
+    .flat_map { |stats_url| get_search_urls_from_stats_url :stats_url => stats_url }
     .sort
     .uniq
 
-  STDERR.puts "-- received #{search_endpoints.length} search endpoints"
+  text = colorize_length :length => search_urls.length
+  STDERR.puts "-- received #{text} search urls from all stats urls"
 
-  search_endpoints
+  search_urls
 end
