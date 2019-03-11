@@ -1,3 +1,4 @@
+require "addressable/uri"
 require "colorize"
 require "uri"
 
@@ -10,27 +11,27 @@ require_relative "../common/query"
 PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
     href[[:space:]]*=[[:space:]]*
-      (?:
-          '
-          (
-            [^']+
-            #{ARCHIVE_POSTFIX_FOR_REGEXP}
-          )
-          '
-        |
-          \"
-          (
-            [^\"]+
-            #{ARCHIVE_POSTFIX_FOR_REGEXP}
-          )
-          \"
-        |
-          (
-            [^[:space:]>]+
-            #{ARCHIVE_POSTFIX_FOR_REGEXP}
-          )
-          [[:space:]>]
-      )
+    (?:
+        '
+        (
+          [^']+
+          #{ARCHIVE_POSTFIX_FOR_REGEXP}
+        )
+        '
+      |
+        \"
+        (
+          [^\"]+
+          #{ARCHIVE_POSTFIX_FOR_REGEXP}
+        )
+        \"
+      |
+        (
+          [^[:space:]>]+
+          #{ARCHIVE_POSTFIX_FOR_REGEXP}
+        )
+        [[:space:]>]
+    )
   ",
   Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
 )
@@ -44,9 +45,9 @@ LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
       #{ARCHIVE_POSTFIX_FOR_REGEXP}
     )
     (?:
-      [[:space:]]
+        [[:space:]]
       |
-      \\Z
+        \\Z
     )
   ",
   Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED
@@ -81,7 +82,7 @@ def get_archive_urls_from_page_url(page_url:)
     .compact
     .map do |archive_url|
       begin
-        URI.join(page_url, archive_url).to_s
+        Addressable::URI.parse(page_url).join(archive_url).to_s
       rescue StandardError => error
         STDERR.puts error
         next nil
@@ -112,7 +113,8 @@ def get_archive_urls(page_urls:)
         page_text = "valid".light_green
       end
 
-      STDERR.puts "page is #{page_text}"
+      archive_text = colorize_length :length => new_archive_urls.length
+      STDERR.puts "received #{archive_text} archive urls, page is #{page_text}"
 
       archive_urls += new_archive_urls
     end
