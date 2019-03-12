@@ -20,7 +20,7 @@ def get_page_text
   .join(" ")
 end
 
-def read_new_page_urls_from_search_url(search_url:, page_number:, page_urls:)
+def read_new_page_urls_from_search_url(search_url, page_number, page_urls)
   STDERR.puts "- processing search url: #{search_url}, page number: #{page_number}"
 
   begin
@@ -34,7 +34,7 @@ def read_new_page_urls_from_search_url(search_url:, page_number:, page_urls:)
   uri.query = URI.encode_www_form params
 
   begin
-    data = get_http_content :uri => uri
+    data = get_http_content uri
   rescue StandardError => error
     STDERR.puts error
     return nil
@@ -62,13 +62,13 @@ def read_new_page_urls_from_search_url(search_url:, page_number:, page_urls:)
     return nil
   end
 
-  text = colorize_length :length => new_page_urls.length
+  text = colorize_length new_page_urls.length
   STDERR.puts "received #{text} page urls"
 
   new_page_urls
 end
 
-def get_page_urls(search_urls:)
+def get_page_urls(search_urls)
   page_urls = []
 
   queue = search_urls
@@ -85,11 +85,7 @@ def get_page_urls(search_urls:)
     new_queue = []
 
     queue.each do |data|
-      new_page_urls = read_new_page_urls_from_search_url(
-        :search_url  => data[:search_url],
-        :page_number => data[:page_number],
-        :page_urls   => data[:page_urls]
-      )
+      new_page_urls = read_new_page_urls_from_search_url data[:search_url], data[:page_number], data[:page_urls]
       next if new_page_urls.nil?
 
       data[:page_number] += 1
@@ -106,7 +102,7 @@ def get_page_urls(search_urls:)
 
   page_urls = page_urls.sort.uniq
 
-  text = colorize_length :length => page_urls.length
+  text = colorize_length page_urls.length
   STDERR.puts "-- received #{text} page urls from all search urls"
 
   page_urls

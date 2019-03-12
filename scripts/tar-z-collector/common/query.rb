@@ -1,5 +1,6 @@
 require "net/http"
 require "net/ftp"
+require "open-uri"
 require "uri"
 
 TIMEOUT = 60 # seconds
@@ -19,7 +20,7 @@ HTTP_OPTIONS =
   .to_h
   .freeze
 
-def get_http_content(uri:)
+def get_http_content(uri)
   options = HTTP_OPTIONS.merge(
     :use_ssl => uri.scheme == "https"
   )
@@ -35,6 +36,27 @@ def get_http_content(uri:)
   response.body
 end
 
+OPEN_OPTIONS =
+  %i[
+    read_timeout
+    open_timeout
+  ]
+  .map { |timeout| [timeout, TIMEOUT] }
+  .to_h
+  .freeze
+
+def download_http_file(uri, file_path)
+  io = Kernel.open uri, "rb", OPEN_OPTIONS
+
+  begin
+    IO.copy_stream io, file_path
+  ensure
+    io.close
+  end
+
+  nil
+end
+
 # -- ftp --
 
 FTP_OPTIONS =
@@ -47,7 +69,7 @@ FTP_OPTIONS =
   .to_h
   .freeze
 
-def process_ftp(uri:, &_block)
+def process_ftp(uri, &_block)
   options = FTP_OPTIONS.merge(
     :port => uri.port
   )
@@ -62,14 +84,16 @@ def process_ftp(uri:, &_block)
   end
 end
 
-def get_file_from_ftp(uri:)
-  process_ftp(:uri => uri) do |ftp|
-    return ftp.getbinaryfile uri.path, nil
+def download_file_from_ftp(uri, file_path)
+  process_ftp(uri) do |ftp|
+    ftp.getbinaryfile uri.path, file_path
   end
+
+  nil
 end
 
-def get_file_or_listing_from_ftp(uri:)
-  process_ftp(:uri => uri) do |ftp|
+def get_content_or_listing_from_ftp(uri)
+  process_ftp(uri) do |ftp|
     # We don't know whether uri path is file or listing.
     # We can try to get listing for the first time.
 
