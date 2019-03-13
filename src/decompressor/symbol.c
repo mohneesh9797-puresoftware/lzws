@@ -43,7 +43,8 @@ lzws_result_t lzws_decompressor_write_symbols_for_current_code(lzws_decompressor
     lzws_decompressor_clear_remainder(state_ptr);
 
     state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE;
-  } else {
+  }
+  else {
     state_ptr->status = LZWS_DECOMPRESSOR_READ_NEXT_CODE;
   }
 

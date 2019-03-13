@@ -65,17 +65,9 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return result;
   }
 
-  bool is_dictionary_full = lzws_decompressor_is_dictionary_full(state_ptr);
-  bool quiet              = state_ptr->quiet;
-
   if (state_ptr->block_mode && code == LZWS_CLEAR_CODE) {
-    if (!is_dictionary_full) {
-      if (!quiet) {
-        LZWS_LOG_ERROR("received clear code when dictionary is not full")
-      }
-
-      return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
-    }
+    // Some UNIX compress implementations provides clear code even when dictionary is not full.
+    // So in terms of compatibility decompressor have to just ignore fact that dictionary is not full here.
 
     // We need to clear state after reading clear code.
     lzws_decompressor_clear_state(state_ptr);
@@ -85,7 +77,8 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
 
     if (state_ptr->unaligned_bit_groups) {
       state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
-    } else {
+    }
+    else {
       // Remainder is a part of alignment, we need to clear it.
       lzws_decompressor_clear_remainder(state_ptr);
 
@@ -96,13 +89,13 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     return 0;
   }
 
-  if (is_dictionary_full) {
+  if (lzws_decompressor_is_dictionary_full(state_ptr)) {
     lzws_decompressor_write_code_to_dictionary_wrapper(state_ptr, code);
   }
   else {
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     if (code > next_code) {
-      if (!quiet) {
+      if (!state_ptr->quiet) {
         LZWS_LOG_ERROR("received code: " FAST_CODE_FORMAT " greater than next code: " FAST_CODE_FORMAT, code, next_code)
       }
 

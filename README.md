@@ -110,7 +110,7 @@ It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
 Use `lzws_flush_compressor` when you received end of your input (EOF for example).
 It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
 
-`LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION` means that `destination` is 100% filled.
+`LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION` means that `destination` is filled.
 You can write your destination buffer to output.
 Than you need to provide new destination (same buffer for example).
 

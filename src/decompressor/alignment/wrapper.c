@@ -26,7 +26,7 @@ static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr,
 
     // Some UNIX compress implementations writes random bits from uninitialized buffer as alignment bits.
     // There is no guarantee that alignment bits will be zeroes.
-    // So in terms of 100% compatibility decompressor have to just ignore alignment bit values.
+    // So in terms of compatibility decompressor have to just ignore alignment bit values.
   }
 
   lzws_decompressor_reset_alignment_after_reading(alignment_ptr, state_ptr->free_code_bit_length);

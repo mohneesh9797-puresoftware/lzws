@@ -11,7 +11,7 @@ def read_list(path)
 end
 
 def write_list(path, list)
-  data = XZ.compress list.join("\n"), XZ_COMPRESSION_LEVEL
+  data = XZ.compress list.join("\n"), :level => XZ_COMPRESSION_LEVEL
   File.write path, data
 
   nil
