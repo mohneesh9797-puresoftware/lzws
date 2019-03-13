@@ -67,7 +67,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
 
   if (state_ptr->block_mode && code == LZWS_CLEAR_CODE) {
     // Some UNIX compress implementations provides clear code even when dictionary is not full.
-    // So in terms of compatibility decompressor have to just ignore fact that dictionary is not full here.
+    // So in terms of compatibility decompressor have to just ignore situation when dictionary is not full here.
 
     // We need to clear state after reading clear code.
     lzws_decompressor_clear_state(state_ptr);
