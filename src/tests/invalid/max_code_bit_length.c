@@ -12,7 +12,7 @@
 static const uint8_t max_code_bit_length_values[] = {
   LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1,
   LZWS_BIGGEST_MAX_CODE_BIT_LENGTH + 1};
-#define MAX_CODE_BIT_LENGTH_VALUE_SIZE sizeof(max_code_bit_length_values) / sizeof(uint8_t)
+#define MAX_CODE_BIT_LENGTH_VALUE_SIZE sizeof(max_code_bit_length_values)
 
 lzws_result_t lzws_test_invalid_max_code_bit_length()
 {

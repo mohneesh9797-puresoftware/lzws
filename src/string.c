@@ -174,7 +174,6 @@ static inline lzws_result_t decompress_data(
 
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
-  DECOMPRESS_WITH_WRITE_BUFFER(&lzws_flush_decompressor, state_ptr);
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
 }

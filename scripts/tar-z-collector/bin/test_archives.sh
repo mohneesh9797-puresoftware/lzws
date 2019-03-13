@@ -11,7 +11,7 @@ for dictionary in "linked-list" "sparse-array"; do
   mkdir -p "${build}"
   sh -c "\
     cd '${build}' && \
-    rm -r * && \
+    rm -rf * && \
     cmake '../..' \
       -DLZWS_COMPRESSOR_DICTIONARY='${dictionary}' \
       -DLZWS_SHARED=0 \

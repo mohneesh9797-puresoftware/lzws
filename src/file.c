@@ -128,28 +128,20 @@ static inline lzws_result_t flush_destination_buffer(
   return 0;
 }
 
-#define READ_MORE_SOURCE(FAILED)                      \
-  result = read_source_buffer(                        \
-    source_file_ptr,                                  \
-    source_buffer, source_buffer_length,              \
-    &source, &source_length,                          \
-    quiet);                                           \
-                                                      \
-  if (result == LZWS_FILE_READ_FINISHED) {            \
-    if (source_length != 0) {                         \
-      /* Algorithm is not able to read all source. */ \
-      /* It means that algorithm is broken. */        \
-      if (!quiet) {                                   \
-        LZWS_LOG_ERROR("not able to read all source") \
-      }                                               \
-                                                      \
-      return FAILED;                                  \
-    }                                                 \
-                                                      \
-    break;                                            \
-  }                                                   \
-  else if (result != 0) {                             \
-    return result;                                    \
+#define READ_MORE_SOURCE()                                                           \
+  result = read_source_buffer(                                                       \
+    source_file_ptr,                                                                 \
+    source_buffer, source_buffer_length,                                             \
+    &source, &source_length,                                                         \
+    quiet);                                                                          \
+                                                                                     \
+  if (result == LZWS_FILE_READ_FINISHED) {                                           \
+    /* Some UNIX compress implementations writes alignment at the end of the file */ \
+    /* So source length here can not be zero. */                                     \
+    break;                                                                           \
+  }                                                                                  \
+  else if (result != 0) {                                                            \
+    return result;                                                                   \
   }
 
 #define FLUSH_DESTINATION_BUFFER()                 \
@@ -172,7 +164,7 @@ static inline lzws_result_t flush_destination_buffer(
       break;                                                                                      \
     }                                                                                             \
     else if (result == NEEDS_MORE_SOURCE) {                                                       \
-      READ_MORE_SOURCE(FAILED)                                                                    \
+      READ_MORE_SOURCE()                                                                          \
     }                                                                                             \
     else if (result == NEEDS_MORE_DESTINATION) {                                                  \
       FLUSH_DESTINATION_BUFFER()                                                                  \
@@ -286,7 +278,6 @@ static inline lzws_result_t decompress_data(
 
   DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
   DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
-  DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_flush_decompressor, state_ptr);
 
   return write_remaining_destination_buffer(destination_file_ptr, destination_buffer, destination_buffer_length, destination_length, quiet);
 }

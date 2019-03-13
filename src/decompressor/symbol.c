@@ -39,10 +39,13 @@ lzws_result_t lzws_decompressor_write_symbols_for_current_code(lzws_decompressor
 
   // We need to check whether we need to read alignment.
   if (lzws_decompressor_need_to_read_alignment_wrapper(state_ptr)) {
-    return lzws_decompressor_verify_zero_remainder_before_read_next_code(state_ptr);
-  }
+    // Remainder is a part of alignment, we need to clear it.
+    lzws_decompressor_clear_remainder(state_ptr);
 
-  state_ptr->status = LZWS_DECOMPRESSOR_READ_NEXT_CODE;
+    state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE;
+  } else {
+    state_ptr->status = LZWS_DECOMPRESSOR_READ_NEXT_CODE;
+  }
 
   return 0;
 }

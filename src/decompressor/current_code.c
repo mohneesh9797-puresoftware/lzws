@@ -25,7 +25,7 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
   // So we need to compare first code with alphabet length.
   if (code >= LZWS_ALPHABET_LENGTH) {
     if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("received invalid first code: " FAST_CODE_FORMAT, code)
+      LZWS_LOG_ERROR("received first code: " FAST_CODE_FORMAT " greater than max first code: %u", code, LZWS_ALPHABET_LENGTH - 1)
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
@@ -85,12 +85,15 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
 
     if (state_ptr->unaligned_bit_groups) {
       state_ptr->status = LZWS_DECOMPRESSOR_READ_FIRST_CODE;
+    } else {
+      // Remainder is a part of alignment, we need to clear it.
+      lzws_decompressor_clear_remainder(state_ptr);
 
-      return 0;
+      // We need to read alignment after reading clear code.
+      state_ptr->status = LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE;
     }
 
-    // We need to read alignment after reading clear code.
-    return lzws_decompressor_verify_zero_remainder_before_read_first_code(state_ptr);
+    return 0;
   }
 
   if (is_dictionary_full) {
@@ -100,7 +103,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     if (code > next_code) {
       if (!quiet) {
-        LZWS_LOG_ERROR("received code greater than next code: " FAST_CODE_FORMAT, code)
+        LZWS_LOG_ERROR("received code: " FAST_CODE_FORMAT " greater than next code: " FAST_CODE_FORMAT, code, next_code)
       }
 
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;

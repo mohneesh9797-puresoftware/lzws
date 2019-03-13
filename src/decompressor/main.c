@@ -11,7 +11,6 @@
 #include "current_code.h"
 #include "header.h"
 #include "main.h"
-#include "remainder.h"
 #include "symbol.h"
 
 lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
@@ -73,35 +72,6 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     if (result != 0) {
       return result;
     }
-  }
-
-  return 0;
-}
-
-lzws_result_t lzws_flush_decompressor(lzws_decompressor_state_t* state_ptr)
-{
-  lzws_decompressor_status_t status = state_ptr->status;
-
-  switch (status) {
-    case LZWS_DECOMPRESSOR_READ_HEADER:
-      // We have no remainder yet.
-    case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE:
-      // Remainder is already verified.
-    case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE:
-      // Remainder is already verified.
-      return 0;
-
-    case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
-    case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
-      // We may have remainder.
-      return lzws_decompressor_verify_zero_remainder(state_ptr);
-
-    default:
-      if (!state_ptr->quiet) {
-        LZWS_LOG_ERROR("unknown status: %u", status)
-      }
-
-      return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
   }
 
   return 0;
