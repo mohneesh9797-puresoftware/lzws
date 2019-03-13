@@ -1,7 +1,5 @@
 require "xz"
 
-XZ_COMPRESSION_LEVEL = 9
-
 def read_list(path)
   XZ
     .decompress(File.read(path))
@@ -11,7 +9,7 @@ def read_list(path)
 end
 
 def write_list(path, list)
-  data = XZ.compress list.join("\n"), :level => XZ_COMPRESSION_LEVEL
+  data = XZ.compress list.join("\n")
   File.write path, data
 
   nil
