@@ -54,9 +54,9 @@ LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
 )
 .freeze
 
-def get_archive_urls_from_page_url(page_url)
+def get_archive_urls_from_page_url(url)
   begin
-    uri = URI page_url
+    uri = URI url
 
     case uri.scheme
     when "ftp"
@@ -82,7 +82,7 @@ def get_archive_urls_from_page_url(page_url)
     .compact
     .map do |archive_url|
       begin
-        Addressable::URI.parse(page_url).join(archive_url).to_s
+        Addressable::URI.parse(url).join(archive_url).to_s
       rescue StandardError => error
         STDERR.puts error
         next nil

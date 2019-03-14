@@ -10,7 +10,7 @@ require_relative "../common/query"
 # We can make a queue of search urls and process urls one-by-one instead.
 # This method provides better results.
 
-def get_page_text
+def get_text
   # "tar.Z" index|directory|listing|ftp|file|archive
   [
     "\"#{ARCHIVE_EXTENSION}\"",
@@ -20,17 +20,17 @@ def get_page_text
   .join(" ")
 end
 
-def read_new_page_urls_from_search_url(search_url, page_number, page_urls)
-  STDERR.puts "- processing search url: #{search_url}, page number: #{page_number}"
+def read_new_page_urls_from_search_url(url, text, page_number, page_urls)
+  STDERR.puts "- processing search url: #{url}, page number: #{page_number}"
 
   begin
-    uri = URI "#{search_url}/search"
+    uri = URI "#{url}/search"
   rescue StandardError
     STDERR.puts "invalid api url"
     return nil
   end
 
-  params    = { :q => get_page_text, :format => "json", :pageno => page_number }
+  params    = { :q => text, :format => "json", :pageno => page_number }
   uri.query = URI.encode_www_form params
 
   begin
@@ -55,7 +55,7 @@ def read_new_page_urls_from_search_url(search_url, page_number, page_urls)
 
   new_page_urls = results
     .map { |result| result["url"] }
-    .reject { |url| page_urls.include? url }
+    .reject { |page_url| page_urls.include? page_url }
 
   if new_page_urls.empty?
     STDERR.puts "finished"
@@ -75,7 +75,8 @@ def get_page_urls(search_urls)
     .shuffle
     .map do |search_url|
       {
-        :search_url  => search_url,
+        :url         => search_url,
+        :text        => get_text,
         :page_number => 1,
         :page_urls   => []
       }
@@ -85,7 +86,7 @@ def get_page_urls(search_urls)
     new_queue = []
 
     queue.each do |data|
-      new_page_urls = read_new_page_urls_from_search_url data[:search_url], data[:page_number], data[:page_urls]
+      new_page_urls = read_new_page_urls_from_search_url data[:url], data[:text], data[:page_number], data[:page_urls]
       next if new_page_urls.nil?
 
       data[:page_number] += 1

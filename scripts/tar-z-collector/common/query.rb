@@ -50,6 +50,8 @@ def download_http_file(uri, file_path)
 
   begin
     IO.copy_stream io, file_path
+  rescue StandardError => error
+    raise "http query failed, error: #{error}"
   ensure
     io.close
   end
