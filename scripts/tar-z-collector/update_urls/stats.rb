@@ -46,11 +46,11 @@ SEARCH_URL_REGEXP = Regexp.new(
 )
 .freeze
 
-def get_search_urls_from_stats_url(stats_url)
-  STDERR.puts "- processing stats url: #{stats_url}"
+def get_search_urls_from_stats_url(url)
+  STDERR.puts "- processing stats url: #{url}"
 
   begin
-    uri  = URI stats_url
+    uri  = URI url
     data = get_http_content uri
 
     search_urls = data.scan(SEARCH_URL_REGEXP).flatten.compact

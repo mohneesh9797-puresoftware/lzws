@@ -19,8 +19,9 @@ for dictionary in "linked-list" "sparse-array"; do
       -DLZWS_CLI=1 \
       -DLZWS_TESTS=0 \
       -DCMAKE_BUILD_TYPE=RELEASE \
+      -DCMAKE_C_FLAGS_RELEASE='-O2 -march=native' \
     && \
-    make -j2\
+    make -j2 \
   "
 done
 
