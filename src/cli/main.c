@@ -21,7 +21,7 @@ static const char* help =
   "  --raw (-r) - raw mode, disable block mode (enabled by default) [compressor only]\n"
   "  --unaligned-bit-groups (-u) - unaligned bit groups (incompatible with original UNIX compress) (disabled by default)\n"
   "\n"
-  "Compatibility:\n"\
+  "Compatibility:\n"
   "  Default options are fully compatible with UNIX compress (for both compressor and decompressor),\n"
   "  --unaligned-bit-groups (-u) breaks compatibility but it will provide best result.\n";
 
