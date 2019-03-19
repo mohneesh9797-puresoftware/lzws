@@ -19,7 +19,11 @@ static const char* help =
   "  --help (-h) - print help\n"
   "  --quiet (-q) - do not print error messages (disabled by default)\n"
   "  --raw (-r) - raw mode, disable block mode (enabled by default) [compressor only]\n"
-  "  --unaligned-bit-groups (-u) - unaligned bit groups (incompatible with original UNIX compress) (disabled by default)\n";
+  "  --unaligned-bit-groups (-u) - unaligned bit groups (incompatible with original UNIX compress) (disabled by default)\n"
+  "\n"
+  "Compatibility:\n"\
+  "  Default options are fully compatible with UNIX compress (for both compressor and decompressor),\n"
+  "  --unaligned-bit-groups (-u) breaks compatibility but it will provide best result.\n";
 
 static const char*   short_options  = "b:dmhqru";
 static struct option long_options[] = {

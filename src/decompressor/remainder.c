@@ -2,10 +2,6 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "remainder.h"
+#define LZWS_DECOMPRESSOR_REMAINDER_C
 
-void lzws_decompressor_clear_remainder(lzws_decompressor_state_t* state_ptr)
-{
-  state_ptr->remainder            = 0;
-  state_ptr->remainder_bit_length = 0;
-}
+#include "remainder.h"

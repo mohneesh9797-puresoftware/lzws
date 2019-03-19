@@ -105,6 +105,11 @@ def test_archive(path)
 
   STDERR.puts "archive decompressed"
 
+  # Decompressed archive can be huge.
+  # Re compression and decompression implemented without storing this archive.
+  # So it is more CPU than I/O intensive.
+  # It is safe to run this code on SSD.
+
   re_decompressed_digests = ALL_BINARIES.map do |binary|
     get_command_digest(
       "#{binary} -d < \"#{path}\" | " \
