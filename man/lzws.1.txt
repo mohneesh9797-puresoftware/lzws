@@ -1,0 +1,22 @@
+LZWS(1)
+=======
+
+
+NAME
+----
+lzws - LZW streaming compressor/decompressor compatible with UNIX compress.
+
+
+SYNOPSIS
+--------
+todo
+
+
+DESCRIPTION
+-----------
+todo
+
+
+SEE ALSO
+--------
+compress(1)
