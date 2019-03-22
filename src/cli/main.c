@@ -8,24 +8,24 @@
 #include "../file.h"
 
 static const char* help =
-  "Overview: LZWS cli tool\n"
+  "Overview: lzws cli tool\n"
   "\n"
   "Usage: lzws [-%s] [< stdin] [> stdout]\n"
   "\n"
   "Options:\n"
-  "  --max-code-bit-length (-b) - set max code bit length (%u-%u) (%u used by default) [compressor only]\n"
-  "  --decompress (-d) - decompress (compress by default)\n"
-  "  --msb (-m) - enable most significant bit (least significant bit used by default)\n"
+  "  --decompress (-d) - enable decompress mode (default mode is compress)\n"
+  "  --max-code-bit-length (-b) - set max code bit length (%u-%u) (default value is %u) [compressor only]\n"
+  "  --msb (-m) - enable most significant bit (default mode is least significant bit)\n"
+  "  --raw (-r) - disable block mode (block mode is enabled by default) [compressor only]\n"
+  "  --unaligned-bit-groups (-u) - enable unaligned bit groups (disabled by default)\n"
+  "  --quiet (-q) - disable error messages (enabled by default)\n"
   "  --help (-h) - print help\n"
-  "  --quiet (-q) - do not print error messages (disabled by default)\n"
-  "  --raw (-r) - raw mode, disable block mode (enabled by default) [compressor only]\n"
-  "  --unaligned-bit-groups (-u) - unaligned bit groups (disabled by default)\n"
   "\n"
   "Compatibility:\n"
-  "  Default options are fully compatible with UNIX compress (for both compressor and decompressor),\n"
-  "  --unaligned-bit-groups (-u) breaks compatibility but it will provide best results.\n";
+  "  Default options are fully compatible with UNIX compress.\n"
+  "  Compressor only options (-b and -r) can be changed without loosing compatibility.\n";
 
-static const char*   short_options  = "b:dmhqru";
+static const char*   short_options  = "db:mruqh";
 static struct option long_options[] = {
   {"max-code-bit-length", optional_argument, NULL, 'b'},
   {"decompress", optional_argument, NULL, 'd'},

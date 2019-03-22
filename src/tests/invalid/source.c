@@ -15,7 +15,7 @@ typedef struct {
 static lzws_code_t data_1[] = {LZWS_CLEAR_CODE}; // First code can't be clear code.
 
 static const source_t sources[]     = {{data_1, 1}};
-static const size_t   source_length = 1;
+static const size_t   source_length = sizeof(sources) / sizeof(source_t);
 
 lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, va_list LZWS_UNUSED(args))
 {

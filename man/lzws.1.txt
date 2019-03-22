@@ -9,12 +9,74 @@ lzws - LZW streaming compressor/decompressor compatible with UNIX compress.
 
 SYNOPSIS
 --------
-todo
+*lzws* ['OPTIONS'] < 'archive.tar' > 'archive.tar.Z'
 
 
 DESCRIPTION
 -----------
-todo
+Lzws is a library with streaming interface for compressor and decompressor.
+Default options are fully compatible with original UNIX compress.
+It has a cli tool for single file processing.
+
+
+OPTIONS
+-------
+*-d, --decompress*::
+  Enable decompress mode.
+  Default mode is compress.
+
+*-b, --max-code-bit-length=9..16*::
+  Set max code bit length.
+  Default value is 16.
+  It can be used in compress mode only.
+  Compressor writes max code bit length value to file.
+  Decompressor reads this option from file.
+
+*-m, --msb*::
+  Enable most significant bit mode.
+  Default mode is least significant bit.
+  It should be used in both compress and decompress mode.
+  Compressor won't store information about significant bit mode in file.
+  Decompressor won't read this option from file.
+
+*-r, --raw*::
+  Disable block mode.
+  Block mode is enabled by default.
+  It can be used in compress mode only.
+  Compressor writes max code bit length value to file.
+  Decompressor reads this option from file.
+
+*-u, --unaligned-bit-groups*::
+  Enable unaligned bit groups.
+  Disabled by default.
+  It should be used in both compress and decompress mode.
+  Compressor won't store information about unaligned bit groups in file.
+  Decompressor won't read this option from file.
+
+*-q, --quiet*::
+  Disable error messages.
+  Enabled by default.
+
+*-h, --help*::
+  Print help.
+
+
+COMPATIBILITY
+-------------
+Default options are fully compatible with original UNIX compress.
+Compressor only options (*-b and -r*) can be changed without loosing compatibility.
+
+
+EXAMPLES
+--------
+`lzws < linux.tar > linux.tar.Z`::
+  Archive size is about 33% of original tar.
+
+`lzws -u < linux.tar > linux.tar.Zu`::
+  Archive without alignment groups is about 12 kb smaller.
+
+`lzws < linux.tar | compress -d | compress | lzws -d > linux.tar.new`::
+  New tar will be the same as original one.
 
 
 SEE ALSO
