@@ -18,8 +18,7 @@ static const uint8_t magic_headers[][MAGIC_HEADER_SIZE] = {
 
 #define HEADER_SIZE 1
 static const uint8_t headers[][HEADER_SIZE] = {
-  {(LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1) | LZWS_BLOCK_MODE}
-};
+  {(LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1) | LZWS_BLOCK_MODE}};
 #define HEADER_LENGTH sizeof(headers) / (HEADER_SIZE)
 
 static inline lzws_result_t test_invalid_header(lzws_decompressor_state_t* state_ptr, va_list LZWS_UNUSED(args))
