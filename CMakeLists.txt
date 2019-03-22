@@ -16,6 +16,9 @@ endif ()
 if (NOT DEFINED CMAKE_INSTALL_BINDIR)
   set (CMAKE_INSTALL_BINDIR "bin" CACHE PATH "output directory for binaries")
 endif ()
+if (NOT DEFINED CMAKE_INSTALL_MANDIR)
+  set (CMAKE_INSTALL_MANDIR "share/man" CACHE PATH "Output directory for man files")
+endif ()
 
 if (NOT DEFINED LZWS_TARGET)
   set (LZWS_TARGET ${PROJECT_NAME})
@@ -27,6 +30,7 @@ set (LZWS_SHARED true CACHE BOOL "build shared libs")
 set (LZWS_STATIC true CACHE BOOL "build static libs")
 set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
+set (LZWS_MAN    true CACHE BOOL "build man")
 
 if (NOT LZWS_COMPRESSOR_DICTIONARY)
   message (FATAL_ERROR "Please select dictionary implementation.")
@@ -96,6 +100,10 @@ if (LZWS_TESTS)
 endif ()
 
 add_subdirectory ("src")
+
+if (LZWS_MAN)
+  add_subdirectory ("man")
+endif ()
 
 include (CPackConfig.cmake)
 include (CPack)
