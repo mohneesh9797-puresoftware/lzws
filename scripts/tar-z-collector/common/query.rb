@@ -33,7 +33,7 @@ def get_http_content(uri)
 
   raise "http response failed, code: #{response.code}" unless response.is_a? Net::HTTPSuccess
 
-  response.body
+  response.body || ""
 end
 
 OPEN_OPTIONS =
