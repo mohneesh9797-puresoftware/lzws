@@ -18,5 +18,6 @@ typedef lzws_result_t (*lzws_test_compressor_and_decompressor_t)(
 lzws_result_t lzws_test_compressor_combinations(lzws_test_compressor_t function, ...);
 lzws_result_t lzws_test_decompressor_combinations(lzws_test_decompressor_t function, ...);
 lzws_result_t lzws_test_compressor_and_decompressor_combinations(lzws_test_compressor_and_decompressor_t function, ...);
+lzws_result_t lzws_test_compatible_compressor_and_decompressor_combinations(lzws_test_compressor_and_decompressor_t function, ...);
 
 #endif // LZWS_TESTS_COMBINATIONS_H

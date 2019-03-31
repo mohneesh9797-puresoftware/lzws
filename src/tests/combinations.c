@@ -159,3 +159,36 @@ lzws_result_t lzws_test_compressor_and_decompressor_combinations(lzws_test_compr
 
   return result;
 }
+
+// -- compatible compressor and decompressor --
+
+static inline lzws_result_t test_compatible_compressor_and_decompressor_combination(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, va_list args)
+{
+  if (
+    compressor_state_ptr->block_mode != decompressor_state_ptr->block_mode ||
+    compressor_state_ptr->msb != decompressor_state_ptr->msb ||
+    compressor_state_ptr->unaligned_bit_groups != decompressor_state_ptr->unaligned_bit_groups) {
+    return 0;
+  }
+
+  lzws_test_compressor_and_decompressor_t function      = va_arg(args, lzws_test_compressor_and_decompressor_t);
+  va_list*                                function_args = va_arg(args, va_list*);
+
+  // We need to copy arguments for each function call.
+  va_list function_args_copy;
+  va_copy(function_args_copy, *function_args);
+
+  return function(compressor_state_ptr, decompressor_state_ptr, function_args_copy);
+}
+
+lzws_result_t lzws_test_compatible_compressor_and_decompressor_combinations(lzws_test_compressor_and_decompressor_t function, ...)
+{
+  va_list function_args;
+  va_start(function_args, function);
+
+  lzws_result_t result = lzws_test_compressor_and_decompressor_combinations(test_compatible_compressor_and_decompressor_combination, function, &function_args);
+
+  va_end(function_args);
+
+  return result;
+}
