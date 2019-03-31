@@ -1,0 +1,111 @@
+It is possible to test lzws and ncompress in real world.
+There are a lot of "tar.Z" archives available on the internet.
+You can check it by using any search engine with query like '"tar.Z" index|directory|listing|ftp|file|archive'.
+
+We can use some search engine api for automatic search.
+The easiest way is to use searx.
+It is a metasearch engine that provides results from popular search engines.
+It is possible to receive about 20-30% results of real search engines using it's api.
+20% of results are enough for testing purposes.
+
+It is better to make this search using tor, so scripts are wrapped using torsocks.
+You need to have tor up and running before using these scripts.
+
+Some searx endpoints won't provide results for tor exit node IPs.
+So we will use all available endpoints from "stats.searx.xyz".
+
+-----
+
+Search results are the list of page urls.
+We will visit pages in random order and collect all links that ends with "tar.Z".
+
+Page urls with at least one link will be stored in "data/valid_page_urls.xz".
+Page urls with no archive links will be stored in "data/invalid_page_urls.xz".
+Links will be stored in "data/archive_urls.xz".
+
+It is possible to view these lists by using "less data/valid_page_urls.xz".
+
+-----
+
+Archive urls will be visited in random order.
+Lzws in all tests will be used using all possible versions (with different compressor dictionary types).
+
+First test: lzws and ncompress will try to decompress it.
+
+Second test: lzws and ncompress will try to recompress archive in any possible combinations using default options:
+1. compress -d < archive.tar.Z | lzws | lzws -d
+2. compress -d < archive.tar.Z | lzws | compress -d
+3. compress -d < archive.tar.Z | compress | compress -d
+4. lzws -d < archive.tar.Z | lzws | lzws -d
+5. lzws -d < archive.tar.Z | lzws | compress -d
+6. lzws -d < archive.tar.Z | compress | compress -d
+
+If there are 2 lzws versions (2 compressor dictionary types), so this list will have 12 commands.
+This test won't take much time.
+
+Third test: lzws will try to recompress archive using all possible combinations of options.
+1. lzws -d < archive.tar.Z | lzws --max-code-bit-length=9 | lzws -d --max-code-bit-length=9
+2. lzws -d < archive.tar.Z | lzws --max-code-bit-length=10 | lzws -d --max-code-bit-length=10
+...
+
+There are 64 possible option combinations for lzws.
+If there are 2 lzws versions (2 compressor dictionary types), so this list will have 128 commands.
+This test can take a long time.
+
+All test are running in memory only.
+Test are more CPU than I/O intensive.
+It is safe to run tests on SSD.
+
+Archive is invalid when both lzws and ncompress fails to decompress it.
+Archive is valid when both lzws and ncompress provides same content for each test.
+Archive is volatile when lzws and ncompress provides different content for any test.
+
+-----
+
+Invalid archives are stored in "data/invalid_archives.xz".
+Valid archives are stored in "data/valid_archives.xz".
+Volatile archives are stored in "data/volatile_archives.xz".
+
+Format of list is "#{archive url} #{sha256sum of archive}".
+Archives with same digest won't be tested again.
+They will be just stored in related list.
+
+You can count unique archives.
+For example: 'xzcat data/valid_archives.xz | cut -d " " -f 2 | sort | uniq -c | sort'.
+
+Volatile archives list is the main result of this test.
+If volatile archives list are empty - lzws and ncompress are 100% compatible.
+If volatile archives list are not empty - please view "less data/volatile_archives.xz" and check these archives.
+
+-----
+
+How to use these scripts?
+
+1. Install rvm
+curl -sSL https://get.rvm.io | bash -s stable
+
+2. Install modern version of ruby
+rvm install ruby-2.6.2
+
+3. Install required gems
+cd scripts/tar-z-collector
+bundle install
+
+4. Start tor
+Please use some convenient timeout like "SocksTimeout 20".
+sudo rc-service tor start
+
+5. Updated urls
+./bin/update_urls.sh
+
+6. Test archives
+./bin/test_archives.sh
+
+-----
+
+You can run these script in infinite loop to collect and test more data.
+
+./bin/loop_update_urls.sh
+./bin/loop_update_urls_and_test_archives.sh
+
+After about 1 week you will receive more than 6000 valid archives.
