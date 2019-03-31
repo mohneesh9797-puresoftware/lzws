@@ -3,7 +3,7 @@ require "net/ftp"
 require "open-uri"
 require "uri"
 
-TIMEOUT = 20 # seconds
+TIMEOUT = 30 # seconds
 
 # -- http --
 
