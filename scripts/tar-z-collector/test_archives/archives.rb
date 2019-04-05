@@ -47,15 +47,16 @@ LZWS_OPTION_COMBINATIONS = LZWS_MAX_CODE_BIT_LENGTH_OPTIONS
 
 def download_archive(url)
   begin
-    uri = URI url
+    uri    = URI url
+    scheme = uri.scheme
 
-    case uri.scheme
+    case scheme
     when "ftp"
       download_file_from_ftp uri, ARCHIVE_PATH
     when "http", "https"
       download_http_file uri, ARCHIVE_PATH
     else
-      raise "uknown uri scheme: #{scheme}"
+      raise "unknown uri scheme: #{scheme}"
     end
 
   rescue StandardError => error

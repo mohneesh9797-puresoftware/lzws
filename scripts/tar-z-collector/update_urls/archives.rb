@@ -56,9 +56,10 @@ LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
 
 def get_archive_urls_from_page_url(url)
   begin
-    uri = URI url
+    uri    = URI url
+    scheme = uri.scheme
 
-    case uri.scheme
+    case scheme
     when "ftp"
       data, is_listing = get_content_or_listing_from_ftp uri
       regexp           = is_listing ? LISTING_WITH_ARCHIVES_REGEXP : PAGE_WITH_ARCHIVES_REGEXP
@@ -68,7 +69,7 @@ def get_archive_urls_from_page_url(url)
       regexp = PAGE_WITH_ARCHIVES_REGEXP
 
     else
-      raise "uknown uri scheme: #{scheme}"
+      raise "unknown uri scheme: #{scheme}"
     end
 
   rescue StandardError => error
