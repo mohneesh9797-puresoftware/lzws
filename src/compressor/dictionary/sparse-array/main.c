@@ -93,12 +93,12 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   return 0;
 }
 
-void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t used_codes_length)
 {
   lzws_code_t*                             next_codes   = dictionary_ptr->next_codes;
   lzws_compressor_dictionary_used_index_t* used_indexes = dictionary_ptr->used_indexes;
 
-  size_t used_indexes_length = get_used_indexes_length(dictionary_ptr, total_codes_length);
+  size_t used_indexes_length = get_used_indexes_length(dictionary_ptr, used_codes_length);
 
   lzws_compressor_dictionary_used_index_t used_index;
   for (lzws_code_fast_t index_of_used_index = 0; index_of_used_index < used_indexes_length; index_of_used_index++) {

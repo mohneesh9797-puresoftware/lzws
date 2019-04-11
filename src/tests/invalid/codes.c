@@ -6,6 +6,7 @@
 #include "../../compressor/header.h"
 #include "../../compressor/remainder.h"
 #include "../../macro.h"
+#include "../../string.h"
 #include "../combinations.h"
 
 #include "codes.h"
@@ -25,34 +26,52 @@ static const data_t datas[] = {
   {data2_2, 2}};
 static const size_t datas_length = sizeof(datas) / sizeof(data_t);
 
-#define BUFFER_LENGTH 6 // 3 bytes for header + 3 bytes for 2 x 9-bit codes.
-static uint8_t buffer[BUFFER_LENGTH];
+#define SOURCE_LENGTH 6 // 3 bytes for header + 3 bytes for 2 x 9-bit codes.
+static uint8_t source[SOURCE_LENGTH];
+
+#define DESTINATION_LENGTH 2 // 2 symbols from 2 x 9-bit codes.
+static uint8_t destination[DESTINATION_LENGTH];
 
 lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, va_list LZWS_UNUSED(args))
 {
   for (size_t index = 0; index < datas_length; index++) {
     const data_t* data_ptr = &datas[index];
 
-    uint8_t* buffer_ptr    = buffer;
-    size_t   buffer_length = BUFFER_LENGTH;
+    uint8_t* source_ptr    = source;
+    size_t   source_length = SOURCE_LENGTH;
 
-    lzws_compressor_clear_state(compressor_state_ptr);
-
-    if (lzws_compressor_write_magic_header(&buffer_ptr, &buffer_length) != 0 ||
-        lzws_compressor_write_header(compressor_state_ptr, &buffer_ptr, &buffer_length) != 0) {
+    if (
+      lzws_compressor_write_magic_header(&source_ptr, &source_length) != 0 ||
+      lzws_compressor_write_header(compressor_state_ptr, &source_ptr, &source_length) != 0) {
       return 1;
     }
 
     for (size_t jndex = 0; jndex < data_ptr->length; jndex++) {
       lzws_code_t code = data_ptr->codes[jndex];
 
-      if (lzws_compressor_write_code(compressor_state_ptr, code, &buffer_ptr, &buffer_length) != 0) {
+      if (lzws_compressor_write_code(compressor_state_ptr, code, &source_ptr, &source_length) != 0) {
         return 2;
       }
     }
 
-    if (lzws_compressor_flush_remainder(compressor_state_ptr, &buffer_ptr, &buffer_length) != 0) {
+    if (lzws_compressor_flush_remainder(compressor_state_ptr, &source_ptr, &source_length) != 0) {
       return 3;
+    }
+
+    lzws_compressor_clear_state(compressor_state_ptr);
+
+    source_ptr    = source;
+    source_length = SOURCE_LENGTH - source_length;
+
+    uint8_t* destination_ptr    = destination;
+    size_t   destination_length = DESTINATION_LENGTH;
+
+    if (
+      lzws_decompress_string(
+        source, source_length,
+        &destination_ptr, &destination_length, 0,
+        decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups, decompressor_state_ptr->quiet) != LZWS_STRING_DECOMPRESSOR_FAILED) {
+      return 4;
     }
   }
 

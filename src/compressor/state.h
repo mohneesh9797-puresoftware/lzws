@@ -72,6 +72,11 @@ LZWS_INLINE bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* sta
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 
+LZWS_INLINE size_t lzws_compressor_get_last_used_codes_length(lzws_compressor_state_t* state_ptr)
+{
+  return state_ptr->last_used_code + 1;
+}
+
 LZWS_INLINE size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_t* state_ptr)
 {
   return state_ptr->max_code + 1;
