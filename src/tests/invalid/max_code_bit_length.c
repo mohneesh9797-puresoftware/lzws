@@ -7,14 +7,15 @@
 
 #include "max_code_bit_length.h"
 
+#define MAX_CODE_BIT_SIZE 1
 static const uint8_t max_code_bit_lengths[] = {
   LZWS_LOWEST_MAX_CODE_BIT_LENGTH - 1,
   LZWS_BIGGEST_MAX_CODE_BIT_LENGTH + 1};
-#define MAX_CODE_BIT_LENGTH_SIZE sizeof(max_code_bit_lengths)
+#define MAX_CODE_BIT_LENGTH sizeof(max_code_bit_lengths) / MAX_CODE_BIT_SIZE
 
 lzws_result_t lzws_test_invalid_max_code_bit_length()
 {
-  for (size_t index = 0; index < MAX_CODE_BIT_LENGTH_SIZE; index++) {
+  for (size_t index = 0; index < MAX_CODE_BIT_LENGTH; index++) {
     uint8_t max_code_bit_length = max_code_bit_lengths[index];
 
     lzws_compressor_state_t* state_ptr;
