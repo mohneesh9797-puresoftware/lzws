@@ -2,6 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "../log.h"
+
 #include "combinations.h"
 
 static const bool block_mode_values[] = {true, false};
@@ -23,6 +25,7 @@ static inline lzws_result_t test_compressor(lzws_test_compressor_t function, va_
 
   lzws_result_t result = lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, unaligned_bit_groups, QUIET);
   if (result != 0) {
+    LZWS_LOG_ERROR("failed to get initial state for compressor");
     return result;
   }
 
@@ -81,6 +84,7 @@ static inline lzws_result_t test_decompressor(lzws_test_decompressor_t function,
 
   lzws_result_t result = lzws_decompressor_get_initial_state(&state_ptr, msb, unaligned_bit_groups, QUIET);
   if (result != 0) {
+    LZWS_LOG_ERROR("failed to get initial state for decompressor");
     return result;
   }
 

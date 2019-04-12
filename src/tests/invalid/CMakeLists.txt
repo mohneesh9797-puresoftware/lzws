@@ -1,8 +1,8 @@
 set (SOURCES
+  "${CMAKE_CURRENT_SOURCE_DIR}/codes.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/header.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/max_code_bit_length.c"
-  "${CMAKE_CURRENT_SOURCE_DIR}/codes.c"
 )
 
 include (DefineRelativeFilePaths)

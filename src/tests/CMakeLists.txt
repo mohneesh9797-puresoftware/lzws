@@ -1,4 +1,7 @@
-set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/combinations.c")
+set (SOURCES
+  "${CMAKE_CURRENT_SOURCE_DIR}/codes.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/combinations.c"
+)
 
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths ("${SOURCES}")

@@ -4,6 +4,7 @@
 
 #include "../../decompressor/header.h"
 #include "../../decompressor/common.h"
+#include "../../log.h"
 #include "../../macro.h"
 #include "../combinations.h"
 
@@ -30,6 +31,7 @@ static inline lzws_result_t test_invalid_header(lzws_decompressor_state_t* state
     size_t   magic_header_size = MAGIC_HEADER_SIZE;
 
     if (lzws_decompressor_read_magic_header(state_ptr, &magic_header, &magic_header_size) != LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER) {
+      LZWS_LOG_ERROR("decompressor read magic header should fail with invalid magic header");
       return 1;
     }
   }
@@ -39,6 +41,7 @@ static inline lzws_result_t test_invalid_header(lzws_decompressor_state_t* state
     size_t   header_size = HEADER_SIZE;
 
     if (lzws_decompressor_read_header(state_ptr, &header, &header_size) != LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
+      LZWS_LOG_ERROR("decompressor read header should fail with invalid max code bit length");
       return 2;
     }
   }
