@@ -4,11 +4,10 @@
 
 #include <string.h>
 
-#include "../../compressor/code.h"
-#include "../../compressor/header.h"
-#include "../../compressor/remainder.h"
+#include "../../log.h"
 #include "../../macro.h"
 #include "../../string.h"
+#include "../codes.h"
 #include "../combinations.h"
 
 #include "codes.h"
@@ -38,59 +37,54 @@ static const data_t datas[] = {
   {data2_3, 3, symbols2_3, 3}};
 static const size_t datas_length = sizeof(datas) / sizeof(data_t);
 
-// -- no block mode --
-
-static const lzws_code_t data3_2[]    = {5, LZWS_FIRST_FREE_CODE};
-static const uint8_t     symbols3_3[] = {5, 5, 5};
-
-static const lzws_code_t data4_3[]    = {7, 3, LZWS_FIRST_FREE_CODE + 1};
-static const uint8_t     symbols4_4[] = {7, 3, 3, 3};
-
-// First free code will be equals to '73'.
-static const lzws_code_t data5_3[]    = {7, 3, LZWS_FIRST_FREE_CODE};
-static const uint8_t     symbols5_4[] = {7, 3, 7, 3};
-
-static const data_t no_block_mode_datas[] = {
-  {data3_2, 2, symbols3_3, 3},
-  {data4_3, 3, symbols4_4, 4},
-  {data5_3, 3, symbols5_4, 4}};
-static const size_t no_block_mode_datas_length = sizeof(no_block_mode_datas) / sizeof(data_t);
-
 // -- block mode --
 
-static const lzws_code_t data6_2[]    = {5, LZWS_CLEAR_CODE};
-static const uint8_t     symbols6_1[] = {6};
+static const lzws_code_t data3_2[]    = {5, LZWS_CLEAR_CODE};
+static const uint8_t     symbols3_1[] = {5};
 
-static const data_t block_mode_datas[] = {
-  {data6_2, 2, symbols6_1, 1}};
-static const size_t block_mode_datas_length = sizeof(block_mode_datas) / sizeof(data_t);
+static const lzws_code_t data4_3[]    = {100, LZWS_CLEAR_CODE, 200};
+static const uint8_t     symbols4_2[] = {100, 200};
 
-// -- buffers --
+static const lzws_code_t data5_4[]    = {70, LZWS_CLEAR_CODE, 30, LZWS_CLEAR_CODE};
+static const uint8_t     symbols5_2[] = {70, 30};
+
+static const data_t datas_for_block_mode[] = {
+  {data3_2, 2, symbols3_1, 1},
+  {data4_3, 3, symbols4_2, 2},
+  {data5_4, 4, symbols5_2, 2}};
+static const size_t datas_for_block_mode_length = sizeof(datas_for_block_mode) / sizeof(data_t);
+
+// -- block mode disabled --
+
+static const lzws_code_t data6_2[]    = {8, LZWS_FIRST_FREE_CODE};
+static const uint8_t     symbols6_3[] = {8, 8, 8};
+
+static const lzws_code_t data7_3[]    = {15, 20, LZWS_FIRST_FREE_CODE + 1};
+static const uint8_t     symbols7_4[] = {15, 20, 20, 20};
+
+// First free code will be equals to '29'.
+static const lzws_code_t data8_3[]    = {2, 9, LZWS_FIRST_FREE_CODE};
+static const uint8_t     symbols8_4[] = {2, 9, 2, 9};
+
+static const data_t datas_for_block_mode_disabled[] = {
+  {data6_2, 2, symbols6_3, 3},
+  {data7_3, 3, symbols7_4, 4},
+  {data8_3, 3, symbols8_4, 4}};
+static const size_t datas_for_block_mode_disabled_length = sizeof(datas_for_block_mode_disabled) / sizeof(data_t);
+
+// -- common --
 
 #define SOURCE_LENGTH 8 // 3 bytes for header + 5 bytes for 4 x 9-bit codes.
 static uint8_t source[SOURCE_LENGTH];
 
-lzws_result_t process_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr)
+lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr)
 {
   uint8_t* source_ptr    = source;
   size_t   source_length = SOURCE_LENGTH;
 
-  if (
-    lzws_compressor_write_magic_header(&source_ptr, &source_length) != 0 ||
-    lzws_compressor_write_header(compressor_state_ptr, &source_ptr, &source_length) != 0) {
+  if (lzws_test_compressor_write_codes(compressor_state_ptr, data_ptr->codes, data_ptr->codes_length, &source_ptr, &source_length) != 0) {
+    LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
-  }
-
-  for (size_t index = 0; index < data_ptr->codes_length; index++) {
-    lzws_code_t code = data_ptr->codes[index];
-
-    if (lzws_compressor_write_code(compressor_state_ptr, code, &source_ptr, &source_length) != 0) {
-      return 2;
-    }
-  }
-
-  if (lzws_compressor_flush_remainder(compressor_state_ptr, &source_ptr, &source_length) != 0) {
-    return 3;
   }
 
   lzws_compressor_clear_state(compressor_state_ptr);
@@ -106,16 +100,16 @@ lzws_result_t process_data(lzws_compressor_state_t* compressor_state_ptr, lzws_d
       source_ptr, source_length,
       &destination_ptr, &destination_length, 0,
       decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups, decompressor_state_ptr->quiet) != 0) {
-    return 4;
+    return 2;
   }
 
   lzws_result_t result;
 
   if (destination_length != data_ptr->symbols_length) {
-    result = 5;
+    result = 3;
   }
   else if (strncmp((const char*)destination_ptr, (const char*)data_ptr->symbols, destination_length) != 0) {
-    result = 6;
+    result = 4;
   }
   else {
     result = 0;
@@ -125,27 +119,36 @@ lzws_result_t process_data(lzws_compressor_state_t* compressor_state_ptr, lzws_d
   return result;
 }
 
-lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, va_list LZWS_UNUSED(args))
+lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* datas, size_t datas_length)
 {
+  lzws_result_t result;
+
   for (size_t index = 0; index < datas_length; index++) {
-    if (process_data(compressor_state_ptr, decompressor_state_ptr, &datas[index]) != 0) {
-      return 1;
+    result = test_data(compressor_state_ptr, decompressor_state_ptr, &datas[index]);
+    if (result != 0) {
+      return result;
     }
   }
 
+  return 0;
+}
+
+lzws_result_t test_all_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, va_list LZWS_UNUSED(args))
+{
+  if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas, datas_length) != 0) {
+    return 1;
+  }
+
   if (compressor_state_ptr->block_mode) {
-    for (size_t index = 0; index < block_mode_datas_length; index++) {
-      if (process_data(compressor_state_ptr, decompressor_state_ptr, &block_mode_datas[index]) != 0) {
+    // Codes test won't provide alignment bits.
+    if (compressor_state_ptr->unaligned_bit_groups) {
+      if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_block_mode, datas_for_block_mode_length) != 0) {
         return 2;
       }
     }
   }
-  else {
-    for (size_t index = 0; index < no_block_mode_datas_length; index++) {
-      if (process_data(compressor_state_ptr, decompressor_state_ptr, &no_block_mode_datas[index]) != 0) {
-        return 3;
-      }
-    }
+  else if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_block_mode_disabled, datas_for_block_mode_disabled_length) != 0) {
+    return 3;
   }
 
   return 0;
@@ -153,5 +156,5 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
 
 lzws_result_t lzws_test_basic_codes()
 {
-  return lzws_test_compatible_compressor_and_decompressor_combinations(test_data);
+  return lzws_test_compatible_compressor_and_decompressor_combinations(test_all_datas);
 }

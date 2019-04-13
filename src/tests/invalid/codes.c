@@ -49,7 +49,7 @@ static const data_t datas_for_block_mode_disabled[] = {
   {data5_2, 2}};
 static const size_t datas_for_block_mode_disabled_length = sizeof(datas_for_block_mode_disabled) / sizeof(data_t);
 
-// -- buffers --
+// -- common --
 
 #define BUFFER_LENGTH 8 // 3 bytes for header + 5 bytes for 4 x 9-bit codes.
 static uint8_t buffer[BUFFER_LENGTH];
@@ -63,6 +63,8 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
     LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
   }
+
+  lzws_compressor_clear_state(compressor_state_ptr);
 
   source_ptr    = buffer;
   source_length = BUFFER_LENGTH - source_length;
@@ -78,11 +80,11 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
   if (result == 0) {
     free(destination_ptr);
     LZWS_LOG_ERROR("string decompressor succeeded instead of fail");
-    return 4;
+    return 2;
   }
   if (result != LZWS_STRING_DECOMPRESSOR_FAILED) {
     LZWS_LOG_ERROR("string decompressor failed with wrong result");
-    return 5;
+    return 3;
   }
 
   return 0;
@@ -90,9 +92,12 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
 
 lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* datas, size_t datas_length)
 {
+  lzws_result_t result;
+
   for (size_t index = 0; index < datas_length; index++) {
-    if (test_data(compressor_state_ptr, decompressor_state_ptr, &datas[index]) != 0) {
-      return 1;
+    result = test_data(compressor_state_ptr, decompressor_state_ptr, &datas[index]);
+    if (result != 0) {
+      return result;
     }
   }
 
