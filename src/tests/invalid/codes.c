@@ -49,25 +49,23 @@ static const data_t datas_for_block_mode_disabled[] = {
   {data5_2, 2}};
 static const size_t datas_for_block_mode_disabled_length = sizeof(datas_for_block_mode_disabled) / sizeof(data_t);
 
-// -- common --
-
-#define BUFFER_LENGTH 8 // 3 bytes for header + 5 bytes for 4 x 9-bit codes.
-static uint8_t buffer[BUFFER_LENGTH];
+// -- test --
 
 lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr)
 {
-  uint8_t* source_ptr    = buffer;
-  size_t   source_length = BUFFER_LENGTH;
+  uint8_t* source_ptr;
+  size_t   source_length;
 
-  if (lzws_test_compressor_write_codes(compressor_state_ptr, data_ptr->codes, data_ptr->codes_length, &source_ptr, &source_length) != 0) {
+  if (
+    lzws_test_compressor_write_codes(
+      compressor_state_ptr,
+      data_ptr->codes, data_ptr->codes_length,
+      &source_ptr, &source_length, 0) != 0) {
     LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
   }
 
   lzws_compressor_clear_state(compressor_state_ptr);
-
-  source_ptr    = buffer;
-  source_length = BUFFER_LENGTH - source_length;
 
   uint8_t* destination_ptr;
   size_t   destination_length;
@@ -76,6 +74,8 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
     source_ptr, source_length,
     &destination_ptr, &destination_length, 0,
     decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups, decompressor_state_ptr->quiet);
+
+  free(source_ptr);
 
   if (result == 0) {
     free(destination_ptr);

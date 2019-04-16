@@ -20,6 +20,14 @@
 // Algorithm has written some data into destination buffer.
 // We need to increase destination and use its tail as destination buffer.
 
+static inline void flush_destination_buffer(size_t* destination_length_ptr, size_t destination_buffer_length, size_t initial_destination_buffer_length)
+{
+  *destination_length_ptr += initial_destination_buffer_length - destination_buffer_length;
+}
+
+#define FLUSH_DESTINATION_BUFFER() \
+  flush_destination_buffer(destination_length_ptr, destination_buffer_length, initial_destination_buffer_length);
+
 static inline lzws_result_t increase_destination_buffer(
   uint8_t** destination_ptr, size_t* destination_length_ptr,
   uint8_t** destination_buffer_ptr, size_t* destination_buffer_length_ptr, size_t initial_destination_buffer_length,
@@ -49,6 +57,8 @@ static inline lzws_result_t increase_destination_buffer(
 }
 
 #define INCREASE_DESTINATION_BUFFER()                                                   \
+  FLUSH_DESTINATION_BUFFER()                                                            \
+                                                                                        \
   result = increase_destination_buffer(                                                 \
     destination_ptr, destination_length_ptr,                                            \
     &destination_buffer, &destination_buffer_length, initial_destination_buffer_length, \
@@ -56,32 +66,6 @@ static inline lzws_result_t increase_destination_buffer(
                                                                                         \
   if (result != 0) {                                                                    \
     return result;                                                                      \
-  }
-
-static inline void flush_destination_buffer(size_t* destination_length_ptr, size_t destination_buffer_length, size_t initial_destination_buffer_length)
-{
-  *destination_length_ptr += initial_destination_buffer_length - destination_buffer_length;
-}
-
-#define FLUSH_DESTINATION_BUFFER() \
-  flush_destination_buffer(destination_length_ptr, destination_buffer_length, initial_destination_buffer_length);
-
-// It is better to wrap function calls that writes something.
-
-#define WITH_WRITE_BUFFER(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
-  while (true) {                                                                            \
-    result = (function)(__VA_ARGS__);                                                       \
-    if (result == 0 || result == NEEDS_MORE_SOURCE) {                                       \
-      FLUSH_DESTINATION_BUFFER()                                                            \
-      break;                                                                                \
-    }                                                                                       \
-    else if (result == NEEDS_MORE_DESTINATION) {                                            \
-      FLUSH_DESTINATION_BUFFER()                                                            \
-      INCREASE_DESTINATION_BUFFER()                                                         \
-    }                                                                                       \
-    else {                                                                                  \
-      return FAILED;                                                                        \
-    }                                                                                       \
   }
 
 static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, size_t destination_length, bool quiet)
@@ -93,6 +77,29 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
 
   return 0;
 }
+
+#define TRIM_DESTINATION_BUFFER() \
+  FLUSH_DESTINATION_BUFFER()      \
+                                  \
+  return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
+
+// -- wrapper --
+
+// It is better to wrap function calls that writes something.
+
+#define WITH_WRITE_BUFFER(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
+  while (true) {                                                                            \
+    result = (function)(__VA_ARGS__);                                                       \
+    if (result == 0 || result == NEEDS_MORE_SOURCE) {                                       \
+      break;                                                                                \
+    }                                                                                       \
+    else if (result == NEEDS_MORE_DESTINATION) {                                            \
+      INCREASE_DESTINATION_BUFFER()                                                         \
+    }                                                                                       \
+    else {                                                                                  \
+      return FAILED;                                                                        \
+    }                                                                                       \
+  }
 
 // -- compress --
 
@@ -113,7 +120,7 @@ static inline lzws_result_t compress_data(
   COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length)
   COMPRESS_WITH_WRITE_BUFFER(&lzws_flush_compressor, state_ptr, &destination_buffer, &destination_buffer_length)
 
-  return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
+  TRIM_DESTINATION_BUFFER()
 }
 
 lzws_result_t lzws_compress_string(
@@ -175,7 +182,7 @@ static inline lzws_result_t decompress_data(
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
 
-  return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
+  TRIM_DESTINATION_BUFFER()
 }
 
 lzws_result_t lzws_decompress_string(

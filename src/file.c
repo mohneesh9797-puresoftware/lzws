@@ -16,7 +16,7 @@
 #include "file.h"
 #include "log.h"
 
-// -- files --
+// -- file --
 
 static inline lzws_result_t read_data(FILE* data_file_ptr, uint8_t* data_buffer, size_t data_buffer_length, size_t* data_length_ptr, bool quiet)
 {
@@ -52,7 +52,7 @@ static inline lzws_result_t write_data(FILE* data_file_ptr, uint8_t* data_buffer
   return 0;
 }
 
-// -- buffers --
+// -- buffer --
 
 // We have read some data from file into source buffer.
 // Algorithm has read some data from this buffer.
@@ -154,6 +154,8 @@ static inline lzws_result_t flush_destination_buffer(
   if (result != 0) {                               \
     return result;                                 \
   }
+
+// -- wrapper --
 
 // It is better to wrap function calls that reads and writes something.
 
