@@ -85,7 +85,7 @@ How to use these scripts?
 curl -sSL https://get.rvm.io | bash -s stable
 
 2. Install modern version of ruby
-rvm install ruby-2.6.2
+rvm install ruby-2.6.3
 
 3. Install required gems
 cd scripts/tar-z-collector

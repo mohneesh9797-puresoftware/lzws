@@ -53,32 +53,32 @@ static const size_t datas_for_block_mode_disabled_length = sizeof(datas_for_bloc
 
 lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr)
 {
-  uint8_t* source_ptr;
+  uint8_t* source;
   size_t   source_length;
 
   if (
     lzws_test_compressor_write_codes(
       compressor_state_ptr,
       data_ptr->codes, data_ptr->codes_length,
-      &source_ptr, &source_length, 0) != 0) {
+      &source, &source_length, 0) != 0) {
     LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
   }
 
   lzws_compressor_clear_state(compressor_state_ptr);
 
-  uint8_t* destination_ptr;
+  uint8_t* destination;
   size_t   destination_length;
 
   lzws_result_t result = lzws_decompress_string(
-    source_ptr, source_length,
-    &destination_ptr, &destination_length, 0,
+    source, source_length,
+    &destination, &destination_length, 0,
     decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups, decompressor_state_ptr->quiet);
 
-  free(source_ptr);
+  free(source);
 
   if (result == 0) {
-    free(destination_ptr);
+    free(destination);
     LZWS_LOG_ERROR("string decompressor succeeded instead of fail");
     return 2;
   }
