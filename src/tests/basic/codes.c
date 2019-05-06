@@ -94,8 +94,9 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
   size_t   destination_length;
 
   lzws_result_t result = lzws_tests_decompress_string_and_file(
-    source, source_length, buffer_length,
-    &destination, &destination_length, buffer_length,
+    source, source_length,
+    &destination, &destination_length,
+    buffer_length,
     decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups);
 
   free(source);
