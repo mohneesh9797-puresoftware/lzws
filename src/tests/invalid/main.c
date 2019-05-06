@@ -12,11 +12,11 @@ int main()
     return 1;
   }
 
-  if (lzws_test_invalid_max_code_bit_length() != 0) {
+  if (lzws_test_invalid_codes() != 0) {
     return 2;
   }
 
-  if (lzws_test_invalid_codes() != 0) {
+  if (lzws_test_invalid_max_code_bit_length() != 0) {
     return 3;
   }
 
