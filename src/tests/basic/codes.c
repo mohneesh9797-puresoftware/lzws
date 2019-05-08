@@ -74,7 +74,7 @@ static const size_t datas_for_block_mode_disabled_length = sizeof(datas_for_bloc
 
 // -- test --
 
-lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, size_t buffer_length, const data_t* data_ptr)
+lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr, size_t buffer_length)
 {
   lzws_compressor_clear_state(compressor_state_ptr);
 
@@ -96,8 +96,8 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
   lzws_result_t result = lzws_tests_decompress_string_and_file(
     source, source_length,
     &destination, &destination_length,
-    buffer_length,
-    decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups);
+    decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups,
+    buffer_length);
 
   free(source);
 
@@ -123,12 +123,12 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
   return result;
 }
 
-lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, size_t buffer_length, const data_t* datas, size_t datas_length)
+lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* datas, size_t datas_length, size_t buffer_length)
 {
   lzws_result_t result;
 
   for (size_t index = 0; index < datas_length; index++) {
-    result = test_data(compressor_state_ptr, decompressor_state_ptr, buffer_length, &datas[index]);
+    result = test_data(compressor_state_ptr, decompressor_state_ptr, &datas[index], buffer_length);
     if (result != 0) {
       return result;
     }
@@ -139,19 +139,19 @@ lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_dec
 
 lzws_result_t test_all_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, size_t buffer_length, va_list LZWS_UNUSED(args))
 {
-  if (test_datas(compressor_state_ptr, decompressor_state_ptr, buffer_length, datas, datas_length) != 0) {
+  if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas, datas_length, buffer_length) != 0) {
     return 1;
   }
 
   if (compressor_state_ptr->block_mode) {
     // Codes test won't provide alignment bits.
     if (compressor_state_ptr->unaligned_bit_groups) {
-      if (test_datas(compressor_state_ptr, decompressor_state_ptr, buffer_length, datas_for_block_mode, datas_for_block_mode_length) != 0) {
+      if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_block_mode, datas_for_block_mode_length, buffer_length) != 0) {
         return 2;
       }
     }
   }
-  else if (test_datas(compressor_state_ptr, decompressor_state_ptr, buffer_length, datas_for_block_mode_disabled, datas_for_block_mode_disabled_length) != 0) {
+  else if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_block_mode_disabled, datas_for_block_mode_disabled_length, buffer_length) != 0) {
     return 3;
   }
 

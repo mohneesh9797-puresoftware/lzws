@@ -14,10 +14,11 @@ enum {
   LZWS_TEST_STRING_AND_FILE_ALLOCATE_FAILED = 1,
   LZWS_TEST_STRING_AND_FILE_FMEMOPEN_FAILED,
   LZWS_TEST_STRING_AND_FILE_FOPEN_FAILED,
+  LZWS_TEST_STRING_AND_FILE_API_FAILED,
   LZWS_TEST_STRING_AND_FILE_COMPRESSOR_FAILED,
-  LZWS_TEST_STRING_AND_FILE_COMPRESSOR_RECEIVED_DIFFERENT_RESULTS,
+  LZWS_TEST_STRING_AND_FILE_COMPRESSOR_IS_VOLATILE,
   LZWS_TEST_STRING_AND_FILE_DECOMPRESSOR_FAILED,
-  LZWS_TEST_STRING_AND_FILE_DECOMPRESSOR_RECEIVED_DIFFERENT_RESULTS
+  LZWS_TEST_STRING_AND_FILE_DECOMPRESSOR_IS_VOLATILE
 };
 
 // We can test both string and file api.
@@ -26,13 +27,13 @@ enum {
 lzws_result_t lzws_tests_compress_string_and_file(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  size_t       buffer_length,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups);
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups,
+  size_t buffer_length);
 
 lzws_result_t lzws_tests_decompress_string_and_file(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  size_t buffer_length,
-  bool msb, bool unaligned_bit_groups);
+  bool msb, bool unaligned_bit_groups,
+  size_t buffer_length);
 
 #endif // LZWS_TESTS_STRING_AND_FILE_H
