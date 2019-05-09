@@ -76,7 +76,7 @@ def get_hash_by_archive_digest(digest, valid_archives, invalid_archives, volatil
 end
 
 def get_command_digest(command)
-  result = `#{command} | sha256sum -b | awk '{printf "%s", $1}' ; exit ${PIPESTATUS}`
+  result = `#{command} | sha256sum -b | awk '{printf "%s", $1}' ; exit $PIPESTATUS`
   return nil unless $CHILD_STATUS.success?
 
   result

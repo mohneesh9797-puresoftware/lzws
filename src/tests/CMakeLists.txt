@@ -19,5 +19,5 @@ if (LZWS_STATIC)
   target_link_libraries (${STATIC_TEST_LIB_TARGET} ${STATIC_LIB_TARGET})
 endif ()
 
-add_subdirectory ("basic")
+add_subdirectory ("valid")
 add_subdirectory ("invalid")

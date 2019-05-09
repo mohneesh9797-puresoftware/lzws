@@ -169,7 +169,7 @@ lzws_result_t test_all_datas(lzws_compressor_state_t* compressor_state_ptr, lzws
   return 0;
 }
 
-lzws_result_t lzws_test_basic_codes()
+lzws_result_t lzws_test_valid_codes()
 {
   return lzws_test_compatible_compressor_and_decompressor_combinations(test_all_datas);
 }
