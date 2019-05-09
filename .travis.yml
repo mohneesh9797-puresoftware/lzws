@@ -12,6 +12,9 @@ addons:
   apt:
     packages:
       - libgmp-dev
+  homebrew:
+    packages:
+      - gmp
 
 script:
   - scripts/toolchains.sh
