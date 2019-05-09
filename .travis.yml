@@ -18,5 +18,8 @@ addons:
     packages:
       - gmp
 
+install:
+  - if [ $TRAVIS_OS_NAME = linux ]; then sudo ln -s /usr/local/clang/libexec/ccc-analyzer /usr/local/bin/ccc-analyzer; fi
+
 script:
   - scripts/toolchains.sh
