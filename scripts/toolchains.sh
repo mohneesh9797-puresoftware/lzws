@@ -29,6 +29,6 @@ find "$toolchains_dir" -type f -print0 | while read -d $'\0' toolchain; do
 
     echo "toolchain: $toolchain, dictionary: $dictionary"
 
-    make test
+    CTEST_OUTPUT_ON_FAILURE=1 make test
   done
 done
