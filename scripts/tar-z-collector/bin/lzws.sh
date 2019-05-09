@@ -7,4 +7,4 @@ tmp="../../../tmp"
 dictionary="${1}"
 shift
 
-"${tmp}/${dictionary}-build/src/cli/lzws-static" $@
+"${tmp}/tar-z-collector-${dictionary}-build/src/cli/lzws-static" $@

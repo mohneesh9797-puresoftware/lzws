@@ -15,8 +15,8 @@ static const bool msbs[] = {true, false};
 static const bool unaligned_bit_groups_values[] = {true, false};
 #define UNALIGNED_BIT_GROUPS_LENGTH sizeof(unaligned_bit_groups_values) / sizeof(bool)
 
-// "0" means automatic buffer length.
-// "2" is the minimal buffer length that should be enough for both compressor and decompressor.
+// "0" means default buffer length.
+// "2" bytes is the minimal buffer length that should be enough for both compressor and decompressor.
 static const size_t buffer_lengths[] = {0, 2, 512};
 #define BUFFER_LENGTH_SIZE sizeof(buffer_lengths) / sizeof(size_t)
 
