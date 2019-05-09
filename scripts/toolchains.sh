@@ -14,12 +14,12 @@ toolchains_dir="../../cmake/toolchains"
 # We need to create builds for all possible toolchains and dictionaries.
 find "$toolchains_dir" -type f -print0 | while read -d $'\0' toolchain; do
   for dictionary in "linked-list" "sparse-array"; do
-    find . -name "CMake*" -o -name "*.cmake" -exec rm -r {} +
+    find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
     cmake "../.." \
       -DCMAKE_TOOLCHAIN_FILE="$toolchain" \
       -DLZWS_COMPRESSOR_DICTIONARY="$dictionary" \
-      -DLZWS_SHARED=0 \
+      -DLZWS_SHARED=1 \
       -DLZWS_STATIC=1 \
       -DLZWS_CLI=0 \
       -DLZWS_TESTS=1 \

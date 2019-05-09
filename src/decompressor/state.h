@@ -52,6 +52,7 @@ typedef struct {
 } lzws_decompressor_state_t;
 
 lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb, bool unaligned_bit_groups, bool quiet);
+void          lzws_decompressor_reset_last_used_data(lzws_decompressor_state_t* state_ptr);
 void          lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr);
 void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
 

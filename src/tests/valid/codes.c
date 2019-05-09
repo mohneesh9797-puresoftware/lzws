@@ -87,8 +87,6 @@ static const size_t datas_for_disabled_block_mode_length = sizeof(datas_for_disa
 
 lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr, size_t buffer_length)
 {
-  lzws_compressor_clear_state(compressor_state_ptr);
-
   uint8_t* source;
   size_t   source_length;
 
@@ -100,6 +98,8 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
     LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
   }
+
+  lzws_compressor_reset_last_used_data(compressor_state_ptr);
 
   uint8_t* destination;
   size_t   destination_length;

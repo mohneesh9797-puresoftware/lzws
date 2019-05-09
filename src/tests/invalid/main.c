@@ -8,11 +8,11 @@
 
 int main()
 {
-  if (lzws_test_invalid_header() != 0) {
+  if (lzws_test_invalid_codes() != 0) {
     return 1;
   }
 
-  if (lzws_test_invalid_codes() != 0) {
+  if (lzws_test_invalid_header() != 0) {
     return 2;
   }
 
