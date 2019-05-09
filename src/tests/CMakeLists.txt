@@ -1,6 +1,6 @@
 set (SOURCES
-  "${CMAKE_CURRENT_SOURCE_DIR}/codes.c"
-  "${CMAKE_CURRENT_SOURCE_DIR}/combinations.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/code.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/combination.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/string_and_file.c"
 )
 

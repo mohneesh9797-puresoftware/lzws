@@ -6,7 +6,7 @@
 #include "../../decompressor/common.h"
 #include "../../log.h"
 #include "../../macro.h"
-#include "../combinations.h"
+#include "../combination.h"
 
 #include "header.h"
 

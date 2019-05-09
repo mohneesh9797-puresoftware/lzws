@@ -2,8 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#if !defined(LZWS_TESTS_COMBINATIONS_H)
-#define LZWS_TESTS_COMBINATIONS_H
+#if !defined(LZWS_TESTS_COMBINATION_H)
+#define LZWS_TESTS_COMBINATION_H
 
 #include <stdarg.h>
 
@@ -20,4 +20,4 @@ lzws_result_t lzws_test_decompressor_combinations(lzws_test_decompressor_t funct
 lzws_result_t lzws_test_compressor_and_decompressor_combinations(lzws_test_compressor_and_decompressor_t function, ...);
 lzws_result_t lzws_test_compatible_compressor_and_decompressor_combinations(lzws_test_compressor_and_decompressor_t function, ...);
 
-#endif // LZWS_TESTS_COMBINATIONS_H
+#endif // LZWS_TESTS_COMBINATION_H

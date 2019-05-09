@@ -4,7 +4,7 @@
 
 #include "../log.h"
 
-#include "combinations.h"
+#include "combination.h"
 
 static const bool block_modes[] = {true, false};
 #define BLOCK_MODE_LENGTH sizeof(block_modes) / sizeof(bool)

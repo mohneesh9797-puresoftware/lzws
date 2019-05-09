@@ -6,11 +6,11 @@
 
 #include "../../log.h"
 #include "../../macro.h"
-#include "../codes.h"
-#include "../combinations.h"
+#include "../code.h"
+#include "../combination.h"
 #include "../string_and_file.h"
 
-#include "codes.h"
+#include "code.h"
 
 typedef struct {
   const lzws_code_t* codes;

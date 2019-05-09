@@ -9,7 +9,7 @@
 #include "../compressor/remainder.h"
 #include "../log.h"
 
-#include "codes.h"
+#include "code.h"
 
 // -- buffer --
 

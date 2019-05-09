@@ -1,5 +1,5 @@
 set (SOURCES
-  "${CMAKE_CURRENT_SOURCE_DIR}/codes.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/code.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
 )
 
