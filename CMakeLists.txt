@@ -27,7 +27,7 @@ endif ()
 set (LZWS_COMPRESSOR_DICTIONARY "sparse-array" CACHE STRING "dictionary implementation")
 
 set (LZWS_SHARED true CACHE BOOL "build shared libs")
-set (LZWS_STATIC true CACHE BOOL "build static libs")
+set (LZWS_STATIC false CACHE BOOL "build static libs")
 set (LZWS_CLI    true CACHE BOOL "build cli")
 set (LZWS_TESTS  true CACHE BOOL "build tests")
 set (LZWS_MAN    true CACHE BOOL "build man")
