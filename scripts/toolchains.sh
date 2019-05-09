@@ -11,13 +11,13 @@ cd "$build"
 
 toolchains_dir="../../cmake/toolchains"
 
-# We need to create builds for all possible toolchains and dictionaries.
-find "$toolchains_dir" -type f -print0 | while read -d $'\0' toolchain; do
+# We need to tests builds for all possible toolchains and dictionaries.
+process_toolchain () {
   for dictionary in "linked-list" "sparse-array"; do
     find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
     cmake "../.." \
-      -DCMAKE_TOOLCHAIN_FILE="$toolchain" \
+      -DCMAKE_TOOLCHAIN_FILE="$1" \
       -DLZWS_COMPRESSOR_DICTIONARY="$dictionary" \
       -DLZWS_SHARED=1 \
       -DLZWS_STATIC=1 \
@@ -27,8 +27,11 @@ find "$toolchains_dir" -type f -print0 | while read -d $'\0' toolchain; do
     make clean
     make -j2
 
-    echo "toolchain: $toolchain, dictionary: $dictionary"
+    echo "toolchain: $1, dictionary: $dictionary"
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
   done
-done
+}
+
+export -f process_toolchain
+find "$toolchains_dir" -type f -exec sh -c 'process_toolchain "$0"' {} \;
