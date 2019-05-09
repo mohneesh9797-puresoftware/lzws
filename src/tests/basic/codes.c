@@ -42,35 +42,46 @@ static const size_t datas_length = sizeof(datas) / sizeof(data_t);
 static const lzws_code_t data3_2[]    = {5, LZWS_CLEAR_CODE};
 static const uint8_t     symbols3_1[] = {5};
 
-static const lzws_code_t data4_3[]    = {100, LZWS_CLEAR_CODE, 200};
-static const uint8_t     symbols4_2[] = {100, 200};
+static const lzws_code_t data4_3[]    = {132, LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE, LZWS_CLEAR_CODE};
+static const uint8_t     symbols4_3[] = {132, 132, 132};
 
-static const lzws_code_t data5_4[]    = {70, LZWS_CLEAR_CODE, 30, LZWS_CLEAR_CODE};
-static const uint8_t     symbols5_2[] = {70, 30};
+static const lzws_code_t data5_3[]    = {100, LZWS_CLEAR_CODE, 200};
+static const uint8_t     symbols5_2[] = {100, 200};
 
-static const data_t datas_for_block_mode[] = {
+static const lzws_code_t data6_4[]    = {100, LZWS_CLEAR_CODE, 200, LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE};
+static const uint8_t     symbols6_4[] = {100, 200, 200, 200};
+
+static const lzws_code_t data7_4[]    = {70, LZWS_CLEAR_CODE, 30, LZWS_CLEAR_CODE};
+static const uint8_t     symbols7_2[] = {70, 30};
+
+static const lzws_code_t data8_8[]    = {70, 80, LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE + 1, LZWS_CLEAR_CODE, 30, 40, LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE, LZWS_CLEAR_CODE};
+static const uint8_t     symbols8_8[] = {70, 80, 80, 80, 30, 40, 30, 40};
+
+static const data_t datas_for_enabled_block_mode[] = {
   {data3_2, 2, symbols3_1, 1},
-  {data4_3, 3, symbols4_2, 2},
-  {data5_4, 4, symbols5_2, 2}};
-static const size_t datas_for_block_mode_length = sizeof(datas_for_block_mode) / sizeof(data_t);
+  {data4_3, 3, symbols4_3, 3},
+  {data5_3, 3, symbols5_2, 2},
+  {data6_4, 4, symbols6_4, 4},
+  {data7_4, 4, symbols7_2, 2},
+  {data8_8, 8, symbols8_8, 8}};
+static const size_t datas_for_enabled_block_mode_length = sizeof(datas_for_enabled_block_mode) / sizeof(data_t);
 
 // -- block mode disabled --
 
-static const lzws_code_t data6_2[]    = {8, LZWS_FIRST_FREE_CODE};
-static const uint8_t     symbols6_3[] = {8, 8, 8};
+static const lzws_code_t data9_2[]    = {8, LZWS_FIRST_FREE_CODE};
+static const uint8_t     symbols9_3[] = {8, 8, 8};
 
-static const lzws_code_t data7_3[]    = {15, 20, LZWS_FIRST_FREE_CODE + 1};
-static const uint8_t     symbols7_4[] = {15, 20, 20, 20};
+static const lzws_code_t data10_3[]    = {15, 20, LZWS_FIRST_FREE_CODE + 1};
+static const uint8_t     symbols10_4[] = {15, 20, 20, 20};
 
-// First free code will be equals to '29'.
-static const lzws_code_t data8_3[]    = {2, 9, LZWS_FIRST_FREE_CODE};
-static const uint8_t     symbols8_4[] = {2, 9, 2, 9};
+static const lzws_code_t data11_3[]    = {2, 9, LZWS_FIRST_FREE_CODE};
+static const uint8_t     symbols11_4[] = {2, 9, 2, 9};
 
-static const data_t datas_for_block_mode_disabled[] = {
-  {data6_2, 2, symbols6_3, 3},
-  {data7_3, 3, symbols7_4, 4},
-  {data8_3, 3, symbols8_4, 4}};
-static const size_t datas_for_block_mode_disabled_length = sizeof(datas_for_block_mode_disabled) / sizeof(data_t);
+static const data_t datas_for_disabled_block_mode[] = {
+  {data9_2, 2, symbols9_3, 3},
+  {data10_3, 3, symbols10_4, 4},
+  {data11_3, 3, symbols11_4, 4}};
+static const size_t datas_for_disabled_block_mode_length = sizeof(datas_for_disabled_block_mode) / sizeof(data_t);
 
 // -- test --
 
@@ -146,12 +157,12 @@ lzws_result_t test_all_datas(lzws_compressor_state_t* compressor_state_ptr, lzws
   if (compressor_state_ptr->block_mode) {
     // Codes test won't provide alignment bits.
     if (compressor_state_ptr->unaligned_bit_groups) {
-      if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_block_mode, datas_for_block_mode_length, buffer_length) != 0) {
+      if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_enabled_block_mode, datas_for_enabled_block_mode_length, buffer_length) != 0) {
         return 2;
       }
     }
   }
-  else if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_block_mode_disabled, datas_for_block_mode_disabled_length, buffer_length) != 0) {
+  else if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas_for_disabled_block_mode, datas_for_disabled_block_mode_length, buffer_length) != 0) {
     return 3;
   }
 
