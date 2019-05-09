@@ -27,7 +27,7 @@ find "$toolchains_dir" -type f | while read -r toolchain; do
       -DLZWS_TESTS=1 \
       -DLZWS_MAN=0
     make clean
-    make -j2 VERBOSE=1
+    make -j2
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
   done
