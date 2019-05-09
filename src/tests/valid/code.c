@@ -85,7 +85,7 @@ static const size_t datas_for_disabled_block_mode_length = sizeof(datas_for_disa
 
 // -- test --
 
-lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr, size_t buffer_length)
+static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* data_ptr, size_t buffer_length)
 {
   uint8_t* source;
   size_t   source_length;
@@ -134,7 +134,7 @@ lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_deco
   return result;
 }
 
-lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* datas, size_t datas_length, size_t buffer_length)
+static inline lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const data_t* datas, size_t datas_length, size_t buffer_length)
 {
   lzws_result_t result;
 
@@ -148,7 +148,7 @@ lzws_result_t test_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_dec
   return 0;
 }
 
-lzws_result_t test_all_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, size_t buffer_length, va_list LZWS_UNUSED(args))
+static inline lzws_result_t test_all_datas(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, size_t buffer_length, va_list LZWS_UNUSED(args))
 {
   if (test_datas(compressor_state_ptr, decompressor_state_ptr, datas, datas_length, buffer_length) != 0) {
     return 1;

@@ -98,9 +98,6 @@ static inline lzws_result_t test_compress_string(
 
   if (test_result != 0 && test_result != LZWS_STRING_COMPRESSOR_FAILED) {
     LZWS_LOG_ERROR("string api failed");
-
-    free(destination);
-
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
 
@@ -140,9 +137,6 @@ static inline lzws_result_t test_compress_file_with_destination(
 
   if (test_result != 0 && test_result != LZWS_FILE_COMPRESSOR_FAILED) {
     LZWS_LOG_ERROR("file api failed");
-
-    free(destination);
-
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
 
@@ -283,9 +277,6 @@ static inline lzws_result_t test_decompress_string(
 
   if (test_result != 0 && test_result != LZWS_STRING_DECOMPRESSOR_FAILED) {
     LZWS_LOG_ERROR("string api failed");
-
-    free(destination);
-
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
 
@@ -325,9 +316,6 @@ static inline lzws_result_t test_decompress_file_with_destination(
 
   if (test_result != 0 && test_result != LZWS_FILE_DECOMPRESSOR_FAILED) {
     LZWS_LOG_ERROR("file api failed");
-
-    free(destination);
-
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
 
