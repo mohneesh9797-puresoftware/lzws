@@ -14,6 +14,8 @@ toolchains_dir="../../cmake/toolchains"
 
 find "$toolchains_dir" -type f | while read -r toolchain; do
   for dictionary in "linked-list" "sparse-array"; do
+    echo "toolchain: $toolchain, dictionary: $dictionary"
+
     find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
     cmake "../.." \
@@ -25,9 +27,7 @@ find "$toolchains_dir" -type f | while read -r toolchain; do
       -DLZWS_TESTS=1 \
       -DLZWS_MAN=0
     make clean
-    make -j2
-
-    echo "toolchain: $toolchain, dictionary: $dictionary"
+    make -j2 VERBOSE=1
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
   done
