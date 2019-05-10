@@ -5,6 +5,7 @@
 #if !defined(LZWS_COMMON_H)
 #define LZWS_COMMON_H
 
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -29,8 +30,8 @@ typedef uint_fast8_t lzws_result_t;
 typedef uint16_t      lzws_code_t;
 typedef uint_fast16_t lzws_code_fast_t;
 
-#define CODE_FORMAT "%u"
-#define FAST_CODE_FORMAT "%lu"
+#define CODE_FORMAT "%" PRIu16
+#define FAST_CODE_FORMAT "%" PRIuFAST16
 
 // External programs requires 2 byte magic header.
 // For example: https://github.com/apache/httpd/blob/b4ee699ea355271bb560248e5f89cca72623a0cf/modules/metadata/mod_mime_magic.c#L2060
