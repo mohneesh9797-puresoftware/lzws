@@ -2,8 +2,10 @@ language: c
 
 os:
   - linux
+  - osx
 
 dist: xenial
+osx_image: xcode10.2
 
 compiler:
   - gcc
@@ -13,9 +15,9 @@ addons:
   apt:
     packages:
       - libgmp-dev
-
-install:
-  - if [ $TRAVIS_OS_NAME = linux ]; then sudo ln -s /usr/local/clang/libexec/ccc-analyzer /usr/local/bin/ccc-analyzer; fi
+  homebrew:
+    packages:
+      - gmp
 
 script:
   - scripts/toolchains.sh

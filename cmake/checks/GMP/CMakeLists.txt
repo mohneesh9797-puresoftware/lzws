@@ -1,11 +1,11 @@
 cmake_minimum_required (VERSION 3.9)
 project ("cmake_check_gmp" "C")
 
-set (CMAKE_TRY_RUN false CACHE BOOL "try run targets after build")
-
 set (CMAKE_GMP_INCLUDE_PATH        "" CACHE STRING "GMP include path")
 set (CMAKE_GMP_SHARED_LIBRARY_PATH "" CACHE STRING "GMP shared library path")
 set (CMAKE_GMP_STATIC_LIBRARY_PATH "" CACHE STRING "GMP static library path")
+
+set (CMAKE_TRY_RUN false CACHE BOOL "try run targets after build")
 
 include_directories (${CMAKE_GMP_INCLUDE_PATH})
 
