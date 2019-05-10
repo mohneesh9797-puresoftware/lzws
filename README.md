@@ -53,7 +53,7 @@ wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.20.3.tar.xz"
 tar xf linux-4.20.3.tar.xz
 tar cf linux.tar linux-4.20.3
 
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLZWS_COMPRESSOR_DICTIONARY="linked-list"
+cmake .. -DCMAKE_BUILD_TYPE="RELEASE" -DLZWS_COMPRESSOR_DICTIONARY="linked-list"
 make
 
 time ./src/cli/lzws < linux.tar > linux.tar.Z
@@ -72,7 +72,7 @@ make test
 
 DEB and RPM release:
 ```sh
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE
+cmake .. -DCMAKE_BUILD_TYPE="RELEASE"
 make
 make package
 ```
