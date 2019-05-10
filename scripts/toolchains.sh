@@ -12,7 +12,7 @@ cd "$build"
 # We need to tests builds for all possible toolchains and dictionaries.
 toolchains="../../cmake/toolchains"
 
-if [[ $(uname -s) == "Darwin" ]]; then
+if [ $(uname -s) = "Darwin" ]; then
   toolchains="$toolchains/osx"
 else
   toolchains="$toolchains/linux"
