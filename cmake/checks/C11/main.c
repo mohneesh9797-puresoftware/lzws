@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdnoreturn.h>
-#include <uchar.h>
 
 // clang-format off
 #define log_format(x) _Generic((x), \
