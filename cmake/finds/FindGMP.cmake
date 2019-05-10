@@ -10,7 +10,7 @@ else ()
 endif ()
 message (STATUS "Status of GMP library - include path is ${PATH_STATUS}")
 
-find_library (CMAKE_GMP_SHARED_LIBRARY_PATH NAMES "libgmp.so")
+find_library (CMAKE_GMP_SHARED_LIBRARY_PATH NAMES "libgmp.so" "libgmp.dylib")
 if (CMAKE_GMP_SHARED_LIBRARY_PATH)
   set (PATH_STATUS "found: \"${CMAKE_GMP_SHARED_LIBRARY_PATH}\"")
 else ()
