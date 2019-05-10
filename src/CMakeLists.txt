@@ -48,13 +48,14 @@ set (SOURCES ${SOURCES}
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths ("${SOURCES}")
 
+include_directories (${CMAKE_GMP_INCLUDE_PATH})
+
 install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if (LZWS_SHARED)
   set (LIB_TARGET ${LZWS_TARGET})
 
   add_library (${LIB_TARGET} SHARED ${SOURCES})
-  target_include_directories(${LIB_TARGET} PUBLIC ${CMAKE_GMP_INCLUDE_PATH})
   target_link_libraries (${LIB_TARGET} ${CMAKE_GMP_SHARED_LIBRARY_PATH})
 
   install (TARGETS ${LIB_TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -65,7 +66,6 @@ if (LZWS_STATIC)
   set (STATIC_LIB_NAME ${LZWS_TARGET})
 
   add_library (${STATIC_LIB_TARGET} STATIC ${SOURCES})
-  target_include_directories(${STATIC_LIB_TARGET} PUBLIC ${CMAKE_GMP_INCLUDE_PATH})
   target_link_libraries (${STATIC_LIB_TARGET} ${CMAKE_GMP_STATIC_LIBRARY_PATH})
 
   set_target_properties (${STATIC_LIB_TARGET} PROPERTIES OUTPUT_NAME ${STATIC_LIB_NAME})
