@@ -11,6 +11,7 @@ include_directories (${CMAKE_GMP_INCLUDE_PATH})
 
 if (CMAKE_GMP_SHARED_LIBRARY_PATH)
   add_executable ("main" "main.c")
+  target_include_directories("main" PUBLIC ${CMAKE_GMP_INCLUDE_PATH})
   target_link_libraries ("main" ${CMAKE_GMP_SHARED_LIBRARY_PATH})
 
   if (CMAKE_TRY_RUN)
@@ -25,6 +26,7 @@ endif ()
 
 if (CMAKE_GMP_STATIC_LIBRARY_PATH)
   add_executable ("main-static" "main.c")
+  target_include_directories("main-static" PUBLIC ${CMAKE_GMP_INCLUDE_PATH})
   target_link_libraries ("main-static" ${CMAKE_GMP_STATIC_LIBRARY_PATH})
 
   if (CMAKE_TRY_RUN)

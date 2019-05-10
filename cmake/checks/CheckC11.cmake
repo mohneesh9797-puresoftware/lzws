@@ -85,9 +85,14 @@ function (cmake_check_c11)
 
   # -- no support --
 
+  if (NOT CHECK_RESULT)
+    set (CMAKE_HAVE_C11 false)
+    set (CMAKE_C11_C_FLAGS "")
+    message (STATUS "Status of C11 support - no")
+  endif ()
+
   set (CMAKE_HAVE_C11 ${CMAKE_HAVE_C11} CACHE STRING "status of C11 support")
   set (CMAKE_C11_C_FLAGS ${CMAKE_C11_C_FLAGS} CACHE STRING "c11 C flags")
-  message (STATUS "Status of C11 support - no")
 
   mark_as_advanced (CMAKE_HAVE_C11 CMAKE_C11_C_FLAGS)
 endfunction ()
