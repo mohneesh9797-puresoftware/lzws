@@ -12,8 +12,11 @@ cd "$build"
 # We need to tests builds for all possible toolchains and dictionaries.
 toolchains="../../cmake/toolchains"
 
-if [ $(uname -s) = "Darwin" ]; then
+kernel_name=$(uname --kernel-name)
+if [ $kernel_name = "Darwin" ]; then
   toolchains="$toolchains/osx"
+elif [ $kernel_name = "FreeBSD" ]; then
+  toolchains="$toolchains/freebsd"
 else
   toolchains="$toolchains/linux"
 fi
