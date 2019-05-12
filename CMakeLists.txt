@@ -30,8 +30,8 @@ set (LZWS_SHARED   true  CACHE BOOL "build shared libs")
 set (LZWS_STATIC   false CACHE BOOL "build static libs")
 set (LZWS_CLI      true  CACHE BOOL "build cli")
 set (LZWS_TESTS    true  CACHE BOOL "build tests")
-set (LZWS_MAN      true  CACHE BOOL "build man")
 set (LZWS_EXAMPLES false CACHE BOOL "build examples")
+set (LZWS_MAN      true  CACHE BOOL "build man")
 
 if (NOT LZWS_COMPRESSOR_DICTIONARY)
   message (FATAL_ERROR "Please select dictionary implementation.")
@@ -98,12 +98,12 @@ endif ()
 
 add_subdirectory ("src")
 
-if (LZWS_MAN)
-  add_subdirectory ("man")
-endif ()
-
 if (LZWS_EXAMPLES)
   add_subdirectory ("examples")
+endif ()
+
+if (LZWS_MAN)
+  add_subdirectory ("man")
 endif ()
 
 include (CPackConfig.cmake)

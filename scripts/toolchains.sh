@@ -34,8 +34,8 @@ find "$toolchains" -type f | while read -r toolchain; do
       -DLZWS_STATIC=1 \
       -DLZWS_CLI=0 \
       -DLZWS_TESTS=1 \
+      -DLZWS_EXAMPLES=1 \
       -DLZWS_MAN=0 \
-      -DLZWS_EXAMPLES=0 \
       -DCMAKE_BUILD_TYPE="RELEASE" \
       -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native"
     make clean
