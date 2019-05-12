@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 
 # WIP
-Tests.
+Examples.
 
 # LZW + Stream = LZWS
 
