@@ -2,10 +2,10 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include <string.h>
+
 #include "../../log.h"
 #include "../../string.h"
-
-#include <string.h>
 
 // "0" means default buffer length.
 #define BUFFER_LENGTH 0
