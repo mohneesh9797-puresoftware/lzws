@@ -76,6 +76,10 @@ if (LZWS_CLI)
   add_subdirectory ("cli")
 endif ()
 
+if (LZWS_EXAMPLES)
+  add_subdirectory ("examples")
+endif ()
+
 if (LZWS_TESTS)
   add_subdirectory ("tests")
 endif ()

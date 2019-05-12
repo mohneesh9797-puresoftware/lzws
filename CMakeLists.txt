@@ -98,10 +98,6 @@ endif ()
 
 add_subdirectory ("src")
 
-if (LZWS_EXAMPLES)
-  add_subdirectory ("examples")
-endif ()
-
 if (LZWS_MAN)
   add_subdirectory ("man")
 endif ()
