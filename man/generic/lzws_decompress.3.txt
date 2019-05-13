@@ -1,0 +1,17 @@
+LZWS(3)
+=======
+
+
+NAME
+----
+lzws_decompress - .
+
+
+SYNOPSIS
+--------
+synopsis.
+
+
+DESCRIPTION
+-----------
+description.

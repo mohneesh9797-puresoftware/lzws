@@ -1,0 +1,17 @@
+LZWS(3)
+=======
+
+
+NAME
+----
+lzws_compressor_write_magic_header - .
+
+
+SYNOPSIS
+--------
+synopsis.
+
+
+DESCRIPTION
+-----------
+description.

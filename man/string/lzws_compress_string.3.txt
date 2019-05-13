@@ -1,0 +1,108 @@
+LZWS(3)
+=======
+
+
+NAME
+----
+lzws_compress_string - Simple API for string compressor.
+
+
+SYNOPSIS
+--------
+*#include <lzws/string.h>*
+
+----
+lzws_result_t lzws_compress_string(
+  uint8_t* source, size_t source_length,
+  uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
+----
+
+
+OPTIONS
+-------
+*`uint8_t* source`*::
+  Pointer to source data like text.
+
+*`size_t source_length`*::
+  Source data length like text length.
+
+*`uint8_t** destination_ptr`*::
+  Pointer to destination.
+
+*`size_t* destination_length_ptr`*::
+  Pointer to destination length.
+
+*`size_t destination_buffer_length`*::
+  Buffer length for destination.
+  If buffer length is *0* optimal buffer length will be auto selected.
+  Minimal buffer length is *2*.
+
+Other options are related to algorithm customization.
+
+*`uint_fast8_t max_code_bit_length`*::
+  Set max code bit length.
+  Min value *LZWS_LOWEST_MAX_CODE_BIT_LENGTH*, max - *LZWS_BIGGEST_MAX_CODE_BIT_LENGTH*.
+  This value will be written into destination header.
+
+*`bool block_mode`*::
+  Disable block mode.
+  This value will be written into destination header.
+
+*`bool msb`*::
+  Enable most significant bit mode.
+  This value won't be written into destination header.
+
+*`bool unaligned_bit_groups`*::
+  Enable unaligned bit groups.
+  This value won't be written into destination header.
+
+*`bool quiet`*::
+  Disable error messages.
+
+
+RETURN VALUE
+------------
+Returns *0* if compression was successful, otherwise not *0*.
+See header file for more details about possible results.
+
+
+DESCRIPTION
+-----------
+This function will allocate buffer as destination, compress source and increase destination and its length.
+If compression was successful - you should *free* destination.
+
+You can use this simple string compressor API for small amount of data.
+Memory required is source length + destination length + buffer length + dictionary size.
+See docs about what amount of memory is required for each type of dictionary.
+
+
+EXAMPLE
+-------
+You need to compress a small string and result should be compatible with UNIX compress utility.
+
+----
+const char text[]      = "example text";
+size_t     text_length = strlen(text);
+
+char*  compressed_text;
+size_t compressed_text_length;
+
+lzws_result_t result = lzws_compress_string(
+  (uint8_t*)text, text_length,
+  (uint8_t**)&compressed_text, &compressed_text_length, 0,
+  LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, true, false, false, false);
+
+if (result != 0) {
+  return 1;
+}
+
+print_binary(compressed_text);
+
+free(compressed_text);
+----
+
+
+SEE ALSO
+--------
+lzws_decompress_string(3)

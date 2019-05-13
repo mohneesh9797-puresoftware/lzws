@@ -1,0 +1,17 @@
+LZWS(3)
+=======
+
+
+NAME
+----
+lzws_decompressor_read_magic_header - .
+
+
+SYNOPSIS
+--------
+synopsis.
+
+
+DESCRIPTION
+-----------
+description.

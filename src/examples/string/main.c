@@ -21,12 +21,12 @@ int main()
   const char text[]      = "example text";
   size_t     text_length = strlen(text);
 
-  uint8_t* compressed_text;
-  size_t   compressed_text_length;
+  char*  compressed_text;
+  size_t compressed_text_length;
 
   lzws_result_t result = lzws_compress_string(
     (uint8_t*)text, text_length,
-    &compressed_text, &compressed_text_length, BUFFER_LENGTH,
+    (uint8_t**)&compressed_text, &compressed_text_length, BUFFER_LENGTH,
     MAX_CODE_BIT_LENGTH, BLOCK_MODE, MSB, UNALIGNED_BIT_GROUPS, QUIET);
 
   if (result != 0) {
@@ -34,11 +34,13 @@ int main()
     return 1;
   }
 
+  // decompress
+
   char*  decompressed_text;
   size_t decompressed_text_length;
 
   result = lzws_decompress_string(
-    compressed_text, compressed_text_length,
+    (uint8_t*)compressed_text, compressed_text_length,
     (uint8_t**)&decompressed_text, &decompressed_text_length, BUFFER_LENGTH,
     MSB, UNALIGNED_BIT_GROUPS, QUIET);
 
