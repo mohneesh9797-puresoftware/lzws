@@ -72,7 +72,7 @@ DESCRIPTION
 This function will allocate buffer as destination, compress source and increase destination and its length.
 If compression was successful - you should *free* destination.
 
-You can use this simple string compressor API for small amount of data.
+You can use this simple string compressor API with small amount of data.
 Memory required is source length + destination length + buffer length + dictionary size.
 See docs about what amount of memory is required for each type of dictionary.
 
@@ -97,7 +97,7 @@ if (result != 0) {
   return 1;
 }
 
-print_binary(compressed_text);
+print_binary(compressed_text, compressed_text_length);
 
 free(compressed_text);
 ----

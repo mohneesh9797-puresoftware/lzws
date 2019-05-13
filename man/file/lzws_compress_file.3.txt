@@ -4,14 +4,93 @@ LZWS(3)
 
 NAME
 ----
-lzws_compress_file - .
+lzws_compress_file - Simple API for file compressor.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/file.h>*
+
+----
+lzws_result_t lzws_compress_file(
+  FILE* source_file, size_t source_buffer_length,
+  FILE* destination_file, size_t destination_buffer_length,
+  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
+----
+
+
+OPTIONS
+-------
+*`FILE* source_file`*::
+  Pointer to source file like stdin.
+
+*`size_t source_buffer_length`*::
+  Buffer length for source.
+  If buffer length is *0* optimal buffer length will be auto selected.
+  Minimal buffer length is *2*.
+
+*`FILE* source_file`*::
+  Pointer to destination file like stdout.
+
+*`size_t source_buffer_length`*::
+  Buffer length for destination.
+  If buffer length is *0* optimal buffer length will be auto selected.
+  Minimal buffer length is *2*.
+
+Other options are related to algorithm customization.
+
+*`uint_fast8_t max_code_bit_length`*::
+  Set max code bit length.
+  Min value *LZWS_LOWEST_MAX_CODE_BIT_LENGTH*, max - *LZWS_BIGGEST_MAX_CODE_BIT_LENGTH*.
+  This value will be written into destination header.
+
+*`bool block_mode`*::
+  Disable block mode.
+  This value will be written into destination header.
+
+*`bool msb`*::
+  Enable most significant bit mode.
+  This value won't be written into destination header.
+
+*`bool unaligned_bit_groups`*::
+  Enable unaligned bit groups.
+  This value won't be written into destination header.
+
+*`bool quiet`*::
+  Disable error messages.
+
+
+RETURN VALUE
+------------
+Returns *0* if compression was successful, otherwise not *0*.
+See header file for more details about possible results.
 
 
 DESCRIPTION
 -----------
-description.
+This function will read data from source file into source buffer, compress it into destination buffer and write destination buffer into destination file.
+
+You can use this simple file compressor API with large amount of data.
+Memory required is source buffer length + destination buffer length + dictionary size.
+See docs about what amount of memory is required for each type of dictionary.
+
+
+EXAMPLE
+-------
+You need to simulate UNIX compress utility.
+
+----
+lzws_result_t result = lzws_compress_file(
+  stdin, 0,
+  stdout, 0,
+  LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, true, false, false, false);
+
+if (result != 0) {
+  return 1;
+}
+----
+
+
+SEE ALSO
+--------
+lzws_decompress_file(3)

@@ -14,7 +14,7 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-Lzws is a library with streaming interface for compressor and decompressor.
+Lzws is a library with streaming API for compressor and decompressor.
 Default options are fully compatible with original UNIX compress.
 It has a cli tool for single file processing.
 

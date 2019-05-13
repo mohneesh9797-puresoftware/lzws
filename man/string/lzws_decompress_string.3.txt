@@ -4,14 +4,94 @@ LZWS(3)
 
 NAME
 ----
-lzws_decompress_string - .
+lzws_decompress_string - Simple API for string decompressor.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/string.h>*
+
+----
+lzws_result_t lzws_decompress_string(
+  uint8_t* source, size_t source_length,
+  uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
+  bool msb, bool unaligned_bit_groups, bool quiet);
+----
+
+
+OPTIONS
+-------
+*`uint8_t* source`*::
+  Pointer to source data like text.
+
+*`size_t source_length`*::
+  Source data length like text length.
+
+*`uint8_t** destination_ptr`*::
+  Pointer to destination.
+
+*`size_t* destination_length_ptr`*::
+  Pointer to destination length.
+
+*`size_t destination_buffer_length`*::
+  Buffer length for destination.
+  If buffer length is *0* optimal buffer length will be auto selected.
+  Minimal buffer length is *2*.
+
+Other options are related to algorithm customization.
+
+*`bool msb`*::
+  Enable most significant bit mode.
+
+*`bool unaligned_bit_groups`*::
+  Enable unaligned bit groups.
+
+*`bool quiet`*::
+  Disable error messages.
+
+
+RETURN VALUE
+------------
+Returns *0* if decompression was successful, otherwise not *0*.
+See header file for more details about possible results.
 
 
 DESCRIPTION
 -----------
-description.
+This function will allocate buffer as destination, decompress source and increase destination and its length.
+If decompression was successful - you should *free* destination.
+
+You can use this simple string decompressor API with small amount of data.
+Memory required is source length + destination length + buffer length + dictionary size.
+See docs about what amount of memory is required for dictionary.
+
+
+EXAMPLE
+-------
+You need to decompress a small string provided by UNIX compress utility.
+
+----
+const char compressed_text[]      = "...";
+size_t     compressed_text_length = strlen(compressed_text);
+
+char*  decompressed_text;
+size_t decompressed_text_length;
+
+lzws_result_t result = lzws_decompress_string(
+  (uint8_t*)compressed_text, compressed_text_length,
+  (uint8_t**)&decompressed_text, &decompressed_text_length, 0,
+  false, false, false);
+
+if (result != 0) {
+  return 1;
+}
+
+print(decompressed_text, decompressed_text_length);
+
+free(decompressed_text);
+----
+
+
+SEE ALSO
+--------
+lzws_compress_string(3)
