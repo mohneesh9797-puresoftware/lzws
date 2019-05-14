@@ -4,14 +4,74 @@ LZWS(3)
 
 NAME
 ----
-lzws_flush_compressor - .
+lzws_flush_compressor - Flush compressor.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/compressor/main.h>*
+
+----
+lzws_result_t lzws_flush_compressor(
+  lzws_compressor_state_t* state_ptr,
+  uint8_t** destination_ptr, size_t* destination_length_ptr);
+----
+
+
+OPTIONS
+-------
+*`lzws_compressor_state_t* state_ptr`*::
+  Pointer to compressor state provided by *lzws_compressor_get_initial_state*.
+
+*`uint8_t** destination_ptr`*::
+  Pointer to destination data.
+
+*`size_t* destination_length_ptr`*::
+  Pointer to destination data length.
+
+
+RETURN VALUE
+------------
+Returns *0* if compression was successful.
+Returns *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* when it is not enough destination.
+See header file *lzws/compressor/common.h* for more details about other results.
 
 
 DESCRIPTION
 -----------
-description.
+Compressor requires flush after *lzws_compress*.
+This function writes compressed tail to destination.
+It is possible that it won't be enough destination.
+You can accept *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* and increase destination or use another destination.
+
+This function moves *destination_ptr* forward.
+It also decreases *destination_length_ptr*.
+
+
+PSEUDO EXAMPLE
+--------------
+You want to flush compressor after several portions of data.
+
+----
+while (true) {
+  lzws_result_t result = lzws_flush_compressor(
+    state_ptr,
+    &destination, &destination_length);
+
+  if (result == 0) {
+    break;
+  } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
+    increase_destination(&destination, &destination_length);
+  } else {
+    return 1;
+  }
+}
+----
+
+
+SEE ALSO
+--------
+*lzws_compressor_get_initial_state*(3)
+*lzws_compressor_free_state*(3)
+*lzws_compressor_write_magic_header*(3)
+*lzws_compress*(3)

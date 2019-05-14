@@ -45,7 +45,7 @@ Other options are related to algorithm customization.
   This value will be written into destination header.
 
 *`bool block_mode`*::
-  Disable block mode.
+  Enable block mode.
   This value will be written into destination header.
 
 *`bool msb`*::
@@ -68,7 +68,7 @@ See header file for more details about possible results.
 
 DESCRIPTION
 -----------
-This function will read data from source file into source buffer, compress it into destination buffer and write destination buffer into destination file.
+This function reads data from source file into source buffer, compresses it into destination buffer and writes destination buffer into destination file.
 
 You can use this simple file compressor API with large amount of data.
 Memory required is source buffer length + destination buffer length + dictionary size.

@@ -4,14 +4,68 @@ LZWS(3)
 
 NAME
 ----
-lzws_decompressor_get_initial_state - .
+lzws_decompressor_get_initial_state - Create decompressor state.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/decompressor/state.h>*
+
+----
+lzws_result_t lzws_decompressor_get_initial_state(
+  lzws_decompressor_state_t** state_ptr,
+  bool msb, bool unaligned_bit_groups, bool quiet);
+----
+
+
+OPTIONS
+-------
+*`lzws_decompressor_state_t** state_ptr`*::
+  Pointer to new decompressor state.
+
+Other options are related to algorithm customization.
+
+*`bool msb`*::
+  Enable most significant bit mode.
+
+*`bool unaligned_bit_groups`*::
+  Enable unaligned bit groups.
+
+*`bool quiet`*::
+  Disable error messages.
+
+
+RETURN VALUE
+------------
+Returns *0* if decompression was successful, otherwise not *0*.
+See header file for more details about possible results.
 
 
 DESCRIPTION
 -----------
-description.
+This function creates initial decompressor state.
+You should use *lzws_decompressor_free_state* to free it.
+
+
+EXAMPLE
+-------
+You need to create decompressor state compatible with UNIX compress utility.
+
+----
+lzws_decompressor_state_t* state_ptr;
+
+lzws_result_t result = lzws_decompressor_get_initial_state(
+  lzws_decompressor_state_t** state_ptr,
+  false, false, false);
+
+if (result != 0) {
+  return 1;
+}
+----
+
+
+SEE ALSO
+--------
+*lzws_decompressor_free_state*(3)
+*lzws_decompressor_write_magic_header*(3)
+*lzws_decompress*(3)

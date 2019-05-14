@@ -24,7 +24,7 @@ OPTIONS
 
 DESCRIPTION
 -----------
-This function will free decompressor state.
+This function frees decompressor state.
 
 
 SEE ALSO

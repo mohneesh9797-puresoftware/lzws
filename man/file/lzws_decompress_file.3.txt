@@ -57,7 +57,7 @@ See header file for more details about possible results.
 
 DESCRIPTION
 -----------
-This function will read data from source file into source buffer, decompress it into destination buffer and write destination buffer into destination file.
+This function reads data from source file into source buffer, decompresses it into destination buffer and writes destination buffer into destination file.
 
 You can use this simple file compressor API with large amount of data.
 Memory required is source buffer length + destination buffer length + dictionary size.

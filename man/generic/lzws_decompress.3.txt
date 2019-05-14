@@ -31,10 +31,10 @@ OPTIONS
   Pointer to source data length.
 
 *`uint8_t** destination_ptr`*::
-  Pointer to description data.
+  Pointer to destination data.
 
 *`size_t* destination_length_ptr`*::
-  Pointer to description data length.
+  Pointer to destination data length.
 
 
 RETURN VALUE
@@ -45,9 +45,12 @@ See header file *lzws/decompressor/common.h* for more details about other result
 
 DESCRIPTION
 -----------
-This function will read source data bytes, process them with decompressor and write destination bytes.
-It will move *source_ptr* and *destination_ptr* forward.
-It will increase *source_length_ptr* and *destination_length_ptr* too.
+This function decompresses portion of source data into destination.
+It is possible that it won't be enough destination.
+You can accept *LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION* and increase destination or use another destination.
+
+This function moves *source_ptr* and *destination_ptr* forward.
+It also decreases *source_length_ptr* and *destination_length_ptr*.
 
 
 PSEUDO EXAMPLE
@@ -57,7 +60,7 @@ You have a portion of source data, you want to decompress it.
 ----
 while (true) {
   lzws_result_t result = lzws_decompress(
-    decompressor_state_ptr,
+    state_ptr,
     &source, &source_length,
     &destination, &destination_length);
 

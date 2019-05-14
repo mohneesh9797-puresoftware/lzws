@@ -24,7 +24,7 @@ OPTIONS
 
 DESCRIPTION
 -----------
-This function will free compressor state.
+This function frees compressor state.
 
 
 SEE ALSO

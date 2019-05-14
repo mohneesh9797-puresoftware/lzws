@@ -58,7 +58,7 @@ See header file for more details about possible results.
 
 DESCRIPTION
 -----------
-This function will allocate buffer as destination, decompress source and increase destination and its length.
+This function allocates buffer as destination, decompresses source into destination and increases destination.
 If decompression was successful - you should *free* destination.
 
 You can use this simple string decompressor API with small amount of data.

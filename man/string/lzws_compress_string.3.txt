@@ -46,7 +46,7 @@ Other options are related to algorithm customization.
   This value will be written into destination header.
 
 *`bool block_mode`*::
-  Disable block mode.
+  Enable block mode.
   This value will be written into destination header.
 
 *`bool msb`*::
@@ -69,7 +69,7 @@ See header file for more details about possible results.
 
 DESCRIPTION
 -----------
-This function will allocate buffer as destination, compress source and increase destination and its length.
+This function allocates buffer as destination, compresses source into destination and increases destination.
 If compression was successful - you should *free* destination.
 
 You can use this simple string compressor API with small amount of data.
