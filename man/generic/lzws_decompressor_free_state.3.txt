@@ -4,14 +4,31 @@ LZWS(3)
 
 NAME
 ----
-lzws_decompressor_free_state - .
+lzws_decompressor_free_state - Free decompressor state.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/decompressor/state.h>*
+
+----
+void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
+----
+
+
+OPTIONS
+-------
+*`lzws_decompressor_state_t* state_ptr`*::
+  Pointer to decompressor state provided by *lzws_decompressor_get_initial_state*.
 
 
 DESCRIPTION
 -----------
-description.
+This function will free decompressor state.
+
+
+SEE ALSO
+--------
+*lzws_decompressor_get_initial_state*(3)
+*lzws_decompressor_read_magic_header*(3)
+*lzws_decompress*(3)

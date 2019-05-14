@@ -4,14 +4,32 @@ LZWS(3)
 
 NAME
 ----
-lzws_compressor_free_state - .
+lzws_compressor_free_state - Free compressor state.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/compressor/state.h>*
+
+----
+void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
+----
+
+
+OPTIONS
+-------
+*`lzws_compressor_state_t* state_ptr`*::
+  Pointer to compressor state provided by *lzws_compressor_get_initial_state*.
 
 
 DESCRIPTION
 -----------
-description.
+This function will free compressor state.
+
+
+SEE ALSO
+--------
+*lzws_compressor_get_initial_state*(3)
+*lzws_compressor_write_magic_header*(3)
+*lzws_compress*(3)
+*lzws_flush_compressor*(3)

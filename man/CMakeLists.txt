@@ -10,7 +10,7 @@ function (add_man_target NAME MANDIR)
       --doctype=manpage
       --format=manpage
       --destination-dir="${CMAKE_CURRENT_BINARY_DIR}"
-      "${SOURCE}"
+      ${SOURCE}
     DEPENDS ${SOURCE}
   )
 

@@ -94,4 +94,4 @@ free(decompressed_text);
 
 SEE ALSO
 --------
-lzws_compress_string(3)
+*lzws_compress_string*(3)

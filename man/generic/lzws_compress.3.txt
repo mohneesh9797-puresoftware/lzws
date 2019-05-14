@@ -4,14 +4,77 @@ LZWS(3)
 
 NAME
 ----
-lzws_compress - .
+lzws_compress - Compress portion of data.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/compressor/main.h>*
+
+----
+lzws_result_t lzws_compress(
+  lzws_compressor_state_t* state_ptr,
+  uint8_t** source_ptr, size_t* source_length_ptr,
+  uint8_t** destination_ptr, size_t* destination_length_ptr);
+----
+
+
+OPTIONS
+-------
+*`lzws_compressor_state_t* state_ptr`*::
+  Pointer to compressor state provided by *lzws_compressor_get_initial_state*.
+
+*`uint8_t** source_ptr`*::
+  Pointer to source data.
+
+*`size_t* source_length_ptr`*::
+  Pointer to source data length.
+
+*`uint8_t** destination_ptr`*::
+  Pointer to description data.
+
+*`size_t* destination_length_ptr`*::
+  Pointer to description data length.
+
+
+RETURN VALUE
+------------
+Returns *LZWS_COMPRESSOR_NEEDS_MORE_SOURCE* or *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* if compression was successful.
+See header file *lzws/compressor/common.h* for more details about other results.
 
 
 DESCRIPTION
 -----------
-description.
+This function will read source data bytes, process them with compressor and write destination bytes.
+It will move *source_ptr* and *destination_ptr* forward.
+It will increase *source_length_ptr* and *destination_length_ptr* too.
+
+
+PSEUDO EXAMPLE
+--------------
+You have a portion of source data, you want to compress it.
+
+----
+while (true) {
+  lzws_result_t result = lzws_compress(
+    compressor_state_ptr,
+    &source, &source_length,
+    &destination, &destination_length);
+
+  if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+    break;
+  } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
+    increase_destination(&destination, &destination_length);
+  } else {
+    return 1;
+  }
+}
+----
+
+
+SEE ALSO
+--------
+*lzws_compressor_get_initial_state*(3)
+*lzws_compressor_free_state*(3)
+*lzws_compressor_write_magic_header*(3)
+*lzws_flush_compressor*(3)

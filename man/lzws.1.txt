@@ -81,4 +81,4 @@ EXAMPLES
 
 SEE ALSO
 --------
-compress(1)
+*compress*(1)

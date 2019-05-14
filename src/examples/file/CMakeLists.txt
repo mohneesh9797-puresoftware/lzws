@@ -1,7 +1,7 @@
 set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.c")
 
 include (DefineRelativeFilePaths)
-cmake_define_relative_file_paths ("${SOURCES}")
+cmake_define_relative_file_paths (${SOURCES})
 
 if (LZWS_SHARED)
   set (EXAMPLE_NAME "example-file")

@@ -105,4 +105,4 @@ free(compressed_text);
 
 SEE ALSO
 --------
-lzws_decompress_string(3)
+*lzws_decompress_string*(3)

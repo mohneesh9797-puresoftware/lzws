@@ -4,14 +4,76 @@ LZWS(3)
 
 NAME
 ----
-lzws_decompress - .
+lzws_decompress - Decompress portion of data.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/decompressor/main.h>*
+
+----
+lzws_result_t lzws_decompress(
+  lzws_decompressor_state_t* state_ptr,
+  uint8_t** source_ptr, size_t* source_length_ptr,
+  uint8_t** destination_ptr, size_t* destination_length_ptr);
+----
+
+
+OPTIONS
+-------
+*`lzws_decompressor_state_t* state_ptr`*::
+  Pointer to decompressor state provided by *lzws_decompressor_get_initial_state*.
+
+*`uint8_t** source_ptr`*::
+  Pointer to source data.
+
+*`size_t* source_length_ptr`*::
+  Pointer to source data length.
+
+*`uint8_t** destination_ptr`*::
+  Pointer to description data.
+
+*`size_t* destination_length_ptr`*::
+  Pointer to description data length.
+
+
+RETURN VALUE
+------------
+Returns *LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE* or *LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION* if decompression was successful.
+See header file *lzws/decompressor/common.h* for more details about other results.
 
 
 DESCRIPTION
 -----------
-description.
+This function will read source data bytes, process them with decompressor and write destination bytes.
+It will move *source_ptr* and *destination_ptr* forward.
+It will increase *source_length_ptr* and *destination_length_ptr* too.
+
+
+PSEUDO EXAMPLE
+--------------
+You have a portion of source data, you want to decompress it.
+
+----
+while (true) {
+  lzws_result_t result = lzws_decompress(
+    decompressor_state_ptr,
+    &source, &source_length,
+    &destination, &destination_length);
+
+  if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+    break;
+  } else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) {
+    increase_destination(&destination, &destination_length);
+  } else {
+    return 1;
+  }
+}
+----
+
+
+SEE ALSO
+--------
+*lzws_decompressor_get_initial_state*(3)
+*lzws_decompressor_free_state*(3)
+*lzws_decompressor_read_magic_header*(3)

@@ -46,11 +46,15 @@ set (SOURCES ${SOURCES}
 )
 
 include (DefineRelativeFilePaths)
-cmake_define_relative_file_paths ("${SOURCES}")
+cmake_define_relative_file_paths (${SOURCES})
 
 include_directories (${CMAKE_GMP_INCLUDE_PATH})
 
-install (FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+foreach (HEADER ${HEADERS})
+  file (RELATIVE_PATH HEADER_RELATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${HEADER})
+  get_filename_component (HEADER_RELATIVE_DIRECTORY_PATH ${HEADER_RELATIVE_PATH} DIRECTORY)
+  install (FILES ${HEADER} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${HEADER_RELATIVE_DIRECTORY_PATH}")
+endforeach ()
 
 if (LZWS_SHARED)
   set (LIB_TARGET ${LZWS_TARGET})

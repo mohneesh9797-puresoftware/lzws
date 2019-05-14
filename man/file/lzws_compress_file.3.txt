@@ -93,4 +93,4 @@ if (result != 0) {
 
 SEE ALSO
 --------
-lzws_decompress_file(3)
+*lzws_decompress_file*(3)
