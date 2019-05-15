@@ -1,12 +1,12 @@
 # LZW + Stream = LZWS [![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 
 LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
-It has no any ancient legacy code from [ncompress](https://github.com/vapier/ncompress).
+It has no legacy code from [ncompress](https://github.com/vapier/ncompress).
 
-## Compressor dictionary implementations
+## Compressor dictionaries
 
 * Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general. It is recommended for small amount of data.
-* Sparse array (enabled by default). It has high memory usage <= 33.5 MB (16 bit codes). It will be fast. It is recommended for large amount of data.
+* Sparse array (enabled by default). It has high memory usage <= 33.5 MB (16 bit codes). It is fast. It is recommended for large amount of data.
 
 You can add your own implementation.
 
@@ -17,9 +17,9 @@ You can add your own implementation.
 
 ## Dependencies
 
-Runtime dependency is [GMP](https://gmplib.org) only.
-Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
-Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/) [ncompress](https://github.com/vapier/ncompress).
+* Runtime dependency is [GMP](https://gmplib.org) only.
+* Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
+* Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/) [ncompress](https://github.com/vapier/ncompress).
 
 ## Operating systems
 
@@ -46,13 +46,13 @@ cmake .. -DLZWS_COMPRESSOR_DICTIONARY="linked-list"/"sparse-array"
 ```
 
 There is a script that tests all dictionaries using several toolchains (with sanitizers).
-This script was used with travis CI too.
+This script was used with travis CI.
 ```sh
 ../scripts/toolchains.sh
 ```
 
-There is a script for release build with CPack.
-CPack will fail if you have no all required generators, it is ok, ignore it.
+There is a script for release build.
+CPack will fail if you have no all required generators, ignore it.
 ```sh
 ../scripts/release.sh
 ```
@@ -98,7 +98,7 @@ free (compressed_text);
 Generic API is framework agnostic and can be used to implement any binding with custom stream.
 See [examples](src/examples) for more details.
 
-You can build and test examples:
+You can build and test all examples:
 ```sh
 cmake .. -DLZWS_EXAMPLES=1
 make
@@ -123,9 +123,9 @@ bundle install
 ```
 
 Than you need to start tor.
-Please use some convenient timeout like "SocksTimeout 20".
+Please use some convenient timeout like `SocksTimeout 20`.
 
-Updated urls:
+Update urls:
 ```sh
 ./bin/update_urls.sh
 ```
@@ -140,6 +140,26 @@ This test will decompress and re-compress more than 6000 unique archives in all 
 It will take several days on modern CPU.
 Test will be successful if file [volatile_archives.xz](scripts/tar-z-collector/data/volatile_archives.xz) will be empty.
 Volatile archives means the list of archives that lzws/ncompress can process, but ncompress/lzws can't.
+
+## Man
+
+* [lzws.1](man/lzws.1.txt)
+
+* [lzws_compress_string.3](man/string/lzws_compress_string.3.txt)
+* [lzws_decompress_string.3](man/string/lzws_decompress_string.3.txt)
+
+* [lzws_compress_file.3](man/file/lzws_compress_file.3.txt)
+* [lzws_decompress_file.3](man/file/lzws_decompress_file.3.txt)
+
+* [lzws_compress.3](man/generic/lzws_compress.3.txt)
+* [lzws_compressor_free_state.3](man/generic/lzws_compressor_free_state.3.txt)
+* [lzws_compressor_get_initial_state.3](man/generic/lzws_compressor_get_initial_state.3.txt)
+* [lzws_compressor_write_magic_header.3](man/generic/lzws_compressor_write_magic_header.3.txt)
+* [lzws_decompress.3](man/generic/lzws_decompress.3.txt)
+* [lzws_decompressor_free_state.3](man/generic/lzws_decompressor_free_state.3.txt)
+* [lzws_decompressor_get_initial_state.3](man/generic/lzws_decompressor_get_initial_state.3.txt)
+* [lzws_decompressor_read_magic_header.3](man/generic/lzws_decompressor_read_magic_header.3.txt)
+* [lzws_flush_compressor.3](man/generic/lzws_flush_compressor.3.txt)
 
 ## Documentation
 
