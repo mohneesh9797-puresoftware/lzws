@@ -1,25 +1,25 @@
 # LZW + Stream = LZWS [![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 
 LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
-It has no legacy code from [ncompress](https://github.com/vapier/ncompress).
+It has no legacy code from [ncompress](https://github.com/vapier/ncompress/blob/ncompress-4.2.4/compress42.c).
 
 ## Compressor dictionaries
 
-* Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general. It is recommended for small amount of data.
-* Sparse array (enabled by default). It has high memory usage <= 33.5 MB (16 bit codes). It is fast. It is recommended for large amount of data.
+- Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general. It is recommended for small amount of data.
+- Sparse array (enabled by default). It has high memory usage <= 33.5 MB (16 bit codes). It is fast. It is recommended for large amount of data.
 
 You can add your own implementation.
 
 ## Why?
 
-* You can support ancient software.
-* You can make your application looks like ancient software.
+- You can support ancient software.
+- You can make your application looks like ancient software.
 
 ## Dependencies
 
-* Runtime dependency is [GMP](https://gmplib.org) only.
-* Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
-* Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/) [ncompress](https://github.com/vapier/ncompress).
+- Runtime dependency is [GMP](https://gmplib.org) only.
+- Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
+- Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/) [ncompress](https://github.com/vapier/ncompress).
 
 ## Operating systems
 
@@ -107,7 +107,7 @@ CTEST_OUTPUT_ON_FAILURE=1 make test
 
 ## Real world testing
 
-There are a great amount of `tar.z` archives available on the internet.
+There are a great amount of `tar.Z` archives available on the internet.
 It is possible to test lzws using these archives.
 
 Install modern version of ruby:
