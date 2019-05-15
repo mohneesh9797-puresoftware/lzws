@@ -44,7 +44,7 @@ Other options are related to algorithm customization.
 
 RETURN VALUE
 ------------
-Returns *0* if compression was successful, otherwise not *0*.
+Returns *0* if state was created, otherwise not *0*.
 See header file for more details about possible results.
 
 
@@ -73,7 +73,7 @@ if (result != 0) {
 
 SEE ALSO
 --------
-*lzws_compressor_free_state*(3)
 *lzws_compressor_write_magic_header*(3)
+*lzws_compressor_free_state*(3)
 *lzws_compress*(3)
 *lzws_flush_compressor*(3)

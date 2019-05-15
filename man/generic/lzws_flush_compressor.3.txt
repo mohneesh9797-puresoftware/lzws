@@ -40,6 +40,7 @@ See header file *lzws/compressor/common.h* for more details about other results.
 DESCRIPTION
 -----------
 Compressor requires flush after *lzws_compress*.
+
 This function writes compressed tail to destination.
 It is possible that it won't be enough destination.
 You can accept *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* and increase destination or use another destination.
@@ -71,7 +72,7 @@ while (true) {
 
 SEE ALSO
 --------
+*lzws_compressor_write_magic_header*(3)
 *lzws_compressor_get_initial_state*(3)
 *lzws_compressor_free_state*(3)
-*lzws_compressor_write_magic_header*(3)
 *lzws_compress*(3)

@@ -4,14 +4,75 @@ LZWS(3)
 
 NAME
 ----
-lzws_decompressor_read_magic_header - .
+lzws_decompressor_read_magic_header - Read magic header.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/decompressor/header.h>*
+
+----
+lzws_result_t lzws_decompressor_read_magic_header(
+  lzws_decompressor_state_t* state_ptr,
+  uint8_t** source_ptr, size_t* source_length_ptr);
+----
+
+
+OPTIONS
+-------
+*`lzws_decompressor_state_t* state_ptr`*::
+  Pointer to decompressor state provided by *lzws_decompressor_get_initial_state*.
+
+*`uint8_t** source_ptr`*::
+  Pointer to source data.
+
+*`size_t* source_length_ptr`*::
+  Pointer to source data length.
+
+
+RETURN VALUE
+------------
+Returns *0* if read was successful.
+Returns *LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE* when it is not enough source.
+See header file *lzws/decompressor/common.h* for more details about other results.
 
 
 DESCRIPTION
 -----------
-description.
+".z" or ".tar.z" files has a special signature - magic header.
+You can read it to be compatible with original UNIX compress utility.
+
+This function reads magic header.
+It is possible that it won't be enough source.
+You can accept *LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE* and provide more source.
+
+This function moves *source_ptr* forward.
+It also decreases *source_length_ptr*.
+
+
+PSEUDO EXAMPLE
+--------------
+You want to read magic header before decompression.
+
+----
+while (true) {
+  lzws_result_t result = lzws_decompressor_read_magic_header(
+    state_ptr,
+    &source, &source_length);
+
+  if (result == 0) {
+    break;
+  } else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+    give_more_source(&source, &source_length);
+  } else {
+    return 1;
+  }
+}
+----
+
+
+SEE ALSO
+--------
+*lzws_decompressor_get_initial_state*(3)
+*lzws_decompressor_free_state*(3)
+*lzws_decompress*(3)

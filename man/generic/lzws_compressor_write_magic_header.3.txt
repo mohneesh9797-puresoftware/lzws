@@ -4,14 +4,69 @@ LZWS(3)
 
 NAME
 ----
-lzws_compressor_write_magic_header - .
+lzws_compressor_write_magic_header - Write magic header.
 
 
 SYNOPSIS
 --------
-synopsis.
+*#include <lzws/compressor/header.h>*
+
+----
+lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr);
+----
+
+
+OPTIONS
+-------
+*`uint8_t** destination_ptr`*::
+  Pointer to destination data.
+
+*`size_t* destination_length_ptr`*::
+  Pointer to destination data length.
+
+
+RETURN VALUE
+------------
+Returns *0* if write was successful.
+Returns *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* when it is not enough destination.
+See header file *lzws/compressor/common.h* for more details about other results.
 
 
 DESCRIPTION
 -----------
-description.
+".z" or ".tar.z" files has a special signature - magic header.
+You can write it to be compatible with original UNIX compress utility.
+
+This function writes magic header.
+It is possible that it won't be enough destination.
+You can accept *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* and increase destination or use another destination.
+
+This function moves *destination_ptr* forward.
+It also decreases *destination_length_ptr*.
+
+
+PSEUDO EXAMPLE
+--------------
+You want to write magic header before compression.
+
+----
+while (true) {
+  lzws_result_t result = lzws_compressor_write_magic_header(&destination, &destination_length);
+
+  if (result == 0) {
+    break;
+  } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
+    increase_destination(&destination, &destination_length);
+  } else {
+    return 1;
+  }
+}
+----
+
+
+SEE ALSO
+--------
+*lzws_compressor_get_initial_state*(3)
+*lzws_compressor_free_state*(3)
+*lzws_compress*(3)
+*lzws_flush_compressor*(3)

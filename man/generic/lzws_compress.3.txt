@@ -65,7 +65,7 @@ while (true) {
     &destination, &destination_length);
 
   if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
-    break;
+    give_more_source(&source, &source_length);
   } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
     increase_destination(&destination, &destination_length);
   } else {
@@ -77,7 +77,7 @@ while (true) {
 
 SEE ALSO
 --------
+*lzws_compressor_write_magic_header*(3)
 *lzws_compressor_get_initial_state*(3)
 *lzws_compressor_free_state*(3)
-*lzws_compressor_write_magic_header*(3)
 *lzws_flush_compressor*(3)

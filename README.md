@@ -1,160 +1,162 @@
-[![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
+# LZW + Stream = LZWS [![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 
-# WIP
-Man.
-
-# LZW + Stream = LZWS
-
-LZW streaming compressor/decompressor based on LZW AB.
-
-It consists of library and cli tool.
-Cli tool should be compatible with original UNIX `compress`, [ncompress](https://github.com/vapier/ncompress) and [gzip unlzw](https://github.com/Distrotech/gzip/blob/distrotech-gzip/unlzw.c).
-
-The main goal of the project is to provide streaming API for lzw compressor/decompressor. This API is framework agnostic and can be used in any application.
+LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
+It has no any ancient legacy code from [ncompress](https://github.com/vapier/ncompress).
 
 ## Compressor dictionary implementations
 
-* Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general.
-* Sparse array. It has high memory usage <= 33.5 MB (16 bit codes). It will be the fastest when block mode disabled or amount of clears is low, otherwise it will be slow.
+* Linked list (idea from LZW AB). It has low memory usage <= 327 KB (16 bit codes). It is slow in general. It is recommended for small amount of data.
+* Sparse array (enabled by default). It has high memory usage <= 33.5 MB (16 bit codes). It will be fast. It is recommended for large amount of data.
 
 You can add your own implementation.
 
-## Getting Started
+## Why?
 
-Project depends on [GMP](https://gmplib.org). You can build it with cmake. It is good to have both gcc and clang for testing.
+* You can support ancient software.
+* You can make your application looks like ancient software.
+
+## Dependencies
+
+Runtime dependency is [GMP](https://gmplib.org) only.
+Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
+Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/) [ncompress](https://github.com/vapier/ncompress).
+
+## Operating systems
+
+GNU/Linux, FreeBSD, OSX.
+
+## Quick start
 
 ```sh
 cd build
-cmake ..
-make
+cmake .. && make
 echo -n "TOBEORNOTTOBEORTOBEORNOT" | ./src/cli/lzws | ./src/cli/lzws -d
 ```
 
 Debug build:
 ```sh
-cmake .. -DCMAKE_VERBOSE_MAKEFILE=1
+cmake .. -DLZWS_STATIC=1 -DLZWS_EXAMPLES=1 -DCMAKE_VERBOSE_MAKEFILE=1
 make VERBOSE=1
-make test
+CTEST_OUTPUT_ON_FAILURE=1 make test
 ```
 
-You can enable/disable features:
+You can use different dictionaries:
 ```sh
-cmake .. \
-  -DLZWS_COMPRESSOR_DICTIONARY="linked-list"/"sparse-array"
-  -DLZWS_SHARED=0/1
-  -DLZWS_STATIC=0/1
-  -DLZWS_CLI=0/1
-  -DLZWS_TESTS=0/1
+cmake .. -DLZWS_COMPRESSOR_DICTIONARY="linked-list"/"sparse-array"
 ```
 
-Testing performance:
+There is a script that tests all dictionaries using several toolchains (with sanitizers).
+This script was used with travis CI too.
 ```sh
-wget "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.20.3.tar.xz"
-tar xf linux-4.20.3.tar.xz
-tar cf linux.tar linux-4.20.3
+../scripts/toolchains.sh
+```
 
-cmake .. -DCMAKE_BUILD_TYPE="RELEASE" -DLZWS_COMPRESSOR_DICTIONARY="linked-list"
-make
+There is a script for release build with CPack.
+CPack will fail if you have no all required generators, it is ok, ignore it.
+```sh
+../scripts/release.sh
+```
+
+You can test performance using linux kernel archive:
+```sh
+wget "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.1.2.tar.xz"
+tar xf linux-5.1.2.tar.xz
+tar cf linux.tar linux-5.1.2
+
+../scripts/release.sh
 
 time ./src/cli/lzws < linux.tar > linux.tar.Z
 time ./src/cli/lzws -d < linux.tar.Z > linux.tar.new
-sha256sum linux.tar && sha256sum linux.tar.new && sha256sum linux.tar.Z
+sha256sum linux.tar && sha256sum linux.tar.new
 ```
 
-Toolchains:
-```sh
-cmake .. -DCMAKE_TOOLCHAIN_FILE="../cmake/toolchains/clang/leak-sanitizer.cmake"
-make
-make test
+## Library quick start
 
-../cmake/scripts/test-all-toolchains.sh
-```
+There are string, file and generic APIs.
+String and file APIs are very simple.
 
-DEB and RPM release:
-```sh
-cmake .. -DCMAKE_BUILD_TYPE="RELEASE"
-make
-make package
-```
-
-## Library
-
+See the following example for string compression:
 ```c
-// This function is optional.
-// Use it to be compatible with with original UNIX compress utility.
-lzws_result_t lzws_compressor_write_magic_header(uint8_t** destination_ptr, size_t* destination_length_ptr);
+const char text[]      = "example text";
+size_t     text_length = strlen(text);
 
-lzws_result_t lzws_compressor_get_initial_state(lzws_compressor_state_t** state_ptr, uint_fast8_t max_code_bit_length, bool block_mode, bool msb);
-void          lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
+char*  compressed_text;
+size_t compressed_text_length;
 
-lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
+lzws_result_t result = lzws_compress_string(
+  (uint8_t*)text, text_length,
+  (uint8_t**)&compressed_text, &compressed_text_length, 0,
+  LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, true, false, false, false);
 
-// Use this function when you have no source (received EOF for example).
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
+if (result != 0) {
+  return 1;
+}
+
+free (compressed_text);
 ```
 
-You can see that input was implemented using `uint8_t** source_ptr, size_t* source_length_ptr` and output using `uint8_t** destination_ptr, size_t* destination_length_ptr`.
-Functions will read bytes and change both `source_ptr`, `source_length_ptr`, write bytes and change both `destination_ptr` and `destination_length_ptr`.
+Generic API is framework agnostic and can be used to implement any binding with custom stream.
+See [examples](src/examples) for more details.
 
-These methods are framework agnostic. You are free to use it with any files, buffers, sockets, etc.
-You can use it with synchronous or asynchronous code.
-It won't be hard to implement bindings for ruby, python, etc.
+You can build and test examples:
+```sh
+cmake .. -DLZWS_EXAMPLES=1
+make
+CTEST_OUTPUT_ON_FAILURE=1 make test
+```
 
-First of all you can use `lzws_compressor_write_magic_header` to be compatible with `compress` and others.
-It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
+## Real world testing
 
-Than you need to create `lzws_compressor_state_t`. Do not forget to free it later with `lzws_compressor_free_state`.
+There are a great amount of `tar.z` archives available on the internet.
+It is possible to test lzws using these archives.
 
-Than use `lzws_compress` within some read loop.
-This method will return `0` when algorithm wants more source (it won't return `LZWS_COMPRESSOR_NEEDS_MORE_SOURCE`).
-It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
+Install modern version of ruby:
+```sh
+curl -sSL https://get.rvm.io | bash -s stable
+rvm install ruby-2.6.3
+```
 
-Use `lzws_flush_compressor` when you received end of your input (EOF for example).
-It can return `LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION`.
+Install required gems:
+```sh
+cd scripts/tar-z-collector
+bundle install
+```
 
-`LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION` means that `destination` is filled.
-You can write your destination buffer to output.
-Than you need to provide new destination (same buffer for example).
+Than you need to start tor.
+Please use some convenient timeout like "SocksTimeout 20".
 
-PS minimum for `source_length` and `destination_length` is just 2 bytes.
-We can recommend to use 32 KB buffers for `linked-list` and 512 KB for `sparse-array`.
+Updated urls:
+```sh
+./bin/update_urls.sh
+```
 
-Please read [src/file.h](src/file.h) and [src/file.c](src/file.c) for more info.
+Re-test archives:
+```sh
+./bin/clear_archives.sh
+./bin/test_archives.sh
+```
+
+This test will decompress and re-compress more than 6000 unique archives in all possible combinations of dictionaries and lzws options.
+It will take several days on modern CPU.
+Test will be successful if file [volatile_archives.xz](scripts/tar-z-collector/data/volatile_archives.xz) will be empty.
+Volatile archives means the list of archives that lzws/ncompress can process, but ncompress/lzws can't.
 
 ## Documentation
 
+* [compressor_ratio.txt](doc/compressor_ratio.txt)
 * [compressor_with_linked_list.txt](doc/compressor_with_linked_list.txt)
 * [compressor_with_sparse_array.txt](doc/compressor_with_sparse_array.txt)
-* [compressor_ratio.txt](doc/compressor_ratio.txt)
 * [decompressor.txt](doc/decompressor.txt)
 * [output_compatibility.txt](doc/output_compatibility.txt)
+* [real_world_testing.txt](doc/real_world_testing.txt)
 
 ## License
 
 Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 Distributed under the BSD Software License (see LICENSE).
 
-## Why not LZW AB?
+Project depends on GMP with LGPL v2 license.
+So it is not possible to distribute project binaries with statically linked GMP library.
 
-It is not compatible with original UNIX `compress` and others.
-You can read its code to meet with original idea of "linked-list".
-It is well documented.
-
-## Why not ncompress/gzip?
-
-`ncompress` code is not user friendly.
-It is full of goto, inliners and it has no comments or any documentation.
-There are some issues with overflow and different code bit length.
-It is very hard to fix it, you have to know all code history of this project, but it is not available.
-It looks almost impossible to modify it for streaming purposes.
-It has no tests.
-
-`gzip` uses a bit modified decompressor from ncompress.
-It has no compressor.
-
-## Example
-
-There are HTTP servers that supports `Content-Encoding: compress` or `x-compress` via compress or gzip utilities.
-See [recent apache 2.0 for example](https://github.com/apache/httpd/blob/trunk/modules/metadata/mod_mime_magic.c#L2055-L2063) uses gzip decompressor.
-Apache 1.3.0 and others was using `ncompress`.
-You can support this content encoding in your application using `lzws`.
+Please use source code based operating systems like Gentoo if you want static linking.
+End user can build, link and use any software in any mode (without distribution).

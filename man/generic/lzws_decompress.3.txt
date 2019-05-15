@@ -65,7 +65,7 @@ while (true) {
     &destination, &destination_length);
 
   if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
-    break;
+    give_more_source(&source, &source_length);
   } else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) {
     increase_destination(&destination, &destination_length);
   } else {
@@ -77,6 +77,6 @@ while (true) {
 
 SEE ALSO
 --------
+*lzws_decompressor_read_magic_header*(3)
 *lzws_decompressor_get_initial_state*(3)
 *lzws_decompressor_free_state*(3)
-*lzws_decompressor_read_magic_header*(3)
