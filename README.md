@@ -143,32 +143,40 @@ Volatile archives means the list of archives that lzws/ncompress can process, bu
 
 ## Man
 
-* [lzws.1](man/lzws.1.txt)
+CLI:
 
-* [lzws_compress_string.3](man/string/lzws_compress_string.3.txt)
-* [lzws_decompress_string.3](man/string/lzws_decompress_string.3.txt)
+- [lzws.1](man/lzws.1.txt)
 
-* [lzws_compress_file.3](man/file/lzws_compress_file.3.txt)
-* [lzws_decompress_file.3](man/file/lzws_decompress_file.3.txt)
+String API:
 
-* [lzws_compress.3](man/generic/lzws_compress.3.txt)
-* [lzws_compressor_free_state.3](man/generic/lzws_compressor_free_state.3.txt)
-* [lzws_compressor_get_initial_state.3](man/generic/lzws_compressor_get_initial_state.3.txt)
-* [lzws_compressor_write_magic_header.3](man/generic/lzws_compressor_write_magic_header.3.txt)
-* [lzws_decompress.3](man/generic/lzws_decompress.3.txt)
-* [lzws_decompressor_free_state.3](man/generic/lzws_decompressor_free_state.3.txt)
-* [lzws_decompressor_get_initial_state.3](man/generic/lzws_decompressor_get_initial_state.3.txt)
-* [lzws_decompressor_read_magic_header.3](man/generic/lzws_decompressor_read_magic_header.3.txt)
-* [lzws_flush_compressor.3](man/generic/lzws_flush_compressor.3.txt)
+- [lzws_compress_string.3](man/string/lzws_compress_string.3.txt)
+- [lzws_decompress_string.3](man/string/lzws_decompress_string.3.txt)
+
+File API:
+
+- [lzws_compress_file.3](man/file/lzws_compress_file.3.txt)
+- [lzws_decompress_file.3](man/file/lzws_decompress_file.3.txt)
+
+Generic API:
+
+- [lzws_compress.3](man/generic/lzws_compress.3.txt)
+- [lzws_compressor_free_state.3](man/generic/lzws_compressor_free_state.3.txt)
+- [lzws_compressor_get_initial_state.3](man/generic/lzws_compressor_get_initial_state.3.txt)
+- [lzws_compressor_write_magic_header.3](man/generic/lzws_compressor_write_magic_header.3.txt)
+- [lzws_decompress.3](man/generic/lzws_decompress.3.txt)
+- [lzws_decompressor_free_state.3](man/generic/lzws_decompressor_free_state.3.txt)
+- [lzws_decompressor_get_initial_state.3](man/generic/lzws_decompressor_get_initial_state.3.txt)
+- [lzws_decompressor_read_magic_header.3](man/generic/lzws_decompressor_read_magic_header.3.txt)
+- [lzws_flush_compressor.3](man/generic/lzws_flush_compressor.3.txt)
 
 ## Documentation
 
-* [compressor_ratio.txt](doc/compressor_ratio.txt)
-* [compressor_with_linked_list.txt](doc/compressor_with_linked_list.txt)
-* [compressor_with_sparse_array.txt](doc/compressor_with_sparse_array.txt)
-* [decompressor.txt](doc/decompressor.txt)
-* [output_compatibility.txt](doc/output_compatibility.txt)
-* [real_world_testing.txt](doc/real_world_testing.txt)
+- [compressor_ratio.txt](doc/compressor_ratio.txt)
+- [compressor_with_linked_list.txt](doc/compressor_with_linked_list.txt)
+- [compressor_with_sparse_array.txt](doc/compressor_with_sparse_array.txt)
+- [decompressor.txt](doc/decompressor.txt)
+- [output_compatibility.txt](doc/output_compatibility.txt)
+- [real_world_testing.txt](doc/real_world_testing.txt)
 
 ## License
 
