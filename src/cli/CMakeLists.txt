@@ -3,7 +3,7 @@ set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.c")
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths (${SOURCES})
 
-if (LZWS_SHARED MATCHES ON)
+if (LZWS_SHARED)
   set (CLI_TARGET "${LZWS_TARGET}-cli")
   set (CLI_NAME ${LZWS_TARGET})
 
@@ -14,7 +14,7 @@ if (LZWS_SHARED MATCHES ON)
   install (TARGETS ${CLI_TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif ()
 
-if (LZWS_STATIC MATCHES ON)
+if (LZWS_STATIC)
   set (STATIC_CLI_TARGET "${LZWS_TARGET}-static-cli")
   set (STATIC_CLI_NAME "${LZWS_TARGET}-static")
 

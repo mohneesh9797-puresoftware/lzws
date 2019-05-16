@@ -24,12 +24,12 @@ DEPEND="${RDEPEND}"
 
 src_configure() {
   local mycmakeargs=(
-    -DLZWS_SHARED="$(usex shared-libs)
-    -DLZWS_STATIC="$(usex static-libs)
+    -DLZWS_SHARED="$(usex shared-libs ON OFF)
+    -DLZWS_STATIC="$(usex static-libs ON OFF)
     -DLZWS_CLI=ON
-    -DLZWS_TESTS="$(usex test)
+    -DLZWS_TESTS="$(usex test ON OFF)
     -DLZWS_EXAMPLES=OFF
-    -DLZWS_MAN="$(usex man)
+    -DLZWS_MAN="$(usex man ON OFF)
   )
 
   cmake-multilib_src_configure
