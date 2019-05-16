@@ -15,11 +15,17 @@ You can add your own implementation.
 - You can support ancient software.
 - You can make your application looks like ancient software.
 
+## New features
+
+- Accurate ratio calculation without overhead provides smaller archive (compatible with UNIX compress).
+- Unaligned bit groups switch (incompatible with UNIX compress).
+- LSB/MSB switch (incompatible with UNIX compress).
+
 ## Dependencies
 
 - Runtime dependency is [GMP](https://gmplib.org) only.
 - Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
-- Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/) [ncompress](https://github.com/vapier/ncompress).
+- Testing dependencies: [tor](https://www.torproject.org/), [torsocks](https://github.com/dgoulet/torsocks), [rvm](https://rvm.io/), [ncompress](https://github.com/vapier/ncompress).
 
 ## Operating systems
 
@@ -132,7 +138,7 @@ Update urls:
 
 Re-test archives:
 ```sh
-./bin/clear_archives.sh
+./bin/clear_results.sh
 ./bin/test_archives.sh
 ```
 

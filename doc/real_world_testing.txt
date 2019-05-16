@@ -111,5 +111,5 @@ You can run these script in infinite loop to collect and test more data.
 After about 1 week you will receive more than 6000 valid archives.
 
 You updated something, how to re-test everything?
-./bin/clear_archives.sh
+./bin/clear_results.sh
 ./bin/test_archives.sh

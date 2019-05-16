@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>lzws</herd>
+  <maintainer>
+    <email>aladjev.andrew@gmail.com</email>
+    <name>Andrew Aladjev</name>
+  </maintainer>
+  <longdescription>
+    LZW streaming compressor/decompressor compatible with UNIX compress.
+  </longdescription>
+  <use>
+    <flag name="shared-libs">Build shared libraries</flag>
+    <flag name="static-libs">Build static libraries</flag>
+    <flag name="test">Build and run tests</flag>
+    <flag name="man">Create man pages</flag>
+  </use>
+</pkgmetadata>
