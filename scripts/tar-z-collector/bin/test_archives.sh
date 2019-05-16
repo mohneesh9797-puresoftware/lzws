@@ -17,12 +17,12 @@ for dictionary in "linked-list" "sparse-array"; do
 
   cmake "../.." \
     -DLZWS_COMPRESSOR_DICTIONARY="$dictionary" \
-    -DLZWS_SHARED=0 \
-    -DLZWS_STATIC=1 \
-    -DLZWS_CLI=1 \
-    -DLZWS_TESTS=0 \
-    -DLZWS_EXAMPLES=0 \
-    -DLZWS_MAN=0 \
+    -DLZWS_SHARED=OFF \
+    -DLZWS_STATIC=ON \
+    -DLZWS_CLI=ON \
+    -DLZWS_TESTS=OFF \
+    -DLZWS_EXAMPLES=OFF \
+    -DLZWS_MAN=OFF \
     -DCMAKE_BUILD_TYPE="RELEASE" \
     -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native"
   make clean

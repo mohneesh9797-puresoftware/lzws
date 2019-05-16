@@ -41,7 +41,7 @@ echo -n "TOBEORNOTTOBEORTOBEORNOT" | ./src/cli/lzws | ./src/cli/lzws -d
 
 Debug build:
 ```sh
-cmake .. -DLZWS_STATIC=1 -DLZWS_EXAMPLES=1 -DCMAKE_VERBOSE_MAKEFILE=1
+cmake .. -DLZWS_STATIC=ON -DLZWS_EXAMPLES=ON -DCMAKE_VERBOSE_MAKEFILE=ON
 make VERBOSE=1
 CTEST_OUTPUT_ON_FAILURE=1 make test
 ```
@@ -106,7 +106,7 @@ See [examples](src/examples) for more details.
 
 You can build and test all examples:
 ```sh
-cmake .. -DLZWS_EXAMPLES=1
+cmake .. -DLZWS_EXAMPLES=ON
 make
 CTEST_OUTPUT_ON_FAILURE=1 make test
 ```

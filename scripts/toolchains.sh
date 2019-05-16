@@ -30,12 +30,12 @@ find "$toolchains" -type f | while read -r toolchain; do
     cmake "../.." \
       -DCMAKE_TOOLCHAIN_FILE="$toolchain" \
       -DLZWS_COMPRESSOR_DICTIONARY="$dictionary" \
-      -DLZWS_SHARED=1 \
-      -DLZWS_STATIC=1 \
-      -DLZWS_CLI=0 \
-      -DLZWS_TESTS=1 \
-      -DLZWS_EXAMPLES=1 \
-      -DLZWS_MAN=0 \
+      -DLZWS_SHARED=ON \
+      -DLZWS_STATIC=ON \
+      -DLZWS_CLI=OFF \
+      -DLZWS_TESTS=ON \
+      -DLZWS_EXAMPLES=ON \
+      -DLZWS_MAN=OFF \
       -DCMAKE_BUILD_TYPE="RELEASE" \
       -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native"
     make clean

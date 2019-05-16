@@ -26,9 +26,9 @@ src_configure() {
   local mycmakeargs=(
     -DLZWS_SHARED="$(usex shared-libs)
     -DLZWS_STATIC="$(usex static-libs)
-    -DLZWS_CLI=1
+    -DLZWS_CLI=ON
     -DLZWS_TESTS="$(usex test)
-    -DLZWS_EXAMPLES=0
+    -DLZWS_EXAMPLES=OFF
     -DLZWS_MAN="$(usex man)
   )
 

@@ -26,12 +26,12 @@ endif ()
 
 set (LZWS_COMPRESSOR_DICTIONARY "sparse-array" CACHE STRING "dictionary implementation")
 
-set (LZWS_SHARED   true  CACHE BOOL "build shared libs")
-set (LZWS_STATIC   false CACHE BOOL "build static libs")
-set (LZWS_CLI      true  CACHE BOOL "build cli")
-set (LZWS_TESTS    true  CACHE BOOL "build tests")
-set (LZWS_EXAMPLES false CACHE BOOL "build examples")
-set (LZWS_MAN      true  CACHE BOOL "build man")
+option (LZWS_SHARED   "build shared libs" ON)
+option (LZWS_STATIC   "build static libs" OFF)
+option (LZWS_CLI      "build cli"         ON)
+option (LZWS_TESTS    "build tests"       ON)
+option (LZWS_EXAMPLES "build examples"    OFF)
+option (LZWS_MAN      "build man"         ON)
 
 if (NOT LZWS_COMPRESSOR_DICTIONARY)
   message (FATAL_ERROR "Please select dictionary implementation.")
