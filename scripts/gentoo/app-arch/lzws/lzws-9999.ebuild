@@ -13,23 +13,29 @@ LICENSE="BSD-3-Clause"
 SLOT="0"
 KEYWORDS=""
 
-IUSE="shared-libs static-libs test man"
+IUSE="static-libs test noman"
+
+COMPRESSOR_DICTIONARIES="linked-list sparse-array"
+for compressor_dictionary in ${COMPRESSOR_DICTIONARIES}; do
+  IUSE+=" compressor_dictionary_${compressor_dictionary}"
+done
 
 RDEPEND="
   virtual/libc
   dev-libs/gmp
-  man? ( app-text/asciidoc )
+  !noman? ( app-text/asciidoc )
 "
 DEPEND="${RDEPEND}"
 
 src_configure() {
   local mycmakeargs=(
-    -DLZWS_SHARED="$(usex shared-libs ON OFF)
-    -DLZWS_STATIC="$(usex static-libs ON OFF)
+    -DLZWS_COMPRESSOR_DICTIONARY=$(usex compressor_dictionary_linked-list linked-list sparse-array)
+    -DLZWS_SHARED=ON
+    -DLZWS_STATIC=$(usex static-libs)
     -DLZWS_CLI=ON
-    -DLZWS_TESTS="$(usex test ON OFF)
+    -DLZWS_TESTS=$(usex test)
     -DLZWS_EXAMPLES=OFF
-    -DLZWS_MAN="$(usex man ON OFF)
+    -DLZWS_MAN=$(usex noman OFF ON)
   )
 
   cmake-multilib_src_configure
