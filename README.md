@@ -132,7 +132,7 @@ Update urls:
 
 Re-test archives:
 ```sh
-./bin/clear_archives.sh
+./bin/clear_results.sh
 ./bin/test_archives.sh
 ```
 
