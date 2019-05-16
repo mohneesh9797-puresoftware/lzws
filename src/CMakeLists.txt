@@ -56,7 +56,7 @@ foreach (HEADER ${HEADERS})
   install (FILES ${HEADER} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LZWS_TARGET}/${HEADER_RELATIVE_DIRECTORY_PATH}")
 endforeach ()
 
-if (LZWS_SHARED)
+if (LZWS_SHARED MATCHES ON)
   set (LIB_TARGET ${LZWS_TARGET})
 
   add_library (${LIB_TARGET} SHARED ${SOURCES})
@@ -65,7 +65,7 @@ if (LZWS_SHARED)
   install (TARGETS ${LIB_TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif ()
 
-if (LZWS_STATIC)
+if (LZWS_STATIC MATCHES ON)
   set (STATIC_LIB_TARGET "${LZWS_TARGET}-static")
   set (STATIC_LIB_NAME ${LZWS_TARGET})
 
@@ -76,14 +76,14 @@ if (LZWS_STATIC)
   install (TARGETS ${STATIC_LIB_TARGET} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif ()
 
-if (LZWS_CLI)
+if (LZWS_CLI MATCHES ON)
   add_subdirectory ("cli")
 endif ()
 
-if (LZWS_EXAMPLES)
+if (LZWS_EXAMPLES MATCHES ON)
   add_subdirectory ("examples")
 endif ()
 
-if (LZWS_TESTS)
+if (LZWS_TESTS MATCHES ON)
   add_subdirectory ("tests")
 endif ()

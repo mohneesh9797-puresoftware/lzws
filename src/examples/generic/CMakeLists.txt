@@ -3,7 +3,7 @@ set (SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.c")
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths (${SOURCES})
 
-if (LZWS_SHARED)
+if (LZWS_SHARED MATCHES ON)
   set (EXAMPLE_NAME "example-generic")
   set (EXAMPLE_TARGET "${LZWS_TARGET}-${EXAMPLE_NAME}")
 
@@ -15,7 +15,7 @@ if (LZWS_SHARED)
   endif ()
 endif ()
 
-if (LZWS_STATIC)
+if (LZWS_STATIC MATCHES ON)
   set (STATIC_EXAMPLE_NAME "static-example-generic")
   set (STATIC_EXAMPLE_TARGET "${LZWS_TARGET}-${STATIC_EXAMPLE_NAME}")
 

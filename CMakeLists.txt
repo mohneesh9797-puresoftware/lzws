@@ -37,7 +37,7 @@ if (NOT LZWS_COMPRESSOR_DICTIONARY)
   message (FATAL_ERROR "Please select dictionary implementation.")
 endif ()
 
-if (NOT LZWS_SHARED AND NOT LZWS_STATIC)
+if (LZWS_SHARED MATCHES OFF AND LZWS_STATIC MATCHES OFF)
   message (FATAL_ERROR "Please enable building of shared or static libraries.")
 endif ()
 
@@ -92,13 +92,13 @@ else ()
   set (CMAKE_INTERPROCEDURAL_OPTIMIZATION false CACHE BOOL "status of IPO")
 endif ()
 
-if (LZWS_TESTS)
+if (LZWS_TESTS MATCHES ON)
   enable_testing ()
 endif ()
 
 add_subdirectory ("src")
 
-if (LZWS_MAN)
+if (LZWS_MAN MATCHES ON)
   add_subdirectory ("man")
 endif ()
 

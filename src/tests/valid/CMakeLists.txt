@@ -7,7 +7,7 @@ set (SOURCES
 include (DefineRelativeFilePaths)
 cmake_define_relative_file_paths (${SOURCES})
 
-if (LZWS_SHARED)
+if (LZWS_SHARED MATCHES ON)
   set (TEST_NAME "test-valid")
   set (TEST_TARGET "${LZWS_TARGET}-${TEST_NAME}")
 
@@ -19,7 +19,7 @@ if (LZWS_SHARED)
   endif ()
 endif ()
 
-if (LZWS_STATIC)
+if (LZWS_STATIC MATCHES ON)
   set (STATIC_TEST_NAME "static-test-valid")
   set (STATIC_TEST_TARGET "${LZWS_TARGET}-${STATIC_TEST_NAME}")
 
