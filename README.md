@@ -15,6 +15,12 @@ You can add your own implementation.
 - You can support ancient software.
 - You can make your application looks like ancient software.
 
+## New features
+
+- Accurate ratio calculation without overhead provides smaller archive (compatible with UNIX compress).
+- Unaligned bit groups switch (incompatible with UNIX compress).
+- LSB/MSB switch (incompatible with UNIX compress).
+
 ## Dependencies
 
 - Runtime dependency is [GMP](https://gmplib.org) only.
