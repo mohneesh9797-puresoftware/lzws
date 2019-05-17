@@ -17,9 +17,9 @@ You can add your own implementation.
 
 ## New features
 
-- Accurate ratio calculation without overhead provides smaller archive (compatible with UNIX compress).
-- Unaligned bit groups switch (incompatible with UNIX compress).
-- LSB/MSB switch (incompatible with UNIX compress).
+- Accurate ratio calculation without overhead, compressor provides smaller archive (compatible with UNIX compress).
+- Unaligned bit groups switch (only disabled mode is compatible with UNIX compress).
+- LSB/MSB switch (only LSB mode is compatible with UNIX compress).
 
 ## Dependencies
 
@@ -142,7 +142,7 @@ Re-test archives:
 ./bin/test_archives.sh
 ```
 
-This test will decompress and re-compress more than 6000 unique archives in all possible combinations of dictionaries and lzws options.
+This test will decompress and re-compress more than 7000 unique archives in all possible combinations of dictionaries and lzws options.
 It will take several days on modern CPU.
 Test will be successful if file [volatile_archives.xz](scripts/tar-z-collector/data/volatile_archives.xz) will be empty.
 Volatile archives means the list of archives that lzws/ncompress can process, but ncompress/lzws can't.
@@ -194,3 +194,14 @@ So it is not possible to distribute project binaries with statically linked GMP 
 
 Please use source code based operating systems like Gentoo if you want static linking.
 End user can build, link and use any software in any mode (without distribution).
+
+## Gentoo
+
+You can make a quick install on gentoo.
+
+```sh
+sudo cp -R scripts/gentoo/app-arch /usr/local/portage/overlay/
+echo "=app-arch/lzws-9999 **" | sudo tee -a /etc/portage/package.keywords/compress
+sudo emerge -v app-arch/lzws
+FEATURES="test" USE="abi_x86_64 compressor_dictionary_linked-list static-libs noman" sudo -E emerge -v app-arch/lzws
+```
