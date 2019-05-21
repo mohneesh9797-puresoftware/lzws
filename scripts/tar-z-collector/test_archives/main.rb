@@ -22,7 +22,7 @@ volatile_archive_urls = volatile_archives.values.flatten
 archive_urls -= valid_archive_urls + invalid_archive_urls + volatile_archive_urls
 
 text = colorize_length archive_urls.length
-STDERR.puts "-- processing #{text} archive urls"
+warn "-- processing #{text} archive urls"
 
 test_archives archive_urls, valid_archives, invalid_archives, volatile_archives
 

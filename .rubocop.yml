@@ -49,6 +49,9 @@ Metrics/PerceivedComplexity:
 Naming/AccessorMethodName:
   Enabled: false
 
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
 Naming/VariableNumber:
   EnforcedStyle: snake_case
 
@@ -92,7 +95,4 @@ Style/SafeNavigation:
   Enabled: false
 
 Style/YodaCondition:
-  Enabled: false
-
-Performance/FixedSize:
   Enabled: false

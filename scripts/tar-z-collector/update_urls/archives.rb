@@ -73,7 +73,7 @@ def get_archive_urls_from_page_url(url)
     end
 
   rescue StandardError => error
-    STDERR.puts error
+    warn error
     return nil
   end
 
@@ -85,7 +85,7 @@ def get_archive_urls_from_page_url(url)
       begin
         Addressable::URI.parse(url).join(archive_url).to_s
       rescue StandardError => error
-        STDERR.puts error
+        warn error
         next nil
       end
     end
@@ -101,7 +101,7 @@ def get_archive_urls(page_urls)
     .shuffle
     .each_with_index do |page_url, index|
       percent = format_percent index, page_urls.length
-      STDERR.puts "- #{percent}% checking page, url: #{page_url}"
+      warn "- #{percent}% checking page, url: #{page_url}"
 
       new_archive_urls = get_archive_urls_from_page_url page_url
       next if new_archive_urls.nil?
@@ -115,7 +115,7 @@ def get_archive_urls(page_urls)
       end
 
       archive_text = colorize_length new_archive_urls.length
-      STDERR.puts "received #{archive_text} archive urls, page is #{page_text}"
+      warn "received #{archive_text} archive urls, page is #{page_text}"
 
       archive_urls += new_archive_urls
     end
@@ -127,7 +127,7 @@ def get_archive_urls(page_urls)
   valid_page_text   = colorize_length valid_page_urls.length
   invalid_page_text = colorize_length invalid_page_urls.length
   archive_text      = colorize_length archive_urls.length
-  STDERR.puts "-- received #{archive_text} archive urls from #{valid_page_text} valid page urls, #{invalid_page_text} invalid page urls"
+  warn "-- received #{archive_text} archive urls from #{valid_page_text} valid page urls, #{invalid_page_text} invalid page urls"
 
   [valid_page_urls, invalid_page_urls, archive_urls]
 end

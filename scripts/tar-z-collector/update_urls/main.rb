@@ -20,7 +20,7 @@ page_urls   = get_page_urls search_urls
 page_urls -= valid_page_urls + invalid_page_urls
 
 text = colorize_length page_urls.length
-STDERR.puts "-- processing #{text} page urls"
+warn "-- processing #{text} page urls"
 
 new_valid_page_urls, new_invalid_page_urls, new_archive_urls = get_archive_urls page_urls
 

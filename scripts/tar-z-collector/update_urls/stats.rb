@@ -47,7 +47,7 @@ SEARCH_URL_REGEXP = Regexp.new(
 .freeze
 
 def get_search_urls_from_stats_url(url)
-  STDERR.puts "- processing stats url: #{url}"
+  warn "- processing stats url: #{url}"
 
   begin
     uri  = URI url
@@ -56,12 +56,12 @@ def get_search_urls_from_stats_url(url)
     search_urls = data.scan(SEARCH_URL_REGEXP).flatten.compact
 
   rescue StandardError => error
-    STDERR.puts error
+    warn error
     return []
   end
 
   text = colorize_length search_urls.length
-  STDERR.puts "received #{text} search urls"
+  warn "received #{text} search urls"
 
   search_urls
 end
@@ -74,7 +74,7 @@ def get_search_urls
     .uniq
 
   text = colorize_length search_urls.length
-  STDERR.puts "-- received #{text} search urls from all stats urls"
+  warn "-- received #{text} search urls from all stats urls"
 
   search_urls
 end

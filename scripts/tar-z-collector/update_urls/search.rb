@@ -21,12 +21,12 @@ def get_text
 end
 
 def read_new_page_urls_from_search_url(url, text, page_number, page_urls)
-  STDERR.puts "- processing search url: #{url}, page number: #{page_number}"
+  warn "- processing search url: #{url}, page number: #{page_number}"
 
   begin
     uri = URI "#{url}/search"
   rescue StandardError
-    STDERR.puts "invalid api url"
+    warn "invalid api url"
     return nil
   end
 
@@ -36,20 +36,20 @@ def read_new_page_urls_from_search_url(url, text, page_number, page_urls)
   begin
     data = get_http_content uri
   rescue StandardError => error
-    STDERR.puts error
+    warn error
     return nil
   end
 
   begin
     data = JSON.parse data
   rescue StandardError # Ignoring big error message.
-    STDERR.puts "failed to parse json"
+    warn "failed to parse json"
     return nil
   end
 
   results = data["results"]
   if results.nil?
-    STDERR.puts "can't find results"
+    warn "can't find results"
     return nil
   end
 
@@ -58,12 +58,12 @@ def read_new_page_urls_from_search_url(url, text, page_number, page_urls)
     .reject { |page_url| page_urls.include? page_url }
 
   if new_page_urls.empty?
-    STDERR.puts "finished"
+    warn "finished"
     return nil
   end
 
   text = colorize_length new_page_urls.length
-  STDERR.puts "received #{text} page urls"
+  warn "received #{text} page urls"
 
   new_page_urls
 end
@@ -104,7 +104,7 @@ def get_page_urls(search_urls)
   page_urls = page_urls.sort.uniq
 
   text = colorize_length page_urls.length
-  STDERR.puts "-- received #{text} page urls from all search urls"
+  warn "-- received #{text} page urls from all search urls"
 
   page_urls
 end

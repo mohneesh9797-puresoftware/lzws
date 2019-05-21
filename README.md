@@ -203,5 +203,5 @@ You can make a quick install on gentoo.
 sudo cp -R scripts/gentoo/app-arch /usr/local/portage/overlay/
 echo "=app-arch/lzws-9999 **" | sudo tee -a /etc/portage/package.keywords/compress
 sudo emerge -v app-arch/lzws
-FEATURES="test" USE="abi_x86_64 compressor_dictionary_linked-list static-libs noman" sudo -E emerge -v app-arch/lzws
+FEATURES="test noman" USE="abi_x86_64 compressor_dictionary_linked-list static-libs" sudo -E emerge -v app-arch/lzws
 ```

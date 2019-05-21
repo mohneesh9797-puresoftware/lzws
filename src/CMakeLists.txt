@@ -46,7 +46,7 @@ set (SOURCES ${SOURCES}
 )
 
 include (DefineRelativeFilePaths)
-cmake_define_relative_file_paths (${SOURCES})
+cmake_define_relative_file_paths ("${SOURCES}")
 
 include_directories (${CMAKE_GMP_INCLUDE_PATH})
 

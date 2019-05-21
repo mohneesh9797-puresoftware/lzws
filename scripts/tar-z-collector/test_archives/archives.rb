@@ -60,7 +60,7 @@ def download_archive(url)
     end
 
   rescue StandardError => error
-    STDERR.puts error
+    warn error
     return nil
   end
 
@@ -82,7 +82,7 @@ def get_command_digest(command)
   result
 
 rescue StandardError => error
-  STDERR.puts error
+  warn error
   nil
 end
 
@@ -92,19 +92,19 @@ def test_archive(path)
   end
 
   if decompressed_digests.uniq.length != 1
-    STDERR.puts "decompressed digests are not the same"
-    STDERR.puts "archive is #{'volatile'.light_red}"
+    warn "decompressed digests are not the same"
+    warn "archive is #{'volatile'.light_red}"
     return :volatile
   end
 
   decompressed_digest = decompressed_digests.first
   if decompressed_digest.nil?
-    STDERR.puts "decompressed digests are nil"
-    STDERR.puts "archive is invalid"
+    warn "decompressed digests are nil"
+    warn "archive is invalid"
     return :invalid
   end
 
-  STDERR.puts "archive decompressed"
+  warn "archive decompressed"
 
   # Decompressed archive can be huge.
   # Re compression and decompression implemented without storing this archive.
@@ -120,12 +120,12 @@ def test_archive(path)
   end
 
   if re_decompressed_digests.uniq.length != 1 || re_decompressed_digests.first != decompressed_digest
-    STDERR.puts "re-decompressed digests are invalid"
-    STDERR.puts "archive is #{'volatile'.light_red}"
+    warn "re-decompressed digests are invalid"
+    warn "archive is #{'volatile'.light_red}"
     return :volatile
   end
 
-  STDERR.puts "archive re compressed and decompressed"
+  warn "archive re compressed and decompressed"
 
   # Now we can re-compress/decompress archive using lzws options.
   # It should be possible to process lzws options in any combination.
@@ -143,13 +143,13 @@ def test_archive(path)
   end
 
   if lzws_re_decompressed_digests.uniq.length != 1 || lzws_re_decompressed_digests.first != decompressed_digest
-    STDERR.puts "lzws re-decompressed digests are invalid"
-    STDERR.puts "archive is #{'volatile'.light_red}"
+    warn "lzws re-decompressed digests are invalid"
+    warn "archive is #{'volatile'.light_red}"
     return :volatile
   end
 
-  STDERR.puts "archive re compressed and decompressed using lzws option combinations"
-  STDERR.puts "archive is #{'valid'.light_green}"
+  warn "archive re compressed and decompressed using lzws option combinations"
+  warn "archive is #{'valid'.light_green}"
 
   :valid
 end
@@ -165,7 +165,7 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
     .shuffle
     .each_with_index do |archive_url, index|
       percent = format_percent index, archive_urls.length
-      STDERR.puts "- #{percent}% testing archive, url: #{archive_url}"
+      warn "- #{percent}% testing archive, url: #{archive_url}"
 
       path = download_archive archive_url
       next if path.nil?
@@ -173,12 +173,12 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
       begin
         size = File.size path
         digest = Digest::SHA256.file(path).to_s
-        STDERR.puts "downloaded archive, size: #{Filesize.new(size).pretty}, digest: #{digest}"
+        warn "downloaded archive, size: #{Filesize.new(size).pretty}, digest: #{digest}"
 
         hash, hash_name = get_hash_by_archive_digest digest, valid_archives, invalid_archives, volatile_archives
         unless hash.nil?
           hash[digest] << archive_url
-          STDERR.puts "digest is already in #{hash_name} archives"
+          warn "digest is already in #{hash_name} archives"
           next
         end
 
@@ -208,7 +208,7 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
   invalid_archives_text  = colorize_length invalid_archives_length
   valid_archives_text    = colorize_length valid_archives_length
 
-  STDERR.puts(
+  warn(
     "-- processed #{archives_size_text} archives size, received " \
     "#{volatile_archives_text} volatile archives, " \
     "#{invalid_archives_text} invalid archives, " \

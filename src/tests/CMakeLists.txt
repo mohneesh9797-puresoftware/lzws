@@ -5,7 +5,7 @@ set (SOURCES
 )
 
 include (DefineRelativeFilePaths)
-cmake_define_relative_file_paths (${SOURCES})
+cmake_define_relative_file_paths ("${SOURCES}")
 
 if (LZWS_SHARED)
   set (TEST_LIB_TARGET "${LZWS_TARGET}-test")
