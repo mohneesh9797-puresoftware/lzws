@@ -8,7 +8,7 @@ It is a metasearch engine that provides results from popular search engines.
 It is possible to receive about 20-30% results of real search engines using it's api.
 20% of results are enough for testing purposes.
 
-It is better to make this search using tor, so scripts are wrapped using torsocks.
+It is better to make this search using tor.
 You need to have tor up and running before using these scripts.
 
 Some searx endpoints won't provide results for tor exit node IPs.
@@ -84,7 +84,7 @@ How to use these scripts?
 1. Install rvm
 curl -sSL https://get.rvm.io | bash -s stable
 
-2. Install modern version of ruby
+2. Install ruby
 rvm install ruby-2.6.3
 
 3. Install required gems

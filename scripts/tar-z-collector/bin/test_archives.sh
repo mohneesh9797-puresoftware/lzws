@@ -32,4 +32,5 @@ for dictionary in "linked-list" "sparse-array"; do
 done
 
 cd "$base"
-torsocks "../test_archives/main.rb" "../data/archive_urls.xz" "../data/valid_archives.xz" "../data/invalid_archives.xz" "../data/volatile_archives.xz"
+"../test_archives/main.rb" \
+  "../data/archive_urls.xz" "../data/valid_archives.xz" "../data/invalid_archives.xz" "../data/volatile_archives.xz"
