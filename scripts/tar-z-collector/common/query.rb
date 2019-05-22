@@ -3,6 +3,18 @@ require "net/ftp"
 require "open-uri"
 require "uri"
 
+TOR_HOST = "127.0.0.1".freeze
+TOR_SOCKS_PORT = 9050
+TOR_HTTP_PORT = 8118
+
+TOR_SOCKS_SERVER = "#{TOR_HOST}:#{TOR_SOCKS_PORT}".freeze
+TOR_SOCKS_PROXY = "socks://#{TOR_SOCKS_SERVER}".freeze
+TOR_HTTP_PROXY = "http://#{TOR_HOST}:#{TOR_HTTP_PORT}".freeze
+
+ENV["SOCKS_SERVER"] = TOR_SOCKS_SERVER
+ENV["ftp_proxy"] = TOR_SOCKS_PROXY
+ENV["https_proxy"] = ENV["http_proxy"] = TOR_HTTP_PROXY
+
 TIMEOUT = 20 # seconds
 
 # -- http --
@@ -26,7 +38,10 @@ def get_http_content(uri)
   )
 
   begin
-    response = Net::HTTP.start(uri.host, uri.port, options) { |http| http.get uri }
+    response = Net::HTTP.start(uri.host, uri.port, options) do |http|
+      warn "ololo"
+      http.get uri
+    end
   rescue StandardError => error
     raise "http query failed, error: #{error}"
   end

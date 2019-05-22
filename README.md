@@ -25,7 +25,7 @@ You can add your own implementation.
 
 - Runtime dependency is [GMP](https://gmplib.org) only.
 - Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
-- Testing dependencies: [tor](https://www.torproject.org/), [rvm](https://rvm.io/), [ncompress](https://github.com/vapier/ncompress).
+- Testing dependencies: [tor](https://www.torproject.org/), [privoxy](http://www.privoxy.org/), [rvm](https://rvm.io/), [ncompress](https://github.com/vapier/ncompress).
 
 ## Operating systems
 
@@ -119,7 +119,7 @@ It is possible to test lzws using these archives.
 Install modern version of ruby:
 ```sh
 curl -sSL https://get.rvm.io | bash -s stable
-rvm install ruby-2.6.3
+rvm install ruby-2.6.3 -C --enable-socks
 ```
 
 Install required gems:
@@ -130,6 +130,13 @@ bundle install
 
 Than you need to start tor.
 Please use some convenient timeout like `SocksTimeout 20`.
+
+Than you need to start privoxy, use config:
+```
+listen-address 127.0.0.1:8118
+toggle 0
+forward-socks5t / 127.0.0.1:9050 .
+```
 
 Update urls:
 ```sh

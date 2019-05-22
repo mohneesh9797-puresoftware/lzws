@@ -85,7 +85,7 @@ How to use these scripts?
 curl -sSL https://get.rvm.io | bash -s stable
 
 2. Install ruby
-rvm install ruby-2.6.3
+rvm install ruby-2.6.3 -C --enable-socks
 
 3. Install required gems
 cd scripts/tar-z-collector
@@ -95,10 +95,15 @@ bundle install
 Please use some convenient timeout like "SocksTimeout 20".
 sudo rc-service tor start
 
-5. Updated urls
+5. Start privoxy, use config:
+listen-address 127.0.0.1:8118
+toggle 0
+forward-socks5t / 127.0.0.1:9050 .
+
+6. Updated urls
 ./bin/update_urls.sh
 
-6. Test archives
+7. Test archives
 ./bin/test_archives.sh
 
 -----
