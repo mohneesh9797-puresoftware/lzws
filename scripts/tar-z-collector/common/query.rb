@@ -39,7 +39,6 @@ def get_http_content(uri)
 
   begin
     response = Net::HTTP.start(uri.host, uri.port, options) do |http|
-      warn "ololo"
       http.get uri
     end
   rescue StandardError => error
