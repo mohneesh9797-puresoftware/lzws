@@ -58,7 +58,6 @@ This script was used with travis CI.
 ```
 
 There is a script for release build.
-CPack will fail if you have no all required generators, ignore it.
 ```sh
 ../scripts/release.sh
 ```
