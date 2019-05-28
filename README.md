@@ -129,7 +129,7 @@ bundle install
 ```
 
 Than you need to start tor.
-Please use some convenient timeout like `SocksTimeout 20`.
+Please use some convenient timeout like `SocksTimeout 10`.
 
 Than you need to start privoxy, use config:
 ```

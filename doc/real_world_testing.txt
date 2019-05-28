@@ -92,7 +92,7 @@ cd scripts/tar-z-collector
 bundle install
 
 4. Start tor
-Please use some convenient timeout like "SocksTimeout 20".
+Please use some convenient timeout like "SocksTimeout 10".
 sudo rc-service tor start
 
 5. Start privoxy, use config:
