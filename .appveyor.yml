@@ -1,0 +1,7 @@
+image: ubuntu
+
+init:
+  - sh: sudo apt-get install -y libgmp-dev
+
+test_script:
+  - sh: scripts/toolchains.sh
