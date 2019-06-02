@@ -1,8 +1,7 @@
-image: ubuntu
+image: Ubuntu1804
 
 init:
   - sh: sudo apt-get install -y libgmp-dev
-  - sh: sudo update-alternatives --set gcc /usr/bin/gcc-8
 
 test_script:
   - sh: scripts/toolchains.sh
