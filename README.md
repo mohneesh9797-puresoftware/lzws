@@ -1,4 +1,6 @@
-# LZW + Stream = LZWS [![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
+# LZW + Stream = LZWS
+[![Build Status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
+[https://ci.appveyor.com/api/projects/status/bi0fuqqcq467sqc5?branch=master&svg=true](https://ci.appveyor.com/api/projects/status/bi0fuqqcq467sqc5?branch=master&svg=true)
 
 LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
 It has no legacy code from [ncompress](https://github.com/vapier/ncompress/blob/ncompress-4.2.4/compress42.c).
