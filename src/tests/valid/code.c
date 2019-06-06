@@ -113,7 +113,7 @@ static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_
   free(source);
 
   if (result != 0) {
-    LZWS_LOG_ERROR("string decompressor failed");
+    LZWS_LOG_ERROR("decompressor failed");
     return 2;
   }
 

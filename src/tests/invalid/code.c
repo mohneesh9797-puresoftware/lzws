@@ -80,11 +80,11 @@ static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_
 
   if (result == 0) {
     free(destination);
-    LZWS_LOG_ERROR("string decompressor succeeded instead of fail");
+    LZWS_LOG_ERROR("decompressor succeeded instead of fail");
     return 2;
   }
   if (result != LZWS_TEST_STRING_AND_FILE_DECOMPRESSOR_FAILED) {
-    LZWS_LOG_ERROR("string decompressor failed with wrong result");
+    LZWS_LOG_ERROR("decompressor failed with wrong result");
     return 3;
   }
 
