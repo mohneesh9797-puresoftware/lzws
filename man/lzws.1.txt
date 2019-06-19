@@ -43,7 +43,7 @@ OPTIONS
   Disable block mode.
   Block mode is enabled by default.
   It can be used in compress mode only.
-  Compressor writes max code bit length value to file.
+  Compressor writes block mode value to file.
   Decompressor reads this option from file.
 
 *-u, --unaligned-bit-groups*::
