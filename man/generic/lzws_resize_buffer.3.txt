@@ -1,0 +1,48 @@
+LZWS(3)
+=======
+
+
+NAME
+----
+lzws_resize_buffer - Resize buffer.
+
+
+SYNOPSIS
+--------
+*#include <lzws/buffer.h>*
+
+----
+lzws_result_t lzws_resize_buffer(uint8_t** buffer_ptr, size_t buffer_length, bool quiet);
+----
+
+
+OPTIONS
+-------
+*`uint8_t** buffer_ptr`*::
+  Pointer to buffer.
+
+*`size_t buffer_length`*::
+  Buffer length.
+
+*`bool quiet`*::
+  Disable error messages.
+
+
+RETURN VALUE
+------------
+Returns *0* if creation was successful.
+Returns *LZWS_BUFFER_REALLOCATE_FAILED* when memory reallocation was failed.
+
+
+DESCRIPTION
+-----------
+You have destination buffer.
+For example you received *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* or *LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION*.
+You can flush destination buffer into file/socket/etc and use same buffer again.
+Another variant is that you can resize it.
+
+
+SEE ALSO
+--------
+*lzws_create_buffer_for_compressor*(3)
+*lzws_create_buffer_for_decompressor*(3)
