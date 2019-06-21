@@ -7,10 +7,11 @@
 #include "compressor/common.h"
 #include "compressor/header.h"
 #include "compressor/main.h"
-
+#include "compressor/state.h"
 #include "decompressor/common.h"
 #include "decompressor/header.h"
 #include "decompressor/main.h"
+#include "decompressor/state.h"
 
 #include "buffer.h"
 #include "file.h"

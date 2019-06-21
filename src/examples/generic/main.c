@@ -8,9 +8,11 @@
 #include "../../compressor/common.h"
 #include "../../compressor/header.h"
 #include "../../compressor/main.h"
+#include "../../compressor/state.h"
 #include "../../decompressor/common.h"
 #include "../../decompressor/header.h"
 #include "../../decompressor/main.h"
+#include "../../decompressor/state.h"
 #include "../../log.h"
 
 #define MAX_CODE_BIT_LENGTH LZWS_BIGGEST_MAX_CODE_BIT_LENGTH
