@@ -7,16 +7,17 @@
 #include "../../log.h"
 #include "../../macro.h"
 #include "../combination.h"
+#include "../random_string.h"
 #include "../string_and_file.h"
 
 #include "data.h"
 
 static const char* datas[] = {
   "hello world",
-  "tobeornottobeortobeornot",
-  "qqqqqqqqqqqqqqqqqqqqqqqq",
-  "qqqqqqqqqqqqqqqqqqqqqqqz"};
-#define DATA_LENGTH 4
+  "tobeornottobeortobeornot"};
+#define DATA_LENGTH 2
+
+#define RANDOM_STRING_LENGTH (1 << 20) // 1 MByte
 
 static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const char* data, size_t buffer_length)
 {
@@ -75,6 +76,14 @@ static inline lzws_result_t test_datas(lzws_compressor_state_t* compressor_state
     if (result != 0) {
       return result;
     }
+  }
+
+  char random_string[RANDOM_STRING_LENGTH];
+  lzws_tests_set_random_string(random_string, RANDOM_STRING_LENGTH);
+
+  result = test_data(compressor_state_ptr, decompressor_state_ptr, random_string, buffer_length);
+  if (result != 0) {
+    return result;
   }
 
   return 0;

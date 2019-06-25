@@ -70,7 +70,7 @@ static inline lzws_result_t read_source_buffer(
   uint8_t* remaining_data        = *source_ptr;
   size_t   remaining_data_length = *source_length_ptr;
 
-  if (remaining_data != source_buffer && remaining_data_length != 0) {
+  if (source_buffer != remaining_data) {
     memmove(source_buffer, remaining_data, remaining_data_length);
   }
 
