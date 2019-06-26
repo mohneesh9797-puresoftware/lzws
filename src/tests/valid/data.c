@@ -17,7 +17,7 @@ static const char* datas[] = {
   "tobeornottobeortobeornot"};
 #define DATA_LENGTH 2
 
-#define RANDOM_STRING_LENGTH (1 << 20) // 1 MByte
+#define RANDOM_STRING_LENGTH (1 << 19) // 512 KBytes
 
 static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const char* data, size_t buffer_length)
 {

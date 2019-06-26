@@ -156,27 +156,6 @@ static inline lzws_result_t flush_destination_buffer(
     return result;                                 \
   }
 
-// -- wrapper --
-
-// It is better to wrap function calls that reads and writes something.
-
-#define WITH_READ_WRITE_BUFFERS(NEEDS_MORE_SOURCE, NEEDS_MORE_DESTINATION, FAILED, function, ...) \
-  while (true) {                                                                                  \
-    result = (function)(__VA_ARGS__);                                                             \
-    if (result == 0) {                                                                            \
-      break;                                                                                      \
-    }                                                                                             \
-    else if (result == NEEDS_MORE_SOURCE) {                                                       \
-      READ_MORE_SOURCE()                                                                          \
-    }                                                                                             \
-    else if (result == NEEDS_MORE_DESTINATION) {                                                  \
-      FLUSH_DESTINATION_BUFFER()                                                                  \
-    }                                                                                             \
-    else {                                                                                        \
-      return FAILED;                                                                              \
-    }                                                                                             \
-  }
-
 static inline lzws_result_t write_remaining_destination_buffer(
   FILE*    destination_file,
   uint8_t* destination_buffer, size_t destination_buffer_length, size_t destination_length,
@@ -192,8 +171,22 @@ static inline lzws_result_t write_remaining_destination_buffer(
 
 // -- compress --
 
-#define COMPRESS_WITH_READ_WRITE_BUFFERS(...) \
-  WITH_READ_WRITE_BUFFERS(LZWS_COMPRESSOR_NEEDS_MORE_SOURCE, LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION, LZWS_FILE_COMPRESSOR_FAILED, __VA_ARGS__)
+#define COMPRESS_WITH_READ_WRITE_BUFFERS(function, ...)          \
+  while (true) {                                                 \
+    result = (function)(__VA_ARGS__);                            \
+    if (result == 0) {                                           \
+      break;                                                     \
+    }                                                            \
+    else if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {      \
+      READ_MORE_SOURCE()                                         \
+    }                                                            \
+    else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) { \
+      FLUSH_DESTINATION_BUFFER()                                 \
+    }                                                            \
+    else {                                                       \
+      return LZWS_FILE_COMPRESSOR_UNEXPECTED_ERROR;              \
+    }                                                            \
+  }
 
 static inline lzws_result_t compress_data(
   lzws_compressor_state_t* state_ptr,
@@ -226,7 +219,7 @@ lzws_result_t lzws_compress_file(
 
   result = lzws_create_buffer_for_compressor(&source_buffer, &source_buffer_length, quiet);
   if (result != 0) {
-    return LZWS_FILE_CREATE_BUFFER_FAILED;
+    return LZWS_FILE_ALLOCATE_FAILED;
   }
 
   uint8_t* destination_buffer;
@@ -235,7 +228,7 @@ lzws_result_t lzws_compress_file(
   if (result != 0) {
     free(source_buffer);
 
-    return LZWS_FILE_CREATE_BUFFER_FAILED;
+    return LZWS_FILE_ALLOCATE_FAILED;
   }
 
   lzws_compressor_state_t* state_ptr;
@@ -245,7 +238,15 @@ lzws_result_t lzws_compress_file(
     free(source_buffer);
     free(destination_buffer);
 
-    return LZWS_FILE_COMPRESSOR_FAILED;
+    if (result == LZWS_COMPRESSOR_ALLOCATE_FAILED) {
+      return LZWS_FILE_ALLOCATE_FAILED;
+    }
+    else if (result == LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
+      return LZWS_FILE_VALIDATE_FAILED;
+    }
+    else {
+      return LZWS_FILE_COMPRESSOR_UNEXPECTED_ERROR;
+    }
   }
 
   result = compress_data(
@@ -263,8 +264,29 @@ lzws_result_t lzws_compress_file(
 
 // -- decompress --
 
-#define DECOMPRESS_WITH_READ_WRITE_BUFFERS(...) \
-  WITH_READ_WRITE_BUFFERS(LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE, LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION, LZWS_FILE_DECOMPRESSOR_FAILED, __VA_ARGS__)
+#define DECOMPRESS_WITH_READ_WRITE_BUFFERS(function, ...)               \
+  while (true) {                                                        \
+    result = (function)(__VA_ARGS__);                                   \
+    if (result == 0) {                                                  \
+      break;                                                            \
+    }                                                                   \
+    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {           \
+      READ_MORE_SOURCE()                                                \
+    }                                                                   \
+    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) {      \
+      FLUSH_DESTINATION_BUFFER()                                        \
+    }                                                                   \
+    else if (result == LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER ||        \
+             result == LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) { \
+      return LZWS_FILE_VALIDATE_FAILED;                                 \
+    }                                                                   \
+    else if (result == LZWS_DECOMPRESSOR_CORRUPTED_SOURCE) {            \
+      return LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE;                   \
+    }                                                                   \
+    else {                                                              \
+      return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;                   \
+    }                                                                   \
+  }
 
 static inline lzws_result_t decompress_data(
   lzws_decompressor_state_t* state_ptr,
@@ -296,7 +318,7 @@ lzws_result_t lzws_decompress_file(
 
   result = lzws_create_buffer_for_decompressor(&source_buffer, &source_buffer_length, quiet);
   if (result != 0) {
-    return LZWS_FILE_CREATE_BUFFER_FAILED;
+    return LZWS_FILE_ALLOCATE_FAILED;
   }
 
   uint8_t* destination_buffer;
@@ -305,7 +327,7 @@ lzws_result_t lzws_decompress_file(
   if (result != 0) {
     free(source_buffer);
 
-    return LZWS_FILE_CREATE_BUFFER_FAILED;
+    return LZWS_FILE_ALLOCATE_FAILED;
   }
 
   lzws_decompressor_state_t* state_ptr;
@@ -315,7 +337,12 @@ lzws_result_t lzws_decompress_file(
     free(source_buffer);
     free(destination_buffer);
 
-    return LZWS_FILE_DECOMPRESSOR_FAILED;
+    if (result == LZWS_DECOMPRESSOR_ALLOCATE_FAILED) {
+      return LZWS_FILE_ALLOCATE_FAILED;
+    }
+    else {
+      return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;
+    }
   }
 
   result = decompress_data(

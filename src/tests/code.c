@@ -41,7 +41,7 @@ static inline lzws_result_t increase_destination_buffer(
 
   lzws_result_t result = lzws_resize_buffer(destination_ptr, destination_length + initial_destination_buffer_length, false);
   if (result != 0) {
-    return LZWS_TEST_CODES_RESIZE_BUFFER_FAILED;
+    return LZWS_TEST_CODES_ALLOCATE_FAILED;
   }
 
   *destination_buffer_ptr        = *destination_ptr + destination_length;
@@ -65,20 +65,13 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
 {
   lzws_result_t result = lzws_resize_buffer(destination_ptr, destination_length, false);
   if (result != 0) {
-    return LZWS_TEST_CODES_RESIZE_BUFFER_FAILED;
+    return LZWS_TEST_CODES_ALLOCATE_FAILED;
   }
 
   return 0;
 }
 
-#define TRIM_DESTINATION_BUFFER() \
-  FLUSH_DESTINATION_BUFFER()      \
-                                  \
-  return trim_destination_buffer(destination_ptr, *destination_length_ptr);
-
-// -- wrapper --
-
-// It is better to wrap function calls that writes something.
+// -- compress --
 
 #define COMPRESS_WITH_WRITE_BUFFER(function, ...)                     \
   while (true) {                                                      \
@@ -90,11 +83,9 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
       INCREASE_DESTINATION_BUFFER()                                   \
     }                                                                 \
     else {                                                            \
-      return LZWS_TEST_CODES_COMPRESSOR_FAILED;                       \
+      return LZWS_TEST_CODES_COMPRESSOR_UNEXPECTED_ERROR;             \
     }                                                                 \
   }
-
-// -- compress --
 
 static inline lzws_result_t compress_data(
   lzws_compressor_state_t* compressor_state_ptr,
@@ -116,7 +107,9 @@ static inline lzws_result_t compress_data(
 
   COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_flush_remainder, compressor_state_ptr, &destination_buffer, &destination_buffer_length)
 
-  TRIM_DESTINATION_BUFFER()
+  FLUSH_DESTINATION_BUFFER()
+
+  return trim_destination_buffer(destination_ptr, *destination_length_ptr);
 }
 
 lzws_result_t lzws_test_compressor_write_codes(
@@ -128,7 +121,7 @@ lzws_result_t lzws_test_compressor_write_codes(
 
   lzws_result_t result = lzws_create_buffer_for_compressor(&destination_buffer, &destination_buffer_length, false);
   if (result != 0) {
-    return LZWS_TEST_CODES_CREATE_BUFFER_FAILED;
+    return LZWS_TEST_CODES_ALLOCATE_FAILED;
   }
 
   *destination_ptr        = destination_buffer;
