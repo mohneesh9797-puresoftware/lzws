@@ -8,7 +8,7 @@
 
 void lzws_tests_set_random_string(char* string, size_t string_length)
 {
-  uint value = time(NULL);
+  uint32_t value = time(NULL);
 
   for (size_t index = 0; index < string_length - 1; index++) {
     value         = value * 1103515245 + 12345;
