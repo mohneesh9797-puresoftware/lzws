@@ -13,11 +13,12 @@
 #include "data.h"
 
 static const char* datas[] = {
+  "",
   "hello world",
   "tobeornottobeortobeornot"};
-#define DATA_LENGTH 2
+#define DATA_LENGTH 3
 
-#define RANDOM_STRING_LENGTH (1 << 19) // 512 KBytes
+#define RANDOM_STRING_LENGTH (1 << 15) // 32 KB
 
 static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, const char* data, size_t buffer_length)
 {
@@ -78,15 +79,17 @@ static inline lzws_result_t test_datas(lzws_compressor_state_t* compressor_state
     }
   }
 
-  char random_string[RANDOM_STRING_LENGTH];
-  lzws_tests_set_random_string(random_string, RANDOM_STRING_LENGTH);
-
-  result = test_data(compressor_state_ptr, decompressor_state_ptr, random_string, buffer_length);
-  if (result != 0) {
-    return result;
+  char* random_string = malloc(RANDOM_STRING_LENGTH);
+  if (random_string == NULL) {
+    LZWS_LOG_ERROR("malloc failed, string size: %u", RANDOM_STRING_LENGTH);
+    return 5;
   }
 
-  return 0;
+  lzws_tests_set_random_string(random_string, RANDOM_STRING_LENGTH);
+  result = test_data(compressor_state_ptr, decompressor_state_ptr, random_string, buffer_length);
+
+  free(random_string);
+  return result;
 }
 
 lzws_result_t lzws_test_valid_datas()

@@ -90,11 +90,10 @@ static inline lzws_result_t test_data(lzws_compressor_state_t* compressor_state_
   uint8_t* source;
   size_t   source_length;
 
-  if (
-    lzws_test_compressor_write_codes(
-      compressor_state_ptr,
-      data_ptr->codes, data_ptr->codes_length,
-      &source, &source_length, buffer_length) != 0) {
+  if (lzws_test_compressor_write_codes(
+        compressor_state_ptr,
+        data_ptr->codes, data_ptr->codes_length,
+        &source, &source_length, buffer_length) != 0) {
     LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
   }

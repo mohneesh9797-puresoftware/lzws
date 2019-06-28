@@ -16,28 +16,39 @@
 
 static inline lzws_result_t prepare_files_with_destination(
   FILE** source_file_ptr, uint8_t* source, size_t source_length,
-  FILE** destination_file_ptr, uint8_t** destination_ptr, size_t destination_length_for_string)
+  FILE** destination_file_ptr, uint8_t** destination_ptr, size_t destination_length)
 {
-  FILE* source_file = fmemopen(source, source_length, "r");
+  // It is not possible to fmemopen empty source using old glibc.
+  // So we have to create 1 byte file and seek to end.
+  size_t source_file_length = source_length;
+  if (source_length == 0) {
+    source_file_length = 1;
+  }
+
+  FILE* source_file = fmemopen(source, source_file_length, "r");
   if (source_file == NULL) {
     LZWS_LOG_ERROR("fmemopen for source failed");
     return LZWS_TEST_STRING_AND_FILE_FMEMOPEN_FAILED;
   }
 
+  if (source_length == 0) {
+    fseek(source_file, 0, SEEK_END);
+  }
+
   // POSIX group don't want users to use binary mode "b" for fmemopen.
   // So we have to give fmemopen ability to write additional null byte.
-  size_t destination_length = destination_length_for_string + 1;
+  size_t destination_file_length = destination_length + 1;
 
-  uint8_t* destination = malloc(destination_length);
+  uint8_t* destination = malloc(destination_file_length);
   if (destination == NULL) {
-    LZWS_LOG_ERROR("malloc failed, buffer length: %zu", destination_length)
+    LZWS_LOG_ERROR("malloc failed, buffer length: %zu", destination_file_length)
 
     fclose(source_file);
 
     return LZWS_TEST_STRING_AND_FILE_ALLOCATE_FAILED;
   }
 
-  FILE* destination_file = fmemopen(destination, destination_length, "w");
+  FILE* destination_file = fmemopen(destination, destination_file_length, "w");
   if (destination_file == NULL) {
     LZWS_LOG_ERROR("fmemopen for destination failed");
 
@@ -58,10 +69,21 @@ static inline lzws_result_t prepare_files_without_destination(
   FILE** source_file_ptr, uint8_t* source, size_t source_length,
   FILE** destination_file_ptr)
 {
-  FILE* source_file = fmemopen(source, source_length, "r");
+  // It is not possible to fmemopen empty source using old glibc.
+  // So we have to create 1 byte file and seek to end.
+  size_t source_file_length = source_length;
+  if (source_length == 0) {
+    source_file_length = 1;
+  }
+
+  FILE* source_file = fmemopen(source, source_file_length, "r");
   if (source_file == NULL) {
     LZWS_LOG_ERROR("fmemopen for source failed");
     return LZWS_TEST_STRING_AND_FILE_FMEMOPEN_FAILED;
+  }
+
+  if (source_length == 0) {
+    fseek(source_file, 0, SEEK_END);
   }
 
   FILE* destination_file = fopen(NULL_PATH_NAME, "w");
@@ -111,7 +133,7 @@ static inline lzws_result_t test_compress_string(
 static inline lzws_result_t test_compress_file_with_destination(
   lzws_result_t* test_result_ptr,
   uint8_t* source, size_t source_length,
-  uint8_t** destination_ptr, size_t destination_length_for_string,
+  uint8_t** destination_ptr, size_t destination_length,
   uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups,
   size_t buffer_length)
 {
@@ -122,7 +144,7 @@ static inline lzws_result_t test_compress_file_with_destination(
 
   lzws_result_t result = prepare_files_with_destination(
     &source_file, source, source_length,
-    &destination_file, &destination, destination_length_for_string);
+    &destination_file, &destination, destination_length);
   if (result != 0) {
     return result;
   }
@@ -187,12 +209,12 @@ lzws_result_t lzws_tests_compress_string_and_file(
   lzws_result_t result, test_result;
 
   uint8_t* destination_for_string;
-  size_t   destination_length_for_string;
+  size_t   destination_length;
 
   result = test_compress_string(
     &test_result,
     source, source_length,
-    &destination_for_string, &destination_length_for_string,
+    &destination_for_string, &destination_length,
     max_code_bit_length, block_mode, msb, unaligned_bit_groups,
     buffer_length);
   if (result != 0) {
@@ -224,7 +246,7 @@ lzws_result_t lzws_tests_compress_string_and_file(
   result = test_compress_file_with_destination(
     &test_result,
     source, source_length,
-    &destination_for_file, destination_length_for_string,
+    &destination_for_file, destination_length,
     max_code_bit_length, block_mode, msb, unaligned_bit_groups,
     buffer_length);
   if (result != 0) {
@@ -241,7 +263,7 @@ lzws_result_t lzws_tests_compress_string_and_file(
     return LZWS_TEST_STRING_AND_FILE_COMPRESSOR_IS_VOLATILE;
   }
 
-  if (strncmp((const char*)destination_for_string, (const char*)destination_for_file, destination_length_for_string) != 0) {
+  if (strncmp((const char*)destination_for_string, (const char*)destination_for_file, destination_length) != 0) {
     LZWS_LOG_ERROR("string and file compressors returned different results");
 
     free(destination_for_string);
@@ -253,7 +275,7 @@ lzws_result_t lzws_tests_compress_string_and_file(
   free(destination_for_file);
 
   *destination_ptr        = destination_for_string;
-  *destination_length_ptr = destination_length_for_string;
+  *destination_length_ptr = destination_length;
 
   return 0;
 }
@@ -275,7 +297,9 @@ static inline lzws_result_t test_decompress_string(
     &destination, &destination_length, buffer_length,
     msb, unaligned_bit_groups, false);
 
-  if (test_result != 0 && test_result != LZWS_STRING_VALIDATE_FAILED && test_result != LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE) {
+  if (test_result != 0 &&
+      test_result != LZWS_STRING_VALIDATE_FAILED &&
+      test_result != LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE) {
     LZWS_LOG_ERROR("string api failed");
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
@@ -290,7 +314,7 @@ static inline lzws_result_t test_decompress_string(
 static inline lzws_result_t test_decompress_file_with_destination(
   lzws_result_t* test_result_ptr,
   uint8_t* source, size_t source_length,
-  uint8_t** destination_ptr, size_t destination_length_for_string,
+  uint8_t** destination_ptr, size_t destination_length,
   bool msb, bool unaligned_bit_groups,
   size_t buffer_length)
 {
@@ -301,7 +325,7 @@ static inline lzws_result_t test_decompress_file_with_destination(
 
   lzws_result_t result = prepare_files_with_destination(
     &source_file, source, source_length,
-    &destination_file, &destination, destination_length_for_string);
+    &destination_file, &destination, destination_length);
   if (result != 0) {
     return result;
   }
@@ -314,7 +338,9 @@ static inline lzws_result_t test_decompress_file_with_destination(
   fclose(source_file);
   fclose(destination_file);
 
-  if (test_result != 0 && test_result != LZWS_FILE_VALIDATE_FAILED && test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
+  if (test_result != 0 &&
+      test_result != LZWS_FILE_VALIDATE_FAILED &&
+      test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
     LZWS_LOG_ERROR("file api failed");
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
@@ -347,7 +373,9 @@ static inline lzws_result_t test_decompress_file_without_destination(
   fclose(source_file);
   fclose(destination_file);
 
-  if (test_result != 0 && test_result != LZWS_FILE_VALIDATE_FAILED && test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
+  if (test_result != 0 &&
+      test_result != LZWS_FILE_VALIDATE_FAILED &&
+      test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
     LZWS_LOG_ERROR("file api failed");
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
@@ -366,12 +394,12 @@ lzws_result_t lzws_tests_decompress_string_and_file(
   lzws_result_t result, test_result;
 
   uint8_t* destination_for_string;
-  size_t   destination_length_for_string;
+  size_t   destination_length;
 
   result = test_decompress_string(
     &test_result,
     source, source_length,
-    &destination_for_string, &destination_length_for_string,
+    &destination_for_string, &destination_length,
     msb, unaligned_bit_groups,
     buffer_length);
   if (result != 0) {
@@ -403,7 +431,7 @@ lzws_result_t lzws_tests_decompress_string_and_file(
   result = test_decompress_file_with_destination(
     &test_result,
     source, source_length,
-    &destination_for_file, destination_length_for_string,
+    &destination_for_file, destination_length,
     msb, unaligned_bit_groups,
     buffer_length);
   if (result != 0) {
@@ -420,7 +448,7 @@ lzws_result_t lzws_tests_decompress_string_and_file(
     return LZWS_TEST_STRING_AND_FILE_DECOMPRESSOR_IS_VOLATILE;
   }
 
-  if (strncmp((const char*)destination_for_string, (const char*)destination_for_file, destination_length_for_string) != 0) {
+  if (strncmp((const char*)destination_for_string, (const char*)destination_for_file, destination_length) != 0) {
     LZWS_LOG_ERROR("string and file decompressors returned different results");
 
     free(destination_for_string);
@@ -432,7 +460,7 @@ lzws_result_t lzws_tests_decompress_string_and_file(
   free(destination_for_file);
 
   *destination_ptr        = destination_for_string;
-  *destination_length_ptr = destination_length_for_string;
+  *destination_length_ptr = destination_length;
 
   return 0;
 }

@@ -6,14 +6,15 @@
 
 #include "random_string.h"
 
-void lzws_tests_set_random_string(char* string, size_t string_length)
+void lzws_tests_set_random_string(char* buffer, size_t buffer_length)
 {
-  uint32_t value = time(NULL);
+  uint32_t value      = time(NULL);
+  size_t   last_index = buffer_length - 1;
 
-  for (size_t index = 0; index < string_length - 1; index++) {
+  for (size_t index = 0; index < last_index; index++) {
     value         = value * 1103515245 + 12345;
-    string[index] = (value / 65536) % 256;
+    buffer[index] = ((value / 65536) % 255) + 1;
   }
 
-  string[string_length - 1] = '\0';
+  buffer[last_index] = '\0';
 }

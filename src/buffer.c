@@ -40,7 +40,7 @@ lzws_result_t lzws_create_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* 
 lzws_result_t lzws_resize_buffer(uint8_t** buffer_ptr, size_t buffer_length, bool quiet)
 {
   uint8_t* new_buffer = realloc(*buffer_ptr, buffer_length);
-  if (new_buffer == NULL) {
+  if (new_buffer == NULL && buffer_length != 0) {
     if (!quiet) {
       LZWS_LOG_ERROR("realloc failed, buffer length: %zu", buffer_length)
     }

@@ -8,6 +8,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void lzws_tests_set_random_string(char* string, size_t string_length);
+void lzws_tests_set_random_string(char* buffer, size_t buffer_length);
 
 #endif // LZWS_TESTS_RANDOM_STRING_H
