@@ -14,12 +14,11 @@
 
 // -- files --
 
-static inline lzws_result_t prepare_files_with_destination(
-  FILE** source_file_ptr, uint8_t* source, size_t source_length,
-  FILE** destination_file_ptr, uint8_t** destination_ptr, size_t destination_length)
+static inline lzws_result_t open_source_file(FILE** source_file_ptr, uint8_t* source, size_t source_length)
 {
-  // It is not possible to fmemopen empty source using old glibc.
+  // It is not possible for fmemopen to open empty source file using old glibc.
   // So we have to create 1 byte file and seek to end.
+
   size_t source_file_length = source_length;
   if (source_length == 0) {
     source_file_length = 1;
@@ -28,11 +27,28 @@ static inline lzws_result_t prepare_files_with_destination(
   FILE* source_file = fmemopen(source, source_file_length, "r");
   if (source_file == NULL) {
     LZWS_LOG_ERROR("fmemopen for source failed");
-    return LZWS_TEST_STRING_AND_FILE_FMEMOPEN_FAILED;
+    return LZWS_TEST_STRING_AND_FILE_NATIVE_STREAM_FAILED;
   }
 
-  if (source_length == 0) {
-    fseek(source_file, 0, SEEK_END);
+  if (source_length == 0 && fseek(source_file, 0, SEEK_END) != 0) {
+    LZWS_LOG_ERROR("fseek to the end of file failed");
+    return LZWS_TEST_STRING_AND_FILE_NATIVE_STREAM_FAILED;
+  }
+
+  *source_file_ptr = source_file;
+
+  return 0;
+}
+
+static inline lzws_result_t prepare_files_with_destination(
+  FILE** source_file_ptr, uint8_t* source, size_t source_length,
+  FILE** destination_file_ptr, uint8_t** destination_ptr, size_t destination_length)
+{
+  FILE* source_file;
+
+  lzws_result_t result = open_source_file(&source_file, source, source_length);
+  if (result != 0) {
+    return result;
   }
 
   // POSIX group don't want users to use binary mode "b" for fmemopen.
@@ -55,7 +71,7 @@ static inline lzws_result_t prepare_files_with_destination(
     fclose(source_file);
     free(destination);
 
-    return LZWS_TEST_STRING_AND_FILE_FMEMOPEN_FAILED;
+    return LZWS_TEST_STRING_AND_FILE_NATIVE_STREAM_FAILED;
   }
 
   *source_file_ptr      = source_file;
@@ -69,21 +85,11 @@ static inline lzws_result_t prepare_files_without_destination(
   FILE** source_file_ptr, uint8_t* source, size_t source_length,
   FILE** destination_file_ptr)
 {
-  // It is not possible to fmemopen empty source using old glibc.
-  // So we have to create 1 byte file and seek to end.
-  size_t source_file_length = source_length;
-  if (source_length == 0) {
-    source_file_length = 1;
-  }
+  FILE* source_file;
 
-  FILE* source_file = fmemopen(source, source_file_length, "r");
-  if (source_file == NULL) {
-    LZWS_LOG_ERROR("fmemopen for source failed");
-    return LZWS_TEST_STRING_AND_FILE_FMEMOPEN_FAILED;
-  }
-
-  if (source_length == 0) {
-    fseek(source_file, 0, SEEK_END);
+  lzws_result_t result = open_source_file(&source_file, source, source_length);
+  if (result != 0) {
+    return result;
   }
 
   FILE* destination_file = fopen(NULL_PATH_NAME, "w");
@@ -92,7 +98,7 @@ static inline lzws_result_t prepare_files_without_destination(
 
     fclose(source_file);
 
-    return LZWS_TEST_STRING_AND_FILE_FOPEN_FAILED;
+    return LZWS_TEST_STRING_AND_FILE_NATIVE_STREAM_FAILED;
   }
 
   *source_file_ptr      = source_file;
