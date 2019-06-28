@@ -28,7 +28,7 @@ static inline lzws_result_t read_data(FILE* data_file, uint8_t* data_buffer, siz
 
   if (read_length != data_buffer_length && ferror(data_file)) {
     if (!quiet) {
-      LZWS_LOG_ERROR("read file failed")
+      LZWS_LOG_ERROR("read file failed");
     }
 
     return LZWS_FILE_READ_FAILED;
@@ -44,7 +44,7 @@ static inline lzws_result_t write_data(FILE* data_file, uint8_t* data_buffer, si
   size_t written_length = fwrite(data_buffer, 1, data_length, data_file);
   if (written_length != data_length) {
     if (!quiet) {
-      LZWS_LOG_ERROR("write file failed")
+      LZWS_LOG_ERROR("write file failed");
     }
 
     return LZWS_FILE_WRITE_FAILED;
@@ -78,7 +78,7 @@ static inline lzws_result_t read_source_buffer(
   if (remaining_buffer_length == 0) {
     // We want to read more data at once, than buffer has.
     if (!quiet) {
-      LZWS_LOG_ERROR("not enough source buffer, length: %zu", source_buffer_length)
+      LZWS_LOG_ERROR("not enough source buffer, length: %zu", source_buffer_length);
     }
 
     return LZWS_FILE_NOT_ENOUGH_SOURCE_BUFFER;
@@ -112,7 +112,7 @@ static inline lzws_result_t flush_destination_buffer(
   if (data_length == 0) {
     // We want to write more data at once, than buffer has.
     if (!quiet) {
-      LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length)
+      LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length);
     }
 
     return LZWS_FILE_NOT_ENOUGH_DESTINATION_BUFFER;
@@ -201,9 +201,9 @@ static inline lzws_result_t compress_data(
 
   lzws_result_t result;
 
-  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compressor_write_magic_header, &destination, &destination_length)
-  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compress, state_ptr, &source, &source_length, &destination, &destination_length)
-  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_flush_compressor, state_ptr, &destination, &destination_length)
+  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compressor_write_magic_header, &destination, &destination_length);
+  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compress, state_ptr, &source, &source_length, &destination, &destination_length);
+  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_flush_compressor, state_ptr, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length, quiet);
 }

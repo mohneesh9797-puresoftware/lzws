@@ -40,7 +40,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   lzws_code_t* previous_codes = malloc(previous_codes_size);
   if (previous_codes == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("malloc failed, previous codes size: %zu", previous_codes_size)
+      LZWS_LOG_ERROR("malloc failed, previous codes size: %zu", previous_codes_size);
     }
 
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
@@ -54,7 +54,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   uint8_t* last_symbol_by_codes = malloc(last_symbol_by_codes_size);
   if (last_symbol_by_codes == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size)
+      LZWS_LOG_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size);
     }
 
     // Previous codes was allocated, need to free it.
@@ -71,7 +71,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   uint8_t* output_buffer = malloc(output_size);
   if (output_buffer == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("malloc failed, output size: %zu", output_size)
+      LZWS_LOG_ERROR("malloc failed, output size: %zu", output_size);
     }
 
     // Previous codes and last symbol by codes were allocated, need to free it.

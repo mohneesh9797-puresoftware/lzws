@@ -25,7 +25,7 @@ lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state
   // So we need to compare first code with alphabet length.
   if (code >= LZWS_ALPHABET_LENGTH) {
     if (!state_ptr->quiet) {
-      LZWS_LOG_ERROR("received first code: " FAST_CODE_FORMAT " greater than max first code: %u", code, LZWS_ALPHABET_LENGTH - 1)
+      LZWS_LOG_ERROR("received first code: " FAST_CODE_FORMAT " greater than max first code: %u", code, LZWS_ALPHABET_LENGTH - 1);
     }
 
     return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;
@@ -96,7 +96,7 @@ lzws_result_t lzws_decompressor_read_next_code(lzws_decompressor_state_t* state_
     lzws_code_fast_t next_code = get_next_code(state_ptr);
     if (code > next_code) {
       if (!state_ptr->quiet) {
-        LZWS_LOG_ERROR("received code: " FAST_CODE_FORMAT " greater than next code: " FAST_CODE_FORMAT, code, next_code)
+        LZWS_LOG_ERROR("received code: " FAST_CODE_FORMAT " greater than next code: " FAST_CODE_FORMAT, code, next_code);
       }
 
       return LZWS_DECOMPRESSOR_CORRUPTED_SOURCE;

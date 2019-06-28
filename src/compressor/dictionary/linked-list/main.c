@@ -53,7 +53,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
   if (first_child_codes == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("allocate array failed, first child codes size: %zu", first_child_codes_size)
+      LZWS_LOG_ERROR("allocate array failed, first child codes size: %zu", first_child_codes_size);
     }
 
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
@@ -68,7 +68,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
   if (next_sibling_codes == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("allocate array failed, next sibling codes size: %zu", next_sibling_codes_size)
+      LZWS_LOG_ERROR("allocate array failed, next sibling codes size: %zu", next_sibling_codes_size);
     }
 
     // First child codes was allocated, need to free it.
@@ -85,7 +85,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
   uint8_t* last_symbol_by_codes = malloc(last_symbol_by_codes_size);
   if (last_symbol_by_codes == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size)
+      LZWS_LOG_ERROR("malloc failed, last symbol by codes size: %zu", last_symbol_by_codes_size);
     }
 
     // First child codes and next sibling codes were allocated, need to free it.

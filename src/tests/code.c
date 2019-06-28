@@ -32,7 +32,7 @@ static inline lzws_result_t increase_destination_buffer(
   size_t destination_buffer_length = *destination_buffer_length_ptr;
   if (destination_buffer_length == initial_destination_buffer_length) {
     // We want to write more data at once, than buffer has.
-    LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length)
+    LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length);
 
     return LZWS_TEST_CODES_NOT_ENOUGH_DESTINATION_BUFFER;
   }
@@ -96,18 +96,18 @@ static inline lzws_result_t compress_data(
 
   size_t destination_buffer_length = initial_destination_buffer_length;
 
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length)
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_header, compressor_state_ptr, &destination_buffer, &destination_buffer_length)
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length);
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_header, compressor_state_ptr, &destination_buffer, &destination_buffer_length);
 
   for (size_t index = 0; index < codes_length; index++) {
     lzws_code_t code = codes[index];
 
-    COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_code, compressor_state_ptr, code, &destination_buffer, &destination_buffer_length)
+    COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_code, compressor_state_ptr, code, &destination_buffer, &destination_buffer_length);
   }
 
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_flush_remainder, compressor_state_ptr, &destination_buffer, &destination_buffer_length)
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_flush_remainder, compressor_state_ptr, &destination_buffer, &destination_buffer_length);
 
-  FLUSH_DESTINATION_BUFFER()
+  FLUSH_DESTINATION_BUFFER();
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr);
 }

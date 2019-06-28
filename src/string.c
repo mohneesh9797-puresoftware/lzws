@@ -38,7 +38,7 @@ static inline lzws_result_t increase_destination_buffer(
   if (destination_buffer_length == initial_destination_buffer_length) {
     // We want to write more data at once, than buffer has.
     if (!quiet) {
-      LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length)
+      LZWS_LOG_ERROR("not enough destination buffer, length: %zu", destination_buffer_length);
     }
 
     return LZWS_STRING_NOT_ENOUGH_DESTINATION_BUFFER;
@@ -105,11 +105,11 @@ static inline lzws_result_t compress_data(
 
   size_t destination_buffer_length = initial_destination_buffer_length;
 
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length)
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length)
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_flush_compressor, state_ptr, &destination_buffer, &destination_buffer_length)
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length);
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_flush_compressor, state_ptr, &destination_buffer, &destination_buffer_length);
 
-  FLUSH_DESTINATION_BUFFER()
+  FLUSH_DESTINATION_BUFFER();
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
 }
@@ -199,7 +199,7 @@ static inline lzws_result_t decompress_data(
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
   DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
 
-  FLUSH_DESTINATION_BUFFER()
+  FLUSH_DESTINATION_BUFFER();
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr, quiet);
 }

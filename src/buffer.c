@@ -15,7 +15,7 @@ static inline lzws_result_t create_buffer(uint8_t** buffer_ptr, size_t* buffer_l
   uint8_t* buffer = malloc(buffer_length);
   if (buffer == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("malloc failed, buffer length: %zu", buffer_length)
+      LZWS_LOG_ERROR("malloc failed, buffer length: %zu", buffer_length);
     }
 
     return LZWS_BUFFER_ALLOCATE_FAILED;
@@ -42,7 +42,7 @@ lzws_result_t lzws_resize_buffer(uint8_t** buffer_ptr, size_t buffer_length, boo
   uint8_t* new_buffer = realloc(*buffer_ptr, buffer_length);
   if (new_buffer == NULL && buffer_length != 0) {
     if (!quiet) {
-      LZWS_LOG_ERROR("realloc failed, buffer length: %zu", buffer_length)
+      LZWS_LOG_ERROR("realloc failed, buffer length: %zu", buffer_length);
     }
 
     return LZWS_BUFFER_REALLOCATE_FAILED;

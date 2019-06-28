@@ -63,7 +63,7 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 
       default:
         if (!state_ptr->quiet) {
-          LZWS_LOG_ERROR("unknown status: %u", status)
+          LZWS_LOG_ERROR("unknown status: %u", status);
         }
 
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;

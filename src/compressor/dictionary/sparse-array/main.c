@@ -55,7 +55,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
   if (next_codes == NULL) {
     if (!quiet) {
-      LZWS_LOG_ERROR("allocate array failed, next codes size: %zu", next_codes_size)
+      LZWS_LOG_ERROR("allocate array failed, next codes size: %zu", next_codes_size);
     }
 
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
@@ -74,7 +74,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
     used_indexes = malloc(used_indexes_size);
     if (used_indexes == NULL) {
       if (!quiet) {
-        LZWS_LOG_ERROR("malloc failed, used indexes size: %zu", used_indexes_size)
+        LZWS_LOG_ERROR("malloc failed, used indexes size: %zu", used_indexes_size);
       }
 
       // Next codes was allocated, need to free it.

@@ -57,7 +57,7 @@ static inline lzws_result_t prepare_files_with_destination(
 
   uint8_t* destination = malloc(destination_file_length);
   if (destination == NULL) {
-    LZWS_LOG_ERROR("malloc failed, buffer length: %zu", destination_file_length)
+    LZWS_LOG_ERROR("malloc failed, buffer length: %zu", destination_file_length);
 
     fclose(source_file);
 
