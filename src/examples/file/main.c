@@ -12,6 +12,7 @@
 // "0" means default buffer length.
 #define BUFFER_LENGTH 0
 
+#define WITHOUT_MAGIC_HEADER false
 #define MAX_CODE_BIT_LENGTH LZWS_BIGGEST_MAX_CODE_BIT_LENGTH
 #define BLOCK_MODE true
 #define MSB false
@@ -42,7 +43,7 @@ int main()
   lzws_result_t result = lzws_compress_file(
     text_file, BUFFER_LENGTH,
     compressed_text_file, BUFFER_LENGTH,
-    MAX_CODE_BIT_LENGTH, BLOCK_MODE, MSB, UNALIGNED_BIT_GROUPS, QUIET);
+    WITHOUT_MAGIC_HEADER, MAX_CODE_BIT_LENGTH, BLOCK_MODE, MSB, UNALIGNED_BIT_GROUPS, QUIET);
 
   fclose(text_file);
 
@@ -85,7 +86,7 @@ int main()
   result = lzws_decompress_file(
     compressed_text_file, BUFFER_LENGTH,
     decompressed_text_file, BUFFER_LENGTH,
-    MSB, UNALIGNED_BIT_GROUPS, QUIET);
+    WITHOUT_MAGIC_HEADER, MSB, UNALIGNED_BIT_GROUPS, QUIET);
 
   fclose(compressed_text_file);
   fclose(decompressed_text_file);

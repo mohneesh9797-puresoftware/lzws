@@ -15,7 +15,7 @@ SYNOPSIS
 lzws_result_t lzws_decompress_file(
   FILE* source_file, size_t source_buffer_length,
   FILE* destination_file, size_t destination_buffer_length,
-  bool msb, bool unaligned_bit_groups, bool quiet);
+  bool without_magic_header, bool msb, bool unaligned_bit_groups, bool quiet);
 ----
 
 
@@ -38,6 +38,9 @@ OPTIONS
   Minimal buffer length is *2*.
 
 Other options are related to algorithm customization.
+
+*`bool without_magic_header`*::
+  Read magic header.
 
 *`bool msb`*::
   Enable most significant bit mode.

@@ -192,7 +192,7 @@ static inline lzws_result_t compress_data(
   lzws_compressor_state_t* state_ptr,
   FILE* source_file, uint8_t* source_buffer, size_t source_buffer_length,
   FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length,
-  bool quiet)
+  bool without_magic_header, bool quiet)
 {
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
@@ -201,7 +201,10 @@ static inline lzws_result_t compress_data(
 
   lzws_result_t result;
 
-  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compressor_write_magic_header, &destination, &destination_length);
+  if (!without_magic_header) {
+    COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compressor_write_magic_header, &destination, &destination_length);
+  }
+
   COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compress, state_ptr, &source, &source_length, &destination, &destination_length);
   COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_flush_compressor, state_ptr, &destination, &destination_length);
 
@@ -211,7 +214,7 @@ static inline lzws_result_t compress_data(
 lzws_result_t lzws_compress_file(
   FILE* source_file, size_t source_buffer_length,
   FILE* destination_file, size_t destination_buffer_length,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
+  bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   lzws_result_t result;
 
@@ -253,7 +256,7 @@ lzws_result_t lzws_compress_file(
     state_ptr,
     source_file, source_buffer, source_buffer_length,
     destination_file, destination_buffer, destination_buffer_length,
-    quiet);
+    without_magic_header, quiet);
 
   lzws_compressor_free_state(state_ptr);
   free(source_buffer);
@@ -292,7 +295,7 @@ static inline lzws_result_t decompress_data(
   lzws_decompressor_state_t* state_ptr,
   FILE* source_file, uint8_t* source_buffer, size_t source_buffer_length,
   FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length,
-  bool quiet)
+  bool without_magic_header, bool quiet)
 {
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
@@ -301,7 +304,10 @@ static inline lzws_result_t decompress_data(
 
   lzws_result_t result;
 
-  DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
+  if (!without_magic_header) {
+    DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
+  }
+
   DECOMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length, quiet);
@@ -310,7 +316,7 @@ static inline lzws_result_t decompress_data(
 lzws_result_t lzws_decompress_file(
   FILE* source_file, size_t source_buffer_length,
   FILE* destination_file, size_t destination_buffer_length,
-  bool msb, bool unaligned_bit_groups, bool quiet)
+  bool without_magic_header, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   lzws_result_t result;
 
@@ -349,7 +355,7 @@ lzws_result_t lzws_decompress_file(
     state_ptr,
     source_file, source_buffer, source_buffer_length,
     destination_file, destination_buffer, destination_buffer_length,
-    quiet);
+    without_magic_header, quiet);
 
   lzws_decompressor_free_state(state_ptr);
   free(source_buffer);

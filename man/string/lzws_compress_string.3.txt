@@ -15,7 +15,7 @@ SYNOPSIS
 lzws_result_t lzws_compress_string(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
+  bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
 ----
 
 
@@ -39,6 +39,9 @@ OPTIONS
   Minimal buffer length is *2*.
 
 Other options are related to algorithm customization.
+
+*`bool without_magic_header`*::
+  Disable writing of magic header.
 
 *`uint_fast8_t max_code_bit_length`*::
   Set max code bit length.

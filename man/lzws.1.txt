@@ -25,6 +25,13 @@ OPTIONS
   Enable decompress mode.
   Default mode is compress.
 
+*-w, --without-magic-header*::
+  Disable magic header.
+  Disabled by default.
+  It should be used in both compress and decompress mode.
+  Compressor won't store information about magic header in file.
+  Decompressor won't read this option from file.
+
 *-b, --max-code-bit-length=9..16*::
   Set max code bit length.
   Default value is 16.

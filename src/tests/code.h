@@ -17,6 +17,7 @@ enum {
 lzws_result_t lzws_test_compressor_write_codes(
   lzws_compressor_state_t* compressor_state_ptr,
   const lzws_code_t* codes, size_t codes_length,
-  uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length);
+  uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
+  bool without_magic_header);
 
 #endif // LZWS_TESTS_CODES_H

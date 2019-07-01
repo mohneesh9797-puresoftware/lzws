@@ -26,13 +26,13 @@ enum {
 lzws_result_t lzws_tests_compress_string_and_file(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups,
-  size_t buffer_length);
+  size_t buffer_length,
+  bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups);
 
 lzws_result_t lzws_tests_decompress_string_and_file(
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr,
-  bool msb, bool unaligned_bit_groups,
-  size_t buffer_length);
+  size_t buffer_length,
+  bool without_magic_header, bool msb, bool unaligned_bit_groups);
 
 #endif // LZWS_TESTS_STRING_AND_FILE_H
