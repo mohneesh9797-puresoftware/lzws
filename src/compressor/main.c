@@ -86,6 +86,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
 lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   switch (state_ptr->status) {
+    case LZWS_COMPRESSOR_WRITE_HEADER:
     case LZWS_COMPRESSOR_READ_FIRST_SYMBOL:
       // We have no current code and remainder yet.
       return 0;

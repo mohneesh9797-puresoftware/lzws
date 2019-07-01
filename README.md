@@ -44,7 +44,7 @@ echo -n "TOBEORNOTTOBEORTOBEORNOT" | ./src/cli/lzws | ./src/cli/lzws -d
 Debug build:
 ```sh
 cmake .. -DLZWS_STATIC=ON -DLZWS_EXAMPLES=ON -DCMAKE_VERBOSE_MAKEFILE=ON
-make VERBOSE=1
+make clean && make VERBOSE=1
 CTEST_OUTPUT_ON_FAILURE=1 make test
 ```
 
@@ -70,7 +70,10 @@ wget "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.1.2.tar.xz"
 tar xf linux-5.1.2.tar.xz
 tar cf linux.tar linux-5.1.2
 
-../scripts/release.sh
+cmake ".." \
+  -DLZWS_COMPRESSOR_DICTIONARY="sparse-array" \
+  -DCMAKE_BUILD_TYPE="RELEASE"
+make clean && make
 
 time ./src/cli/lzws < linux.tar > linux.tar.Z
 time ./src/cli/lzws -d < linux.tar.Z > linux.tar.new
@@ -108,7 +111,7 @@ See [examples](src/examples) for more details.
 You can build and test all examples:
 ```sh
 cmake .. -DLZWS_EXAMPLES=ON
-make
+make clean && make
 CTEST_OUTPUT_ON_FAILURE=1 make test
 ```
 
