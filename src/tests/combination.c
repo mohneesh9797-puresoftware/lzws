@@ -42,7 +42,10 @@ static inline lzws_result_t test_compressor(
   va_list args_copy;
   va_copy(args_copy, args);
 
-  result = function(state_ptr, buffer_length, without_magic_header, args_copy);
+  result = function(
+    state_ptr, buffer_length,
+    without_magic_header,
+    args_copy);
 
   lzws_compressor_free_state(state_ptr);
 
@@ -113,7 +116,10 @@ static inline lzws_result_t test_decompressor(
   va_list args_copy;
   va_copy(args_copy, args);
 
-  result = function(state_ptr, buffer_length, without_magic_header, args_copy);
+  result = function(
+    state_ptr, buffer_length,
+    without_magic_header,
+    args_copy);
 
   lzws_decompressor_free_state(state_ptr);
 

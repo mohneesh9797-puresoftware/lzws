@@ -16,8 +16,8 @@ static const char* help =
   "  --decompress (-d) - enable decompress mode (default mode is compress)\n"
   "  --without-magic-header (-w) - disable magic header (disabled by default)\n"
   "  --max-code-bit-length (-b) - set max code bit length (%u-%u) (default value is %u) [compressor only]\n"
-  "  --msb (-m) - enable most significant bit (default mode is least significant bit)\n"
   "  --raw (-r) - disable block mode (block mode is enabled by default) [compressor only]\n"
+  "  --msb (-m) - enable most significant bit (default mode is least significant bit)\n"
   "  --unaligned-bit-groups (-u) - enable unaligned bit groups (disabled by default)\n"
   "  --quiet (-q) - disable error messages (enabled by default)\n"
   "  --help (-h) - print help\n"
@@ -26,16 +26,16 @@ static const char* help =
   "  Default options are fully compatible with UNIX compress.\n"
   "  Compressor only options (-b and -r) can be changed without loosing compatibility.\n";
 
-static const char*   short_options  = "dwb:mruqh";
+static const char*   short_options  = "dwb:rmuqh";
 static struct option long_options[] = {
-  {"max-code-bit-length", optional_argument, NULL, 'b'},
   {"decompress", optional_argument, NULL, 'd'},
-  {"msb", optional_argument, NULL, 'm'},
-  {"help", optional_argument, NULL, 'h'},
-  {"quiet", optional_argument, NULL, 'q'},
-  {"raw", optional_argument, NULL, 'r'},
-  {"unaligned-bit-groups", optional_argument, NULL, 'u'},
   {"without-magic-header", optional_argument, NULL, 'w'},
+  {"max-code-bit-length", optional_argument, NULL, 'b'},
+  {"raw", optional_argument, NULL, 'r'},
+  {"msb", optional_argument, NULL, 'm'},
+  {"unaligned-bit-groups", optional_argument, NULL, 'u'},
+  {"quiet", optional_argument, NULL, 'q'},
+  {"help", optional_argument, NULL, 'h'},
   {NULL, 0, NULL, 0}};
 
 static inline void print_help()

@@ -22,7 +22,7 @@ You can add your own implementation.
 - Accurate ratio calculation without overhead, compressor provides smaller archive (compatible with UNIX compress).
 - Unaligned bit groups switch (only disabled mode is compatible with UNIX compress).
 - LSB/MSB switch (only LSB mode is compatible with UNIX compress).
-- Disable magic header (only disabled mode is compatible with UNIX compress).
+- Magic header switch (only enabled magic header is compatible with UNIX compress).
 
 ## Dependencies
 

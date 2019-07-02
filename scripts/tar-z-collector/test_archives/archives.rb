@@ -33,7 +33,13 @@ ALL_BINARIES = (LZWS_BINARIES + [COMPRESS_BINARY]).freeze
 LZWS_MAX_CODE_BIT_LENGTH_OPTIONS = (9..16)
   .map { |length| "--max-code-bit-length=#{length}" }
   .freeze
-LZWS_OTHER_OPTIONS = %w[--without-magic-header --msb --raw --unaligned-bit-groups].freeze
+LZWS_OTHER_OPTIONS = %w[
+  --without-magic-header
+  --msb
+  --raw
+  --unaligned-bit-groups
+]
+.freeze
 
 # Variant with no other options need to be included too.
 LZWS_OTHER_OPTION_COMBINATIONS = (0..LZWS_OTHER_OPTIONS.length)
