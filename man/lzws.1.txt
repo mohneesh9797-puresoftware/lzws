@@ -39,19 +39,19 @@ OPTIONS
   Compressor writes max code bit length value to file.
   Decompressor reads this option from file.
 
-*-m, --msb*::
-  Enable most significant bit mode.
-  Default mode is least significant bit.
-  It should be used in both compress and decompress mode.
-  Compressor won't store information about significant bit mode in file.
-  Decompressor won't read this option from file.
-
 *-r, --raw*::
   Disable block mode.
   Block mode is enabled by default.
   It can be used in compress mode only.
   Compressor writes block mode value to file.
   Decompressor reads this option from file.
+
+*-m, --msb*::
+  Enable most significant bit mode.
+  Default mode is least significant bit.
+  It should be used in both compress and decompress mode.
+  Compressor won't store information about significant bit mode in file.
+  Decompressor won't read this option from file.
 
 *-u, --unaligned-bit-groups*::
   Enable unaligned bit groups.
