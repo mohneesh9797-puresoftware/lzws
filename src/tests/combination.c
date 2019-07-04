@@ -7,8 +7,8 @@
 #include "combination.h"
 
 // "0" means default buffer length.
-// "2" bytes is the minimal buffer length that should be enough for both compressor and decompressor.
-// "3" bytes should be enough for writing and reading header.
+// "2" bytes is the minimal buffer length for compressor and decompressor.
+// "3" bytes should be enough for reading/writing magic and regular header.
 static const size_t buffer_lengths[] = {0, 2, 3, 512};
 #define BUFFER_LENGTH_SIZE sizeof(buffer_lengths) / sizeof(size_t)
 
