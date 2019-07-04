@@ -69,7 +69,7 @@ def get_archive_urls_from_page_url(url)
       regexp = PAGE_WITH_ARCHIVES_REGEXP
 
     else
-      raise "unknown uri scheme: #{scheme}"
+      raise StandardError, "unknown uri scheme: #{scheme}"
     end
 
   rescue StandardError => error

@@ -42,10 +42,10 @@ def get_http_content(uri)
       http.get uri
     end
   rescue StandardError => error
-    raise "http query failed, error: #{error}"
+    raise StandardError, "http query failed, error: #{error}"
   end
 
-  raise "http response failed, code: #{response.code}" unless response.is_a? Net::HTTPSuccess
+  raise StandardError, "http response failed, code: #{response.code}" unless response.is_a? Net::HTTPSuccess
 
   response.body || ""
 end
@@ -65,7 +65,7 @@ def download_http_file(uri, file_path)
   begin
     IO.copy_stream io, file_path
   rescue StandardError => error
-    raise "http query failed, error: #{error}"
+    raise StandardError, "http query failed, error: #{error}"
   ensure
     io.close
   end
@@ -96,7 +96,7 @@ def process_ftp(uri, &_block)
       yield ftp
     end
   rescue StandardError => error
-    raise "ftp query failed, error: #{error}"
+    raise StandardError, "ftp query failed, error: #{error}"
   end
 end
 

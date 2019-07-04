@@ -62,7 +62,7 @@ def download_archive(url)
     when "http", "https"
       download_http_file uri, ARCHIVE_PATH
     else
-      raise "unknown uri scheme: #{scheme}"
+      raise StandardError, "unknown uri scheme: #{scheme}"
     end
 
   rescue StandardError => error
