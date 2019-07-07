@@ -97,7 +97,7 @@ size_t compressed_text_length;
 lzws_result_t result = lzws_compress_string(
   (uint8_t*)text, text_length,
   (uint8_t**)&compressed_text, &compressed_text_length, 0,
-  true, LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, true, false, false, false);
+  false, LZWS_BIGGEST_MAX_CODE_BIT_LENGTH, true, false, false, false);
 
 if (result != 0) {
   return 1;
