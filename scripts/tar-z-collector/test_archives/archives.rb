@@ -99,7 +99,7 @@ def test_archive(path)
     get_command_digest "#{binary} -d < \"#{path}\""
   end
 
-  STDERR.print "\n"
+  STDERR.print " "
 
   if decompressed_digests.uniq.length != 1
     warn "decompressed digests are not the same"
@@ -131,7 +131,7 @@ def test_archive(path)
     )
   end
 
-  STDERR.print "\n"
+  STDERR.print " "
 
   if re_decompressed_digests.uniq.length != 1 || re_decompressed_digests.first != decompressed_digest
     warn "re-decompressed digests are invalid"
@@ -139,7 +139,7 @@ def test_archive(path)
     return :volatile
   end
 
-  warn "archive re compressed and decompressed"
+  warn "archive re-compressed and decompressed"
 
   # Now we can re-compress/decompress archive using lzws options.
   # It should be possible to process lzws options in any combination.
@@ -166,7 +166,7 @@ def test_archive(path)
     return :volatile
   end
 
-  warn "archive re compressed and decompressed using lzws option combinations"
+  warn "archive re-compressed and decompressed using lzws option combinations"
   warn "archive is #{'valid'.light_green}"
 
   :valid
