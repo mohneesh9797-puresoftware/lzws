@@ -155,7 +155,7 @@ Re-test archives:
 ```
 
 This test will decompress and re-compress more than 8000 unique archives in all possible combinations of dictionaries and lzws options.
-It will take a week on modern CPU (large archives will be decompressed and re-compressed using all dictionaries).
+It will take a week on modern CPU (there are many large archives).
 Test will be successful if file [volatile_archives.xz](scripts/tar-z-collector/data/volatile_archives.xz) will be empty.
 Volatile archives means the list of archives that lzws/ncompress can process, but ncompress/lzws can't.
 
