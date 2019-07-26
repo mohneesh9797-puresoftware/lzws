@@ -16,7 +16,7 @@ You can add your own implementation.
 
 - You can support ancient software.
 - You can make your application looks like ancient software.
-- You can resurrect legacy apis (like Content-Encoding: compress in HTTP 1.1).
+- You can resurrect legacy apis (like `Content-Encoding: compress` in HTTP 1.1).
 
 ## New features
 
