@@ -1,4 +1,4 @@
-# LZW streaming compressor/decompressor.
+# LZW streaming compressor/decompressor
 
 [![Travis build status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/andrew-aladev/lzws?branch=master&svg=true)](https://ci.appveyor.com/project/andrew-aladev/lzws/branch/master)
