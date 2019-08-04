@@ -1,8 +1,10 @@
-LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
-It has no legacy code from [ncompress](https://github.com/vapier/ncompress/blob/ncompress-4.2.4/compress42.c).
+# LZW streaming compressor/decompressor.
 
 [![Travis build status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/andrew-aladev/lzws?branch=master&svg=true)](https://ci.appveyor.com/project/andrew-aladev/lzws/branch/master)
+
+LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
+It has no legacy code from [ncompress](https://github.com/vapier/ncompress/blob/ncompress-4.2.4/compress42.c).
 
 ## Compressor dictionaries
 
