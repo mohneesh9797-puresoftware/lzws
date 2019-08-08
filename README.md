@@ -1,4 +1,5 @@
-# LZW + Stream = LZWS
+# LZW streaming compressor/decompressor
+
 [![Travis build status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/andrew-aladev/lzws?branch=master&svg=true)](https://ci.appveyor.com/project/andrew-aladev/lzws/branch/master)
 
@@ -34,6 +35,19 @@ You can add your own implementation.
 ## Operating systems
 
 GNU/Linux, FreeBSD, OSX.
+
+## Installation
+
+You can download and install prebuilt versions [on releases page](https://github.com/andrew-aladev/lzws/releases).
+
+```sh
+sudo dpkg -i lzws-sparse-array-1.1.0.x86_64.deb
+sudo rpm -i lzws-sparse-array-1.1.0.x86_64.rpm
+```
+
+You can find ebuilds for Gentoo in [scripts folder](scripts/gentoo).
+
+On other systems you can unpack `lzws-sparse-array-1.1.0.x86_64.tar.gz` to `/usr/local` or build from source.
 
 ## Quick start
 
@@ -214,14 +228,3 @@ So it is not possible to distribute project binaries with statically linked GMP 
 
 Please use source code based operating systems like Gentoo if you want static linking.
 End user can build, link and use any software in any mode (without distribution).
-
-## Gentoo
-
-You can make a quick install on gentoo.
-
-```sh
-sudo cp -R scripts/gentoo/app-arch /usr/local/portage/overlay/
-echo "=app-arch/lzws-9999 **" | sudo tee -a /etc/portage/package.keywords/compress
-sudo emerge -v app-arch/lzws
-FEATURES="test noman" USE="abi_x86_64 compressor_dictionary_linked-list static-libs" sudo -E emerge -v app-arch/lzws
-```
