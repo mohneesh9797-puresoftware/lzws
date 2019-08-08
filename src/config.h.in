@@ -2,5 +2,7 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#cmakedefine LZWS_VERSION "@LZWS_VERSION@"
+
 #cmakedefine LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST
 #cmakedefine LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY

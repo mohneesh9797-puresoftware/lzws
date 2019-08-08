@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 
+#include "../config.h"
 #include "../file.h"
 
 static const char* help =
@@ -21,12 +22,13 @@ static const char* help =
   "  --unaligned-bit-groups (-u) - enable unaligned bit groups (disabled by default)\n"
   "  --quiet (-q) - disable error messages (enabled by default)\n"
   "  --help (-h) - print help\n"
+  "  --version (v) - print version\n"
   "\n"
   "Compatibility:\n"
   "  Default options are fully compatible with UNIX compress.\n"
   "  Compressor only options (-b and -r) can be changed without loosing compatibility.\n";
 
-static const char*   short_options  = "dwb:rmuqh";
+static const char*   short_options  = "dwb:rmuqhv";
 static struct option long_options[] = {
   {"decompress", optional_argument, NULL, 'd'},
   {"without-magic-header", optional_argument, NULL, 'w'},
@@ -36,7 +38,13 @@ static struct option long_options[] = {
   {"unaligned-bit-groups", optional_argument, NULL, 'u'},
   {"quiet", optional_argument, NULL, 'q'},
   {"help", optional_argument, NULL, 'h'},
+  {"version", optional_argument, NULL, 'v'},
   {NULL, 0, NULL, 0}};
+
+static inline void print_version()
+{
+  fprintf(stderr, "%s\n", LZWS_VERSION);
+}
 
 static inline void print_help()
 {
@@ -79,9 +87,12 @@ int main(int argc, char** argv)
       case 'w':
         without_magic_header = true;
         break;
+      case 'v':
+        print_version();
+        return 0;
       default:
         print_help();
-        return 1;
+        return 0;
     }
   }
 
@@ -90,14 +101,14 @@ int main(int argc, char** argv)
           stdin, 0,
           stdout, 0,
           without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet) != 0) {
-      return 2;
+      return 1;
     }
   }
   else {
     if (lzws_decompress_file(
           stdin, 0, stdout, 0,
           without_magic_header, msb, unaligned_bit_groups, quiet) != 0) {
-      return 3;
+      return 2;
     }
   }
 

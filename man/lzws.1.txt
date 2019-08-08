@@ -67,6 +67,9 @@ OPTIONS
 *-h, --help*::
   Print help.
 
+*-v, --version*::
+  Print version.
+
 
 COMPATIBILITY
 -------------

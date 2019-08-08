@@ -41,13 +41,13 @@ GNU/Linux, FreeBSD, OSX.
 You can download and install prebuilt versions [on releases page](https://github.com/andrew-aladev/lzws/releases).
 
 ```sh
-sudo dpkg -i lzws-sparse-array-1.1.0.x86_64.deb
-sudo rpm -i lzws-sparse-array-1.1.0.x86_64.rpm
+sudo dpkg -i lzws-sparse-array-*.x86_64.deb
+sudo rpm -i lzws-sparse-array-*.x86_64.rpm
 ```
 
 You can find ebuilds for Gentoo in [scripts folder](scripts/gentoo).
 
-On other systems you can unpack `lzws-sparse-array-1.1.0.x86_64.tar.gz` to `/usr/local` or build from source.
+On other systems you can unpack `lzws-sparse-array-*.x86_64.tar.gz` to `/usr/local` or build from source.
 
 ## Quick start
 
@@ -70,7 +70,7 @@ cmake .. -DLZWS_COMPRESSOR_DICTIONARY="linked-list"/"sparse-array"
 ```
 
 There is a script that tests all dictionaries using several toolchains (with sanitizers).
-This script was used with travis CI.
+This script was used on CI.
 ```sh
 ../scripts/toolchains.sh
 ```
