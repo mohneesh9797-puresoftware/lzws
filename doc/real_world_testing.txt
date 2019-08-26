@@ -113,7 +113,7 @@ You can run these script in infinite loop to collect and test more data.
 ./bin/loop_update_urls.sh
 ./bin/loop_update_urls_and_test_archives.sh
 
-After about 1 week you will receive more than 8500 valid archives.
+After about 1 week you will receive more than 9000 valid archives.
 
 You updated something, how to re-test everything?
 ./bin/clear_results.sh
