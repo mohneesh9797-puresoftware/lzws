@@ -135,5 +135,7 @@ lzws_result_t lzws_finish_compressor(lzws_compressor_state_t* state_ptr, uint8_t
   }
 }
 
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
-  __attribute__((weak, alias("lzws_finish_compressor")));
+lzws_result_t __attribute__((deprecated)) lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+{
+  return lzws_finish_compressor(state_ptr, destination_ptr, destination_length_ptr);
+}
