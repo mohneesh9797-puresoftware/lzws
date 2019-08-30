@@ -4,7 +4,9 @@ LZWS(3)
 
 NAME
 ----
-lzws_flush_compressor - Flush compressor.
+lzws_finish_compressor - Finish compressor.
+You can't use *lzws_compress* after this call.
+Use it only after stream was finished.
 
 
 SYNOPSIS
@@ -12,7 +14,7 @@ SYNOPSIS
 *#include <lzws/compressor/main.h>*
 
 ----
-lzws_result_t lzws_flush_compressor(
+lzws_result_t lzws_finish_compressor(
   lzws_compressor_state_t* state_ptr,
   uint8_t** destination_ptr, size_t* destination_length_ptr);
 ----
@@ -39,7 +41,7 @@ See header file *lzws/compressor/common.h* for more details about other results.
 
 DESCRIPTION
 -----------
-Compressor requires flush after *lzws_compress*.
+Compressor requires finish after *lzws_compress*.
 
 This function writes compressed tail to destination.
 It is possible that it won't be enough destination.
@@ -51,11 +53,11 @@ It also decreases *destination_length_ptr*.
 
 PSEUDO EXAMPLE
 --------------
-You want to flush compressor after several portions of data.
+You want to finish compressor after several portions of data.
 
 ----
 while (true) {
-  lzws_result_t result = lzws_flush_compressor(
+  lzws_result_t result = lzws_finish_compressor(
     state_ptr,
     &destination, &destination_length);
 

@@ -206,7 +206,7 @@ static inline lzws_result_t compress_data(
   }
 
   COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_compress, state_ptr, &source, &source_length, &destination, &destination_length);
-  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_flush_compressor, state_ptr, &destination, &destination_length);
+  COMPRESS_WITH_READ_WRITE_BUFFERS(&lzws_finish_compressor, state_ptr, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length, quiet);
 }

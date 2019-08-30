@@ -110,7 +110,7 @@ static inline lzws_result_t compress_data(
   }
 
   COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_flush_compressor, state_ptr, &destination_buffer, &destination_buffer_length);
+  COMPRESS_WITH_WRITE_BUFFER(&lzws_finish_compressor, state_ptr, &destination_buffer, &destination_buffer_length);
 
   FLUSH_DESTINATION_BUFFER();
 

@@ -71,9 +71,9 @@ int main()
     return 4;
   }
 
-  result = lzws_flush_compressor(compressor_state_ptr, &remaining_compressor_buffer, &remaining_compressor_buffer_length);
+  result = lzws_finish_compressor(compressor_state_ptr, &remaining_compressor_buffer, &remaining_compressor_buffer_length);
   if (result != 0) {
-    LZWS_LOG_ERROR("flush compressor failed");
+    LZWS_LOG_ERROR("finish compressor failed");
 
     lzws_compressor_free_state(compressor_state_ptr);
     free(compressor_buffer);

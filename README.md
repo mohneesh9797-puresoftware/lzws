@@ -206,7 +206,7 @@ Generic API:
 - [lzws_decompressor_free_state.3](man/generic/lzws_decompressor_free_state.3.txt)
 - [lzws_decompressor_get_initial_state.3](man/generic/lzws_decompressor_get_initial_state.3.txt)
 - [lzws_decompressor_read_magic_header.3](man/generic/lzws_decompressor_read_magic_header.3.txt)
-- [lzws_flush_compressor.3](man/generic/lzws_flush_compressor.3.txt)
+- [lzws_finish_compressor.3](man/generic/lzws_finish_compressor.3.txt)
 - [lzws_resize_buffer.3](man/generic/lzws_resize_buffer.3.txt)
 
 ## Documentation

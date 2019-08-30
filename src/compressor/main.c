@@ -83,7 +83,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
   }
 }
 
-lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+lzws_result_t lzws_finish_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   switch (state_ptr->status) {
     case LZWS_COMPRESSOR_WRITE_HEADER:
@@ -134,3 +134,6 @@ lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t*
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;
   }
 }
+
+lzws_result_t lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
+  __attribute__((weak, alias("lzws_finish_compressor")));
