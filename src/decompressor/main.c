@@ -13,22 +13,32 @@
 #include "main.h"
 #include "symbol.h"
 
+#define RETURN_FAILED_RESULT() \
+  if (result != 0) {           \
+    return result;             \
+  }
+
+#define RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE()       \
+  if (result != 0) {                                     \
+    if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) { \
+      return 0;                                          \
+    }                                                    \
+                                                         \
+    return result;                                       \
+  }
+
 lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   lzws_result_t result;
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_READ_HEADER) {
     result = lzws_decompressor_read_header(state_ptr, source_ptr, source_length_ptr);
-    if (result != 0) {
-      return result;
-    }
+    RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE();
   }
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY) {
     result = lzws_decompressor_allocate_dictionary_wrapper(state_ptr);
-    if (result != 0) {
-      return result;
-    }
+    RETURN_FAILED_RESULT();
   }
 
   lzws_decompressor_status_t status;
@@ -69,13 +79,7 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
     }
 
-    if (result != 0) {
-      if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
-        return 0;
-      }
-
-      return result;
-    }
+    RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE();
   }
 
   return 0;
