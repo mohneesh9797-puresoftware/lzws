@@ -35,6 +35,10 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
   if (state_ptr->status == LZWS_COMPRESSOR_READ_FIRST_SYMBOL) {
     result = lzws_compressor_read_first_symbol(state_ptr, source_ptr, source_length_ptr);
     if (result != 0) {
+      if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+        return 0;
+      }
+
       return result;
     }
   }
@@ -78,6 +82,10 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
     }
 
     if (result != 0) {
+      if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+        return 0;
+      }
+
       return result;
     }
   }
@@ -133,9 +141,4 @@ lzws_result_t lzws_finish_compressor(lzws_compressor_state_t* state_ptr, uint8_t
 
       return LZWS_COMPRESSOR_UNKNOWN_STATUS;
   }
-}
-
-lzws_result_t __attribute__((deprecated)) lzws_flush_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
-{
-  return lzws_finish_compressor(state_ptr, destination_ptr, destination_length_ptr);
 }

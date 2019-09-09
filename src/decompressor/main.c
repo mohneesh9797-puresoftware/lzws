@@ -70,6 +70,10 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     }
 
     if (result != 0) {
+      if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+        return 0;
+      }
+
       return result;
     }
   }

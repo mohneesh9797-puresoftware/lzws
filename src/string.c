@@ -58,7 +58,7 @@ static inline lzws_result_t increase_destination_buffer(
 }
 
 #define INCREASE_DESTINATION_BUFFER()                                                   \
-  FLUSH_DESTINATION_BUFFER()                                                            \
+  FLUSH_DESTINATION_BUFFER();                                                           \
                                                                                         \
   result = increase_destination_buffer(                                                 \
     destination_ptr, destination_length_ptr,                                            \
@@ -81,18 +81,19 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
 
 // -- compress --
 
-#define COMPRESS_WITH_WRITE_BUFFER(function, ...)                     \
-  while (true) {                                                      \
-    result = (function)(__VA_ARGS__);                                 \
-    if (result == 0 || result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) { \
-      break;                                                          \
-    }                                                                 \
-    else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {      \
-      INCREASE_DESTINATION_BUFFER()                                   \
-    }                                                                 \
-    else {                                                            \
-      return LZWS_STRING_COMPRESSOR_UNEXPECTED_ERROR;                 \
-    }                                                                 \
+#define BUFFERED_COMPRESS(function, ...)                         \
+  while (true) {                                                 \
+    result = (function)(__VA_ARGS__);                            \
+                                                                 \
+    if (result == 0) {                                           \
+      break;                                                     \
+    }                                                            \
+    else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) { \
+      INCREASE_DESTINATION_BUFFER();                             \
+    }                                                            \
+    else {                                                       \
+      return LZWS_STRING_COMPRESSOR_UNEXPECTED_ERROR;            \
+    }                                                            \
   }
 
 static inline lzws_result_t compress_data(
@@ -106,11 +107,11 @@ static inline lzws_result_t compress_data(
   size_t destination_buffer_length = initial_destination_buffer_length;
 
   if (!without_magic_header) {
-    COMPRESS_WITH_WRITE_BUFFER(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length);
+    BUFFERED_COMPRESS(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length);
   }
 
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
-  COMPRESS_WITH_WRITE_BUFFER(&lzws_finish_compressor, state_ptr, &destination_buffer, &destination_buffer_length);
+  BUFFERED_COMPRESS(&lzws_compress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
+  BUFFERED_COMPRESS(&lzws_finish_compressor, state_ptr, &destination_buffer, &destination_buffer_length);
 
   FLUSH_DESTINATION_BUFFER();
 
@@ -168,21 +169,23 @@ lzws_result_t lzws_compress_string(
 
 // -- decompress --
 
-#define DECOMPRESS_WITH_WRITE_BUFFER(function, ...)                     \
+#define BUFFERED_DECOMPRESS(function, ...)                              \
   while (true) {                                                        \
     result = (function)(__VA_ARGS__);                                   \
-    if (result == 0 || result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) { \
+                                                                        \
+    if (result == 0) {                                                  \
       break;                                                            \
     }                                                                   \
+    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE ||           \
+             result == LZWS_DECOMPRESSOR_CORRUPTED_SOURCE) {            \
+      return LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE;                 \
+    }                                                                   \
     else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) {      \
-      INCREASE_DESTINATION_BUFFER()                                     \
+      INCREASE_DESTINATION_BUFFER();                                    \
     }                                                                   \
     else if (result == LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER ||        \
              result == LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) { \
       return LZWS_STRING_VALIDATE_FAILED;                               \
-    }                                                                   \
-    else if (result == LZWS_DECOMPRESSOR_CORRUPTED_SOURCE) {            \
-      return LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE;                 \
     }                                                                   \
     else {                                                              \
       return LZWS_STRING_DECOMPRESSOR_UNEXPECTED_ERROR;                 \
@@ -200,10 +203,10 @@ static inline lzws_result_t decompress_data(
   size_t destination_buffer_length = initial_destination_buffer_length;
 
   if (!without_magic_header) {
-    DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
+    BUFFERED_DECOMPRESS(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
   }
 
-  DECOMPRESS_WITH_WRITE_BUFFER(&lzws_decompress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
+  BUFFERED_DECOMPRESS(&lzws_decompress, state_ptr, &source, &source_length, &destination_buffer, &destination_buffer_length);
 
   FLUSH_DESTINATION_BUFFER();
 

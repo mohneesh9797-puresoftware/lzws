@@ -62,7 +62,7 @@ int main()
   size_t remaining_text_length = text_length;
 
   result = lzws_compress(compressor_state_ptr, (uint8_t**)&remaining_text, &remaining_text_length, &remaining_compressor_buffer, &remaining_compressor_buffer_length);
-  if (result != LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
+  if (result != 0) {
     LZWS_LOG_ERROR("compressor failed");
 
     lzws_compressor_free_state(compressor_state_ptr);
@@ -132,7 +132,7 @@ int main()
     (uint8_t**)&remaining_compressed_text, &remaining_compressed_text_length,
     &remaining_decompressor_buffer, &remaining_decompressor_buffer_length);
 
-  if (result != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+  if (result != 0) {
     LZWS_LOG_ERROR("decompressor failed");
 
     lzws_decompressor_free_state(decompressor_state_ptr);
