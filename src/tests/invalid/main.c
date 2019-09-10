@@ -3,6 +3,7 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "code.h"
+#include "data.h"
 #include "header.h"
 #include "max_code_bit_length.h"
 
@@ -10,6 +11,10 @@ int main()
 {
   if (lzws_test_invalid_codes() != 0) {
     return 1;
+  }
+
+  if (lzws_test_invalid_datas() != 0) {
+    return 2;
   }
 
   if (lzws_test_invalid_header() != 0) {

@@ -13,7 +13,9 @@
 #include "common.h"
 #include "state.h"
 
-lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** result_state_ptr, bool msb, bool unaligned_bit_groups, bool quiet)
+lzws_result_t lzws_decompressor_get_initial_state(
+  lzws_decompressor_state_t** result_state_ptr,
+  bool without_magic_header, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   size_t state_size = sizeof(lzws_decompressor_state_t);
 
@@ -26,8 +28,9 @@ lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** re
     return LZWS_DECOMPRESSOR_ALLOCATE_FAILED;
   }
 
-  state_ptr->status = LZWS_DECOMPRESSOR_READ_HEADER;
+  state_ptr->status = without_magic_header ? LZWS_DECOMPRESSOR_READ_HEADER : LZWS_DECOMPRESSOR_READ_MAGIC_HEADER;
 
+  state_ptr->without_magic_header = without_magic_header;
   state_ptr->msb                  = msb;
   state_ptr->unaligned_bit_groups = unaligned_bit_groups;
   state_ptr->quiet                = quiet;

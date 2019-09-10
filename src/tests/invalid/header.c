@@ -23,19 +23,20 @@ static const uint8_t headers[][HEADER_SIZE] = {
 #define HEADER_LENGTH sizeof(headers) / HEADER_SIZE
 
 static inline lzws_result_t test_invalid_header(
-  lzws_decompressor_state_t* state_ptr, size_t LZWS_UNUSED(buffer_length),
-  bool    LZWS_UNUSED(without_magic_header),
-  va_list LZWS_UNUSED(args))
+  lzws_decompressor_state_t* state_ptr,
+  size_t LZWS_UNUSED(buffer_length), va_list LZWS_UNUSED(args))
 {
   size_t index;
 
-  for (index = 0; index < MAGIC_HEADER_LENGTH; index++) {
-    uint8_t* magic_header      = (uint8_t*)magic_headers[index];
-    size_t   magic_header_size = MAGIC_HEADER_SIZE;
+  if (!state_ptr->without_magic_header) {
+    for (index = 0; index < MAGIC_HEADER_LENGTH; index++) {
+      uint8_t* magic_header      = (uint8_t*)magic_headers[index];
+      size_t   magic_header_size = MAGIC_HEADER_SIZE;
 
-    if (lzws_decompressor_read_magic_header(state_ptr, &magic_header, &magic_header_size) != LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER) {
-      LZWS_LOG_ERROR("decompressor read magic header should fail with invalid magic header");
-      return 1;
+      if (lzws_decompressor_read_magic_header(state_ptr, &magic_header, &magic_header_size) != LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER) {
+        LZWS_LOG_ERROR("decompressor read magic header should fail with invalid magic header");
+        return 1;
+      }
     }
   }
 
@@ -47,6 +48,22 @@ static inline lzws_result_t test_invalid_header(
       LZWS_LOG_ERROR("decompressor read header should fail with invalid max code bit length");
       return 2;
     }
+  }
+
+  const char empty_string[]    = "";
+  uint8_t*   empty_header      = (uint8_t*)empty_string;
+  size_t     empty_header_size = 0;
+
+  if (!state_ptr->without_magic_header) {
+    if (lzws_decompressor_read_magic_header(state_ptr, &empty_header, &empty_header_size) != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+      LZWS_LOG_ERROR("decompressor read magic header should fail with needs more source");
+      return 3;
+    }
+  }
+
+  if (lzws_decompressor_read_header(state_ptr, &empty_header, &empty_header_size) != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+    LZWS_LOG_ERROR("decompressor read header should fail with needs more source");
+    return 4;
   }
 
   return 0;

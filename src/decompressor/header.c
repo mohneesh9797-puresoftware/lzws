@@ -37,6 +37,8 @@ lzws_result_t lzws_decompressor_read_magic_header(lzws_decompressor_state_t* sta
     return LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER;
   }
 
+  state_ptr->status = LZWS_DECOMPRESSOR_READ_HEADER;
+
   return 0;
 }
 

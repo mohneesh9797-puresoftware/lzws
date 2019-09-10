@@ -17,7 +17,8 @@
 #endif
 
 enum {
-  LZWS_COMPRESSOR_WRITE_HEADER = 1,
+  LZWS_COMPRESSOR_WRITE_MAGIC_HEADER = 1,
+  LZWS_COMPRESSOR_WRITE_HEADER,
   LZWS_COMPRESSOR_ALLOCATE_DICTIONARY,
   LZWS_COMPRESSOR_READ_FIRST_SYMBOL,
   LZWS_COMPRESSOR_READ_NEXT_SYMBOL,
@@ -36,6 +37,7 @@ typedef uint_fast8_t lzws_compressor_status_t;
 typedef struct {
   lzws_compressor_status_t status;
 
+  bool         without_magic_header;
   uint_fast8_t max_code_bit_length;
   bool         block_mode;
   bool         msb;
@@ -62,7 +64,7 @@ typedef struct {
 
 lzws_result_t lzws_compressor_get_initial_state(
   lzws_compressor_state_t** state_ptr,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
+  bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet);
 
 void lzws_compressor_reset_last_used_data(lzws_compressor_state_t* state_ptr);
 void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);

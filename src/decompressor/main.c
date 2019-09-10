@@ -18,7 +18,7 @@
     return result;             \
   }
 
-#define RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE()       \
+#define RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE()     \
   if (result != 0) {                                     \
     if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) { \
       return 0;                                          \
@@ -31,9 +31,14 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 {
   lzws_result_t result;
 
+  if (state_ptr->status == LZWS_DECOMPRESSOR_READ_MAGIC_HEADER) {
+    result = lzws_decompressor_read_magic_header(state_ptr, source_ptr, source_length_ptr);
+    RETURN_FAILED_RESULT();
+  }
+
   if (state_ptr->status == LZWS_DECOMPRESSOR_READ_HEADER) {
     result = lzws_decompressor_read_header(state_ptr, source_ptr, source_length_ptr);
-    RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE();
+    RETURN_FAILED_RESULT();
   }
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY) {
@@ -79,7 +84,7 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
     }
 
-    RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE();
+    RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
   }
 
   return 0;

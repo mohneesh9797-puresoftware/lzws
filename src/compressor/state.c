@@ -16,7 +16,7 @@
 
 lzws_result_t lzws_compressor_get_initial_state(
   lzws_compressor_state_t** result_state_ptr,
-  uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
+  bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
 {
   if (max_code_bit_length < LZWS_LOWEST_MAX_CODE_BIT_LENGTH || max_code_bit_length > LZWS_BIGGEST_MAX_CODE_BIT_LENGTH) {
     if (!quiet) {
@@ -37,8 +37,9 @@ lzws_result_t lzws_compressor_get_initial_state(
     return LZWS_COMPRESSOR_ALLOCATE_FAILED;
   }
 
-  state_ptr->status = LZWS_COMPRESSOR_WRITE_HEADER;
+  state_ptr->status = without_magic_header ? LZWS_COMPRESSOR_WRITE_HEADER : LZWS_COMPRESSOR_WRITE_MAGIC_HEADER;
 
+  state_ptr->without_magic_header = without_magic_header;
   state_ptr->max_code_bit_length  = max_code_bit_length;
   state_ptr->block_mode           = block_mode;
   state_ptr->msb                  = msb;

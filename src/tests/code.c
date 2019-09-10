@@ -91,15 +91,14 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
 static inline lzws_result_t compress_data(
   lzws_compressor_state_t* compressor_state_ptr,
   const lzws_code_t* codes, size_t codes_length,
-  uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t* destination_buffer, size_t initial_destination_buffer_length,
-  bool without_magic_header)
+  uint8_t** destination_ptr, size_t* destination_length_ptr, uint8_t* destination_buffer, size_t initial_destination_buffer_length)
 {
   lzws_result_t result;
 
   size_t destination_buffer_length = initial_destination_buffer_length;
 
-  if (!without_magic_header) {
-    BUFFERED_COMPRESS(&lzws_compressor_write_magic_header, &destination_buffer, &destination_buffer_length);
+  if (!compressor_state_ptr->without_magic_header) {
+    BUFFERED_COMPRESS(&lzws_compressor_write_magic_header, compressor_state_ptr, &destination_buffer, &destination_buffer_length);
   }
 
   BUFFERED_COMPRESS(&lzws_compressor_write_header, compressor_state_ptr, &destination_buffer, &destination_buffer_length);
@@ -111,7 +110,6 @@ static inline lzws_result_t compress_data(
   }
 
   BUFFERED_COMPRESS(&lzws_compressor_flush_remainder, compressor_state_ptr, &destination_buffer, &destination_buffer_length);
-
   FLUSH_DESTINATION_BUFFER();
 
   return trim_destination_buffer(destination_ptr, *destination_length_ptr);
@@ -120,8 +118,7 @@ static inline lzws_result_t compress_data(
 lzws_result_t lzws_test_compressor_write_codes(
   lzws_compressor_state_t* compressor_state_ptr,
   const lzws_code_t* codes, size_t codes_length,
-  uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
-  bool without_magic_header)
+  uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length)
 {
   uint8_t* destination_buffer;
 
@@ -136,8 +133,7 @@ lzws_result_t lzws_test_compressor_write_codes(
   result = compress_data(
     compressor_state_ptr,
     codes, codes_length,
-    destination_ptr, destination_length_ptr, destination_buffer, destination_buffer_length,
-    without_magic_header);
+    destination_ptr, destination_length_ptr, destination_buffer, destination_buffer_length);
 
   if (result != 0) {
     free(*destination_ptr);

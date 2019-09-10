@@ -22,8 +22,7 @@ static const char* datas[] = {
 
 static inline lzws_result_t test_data(
   lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
-  const char* data, size_t buffer_length,
-  bool without_magic_header)
+  const char* data, size_t buffer_length)
 {
   size_t data_length = strlen(data);
 
@@ -34,7 +33,12 @@ static inline lzws_result_t test_data(
     (uint8_t*)data, data_length,
     &compressed_data, &compressed_data_length,
     buffer_length,
-    without_magic_header, compressor_state_ptr->max_code_bit_length, compressor_state_ptr->block_mode, compressor_state_ptr->msb, compressor_state_ptr->unaligned_bit_groups);
+    compressor_state_ptr->without_magic_header,
+    compressor_state_ptr->max_code_bit_length,
+    compressor_state_ptr->block_mode,
+    compressor_state_ptr->msb,
+    compressor_state_ptr->unaligned_bit_groups);
+
   if (result != 0) {
     return 1;
   }
@@ -46,7 +50,9 @@ static inline lzws_result_t test_data(
     compressed_data, compressed_data_length,
     (uint8_t**)&result_data, &result_data_length,
     buffer_length,
-    without_magic_header, decompressor_state_ptr->msb, decompressor_state_ptr->unaligned_bit_groups);
+    decompressor_state_ptr->without_magic_header,
+    decompressor_state_ptr->msb,
+    decompressor_state_ptr->unaligned_bit_groups);
 
   free(compressed_data);
 
@@ -72,17 +78,16 @@ static inline lzws_result_t test_data(
 }
 
 static inline lzws_result_t test_datas(
-  lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr, size_t buffer_length,
-  bool    without_magic_header,
-  va_list LZWS_UNUSED(args))
+  lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
+  size_t buffer_length, va_list LZWS_UNUSED(args))
 {
   lzws_result_t result;
 
   for (size_t index = 0; index < DATA_LENGTH; index++) {
     result = test_data(
       compressor_state_ptr, decompressor_state_ptr,
-      datas[index], buffer_length,
-      without_magic_header);
+      datas[index], buffer_length);
+
     if (result != 0) {
       return result;
     }
@@ -97,8 +102,7 @@ static inline lzws_result_t test_datas(
   lzws_tests_set_random_string(random_string, RANDOM_STRING_LENGTH);
   result = test_data(
     compressor_state_ptr, decompressor_state_ptr,
-    random_string, buffer_length,
-    without_magic_header);
+    random_string, buffer_length);
 
   free(random_string);
   return result;

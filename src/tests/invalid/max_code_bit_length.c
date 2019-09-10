@@ -20,7 +20,7 @@ lzws_result_t lzws_test_invalid_max_code_bit_length()
 
     lzws_compressor_state_t* state_ptr;
 
-    if (lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, false, false, false, false) != LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
+    if (lzws_compressor_get_initial_state(&state_ptr, false, max_code_bit_length, false, false, false, false) != LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
       LZWS_LOG_ERROR("compressor get initial state should fail with invaid max code bit length");
       return 1;
     }

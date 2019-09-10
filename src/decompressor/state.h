@@ -16,7 +16,8 @@
 #endif
 
 enum {
-  LZWS_DECOMPRESSOR_READ_HEADER = 1,
+  LZWS_DECOMPRESSOR_READ_MAGIC_HEADER = 1,
+  LZWS_DECOMPRESSOR_READ_HEADER,
   LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY,
   LZWS_DECOMPRESSOR_READ_FIRST_CODE,
   LZWS_DECOMPRESSOR_READ_NEXT_CODE,
@@ -30,6 +31,7 @@ typedef uint_fast8_t lzws_decompressor_status_t;
 typedef struct {
   lzws_decompressor_status_t status;
 
+  bool without_magic_header;
   bool block_mode;
   bool msb;
   bool unaligned_bit_groups;
@@ -51,10 +53,13 @@ typedef struct {
   lzws_decompressor_dictionary_t dictionary;
 } lzws_decompressor_state_t;
 
-lzws_result_t lzws_decompressor_get_initial_state(lzws_decompressor_state_t** state_ptr, bool msb, bool unaligned_bit_groups, bool quiet);
-void          lzws_decompressor_reset_last_used_data(lzws_decompressor_state_t* state_ptr);
-void          lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr);
-void          lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
+lzws_result_t lzws_decompressor_get_initial_state(
+  lzws_decompressor_state_t** state_ptr,
+  bool without_magic_header, bool msb, bool unaligned_bit_groups, bool quiet);
+
+void lzws_decompressor_reset_last_used_data(lzws_decompressor_state_t* state_ptr);
+void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr);
+void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
 
 LZWS_INLINE bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr)
 {

@@ -6,15 +6,14 @@
 
 #include "../../buffer.h"
 #include "../../compressor/common.h"
-#include "../../compressor/header.h"
 #include "../../compressor/main.h"
 #include "../../compressor/state.h"
 #include "../../decompressor/common.h"
-#include "../../decompressor/header.h"
 #include "../../decompressor/main.h"
 #include "../../decompressor/state.h"
 #include "../../log.h"
 
+#define WITHOUT_MAGIC_HEADER false
 #define MAX_CODE_BIT_LENGTH LZWS_BIGGEST_MAX_CODE_BIT_LENGTH
 #define BLOCK_MODE true
 #define MSB false
@@ -35,50 +34,50 @@ int main()
     return 1;
   }
 
-  uint8_t* remaining_compressor_buffer        = compressor_buffer;
-  size_t   remaining_compressor_buffer_length = compressor_buffer_length;
+  lzws_compressor_state_t* compressor_state_ptr;
 
-  result = lzws_compressor_write_magic_header(&remaining_compressor_buffer, &remaining_compressor_buffer_length);
+  result = lzws_compressor_get_initial_state(
+    &compressor_state_ptr,
+    WITHOUT_MAGIC_HEADER, MAX_CODE_BIT_LENGTH, BLOCK_MODE, MSB, UNALIGNED_BIT_GROUPS, QUIET);
+
   if (result != 0) {
-    LZWS_LOG_ERROR("compressor write magic header failed");
+    LZWS_LOG_ERROR("compressor get initial state failed");
 
     free(compressor_buffer);
 
     return 2;
   }
 
-  lzws_compressor_state_t* compressor_state_ptr;
+  char*    remaining_text                     = (char*)text;
+  size_t   remaining_text_length              = text_length;
+  uint8_t* remaining_compressor_buffer        = compressor_buffer;
+  size_t   remaining_compressor_buffer_length = compressor_buffer_length;
 
-  result = lzws_compressor_get_initial_state(&compressor_state_ptr, MAX_CODE_BIT_LENGTH, BLOCK_MODE, MSB, UNALIGNED_BIT_GROUPS, QUIET);
-  if (result != 0) {
-    LZWS_LOG_ERROR("compressor get initial state failed");
+  result = lzws_compress(
+    compressor_state_ptr,
+    (uint8_t**)&remaining_text, &remaining_text_length,
+    &remaining_compressor_buffer, &remaining_compressor_buffer_length);
 
-    free(compressor_buffer);
-
-    return 3;
-  }
-
-  char*  remaining_text        = (char*)text;
-  size_t remaining_text_length = text_length;
-
-  result = lzws_compress(compressor_state_ptr, (uint8_t**)&remaining_text, &remaining_text_length, &remaining_compressor_buffer, &remaining_compressor_buffer_length);
   if (result != 0) {
     LZWS_LOG_ERROR("compressor failed");
 
     lzws_compressor_free_state(compressor_state_ptr);
     free(compressor_buffer);
 
-    return 4;
+    return 3;
   }
 
-  result = lzws_finish_compressor(compressor_state_ptr, &remaining_compressor_buffer, &remaining_compressor_buffer_length);
+  result = lzws_finish_compressor(
+    compressor_state_ptr,
+    &remaining_compressor_buffer, &remaining_compressor_buffer_length);
+
   if (result != 0) {
     LZWS_LOG_ERROR("finish compressor failed");
 
     lzws_compressor_free_state(compressor_state_ptr);
     free(compressor_buffer);
 
-    return 5;
+    return 4;
   }
 
   lzws_compressor_free_state(compressor_state_ptr);
@@ -89,26 +88,14 @@ int main()
 
   result = lzws_decompressor_get_initial_state(
     &decompressor_state_ptr,
-    MSB, UNALIGNED_BIT_GROUPS, QUIET);
+    WITHOUT_MAGIC_HEADER, MSB, UNALIGNED_BIT_GROUPS, QUIET);
+
   if (result != 0) {
     LZWS_LOG_ERROR("decompressor get initial state failed");
 
     free(compressor_buffer);
 
-    return 6;
-  }
-
-  char*  remaining_compressed_text        = (char*)compressor_buffer;
-  size_t remaining_compressed_text_length = compressor_buffer_length - remaining_compressor_buffer_length;
-
-  result = lzws_decompressor_read_magic_header(decompressor_state_ptr, (uint8_t**)&remaining_compressed_text, &remaining_compressed_text_length);
-  if (result != 0) {
-    LZWS_LOG_ERROR("decompressor read magic header failed");
-
-    lzws_decompressor_free_state(decompressor_state_ptr);
-    free(compressor_buffer);
-
-    return 7;
+    return 5;
   }
 
   uint8_t* decompressor_buffer;
@@ -121,9 +108,11 @@ int main()
     lzws_decompressor_free_state(decompressor_state_ptr);
     free(compressor_buffer);
 
-    return 8;
+    return 6;
   }
 
+  char*    remaining_compressed_text            = (char*)compressor_buffer;
+  size_t   remaining_compressed_text_length     = compressor_buffer_length - remaining_compressor_buffer_length;
   uint8_t* remaining_decompressor_buffer        = decompressor_buffer;
   size_t   remaining_decompressor_buffer_length = decompressor_buffer_length;
 
@@ -139,7 +128,7 @@ int main()
     free(decompressor_buffer);
     free(compressor_buffer);
 
-    return 9;
+    return 7;
   }
 
   lzws_decompressor_free_state(decompressor_state_ptr);
@@ -153,7 +142,7 @@ int main()
     free(decompressor_buffer);
     free(compressor_buffer);
 
-    return 10;
+    return 8;
   }
 
   free(decompressor_buffer);

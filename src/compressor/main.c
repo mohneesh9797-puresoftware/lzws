@@ -19,7 +19,7 @@
     return result;             \
   }
 
-#define RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE()     \
+#define RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE()   \
   if (result != 0) {                                   \
     if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) { \
       return 0;                                        \
@@ -31,6 +31,11 @@
 lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {
   lzws_result_t result;
+
+  if (state_ptr->status == LZWS_COMPRESSOR_WRITE_MAGIC_HEADER) {
+    result = lzws_compressor_write_magic_header(state_ptr, destination_ptr, destination_length_ptr);
+    RETURN_FAILED_RESULT();
+  }
 
   if (state_ptr->status == LZWS_COMPRESSOR_WRITE_HEADER) {
     result = lzws_compressor_write_header(state_ptr, destination_ptr, destination_length_ptr);
@@ -44,7 +49,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
 
   if (state_ptr->status == LZWS_COMPRESSOR_READ_FIRST_SYMBOL) {
     result = lzws_compressor_read_first_symbol(state_ptr, source_ptr, source_length_ptr);
-    RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE();
+    RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
   }
 
   lzws_compressor_status_t status;
@@ -85,7 +90,7 @@ lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source
         return LZWS_COMPRESSOR_UNKNOWN_STATUS;
     }
 
-    RETURN_FAILED_RESULT_WITHOUT_MORE_SOURCE();
+    RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
   }
 }
 

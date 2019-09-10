@@ -5,11 +5,9 @@
 #include <string.h>
 
 #include "compressor/common.h"
-#include "compressor/header.h"
 #include "compressor/main.h"
 #include "compressor/state.h"
 #include "decompressor/common.h"
-#include "decompressor/header.h"
 #include "decompressor/main.h"
 #include "decompressor/state.h"
 
@@ -210,7 +208,7 @@ static inline lzws_result_t compress_data(
   lzws_compressor_state_t* state_ptr,
   FILE* source_file, uint8_t* source_buffer, size_t source_buffer_length,
   FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length,
-  bool without_magic_header, bool quiet)
+  bool quiet)
 {
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
@@ -218,10 +216,6 @@ static inline lzws_result_t compress_data(
   size_t   destination_length = destination_buffer_length;
 
   lzws_result_t result;
-
-  if (!without_magic_header) {
-    BUFFERED_COMPRESS_CALL(&lzws_compressor_write_magic_header, &destination, &destination_length);
-  }
 
   BUFFERED_COMPRESS_LOOP(&lzws_compress, state_ptr, &source, &source_length, &destination, &destination_length);
   BUFFERED_COMPRESS_CALL(&lzws_finish_compressor, state_ptr, &destination, &destination_length);
@@ -254,7 +248,10 @@ lzws_result_t lzws_compress_file(
 
   lzws_compressor_state_t* state_ptr;
 
-  result = lzws_compressor_get_initial_state(&state_ptr, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet);
+  result = lzws_compressor_get_initial_state(
+    &state_ptr,
+    without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet);
+
   if (result != 0) {
     free(source_buffer);
     free(destination_buffer);
@@ -274,7 +271,7 @@ lzws_result_t lzws_compress_file(
     state_ptr,
     source_file, source_buffer, source_buffer_length,
     destination_file, destination_buffer, destination_buffer_length,
-    without_magic_header, quiet);
+    quiet);
 
   lzws_compressor_free_state(state_ptr);
   free(source_buffer);
@@ -325,7 +322,7 @@ static inline lzws_result_t decompress_data(
   lzws_decompressor_state_t* state_ptr,
   FILE* source_file, uint8_t* source_buffer, size_t source_buffer_length,
   FILE* destination_file, uint8_t* destination_buffer, size_t destination_buffer_length,
-  bool without_magic_header, bool quiet)
+  bool quiet)
 {
   uint8_t* source             = NULL;
   size_t   source_length      = 0;
@@ -333,10 +330,6 @@ static inline lzws_result_t decompress_data(
   size_t   destination_length = destination_buffer_length;
 
   lzws_result_t result;
-
-  if (!without_magic_header) {
-    BUFFERED_DECOMPRESS_CALL(&lzws_decompressor_read_magic_header, state_ptr, &source, &source_length);
-  }
 
   BUFFERED_DECOMPRESS_LOOP(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
 
@@ -368,7 +361,10 @@ lzws_result_t lzws_decompress_file(
 
   lzws_decompressor_state_t* state_ptr;
 
-  result = lzws_decompressor_get_initial_state(&state_ptr, msb, unaligned_bit_groups, quiet);
+  result = lzws_decompressor_get_initial_state(
+    &state_ptr,
+    without_magic_header, msb, unaligned_bit_groups, quiet);
+
   if (result != 0) {
     free(source_buffer);
     free(destination_buffer);
@@ -385,7 +381,7 @@ lzws_result_t lzws_decompress_file(
     state_ptr,
     source_file, source_buffer, source_buffer_length,
     destination_file, destination_buffer, destination_buffer_length,
-    without_magic_header, quiet);
+    quiet);
 
   lzws_decompressor_free_state(state_ptr);
   free(source_buffer);
