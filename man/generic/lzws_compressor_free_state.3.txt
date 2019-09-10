@@ -29,7 +29,6 @@ This function frees compressor state.
 
 SEE ALSO
 --------
-*lzws_compressor_write_magic_header*(3)
 *lzws_compressor_get_initial_state*(3)
 *lzws_compress*(3)
 *lzws_finish_compressor*(3)

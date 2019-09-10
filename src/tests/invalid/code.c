@@ -58,10 +58,12 @@ static inline lzws_result_t test_data(
   uint8_t* source;
   size_t   source_length;
 
-  if (lzws_test_compressor_write_codes(
-        compressor_state_ptr,
-        data_ptr->codes, data_ptr->codes_length,
-        &source, &source_length, buffer_length) != 0) {
+  lzws_result_t result = lzws_test_compressor_write_codes(
+    compressor_state_ptr,
+    data_ptr->codes, data_ptr->codes_length,
+    &source, &source_length, buffer_length);
+
+  if (result != 0) {
     LZWS_LOG_ERROR("compressor failed to write codes");
     return 1;
   }
@@ -71,7 +73,7 @@ static inline lzws_result_t test_data(
   uint8_t* destination;
   size_t   destination_length;
 
-  lzws_result_t result = lzws_tests_decompress_string_and_file(
+  result = lzws_tests_decompress_string_and_file(
     source, source_length,
     &destination, &destination_length,
     buffer_length,
@@ -104,6 +106,7 @@ static inline lzws_result_t test_datas(
     result = test_data(
       compressor_state_ptr, decompressor_state_ptr,
       &datas[index], buffer_length);
+
     if (result != 0) {
       return result;
     }
@@ -116,20 +119,26 @@ static inline lzws_result_t test_all_datas(
   lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
   size_t buffer_length, va_list LZWS_UNUSED(args))
 {
+  lzws_result_t result;
+
   if (compressor_state_ptr->block_mode) {
     // Codes test won't provide alignment bits.
     if (compressor_state_ptr->unaligned_bit_groups) {
-      if (test_datas(
-            compressor_state_ptr, decompressor_state_ptr,
-            datas_for_enabled_block_mode, datas_for_enabled_block_mode_length, buffer_length) != 0) {
+      result = test_datas(
+        compressor_state_ptr, decompressor_state_ptr,
+        datas_for_enabled_block_mode, datas_for_enabled_block_mode_length, buffer_length);
+
+      if (result != 0) {
         return 1;
       }
     }
   }
   else {
-    if (test_datas(
-          compressor_state_ptr, decompressor_state_ptr,
-          datas_for_disabled_block_mode, datas_for_disabled_block_mode_length, buffer_length) != 0) {
+    result = test_datas(
+      compressor_state_ptr, decompressor_state_ptr,
+      datas_for_disabled_block_mode, datas_for_disabled_block_mode_length, buffer_length);
+
+    if (result != 0) {
       return 2;
     }
   }

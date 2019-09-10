@@ -196,18 +196,16 @@ File API:
 
 Generic API:
 
+- [lzws_create_buffer_for_compressor.3](man/generic/lzws_create_buffer_for_compressor.3.txt)
+- [lzws_create_buffer_for_decompressor.3](man/generic/lzws_create_buffer_for_decompressor.3.txt)
+- [lzws_resize_buffer.3](man/generic/lzws_resize_buffer.3.txt)
 - [lzws_compress.3](man/generic/lzws_compress.3.txt)
 - [lzws_compressor_free_state.3](man/generic/lzws_compressor_free_state.3.txt)
 - [lzws_compressor_get_initial_state.3](man/generic/lzws_compressor_get_initial_state.3.txt)
-- [lzws_compressor_write_magic_header.3](man/generic/lzws_compressor_write_magic_header.3.txt)
-- [lzws_create_buffer_for_compressor.3](man/generic/lzws_create_buffer_for_compressor.3.txt)
-- [lzws_create_buffer_for_decompressor.3](man/generic/lzws_create_buffer_for_decompressor.3.txt)
+- [lzws_finish_compressor.3](man/generic/lzws_finish_compressor.3.txt)
 - [lzws_decompress.3](man/generic/lzws_decompress.3.txt)
 - [lzws_decompressor_free_state.3](man/generic/lzws_decompressor_free_state.3.txt)
 - [lzws_decompressor_get_initial_state.3](man/generic/lzws_decompressor_get_initial_state.3.txt)
-- [lzws_decompressor_read_magic_header.3](man/generic/lzws_decompressor_read_magic_header.3.txt)
-- [lzws_finish_compressor.3](man/generic/lzws_finish_compressor.3.txt)
-- [lzws_resize_buffer.3](man/generic/lzws_resize_buffer.3.txt)
 
 ## Documentation
 

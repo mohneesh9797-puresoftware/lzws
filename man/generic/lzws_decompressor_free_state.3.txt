@@ -29,6 +29,5 @@ This function frees decompressor state.
 
 SEE ALSO
 --------
-*lzws_decompressor_read_magic_header*(3)
 *lzws_decompressor_get_initial_state*(3)
 *lzws_decompress*(3)

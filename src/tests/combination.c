@@ -35,6 +35,7 @@ static inline lzws_result_t test_compressor(
   lzws_result_t result = lzws_compressor_get_initial_state(
     &state_ptr,
     without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, false);
+
   if (result != 0) {
     LZWS_LOG_ERROR("failed to get initial state for compressor");
     return result;
@@ -74,6 +75,7 @@ static inline lzws_result_t process_compressor_combinations(lzws_test_compressor
               lzws_result_t result = test_compressor(
                 function, args, buffer_length,
                 without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups);
+
               if (result != 0) {
                 return result;
               }
@@ -110,6 +112,7 @@ static inline lzws_result_t test_decompressor(
   lzws_result_t result = lzws_decompressor_get_initial_state(
     &state_ptr,
     without_magic_header, msb, unaligned_bit_groups, false);
+
   if (result != 0) {
     LZWS_LOG_ERROR("failed to get initial state for decompressor");
     return result;
@@ -145,6 +148,7 @@ lzws_result_t process_decompressor_combinations(lzws_test_decompressor_t functio
           lzws_result_t result = test_decompressor(
             function, args, buffer_length,
             without_magic_header, msb, unaligned_bit_groups);
+
           if (result != 0) {
             return result;
           }

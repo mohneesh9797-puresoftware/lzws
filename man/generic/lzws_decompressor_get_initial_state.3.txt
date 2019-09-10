@@ -66,6 +66,5 @@ if (result != 0) {
 
 SEE ALSO
 --------
-*lzws_decompressor_read_magic_header*(3)
 *lzws_decompressor_free_state*(3)
 *lzws_decompress*(3)

@@ -152,6 +152,7 @@ static inline lzws_result_t test_compress_file_with_destination(
   lzws_result_t result = prepare_files_with_destination(
     &source_file, source, source_length,
     &destination_file, &destination, destination_length);
+
   if (result != 0) {
     return result;
   }
@@ -224,6 +225,7 @@ lzws_result_t lzws_tests_compress_string_and_file(
     &destination_for_string, &destination_length,
     buffer_length,
     without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups);
+
   if (result != 0) {
     return result;
   }
@@ -236,6 +238,7 @@ lzws_result_t lzws_tests_compress_string_and_file(
       source, source_length,
       buffer_length,
       without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups);
+
     if (result != 0) {
       return result;
     }
@@ -256,6 +259,7 @@ lzws_result_t lzws_tests_compress_string_and_file(
     &destination_for_file, destination_length,
     buffer_length,
     without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups);
+
   if (result != 0) {
     free(destination_for_string);
     return result;
@@ -334,6 +338,7 @@ static inline lzws_result_t test_decompress_file_with_destination(
   lzws_result_t result = prepare_files_with_destination(
     &source_file, source, source_length,
     &destination_file, &destination, destination_length);
+
   if (result != 0) {
     return result;
   }
@@ -410,6 +415,7 @@ lzws_result_t lzws_tests_decompress_string_and_file(
     &destination_for_string, &destination_length,
     buffer_length,
     without_magic_header, msb, unaligned_bit_groups);
+
   if (result != 0) {
     return result;
   }
@@ -422,6 +428,7 @@ lzws_result_t lzws_tests_decompress_string_and_file(
       source, source_length,
       buffer_length,
       without_magic_header, msb, unaligned_bit_groups);
+
     if (result != 0) {
       return result;
     }
@@ -442,6 +449,7 @@ lzws_result_t lzws_tests_decompress_string_and_file(
     &destination_for_file, destination_length,
     buffer_length,
     without_magic_header, msb, unaligned_bit_groups);
+
   if (result != 0) {
     free(destination_for_string);
     return result;

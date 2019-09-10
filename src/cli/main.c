@@ -96,18 +96,24 @@ int main(int argc, char** argv)
     }
   }
 
+  lzws_result_t result;
+
   if (is_compressor) {
-    if (lzws_compress_file(
-          stdin, 0,
-          stdout, 0,
-          without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet) != 0) {
+    result = lzws_compress_file(
+      stdin, 0,
+      stdout, 0,
+      without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet);
+
+    if (result != 0) {
       return 1;
     }
   }
   else {
-    if (lzws_decompress_file(
-          stdin, 0, stdout, 0,
-          without_magic_header, msb, unaligned_bit_groups, quiet) != 0) {
+    result = lzws_decompress_file(
+      stdin, 0, stdout, 0,
+      without_magic_header, msb, unaligned_bit_groups, quiet);
+
+    if (result != 0) {
       return 2;
     }
   }

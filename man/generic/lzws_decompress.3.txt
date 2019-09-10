@@ -39,7 +39,8 @@ OPTIONS
 
 RETURN VALUE
 ------------
-Returns *0* or *LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION* if decompression was successful.
+Returns *0* if decompression was successful.
+Returns *LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE* or *LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION* if decompressor requires more source or destination.
 See header file *lzws/decompressor/common.h* for more details about other results.
 
 
@@ -66,6 +67,8 @@ while (true) {
 
   if (result == 0) {
     give_more_source(&source, &source_length);
+  else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+    require_more_source(&source, &source_length);
   } else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) {
     increase_destination(&destination, &destination_length);
   } else {
@@ -77,6 +80,5 @@ while (true) {
 
 SEE ALSO
 --------
-*lzws_decompressor_read_magic_header*(3)
 *lzws_decompressor_get_initial_state*(3)
 *lzws_decompressor_free_state*(3)
