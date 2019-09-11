@@ -40,7 +40,7 @@ OPTIONS
 RETURN VALUE
 ------------
 Returns *0* if compression was successful.
-Returns *LZWS_COMPRESSOR_NEEDS_MORE_SOURCE* or *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* if compressor requires more source or destination.
+Returns *LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION* if compressor requires more destination.
 See header file *lzws/compressor/common.h* for more details about other results.
 
 
@@ -67,8 +67,6 @@ while (true) {
 
   if (result == 0) {
     give_more_source(&source, &source_length);
-  } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_SOURCE) {
-    require_more_source(&source, &source_length);
   } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
     increase_destination(&destination, &destination_length);
   } else {
