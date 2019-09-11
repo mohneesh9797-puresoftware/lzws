@@ -13,6 +13,9 @@
 #include "main.h"
 #include "symbol.h"
 
+// Decompressor should not expose LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE.
+// Magic header and header are not required for empty string decompressing.
+
 #define RETURN_FAILED_RESULT() \
   if (result != 0) {           \
     return result;             \
@@ -33,12 +36,12 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_READ_MAGIC_HEADER) {
     result = lzws_decompressor_read_magic_header(state_ptr, source_ptr, source_length_ptr);
-    RETURN_FAILED_RESULT();
+    RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
   }
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_READ_HEADER) {
     result = lzws_decompressor_read_header(state_ptr, source_ptr, source_length_ptr);
-    RETURN_FAILED_RESULT();
+    RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
   }
 
   if (state_ptr->status == LZWS_DECOMPRESSOR_ALLOCATE_DICTIONARY) {
@@ -54,26 +57,32 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
     switch (status) {
       case LZWS_DECOMPRESSOR_READ_FIRST_CODE:
         result = lzws_decompressor_read_first_code(state_ptr, source_ptr, source_length_ptr);
+        RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
         break;
 
       case LZWS_DECOMPRESSOR_READ_NEXT_CODE:
         result = lzws_decompressor_read_next_code(state_ptr, source_ptr, source_length_ptr);
+        RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
         break;
 
       case LZWS_DECOMPRESSOR_WRITE_FIRST_SYMBOL:
         result = lzws_decompressor_write_first_symbol(state_ptr, destination_ptr, destination_length_ptr);
+        RETURN_FAILED_RESULT();
         break;
 
       case LZWS_DECOMPRESSOR_WRITE_SYMBOLS_FOR_CURRENT_CODE:
         result = lzws_decompressor_write_symbols_for_current_code(state_ptr, destination_ptr, destination_length_ptr);
+        RETURN_FAILED_RESULT();
         break;
 
       case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_FIRST_CODE:
         result = lzws_decompressor_read_alignment_before_first_code(state_ptr, source_ptr, source_length_ptr);
+        RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
         break;
 
       case LZWS_DECOMPRESSOR_READ_ALIGNMENT_BEFORE_NEXT_CODE:
         result = lzws_decompressor_read_alignment_before_next_code(state_ptr, source_ptr, source_length_ptr);
+        RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
         break;
 
       default:
@@ -83,8 +92,6 @@ lzws_result_t lzws_decompress(lzws_decompressor_state_t* state_ptr, uint8_t** so
 
         return LZWS_DECOMPRESSOR_UNKNOWN_STATUS;
     }
-
-    RETURN_FAILED_RESULT_EXCLUDING_MORE_SOURCE();
   }
 
   return 0;

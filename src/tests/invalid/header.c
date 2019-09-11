@@ -53,24 +53,6 @@ static inline lzws_result_t test_invalid_header(
     }
   }
 
-  const char empty_string[]    = "";
-  uint8_t*   empty_header      = (uint8_t*)empty_string;
-  size_t     empty_header_size = 0;
-
-  if (!state_ptr->without_magic_header) {
-    result = lzws_decompressor_read_magic_header(state_ptr, &empty_header, &empty_header_size);
-    if (result != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
-      LZWS_LOG_ERROR("decompressor read magic header should fail with needs more source");
-      return 3;
-    }
-  }
-
-  result = lzws_decompressor_read_header(state_ptr, &empty_header, &empty_header_size);
-  if (result != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
-    LZWS_LOG_ERROR("decompressor read header should fail with needs more source");
-    return 4;
-  }
-
   return 0;
 }
 

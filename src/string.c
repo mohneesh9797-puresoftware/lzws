@@ -165,27 +165,27 @@ lzws_result_t lzws_compress_string(
 
 // -- decompress --
 
-#define BUFFERED_DECOMPRESS(function, ...)                              \
-  while (true) {                                                        \
-    result = (function)(__VA_ARGS__);                                   \
-                                                                        \
-    if (result == 0) {                                                  \
-      break;                                                            \
-    }                                                                   \
-    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE ||           \
-             result == LZWS_DECOMPRESSOR_CORRUPTED_SOURCE) {            \
-      return LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE;                 \
-    }                                                                   \
-    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) {      \
-      INCREASE_DESTINATION_BUFFER();                                    \
-    }                                                                   \
-    else if (result == LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER ||        \
-             result == LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) { \
-      return LZWS_STRING_VALIDATE_FAILED;                               \
-    }                                                                   \
-    else {                                                              \
-      return LZWS_STRING_DECOMPRESSOR_UNEXPECTED_ERROR;                 \
-    }                                                                   \
+#define BUFFERED_DECOMPRESS(function, ...)                         \
+  while (true) {                                                   \
+    result = (function)(__VA_ARGS__);                              \
+                                                                   \
+    if (result == 0) {                                             \
+      break;                                                       \
+    }                                                              \
+    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) { \
+      INCREASE_DESTINATION_BUFFER();                               \
+    }                                                              \
+    else if (                                                      \
+      result == LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER ||          \
+      result == LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {   \
+      return LZWS_STRING_VALIDATE_FAILED;                          \
+    }                                                              \
+    else if (result == LZWS_DECOMPRESSOR_CORRUPTED_SOURCE) {       \
+      return LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE;            \
+    }                                                              \
+    else {                                                         \
+      return LZWS_STRING_DECOMPRESSOR_UNEXPECTED_ERROR;            \
+    }                                                              \
   }
 
 static inline lzws_result_t decompress_data(
