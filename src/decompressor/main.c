@@ -13,7 +13,7 @@
 #include "main.h"
 #include "symbol.h"
 
-// Decompressor should not expose LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE.
+// Decompressor will not expose LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE.
 // Magic header and header are not required for empty string decompressing.
 
 #define RETURN_FAILED_RESULT() \
