@@ -65,12 +65,15 @@ while (true) {
     &source, &source_length,
     &destination, &destination_length);
 
-  if (result == 0) {
-    give_more_source(&source, &source_length);
-  } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
-    increase_destination(&destination, &destination_length);
-  } else {
-    return 1;
+  switch (result) {
+    case 0:
+      give_more_source(&source, &source_length);
+      break;
+    case LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION:
+      increase_destination(&destination, &destination_length);
+      break;
+    default:
+      return 1;
   }
 }
 ----

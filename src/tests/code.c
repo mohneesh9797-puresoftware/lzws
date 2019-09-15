@@ -73,19 +73,21 @@ static inline lzws_result_t trim_destination_buffer(uint8_t** destination_ptr, s
 
 // -- compress --
 
-#define BUFFERED_COMPRESS(function, ...)                         \
-  while (true) {                                                 \
-    result = (function)(__VA_ARGS__);                            \
-                                                                 \
-    if (result == 0) {                                           \
-      break;                                                     \
-    }                                                            \
-    else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) { \
-      INCREASE_DESTINATION_BUFFER();                             \
-    }                                                            \
-    else {                                                       \
-      return LZWS_TEST_CODES_COMPRESSOR_UNEXPECTED_ERROR;        \
-    }                                                            \
+#define BUFFERED_COMPRESS(function, ...)                    \
+  while (true) {                                            \
+    result = (function)(__VA_ARGS__);                       \
+                                                            \
+    if (result == 0) {                                      \
+      break;                                                \
+    }                                                       \
+                                                            \
+    switch (result) {                                       \
+      case LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION:          \
+        INCREASE_DESTINATION_BUFFER();                      \
+        break;                                              \
+      default:                                              \
+        return LZWS_TEST_CODES_COMPRESSOR_UNEXPECTED_ERROR; \
+    }                                                       \
   }
 
 static inline lzws_result_t compress_data(

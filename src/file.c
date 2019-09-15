@@ -173,24 +173,26 @@ static inline lzws_result_t write_remaining_destination_buffer(
 
 // -- compress --
 
-#define BUFFERED_COMPRESS(BREAK_AFTER_SUCCESS, function, ...)    \
-  while (true) {                                                 \
-    result = (function)(__VA_ARGS__);                            \
-                                                                 \
-    if (result == 0) {                                           \
-      if (BREAK_AFTER_SUCCESS) {                                 \
-        break;                                                   \
-      }                                                          \
-      else {                                                     \
-        READ_MORE_SOURCE();                                      \
-      }                                                          \
-    }                                                            \
-    else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) { \
-      FLUSH_DESTINATION_BUFFER();                                \
-    }                                                            \
-    else {                                                       \
-      return LZWS_FILE_COMPRESSOR_UNEXPECTED_ERROR;              \
-    }                                                            \
+#define BUFFERED_COMPRESS(BREAK_AFTER_SUCCESS, function, ...) \
+  while (true) {                                              \
+    result = (function)(__VA_ARGS__);                         \
+                                                              \
+    if (result == 0) {                                        \
+      if (BREAK_AFTER_SUCCESS) {                              \
+        break;                                                \
+      }                                                       \
+                                                              \
+      READ_MORE_SOURCE();                                     \
+      continue;                                               \
+    }                                                         \
+                                                              \
+    switch (result) {                                         \
+      case LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION:            \
+        FLUSH_DESTINATION_BUFFER();                           \
+        break;                                                \
+      default:                                                \
+        return LZWS_FILE_COMPRESSOR_UNEXPECTED_ERROR;         \
+    }                                                         \
   }
 
 #define BUFFERED_COMPRESS_ONESHOT(...) \
@@ -251,14 +253,13 @@ lzws_result_t lzws_compress_file(
     free(source_buffer);
     free(destination_buffer);
 
-    if (result == LZWS_COMPRESSOR_ALLOCATE_FAILED) {
-      return LZWS_FILE_ALLOCATE_FAILED;
-    }
-    else if (result == LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
-      return LZWS_FILE_VALIDATE_FAILED;
-    }
-    else {
-      return LZWS_FILE_COMPRESSOR_UNEXPECTED_ERROR;
+    switch (result) {
+      case LZWS_COMPRESSOR_ALLOCATE_FAILED:
+        return LZWS_FILE_ALLOCATE_FAILED;
+      case LZWS_COMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH:
+        return LZWS_FILE_VALIDATE_FAILED;
+      default:
+        return LZWS_FILE_COMPRESSOR_UNEXPECTED_ERROR;
     }
   }
 
@@ -277,32 +278,31 @@ lzws_result_t lzws_compress_file(
 
 // -- decompress --
 
-#define BUFFERED_DECOMPRESS(BREAK_AFTER_SUCCESS, function, ...)    \
-  while (true) {                                                   \
-    result = (function)(__VA_ARGS__);                              \
-                                                                   \
-    if (result == 0) {                                             \
-      if (BREAK_AFTER_SUCCESS) {                                   \
-        break;                                                     \
-      }                                                            \
-      else {                                                       \
-        READ_MORE_SOURCE();                                        \
-      }                                                            \
-    }                                                              \
-    else if (result == LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION) { \
-      FLUSH_DESTINATION_BUFFER();                                  \
-    }                                                              \
-    else if (                                                      \
-      result == LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER ||          \
-      result == LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {   \
-      return LZWS_FILE_VALIDATE_FAILED;                            \
-    }                                                              \
-    else if (result == LZWS_DECOMPRESSOR_CORRUPTED_SOURCE) {       \
-      return LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE;              \
-    }                                                              \
-    else {                                                         \
-      return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;              \
-    }                                                              \
+#define BUFFERED_DECOMPRESS(BREAK_AFTER_SUCCESS, function, ...) \
+  while (true) {                                                \
+    result = (function)(__VA_ARGS__);                           \
+                                                                \
+    if (result == 0) {                                          \
+      if (BREAK_AFTER_SUCCESS) {                                \
+        break;                                                  \
+      }                                                         \
+                                                                \
+      READ_MORE_SOURCE();                                       \
+      continue;                                                 \
+    }                                                           \
+                                                                \
+    switch (result) {                                           \
+      case LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION:            \
+        FLUSH_DESTINATION_BUFFER();                             \
+        break;                                                  \
+      case LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER:              \
+      case LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH:       \
+        return LZWS_FILE_VALIDATE_FAILED;                       \
+      case LZWS_DECOMPRESSOR_CORRUPTED_SOURCE:                  \
+        return LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE;         \
+      default:                                                  \
+        return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;         \
+    }                                                           \
   }
 
 #define BUFFERED_DECOMPRESS_CALL(...) \
@@ -362,11 +362,11 @@ lzws_result_t lzws_decompress_file(
     free(source_buffer);
     free(destination_buffer);
 
-    if (result == LZWS_DECOMPRESSOR_ALLOCATE_FAILED) {
-      return LZWS_FILE_ALLOCATE_FAILED;
-    }
-    else {
-      return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;
+    switch (result) {
+      case LZWS_DECOMPRESSOR_ALLOCATE_FAILED:
+        return LZWS_FILE_ALLOCATE_FAILED;
+      default:
+        return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;
     }
   }
 

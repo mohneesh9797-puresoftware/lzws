@@ -61,12 +61,14 @@ while (true) {
     state_ptr,
     &destination, &destination_length);
 
-  if (result == 0) {
-    break;
-  } else if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
-    increase_destination(&destination, &destination_length);
-  } else {
-    return 1;
+  switch (result) {
+    case 0:
+      break;
+    case LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION:
+      increase_destination(&destination, &destination_length);
+      break;
+    default:
+      return 1;
   }
 }
 ----
