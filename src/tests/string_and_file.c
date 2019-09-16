@@ -309,9 +309,10 @@ static inline lzws_result_t test_decompress_string(
     buffer_length,
     without_magic_header, msb, unaligned_bit_groups, false);
 
-  if (test_result != 0 &&
-      test_result != LZWS_STRING_VALIDATE_FAILED &&
-      test_result != LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE) {
+  if (
+    test_result != 0 &&
+    test_result != LZWS_STRING_VALIDATE_FAILED &&
+    test_result != LZWS_STRING_DECOMPRESSOR_CORRUPTED_SOURCE) {
     LZWS_LOG_ERROR("string api failed");
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
@@ -351,9 +352,10 @@ static inline lzws_result_t test_decompress_file_with_destination(
   fclose(source_file);
   fclose(destination_file);
 
-  if (test_result != 0 &&
-      test_result != LZWS_FILE_VALIDATE_FAILED &&
-      test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
+  if (
+    test_result != 0 &&
+    test_result != LZWS_FILE_VALIDATE_FAILED &&
+    test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
     LZWS_LOG_ERROR("file api failed");
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }
@@ -386,9 +388,10 @@ static inline lzws_result_t test_decompress_file_without_destination(
   fclose(source_file);
   fclose(destination_file);
 
-  if (test_result != 0 &&
-      test_result != LZWS_FILE_VALIDATE_FAILED &&
-      test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
+  if (
+    test_result != 0 &&
+    test_result != LZWS_FILE_VALIDATE_FAILED &&
+    test_result != LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE) {
     LZWS_LOG_ERROR("file api failed");
     return LZWS_TEST_STRING_AND_FILE_API_FAILED;
   }

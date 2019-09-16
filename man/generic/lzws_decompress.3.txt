@@ -65,16 +65,17 @@ while (true) {
     &source, &source_length,
     &destination, &destination_length);
 
-  switch (result) {
-    case 0:
-      give_more_source(&source, &source_length);
-      break;
-    case LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION:
-      increase_destination(&destination, &destination_length);
-      break;
-    default:
-      return 1;
+  if (result != 0) {
+    switch (result) {
+      case LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION:
+        increase_destination(&destination, &destination_length);
+        continue;
+      default:
+        return 1;
+    }
   }
+
+  give_more_source(&source, &source_length);
 }
 ----
 

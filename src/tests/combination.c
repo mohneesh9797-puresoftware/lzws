@@ -228,9 +228,10 @@ static inline lzws_result_t test_compatible_compressor_and_decompressor_combinat
   lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
   size_t buffer_length, va_list args)
 {
-  if (compressor_state_ptr->without_magic_header != decompressor_state_ptr->without_magic_header ||
-      compressor_state_ptr->msb != decompressor_state_ptr->msb ||
-      compressor_state_ptr->unaligned_bit_groups != decompressor_state_ptr->unaligned_bit_groups) {
+  if (
+    compressor_state_ptr->without_magic_header != decompressor_state_ptr->without_magic_header ||
+    compressor_state_ptr->msb != decompressor_state_ptr->msb ||
+    compressor_state_ptr->unaligned_bit_groups != decompressor_state_ptr->unaligned_bit_groups) {
     return 0;
   }
 
