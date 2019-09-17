@@ -277,37 +277,27 @@ lzws_result_t lzws_compress_file(
 
 // -- decompress --
 
-#define BUFFERED_DECOMPRESS(BREAK_AFTER_SUCCESS, function, ...) \
-  while (true) {                                                \
-    result = (function)(__VA_ARGS__);                           \
-                                                                \
-    if (result != 0) {                                          \
-      switch (result) {                                         \
-        case LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION:          \
-          FLUSH_DESTINATION_BUFFER();                           \
-          continue;                                             \
-        case LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER:            \
-        case LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH:     \
-          return LZWS_FILE_VALIDATE_FAILED;                     \
-        case LZWS_DECOMPRESSOR_CORRUPTED_SOURCE:                \
-          return LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE;       \
-        default:                                                \
-          return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;       \
-      }                                                         \
-    }                                                           \
-                                                                \
-    if (BREAK_AFTER_SUCCESS) {                                  \
-      break;                                                    \
-    }                                                           \
-                                                                \
-    READ_MORE_SOURCE();                                         \
+#define BUFFERED_DECOMPRESS(function, ...)                  \
+  while (true) {                                            \
+    result = (function)(__VA_ARGS__);                       \
+                                                            \
+    if (result != 0) {                                      \
+      switch (result) {                                     \
+        case LZWS_DECOMPRESSOR_NEEDS_MORE_DESTINATION:      \
+          FLUSH_DESTINATION_BUFFER();                       \
+          continue;                                         \
+        case LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER:        \
+        case LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH: \
+          return LZWS_FILE_VALIDATE_FAILED;                 \
+        case LZWS_DECOMPRESSOR_CORRUPTED_SOURCE:            \
+          return LZWS_FILE_DECOMPRESSOR_CORRUPTED_SOURCE;   \
+        default:                                            \
+          return LZWS_FILE_DECOMPRESSOR_UNEXPECTED_ERROR;   \
+      }                                                     \
+    }                                                       \
+                                                            \
+    READ_MORE_SOURCE();                                     \
   }
-
-#define BUFFERED_DECOMPRESS_CALL(...) \
-  BUFFERED_DECOMPRESS(true, __VA_ARGS__);
-
-#define BUFFERED_DECOMPRESS_LOOP(...) \
-  BUFFERED_DECOMPRESS(false, __VA_ARGS__);
 
 static inline lzws_result_t decompress_data(
   lzws_decompressor_state_t* state_ptr,
@@ -322,7 +312,7 @@ static inline lzws_result_t decompress_data(
 
   lzws_result_t result;
 
-  BUFFERED_DECOMPRESS_LOOP(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
+  BUFFERED_DECOMPRESS(&lzws_decompress, state_ptr, &source, &source_length, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length, quiet);
 }
