@@ -6,7 +6,6 @@
 #define LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_WRAPPER_H
 
 #include "../../state.h"
-
 #include "main.h"
 
 #undef LZWS_INLINE

@@ -3,6 +3,7 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "buffer.h"
+
 #include "log.h"
 
 static inline lzws_result_t create_buffer(uint8_t** buffer_ptr, size_t* buffer_length_ptr, size_t default_buffer_length, bool quiet)

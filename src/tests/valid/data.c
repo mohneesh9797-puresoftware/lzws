@@ -2,6 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "data.h"
+
 #include <string.h>
 
 #include "../../log.h"
@@ -9,8 +11,6 @@
 #include "../combination.h"
 #include "../random_string.h"
 #include "../string_and_file.h"
-
-#include "data.h"
 
 static const char* datas[] = {
   "",

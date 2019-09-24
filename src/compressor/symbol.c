@@ -2,12 +2,12 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "symbol.h"
+
 #include "alignment/wrapper.h"
+#include "common.h"
 #include "dictionary/wrapper.h"
 #include "ratio/wrapper.h"
-
-#include "common.h"
-#include "symbol.h"
 #include "utils.h"
 
 lzws_result_t lzws_compressor_read_first_symbol(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)

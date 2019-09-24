@@ -6,7 +6,6 @@
 #define LZWS_COMPRESSOR_RATIO_WRAPPER_H
 
 #include "../state.h"
-
 #include "main.h"
 
 #undef LZWS_INLINE

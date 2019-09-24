@@ -2,14 +2,13 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "dictionary/wrapper.h"
+#include "current_code.h"
 
 #include "../log.h"
 #include "../utils.h"
-
 #include "code.h"
 #include "common.h"
-#include "current_code.h"
+#include "dictionary/wrapper.h"
 #include "remainder.h"
 
 lzws_result_t lzws_decompressor_read_first_code(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)

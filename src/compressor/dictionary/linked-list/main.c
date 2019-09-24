@@ -4,11 +4,11 @@
 
 #define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_C
 
+#include "main.h"
+
 #include "../../../log.h"
 #include "../../../utils.h"
 #include "../../common.h"
-
-#include "main.h"
 
 // -- codes length --
 

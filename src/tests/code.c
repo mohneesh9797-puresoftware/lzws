@@ -3,12 +3,12 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "../compressor/code.h"
+
 #include "../buffer.h"
 #include "../compressor/common.h"
 #include "../compressor/header.h"
 #include "../compressor/remainder.h"
 #include "../log.h"
-
 #include "code.h"
 
 // -- buffer --

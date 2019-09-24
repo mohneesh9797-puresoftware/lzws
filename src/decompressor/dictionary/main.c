@@ -4,10 +4,10 @@
 
 #define LZWS_DECOMPRESSOR_DICTIONARY_MAIN_C
 
+#include "main.h"
+
 #include "../../log.h"
 #include "../common.h"
-
-#include "main.h"
 
 // -- codes length --
 

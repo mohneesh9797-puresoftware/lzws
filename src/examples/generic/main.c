@@ -2,11 +2,12 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+#include "../../compressor/main.h"
+
 #include <string.h>
 
 #include "../../buffer.h"
 #include "../../compressor/common.h"
-#include "../../compressor/main.h"
 #include "../../compressor/state.h"
 #include "../../decompressor/common.h"
 #include "../../decompressor/main.h"

@@ -3,11 +3,11 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "../code.h"
+
 #include "../../log.h"
 #include "../../macro.h"
 #include "../combination.h"
 #include "../string_and_file.h"
-
 #include "code.h"
 
 typedef struct {

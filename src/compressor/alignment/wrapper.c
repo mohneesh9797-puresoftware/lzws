@@ -4,10 +4,10 @@
 
 #define LZWS_COMPRESSOR_ALIGNMENT_WRAPPER_C
 
+#include "wrapper.h"
+
 #include "../common.h"
 #include "../utils.h"
-
-#include "wrapper.h"
 
 static inline lzws_result_t write_alignment(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {

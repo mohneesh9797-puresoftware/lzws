@@ -2,14 +2,13 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include "alignment/wrapper.h"
-#include "dictionary/wrapper.h"
+#include "symbol.h"
 
 #include "../utils.h"
-
+#include "alignment/wrapper.h"
 #include "common.h"
+#include "dictionary/wrapper.h"
 #include "remainder.h"
-#include "symbol.h"
 
 lzws_result_t lzws_decompressor_write_first_symbol(lzws_decompressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr)
 {

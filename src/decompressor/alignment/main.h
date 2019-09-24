@@ -6,7 +6,6 @@
 #define LZWS_DECOMPRESSOR_ALIGNMENT_MAIN_H
 
 #include "../../common.h"
-
 #include "common.h"
 
 #undef LZWS_INLINE

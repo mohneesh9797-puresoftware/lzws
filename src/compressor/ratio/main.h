@@ -6,7 +6,6 @@
 #define LZWS_COMPRESSOR_RATIO_MAIN_H
 
 #include "../../common.h"
-
 #include "common.h"
 
 #undef LZWS_INLINE

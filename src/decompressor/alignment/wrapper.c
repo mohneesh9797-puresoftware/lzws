@@ -4,10 +4,10 @@
 
 #define LZWS_DECOMPRESSOR_ALIGNMENT_WRAPPER_C
 
+#include "wrapper.h"
+
 #include "../common.h"
 #include "../utils.h"
-
-#include "wrapper.h"
 
 static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {

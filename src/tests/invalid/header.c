@@ -3,11 +3,11 @@
 // Distributed under the BSD Software License (see LICENSE).
 
 #include "../../decompressor/header.h"
+
 #include "../../decompressor/common.h"
 #include "../../log.h"
 #include "../../macro.h"
 #include "../combination.h"
-
 #include "header.h"
 
 #define MAGIC_HEADER_SIZE 2

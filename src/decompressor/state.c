@@ -4,14 +4,13 @@
 
 #define LZWS_DECOMPRESSOR_STATE_C
 
-#include "alignment/wrapper.h"
-#include "dictionary/wrapper.h"
+#include "state.h"
 
 #include "../log.h"
 #include "../utils.h"
-
+#include "alignment/wrapper.h"
 #include "common.h"
-#include "state.h"
+#include "dictionary/wrapper.h"
 
 lzws_result_t lzws_decompressor_get_initial_state(
   lzws_decompressor_state_t** result_state_ptr,
