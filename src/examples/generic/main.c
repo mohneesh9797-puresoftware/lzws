@@ -68,7 +68,7 @@ int main()
     return 3;
   }
 
-  result = lzws_finish_compressor(
+  result = lzws_compressor_finish(
     compressor_state_ptr,
     &remaining_compressor_buffer, &remaining_compressor_buffer_length);
 

@@ -75,4 +75,4 @@ SEE ALSO
 --------
 *lzws_compressor_free_state*(3)
 *lzws_compress*(3)
-*lzws_finish_compressor*(3)
+*lzws_compressor_finish*(3)

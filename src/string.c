@@ -41,6 +41,37 @@ static inline lzws_result_t increase_destination_buffer(
 
 // -- compress --
 
+#define BUFFERED_COMPRESS(function, ...)                                                                       \
+  while (true) {                                                                                               \
+    uint8_t* remaining_destination_buffer             = *destination_ptr + *destination_length_ptr;            \
+    size_t   prev_remaining_destination_buffer_length = remaining_destination_buffer_length;                   \
+                                                                                                               \
+    result = (function)(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);     \
+                                                                                                               \
+    if (                                                                                                       \
+      result != 0 &&                                                                                           \
+      result != LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {                                                      \
+      return LZWS_STRING_COMPRESSOR_UNEXPECTED_ERROR;                                                          \
+    }                                                                                                          \
+                                                                                                               \
+    *destination_length_ptr += prev_remaining_destination_buffer_length - remaining_destination_buffer_length; \
+                                                                                                               \
+    if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {                                                    \
+      result = increase_destination_buffer(                                                                    \
+        destination_ptr, *destination_length_ptr,                                                              \
+        &remaining_destination_buffer_length, destination_buffer_length,                                       \
+        quiet);                                                                                                \
+                                                                                                               \
+      if (result != 0) {                                                                                       \
+        return result;                                                                                         \
+      }                                                                                                        \
+                                                                                                               \
+      continue;                                                                                                \
+    }                                                                                                          \
+                                                                                                               \
+    break;                                                                                                     \
+  }
+
 static inline lzws_result_t compress_data(
   lzws_compressor_state_t* state_ptr,
   uint8_t* source, size_t source_length,
@@ -51,51 +82,8 @@ static inline lzws_result_t compress_data(
 
   size_t remaining_destination_buffer_length = destination_buffer_length;
 
-  bool is_finished = false;
-
-  while (true) {
-    uint8_t* remaining_destination_buffer             = *destination_ptr + *destination_length_ptr;
-    size_t   prev_remaining_destination_buffer_length = remaining_destination_buffer_length;
-
-    if (is_finished) {
-      result = lzws_finish_compressor(
-        state_ptr,
-        &remaining_destination_buffer, &remaining_destination_buffer_length);
-    }
-    else {
-      result = lzws_compress(
-        state_ptr,
-        &source, &source_length,
-        &remaining_destination_buffer, &remaining_destination_buffer_length);
-    }
-
-    if (
-      result != 0 &&
-      result != LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
-      return LZWS_STRING_COMPRESSOR_UNEXPECTED_ERROR;
-    }
-
-    *destination_length_ptr += prev_remaining_destination_buffer_length - remaining_destination_buffer_length;
-
-    if (result == LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
-      result = increase_destination_buffer(
-        destination_ptr, *destination_length_ptr,
-        &remaining_destination_buffer_length, destination_buffer_length,
-        quiet);
-
-      if (result != 0) {
-        return result;
-      }
-
-      continue;
-    }
-
-    if (is_finished) {
-      break;
-    }
-
-    is_finished = true;
-  }
+  BUFFERED_COMPRESS(&lzws_compress, state_ptr, &source, &source_length);
+  BUFFERED_COMPRESS(&lzws_compressor_finish, state_ptr);
 
   result = lzws_resize_buffer(destination_ptr, *destination_length_ptr, quiet);
   if (result != 0) {

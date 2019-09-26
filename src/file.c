@@ -214,7 +214,7 @@ static inline lzws_result_t compress_data(
   lzws_result_t result;
 
   BUFFERED_COMPRESS_LOOP(&lzws_compress, state_ptr, &source, &source_length, &destination, &destination_length);
-  BUFFERED_COMPRESS_ONESHOT(&lzws_finish_compressor, state_ptr, &destination, &destination_length);
+  BUFFERED_COMPRESS_ONESHOT(&lzws_compressor_finish, state_ptr, &destination, &destination_length);
 
   return write_remaining_destination_buffer(destination_file, destination_buffer, destination_buffer_length, destination_length, quiet);
 }

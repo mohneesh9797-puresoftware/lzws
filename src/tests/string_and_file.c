@@ -116,13 +116,12 @@ static inline lzws_result_t test_compress_string(
   size_t buffer_length,
   bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups)
 {
-  uint8_t* destination;
-  size_t   destination_length;
+  uint8_t* destination        = NULL;
+  size_t   destination_length = 0;
 
   lzws_result_t test_result = lzws_compress_string(
     source, source_length,
-    &destination, &destination_length,
-    buffer_length,
+    &destination, &destination_length, buffer_length,
     without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, false);
 
   if (test_result != 0 && test_result != LZWS_STRING_VALIDATE_FAILED) {
@@ -300,13 +299,12 @@ static inline lzws_result_t test_decompress_string(
   size_t buffer_length,
   bool without_magic_header, bool msb, bool unaligned_bit_groups)
 {
-  uint8_t* destination;
-  size_t   destination_length;
+  uint8_t* destination        = NULL;
+  size_t   destination_length = 0;
 
   lzws_result_t test_result = lzws_decompress_string(
     source, source_length,
-    &destination, &destination_length,
-    buffer_length,
+    &destination, &destination_length, buffer_length,
     without_magic_header, msb, unaligned_bit_groups, false);
 
   if (

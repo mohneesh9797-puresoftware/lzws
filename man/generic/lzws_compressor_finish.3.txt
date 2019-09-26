@@ -4,7 +4,7 @@ LZWS(3)
 
 NAME
 ----
-lzws_finish_compressor - Finish compressor.
+lzws_compressor_finish - Finish compressor.
 You can't use *lzws_compress* after this call.
 Use it only after stream was finished.
 
@@ -14,7 +14,7 @@ SYNOPSIS
 *#include <lzws/compressor/main.h>*
 
 ----
-lzws_result_t lzws_finish_compressor(
+lzws_result_t lzws_compressor_finish(
   lzws_compressor_state_t* state_ptr,
   uint8_t** destination_ptr, size_t* destination_length_ptr);
 ----
@@ -57,7 +57,7 @@ You want to finish compressor after several portions of data.
 
 ----
 while (true) {
-  lzws_result_t result = lzws_finish_compressor(
+  lzws_result_t result = lzws_compressor_finish(
     state_ptr,
     &destination, &destination_length);
 

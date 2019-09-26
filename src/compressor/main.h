@@ -10,6 +10,6 @@
 lzws_result_t lzws_compress(lzws_compressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 // Use this function when you have no more source (received EOF for example).
-lzws_result_t lzws_finish_compressor(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
+lzws_result_t lzws_compressor_finish(lzws_compressor_state_t* state_ptr, uint8_t** destination_ptr, size_t* destination_length_ptr);
 
 #endif // LZWS_COMPRESSOR_MAIN_H
