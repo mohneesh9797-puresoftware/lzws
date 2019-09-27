@@ -21,30 +21,33 @@
 #define UNALIGNED_BIT_GROUPS false
 #define QUIET false
 
+#define BUFFER_LENGTH 512
+
 int main()
 {
   const char text[]      = "example text";
   size_t     text_length = strlen(text);
 
-  uint8_t* compressor_buffer;
-  size_t   compressor_buffer_length = 0;
-
-  lzws_result_t result = lzws_create_buffer_for_compressor(&compressor_buffer, &compressor_buffer_length, QUIET);
-  if (result != 0) {
-    LZWS_LOG_ERROR("create buffer for compressor failed");
-    return 1;
-  }
-
   lzws_compressor_state_t* compressor_state_ptr;
 
-  result = lzws_compressor_get_initial_state(
+  lzws_result_t result = lzws_compressor_get_initial_state(
     &compressor_state_ptr,
     WITHOUT_MAGIC_HEADER, MAX_CODE_BIT_LENGTH, BLOCK_MODE, MSB, UNALIGNED_BIT_GROUPS, QUIET);
 
   if (result != 0) {
     LZWS_LOG_ERROR("compressor get initial state failed");
 
-    free(compressor_buffer);
+    return 1;
+  }
+
+  uint8_t* compressor_buffer;
+  size_t   compressor_buffer_length = BUFFER_LENGTH;
+
+  result = lzws_create_destination_buffer_for_compressor(&compressor_buffer, &compressor_buffer_length, QUIET);
+  if (result != 0) {
+    LZWS_LOG_ERROR("create destination buffer for compressor failed");
+
+    lzws_compressor_free_state(compressor_state_ptr);
 
     return 2;
   }
@@ -62,8 +65,8 @@ int main()
   if (result != 0) {
     LZWS_LOG_ERROR("compressor failed");
 
-    lzws_compressor_free_state(compressor_state_ptr);
     free(compressor_buffer);
+    lzws_compressor_free_state(compressor_state_ptr);
 
     return 3;
   }
@@ -75,8 +78,8 @@ int main()
   if (result != 0) {
     LZWS_LOG_ERROR("finish compressor failed");
 
-    lzws_compressor_free_state(compressor_state_ptr);
     free(compressor_buffer);
+    lzws_compressor_free_state(compressor_state_ptr);
 
     return 4;
   }
@@ -100,14 +103,14 @@ int main()
   }
 
   uint8_t* decompressor_buffer;
-  size_t   decompressor_buffer_length = 0;
+  size_t   decompressor_buffer_length = BUFFER_LENGTH;
 
-  result = lzws_create_buffer_for_decompressor(&decompressor_buffer, &decompressor_buffer_length, QUIET);
+  result = lzws_create_destination_buffer_for_decompressor(&decompressor_buffer, &decompressor_buffer_length, QUIET);
   if (result != 0) {
     LZWS_LOG_ERROR("create buffer for decompressor failed");
 
-    lzws_decompressor_free_state(decompressor_state_ptr);
     free(compressor_buffer);
+    lzws_decompressor_free_state(decompressor_state_ptr);
 
     return 6;
   }
@@ -125,9 +128,9 @@ int main()
   if (result != 0) {
     LZWS_LOG_ERROR("decompressor failed");
 
-    lzws_decompressor_free_state(decompressor_state_ptr);
-    free(decompressor_buffer);
     free(compressor_buffer);
+    free(decompressor_buffer);
+    lzws_decompressor_free_state(decompressor_state_ptr);
 
     return 7;
   }
@@ -140,14 +143,14 @@ int main()
   if (decompressed_text_length != text_length || strncmp(decompressed_text, text, text_length) != 0) {
     LZWS_LOG_ERROR("decompressed text is not the same as original");
 
-    free(decompressor_buffer);
     free(compressor_buffer);
+    free(decompressor_buffer);
 
     return 8;
   }
 
-  free(decompressor_buffer);
   free(compressor_buffer);
+  free(decompressor_buffer);
 
   return 0;
 }

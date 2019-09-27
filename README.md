@@ -139,7 +139,7 @@ It is possible to test lzws using these archives.
 Install modern version of ruby:
 ```sh
 curl -sSL https://get.rvm.io | bash -s stable
-rvm install ruby-2.6.3 -C --enable-socks
+rvm install ruby-2.6.4 -C --enable-socks
 ```
 
 Install required gems:
@@ -196,8 +196,10 @@ File API:
 
 Generic API:
 
-- [lzws_create_buffer_for_compressor.3](man/generic/lzws_create_buffer_for_compressor.3.txt)
-- [lzws_create_buffer_for_decompressor.3](man/generic/lzws_create_buffer_for_decompressor.3.txt)
+- [lzws_create_source_buffer_for_compressor.3](man/generic/lzws_create_source_buffer_for_compressor.3.txt)
+- [lzws_create_destination_buffer_for_compressor.3](man/generic/lzws_create_destination_buffer_for_compressor.3.txt)
+- [lzws_create_source_buffer_for_decompressor.3](man/generic/lzws_create_source_buffer_for_decompressor.3.txt)
+- [lzws_create_destination_buffer_for_decompressor.3](man/generic/lzws_create_destination_buffer_for_decompressor.3.txt)
 - [lzws_resize_buffer.3](man/generic/lzws_resize_buffer.3.txt)
 - [lzws_compressor_get_initial_state.3](man/generic/lzws_compressor_get_initial_state.3.txt)
 - [lzws_compressor_free_state.3](man/generic/lzws_compressor_free_state.3.txt)

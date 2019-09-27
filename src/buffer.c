@@ -28,14 +28,24 @@ static inline lzws_result_t create_buffer(uint8_t** buffer_ptr, size_t* buffer_l
   return 0;
 }
 
-lzws_result_t lzws_create_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet)
+lzws_result_t lzws_create_source_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet)
 {
-  return create_buffer(buffer_ptr, buffer_length_ptr, LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH, quiet);
+  return create_buffer(buffer_ptr, buffer_length_ptr, LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_COMPRESSOR, quiet);
 }
 
-lzws_result_t lzws_create_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet)
+lzws_result_t lzws_create_destination_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet)
 {
-  return create_buffer(buffer_ptr, buffer_length_ptr, LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH, quiet);
+  return create_buffer(buffer_ptr, buffer_length_ptr, LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_COMPRESSOR, quiet);
+}
+
+lzws_result_t lzws_create_source_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet)
+{
+  return create_buffer(buffer_ptr, buffer_length_ptr, LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_DECOMPRESSOR, quiet);
+}
+
+lzws_result_t lzws_create_destination_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet)
+{
+  return create_buffer(buffer_ptr, buffer_length_ptr, LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_DECOMPRESSOR, quiet);
 }
 
 lzws_result_t lzws_resize_buffer(uint8_t** buffer_ptr, size_t buffer_length, bool quiet)

@@ -117,7 +117,7 @@ lzws_result_t lzws_compress_string(
 
   uint8_t* destination_buffer;
 
-  result = lzws_create_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
+  result = lzws_create_destination_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
   if (result != 0) {
     lzws_compressor_free_state(state_ptr);
 
@@ -227,7 +227,7 @@ lzws_result_t lzws_decompress_string(
 
   uint8_t* destination_buffer;
 
-  result = lzws_create_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
+  result = lzws_create_destination_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
   if (result != 0) {
     lzws_decompressor_free_state(state_ptr);
 

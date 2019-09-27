@@ -224,34 +224,13 @@ lzws_result_t lzws_compress_file(
   FILE* destination_file, size_t destination_buffer_length,
   bool without_magic_header, uint_fast8_t max_code_bit_length, bool block_mode, bool msb, bool unaligned_bit_groups, bool quiet)
 {
-  lzws_result_t result;
-
-  uint8_t* source_buffer;
-
-  result = lzws_create_buffer_for_compressor(&source_buffer, &source_buffer_length, quiet);
-  if (result != 0) {
-    return LZWS_FILE_ALLOCATE_FAILED;
-  }
-
-  uint8_t* destination_buffer;
-
-  result = lzws_create_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
-  if (result != 0) {
-    free(source_buffer);
-
-    return LZWS_FILE_ALLOCATE_FAILED;
-  }
-
   lzws_compressor_state_t* state_ptr;
 
-  result = lzws_compressor_get_initial_state(
+  lzws_result_t result = lzws_compressor_get_initial_state(
     &state_ptr,
     without_magic_header, max_code_bit_length, block_mode, msb, unaligned_bit_groups, quiet);
 
   if (result != 0) {
-    free(source_buffer);
-    free(destination_buffer);
-
     switch (result) {
       case LZWS_COMPRESSOR_ALLOCATE_FAILED:
         return LZWS_FILE_ALLOCATE_FAILED;
@@ -262,15 +241,34 @@ lzws_result_t lzws_compress_file(
     }
   }
 
+  uint8_t* source_buffer;
+
+  result = lzws_create_source_buffer_for_compressor(&source_buffer, &source_buffer_length, quiet);
+  if (result != 0) {
+    lzws_compressor_free_state(state_ptr);
+
+    return LZWS_FILE_ALLOCATE_FAILED;
+  }
+
+  uint8_t* destination_buffer;
+
+  result = lzws_create_destination_buffer_for_compressor(&destination_buffer, &destination_buffer_length, quiet);
+  if (result != 0) {
+    free(source_buffer);
+    lzws_compressor_free_state(state_ptr);
+
+    return LZWS_FILE_ALLOCATE_FAILED;
+  }
+
   result = compress_data(
     state_ptr,
     source_file, source_buffer, source_buffer_length,
     destination_file, destination_buffer, destination_buffer_length,
     quiet);
 
-  lzws_compressor_free_state(state_ptr);
   free(source_buffer);
   free(destination_buffer);
+  lzws_compressor_free_state(state_ptr);
 
   return result;
 }
@@ -322,34 +320,13 @@ lzws_result_t lzws_decompress_file(
   FILE* destination_file, size_t destination_buffer_length,
   bool without_magic_header, bool msb, bool unaligned_bit_groups, bool quiet)
 {
-  lzws_result_t result;
-
-  uint8_t* source_buffer;
-
-  result = lzws_create_buffer_for_decompressor(&source_buffer, &source_buffer_length, quiet);
-  if (result != 0) {
-    return LZWS_FILE_ALLOCATE_FAILED;
-  }
-
-  uint8_t* destination_buffer;
-
-  result = lzws_create_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
-  if (result != 0) {
-    free(source_buffer);
-
-    return LZWS_FILE_ALLOCATE_FAILED;
-  }
-
   lzws_decompressor_state_t* state_ptr;
 
-  result = lzws_decompressor_get_initial_state(
+  lzws_result_t result = lzws_decompressor_get_initial_state(
     &state_ptr,
     without_magic_header, msb, unaligned_bit_groups, quiet);
 
   if (result != 0) {
-    free(source_buffer);
-    free(destination_buffer);
-
     switch (result) {
       case LZWS_DECOMPRESSOR_ALLOCATE_FAILED:
         return LZWS_FILE_ALLOCATE_FAILED;
@@ -358,15 +335,34 @@ lzws_result_t lzws_decompress_file(
     }
   }
 
+  uint8_t* source_buffer;
+
+  result = lzws_create_source_buffer_for_decompressor(&source_buffer, &source_buffer_length, quiet);
+  if (result != 0) {
+    lzws_decompressor_free_state(state_ptr);
+
+    return LZWS_FILE_ALLOCATE_FAILED;
+  }
+
+  uint8_t* destination_buffer;
+
+  result = lzws_create_destination_buffer_for_decompressor(&destination_buffer, &destination_buffer_length, quiet);
+  if (result != 0) {
+    free(source_buffer);
+    lzws_decompressor_free_state(state_ptr);
+
+    return LZWS_FILE_ALLOCATE_FAILED;
+  }
+
   result = decompress_data(
     state_ptr,
     source_file, source_buffer, source_buffer_length,
     destination_file, destination_buffer, destination_buffer_length,
     quiet);
 
-  lzws_decompressor_free_state(state_ptr);
   free(source_buffer);
   free(destination_buffer);
+  lzws_decompressor_free_state(state_ptr);
 
   return result;
 }

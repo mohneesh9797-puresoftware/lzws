@@ -44,5 +44,7 @@ Another variant is that you can resize it.
 
 SEE ALSO
 --------
-*lzws_create_buffer_for_compressor*(3)
-*lzws_create_buffer_for_decompressor*(3)
+*lzws_create_source_buffer_for_compressor*(3)
+*lzws_create_destination_buffer_for_compressor*(3)
+*lzws_create_source_buffer_for_decompressor*(3)
+*lzws_create_destination_buffer_for_decompressor*(3)

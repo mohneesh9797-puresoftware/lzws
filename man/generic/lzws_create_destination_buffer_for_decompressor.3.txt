@@ -1,0 +1,51 @@
+LZWS(3)
+=======
+
+
+NAME
+----
+lzws_create_destination_buffer_for_decompressor - Create destination buffer for decompressor.
+
+
+SYNOPSIS
+--------
+*#include <lzws/buffer.h>*
+
+----
+lzws_result_t lzws_create_destination_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+----
+
+
+OPTIONS
+-------
+*`uint8_t** buffer_ptr`*::
+  Pointer to buffer.
+
+*`size_t* buffer_length_ptr`*::
+  Pointer to buffer length.
+
+*`bool quiet`*::
+  Disable error messages.
+
+
+RETURN VALUE
+------------
+Returns *0* if creation was successful.
+Returns *LZWS_BUFFER_ALLOCATE_FAILED* when memory allocation was failed.
+
+
+DESCRIPTION
+-----------
+This function creates destination buffer for decompressor.
+You can pass 0 as *buffer_length_ptr* value and it will select default optimal length for performance.
+It will write buffer length at *buffer_length_ptr* pointer.
+
+You have to free *buffer_ptr* later.
+
+
+SEE ALSO
+--------
+*lzws_create_source_buffer_for_decompressor*(3)
+*lzws_create_source_buffer_for_compressor*(3)
+*lzws_create_destination_buffer_for_compressor*(3)
+*lzws_resize_buffer*(3)

@@ -110,7 +110,8 @@ int main(int argc, char** argv)
   }
   else {
     result = lzws_decompress_file(
-      stdin, 0, stdout, 0,
+      stdin, 0,
+      stdout, 0,
       without_magic_header, msb, unaligned_bit_groups, quiet);
 
     if (result != 0) {

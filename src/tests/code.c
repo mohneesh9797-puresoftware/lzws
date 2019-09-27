@@ -100,7 +100,7 @@ lzws_result_t lzws_test_compressor_write_codes(
 {
   uint8_t* destination_buffer;
 
-  lzws_result_t result = lzws_create_buffer_for_compressor(&destination_buffer, &destination_buffer_length, false);
+  lzws_result_t result = lzws_create_destination_buffer_for_compressor(&destination_buffer, &destination_buffer_length, false);
   if (result != 0) {
     return LZWS_TEST_CODES_ALLOCATE_FAILED;
   }

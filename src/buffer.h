@@ -15,20 +15,25 @@ enum {
   LZWS_BUFFER_REALLOCATE_FAILED
 };
 
-// Compressor/decompressor dictionary implementations has different speed.
+// Compressor dictionary implementations has different performance.
 // Buffers shouldn't be a bottleneck.
-// So we can use bigger buffers for faster implementation.
+// We can use bigger buffers for faster implementation.
 
 #if defined(LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST)
-#define LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 15) // 32 KB
+#define LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_COMPRESSOR (1 << 17)      // 128 KB
+#define LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_COMPRESSOR (1 << 15) // 32 KB
 #elif defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY)
-#define LZWS_COMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
+#define LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_COMPRESSOR (1 << 18)      // 256 KB
+#define LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_COMPRESSOR (1 << 16) // 64 KB
 #endif
 
-#define LZWS_DECOMPRESSOR_DEFAULT_BUFFER_LENGTH (1 << 16) // 64 KB
+#define LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_DECOMPRESSOR (1 << 18)      // 256 KB
+#define LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_DECOMPRESSOR (1 << 16) // 64 KB
 
-lzws_result_t lzws_create_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
-lzws_result_t lzws_create_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+lzws_result_t lzws_create_source_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+lzws_result_t lzws_create_destination_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+lzws_result_t lzws_create_source_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
+lzws_result_t lzws_create_destination_buffer_for_decompressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
 
 lzws_result_t lzws_resize_buffer(uint8_t** buffer_ptr, size_t buffer_length, bool quiet);
 
