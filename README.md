@@ -82,9 +82,9 @@ There is a script for release build.
 
 You can test performance using linux kernel archive:
 ```sh
-wget "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.1.2.tar.xz"
-tar xf linux-5.1.2.tar.xz
-tar cf linux.tar linux-5.1.2
+wget "https://mirrors.edge.kernel.org/pub/linux/kernel/v2.6/linux-2.6.39.4.tar.xz"
+tar xf linux-2.6.39.4.tar.xz
+tar cf linux.tar linux-2.6.39.4
 
 cmake ".." \
   -DLZWS_COMPRESSOR_DICTIONARY="sparse-array" \
