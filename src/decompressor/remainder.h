@@ -14,7 +14,7 @@
 #define LZWS_INLINE inline
 #endif
 
-// Some UNIX compress implementations writes random bits from uninitialized buffer as remainder bits.
+// Some UNIX compress implementations write random bits from uninitialized buffer as remainder bits.
 // There is no guarantee that remainder bits will be zeroes at the end of the file or as a part of alignment.
 // So in terms of compatibility decompressor have to just ignore remainder bit values.
 

@@ -62,7 +62,7 @@ static inline lzws_result_t increase_destination_buffer(
     break;                                                                                                     \
   }
 
-static inline lzws_result_t compress_data(
+static inline lzws_result_t compress(
   lzws_compressor_state_t* compressor_state_ptr,
   const lzws_code_t* codes, size_t codes_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length)
@@ -108,7 +108,7 @@ lzws_result_t lzws_test_compressor_write_codes(
   *destination_ptr        = destination_buffer;
   *destination_length_ptr = 0;
 
-  result = compress_data(
+  result = compress(
     compressor_state_ptr,
     codes, codes_length,
     destination_ptr, destination_length_ptr, destination_buffer_length);

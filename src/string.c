@@ -72,7 +72,7 @@ static inline lzws_result_t increase_destination_buffer(
     break;                                                                                                     \
   }
 
-static inline lzws_result_t compress_data(
+static inline lzws_result_t compress(
   lzws_compressor_state_t* state_ptr,
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
@@ -127,7 +127,7 @@ lzws_result_t lzws_compress_string(
   *destination_ptr        = destination_buffer;
   *destination_length_ptr = 0;
 
-  result = compress_data(
+  result = compress(
     state_ptr,
     source, source_length,
     destination_ptr, destination_length_ptr, destination_buffer_length,
@@ -146,7 +146,7 @@ lzws_result_t lzws_compress_string(
 
 // -- decompress --
 
-static inline lzws_result_t decompress_data(
+static inline lzws_result_t decompress(
   lzws_decompressor_state_t* state_ptr,
   uint8_t* source, size_t source_length,
   uint8_t** destination_ptr, size_t* destination_length_ptr, size_t destination_buffer_length,
@@ -237,7 +237,7 @@ lzws_result_t lzws_decompress_string(
   *destination_ptr        = destination_buffer;
   *destination_length_ptr = 0;
 
-  result = decompress_data(
+  result = decompress(
     state_ptr,
     source, source_length,
     destination_ptr, destination_length_ptr, destination_buffer_length,
