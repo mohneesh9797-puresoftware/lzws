@@ -27,8 +27,8 @@ enum {
 #define LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_COMPRESSOR (1 << 16) // 64 KB
 #endif
 
-#define LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_DECOMPRESSOR (1 << 18)      // 256 KB
-#define LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_DECOMPRESSOR (1 << 16) // 64 KB
+#define LZWS_DEFAULT_SOURCE_BUFFER_LENGTH_FOR_DECOMPRESSOR (1 << 16)      // 64 KB
+#define LZWS_DEFAULT_DESTINATION_BUFFER_LENGTH_FOR_DECOMPRESSOR (1 << 18) // 256 KB
 
 lzws_result_t lzws_create_source_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
 lzws_result_t lzws_create_destination_buffer_for_compressor(uint8_t** buffer_ptr, size_t* buffer_length_ptr, bool quiet);
