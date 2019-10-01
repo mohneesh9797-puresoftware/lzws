@@ -82,7 +82,7 @@ There is a script for release build.
 
 You can test performance using linux kernel archive:
 ```sh
-wget "https://mirrors.edge.kernel.org/pub/linux/kernel/v2.6/linux-2.6.39.4.tar.xz"
+wget "https://cdn.kernel.org/pub/linux/kernel/v2.6/linux-2.6.39.4.tar.xz"
 tar xf linux-2.6.39.4.tar.xz
 tar cf linux.tar linux-2.6.39.4
 
