@@ -139,7 +139,7 @@ It is possible to test lzws using these archives.
 Install modern version of ruby:
 ```sh
 curl -sSL https://get.rvm.io | bash -s stable
-rvm install ruby-2.6.4 -C --enable-socks
+rvm install ruby-2.6.5 -C --enable-socks
 ```
 
 Install required gems:

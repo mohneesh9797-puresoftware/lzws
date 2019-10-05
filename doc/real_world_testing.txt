@@ -85,7 +85,7 @@ How to use these scripts?
 curl -sSL https://get.rvm.io | bash -s stable
 
 2. Install ruby
-rvm install ruby-2.6.4 -C --enable-socks
+rvm install ruby-2.6.5 -C --enable-socks
 
 3. Install required gems
 cd scripts/tar-z-collector
