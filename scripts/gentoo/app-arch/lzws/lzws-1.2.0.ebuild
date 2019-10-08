@@ -7,7 +7,7 @@ inherit cmake-multilib cmake-utils
 
 DESCRIPTION="LZW streaming compressor/decompressor compatible with UNIX compress."
 HOMEPAGE="https://github.com/andrew-aladev/lzws"
-SRC_URI="https://github.com/andrew-aladev/lzws/archive/v${PV}.tar.gz"
+SRC_URI="https://github.com/andrew-aladev/lzws/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD-3-Clause"
 SLOT="0"
