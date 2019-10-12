@@ -102,7 +102,7 @@ static inline lzws_result_t read_more_source(
 
 #define BUFFERED_READ_SOURCE(function, ...)                                            \
   while (true) {                                                                       \
-    result = (function)(__VA_ARGS__);                                                  \
+    result = function(__VA_ARGS__);                                                    \
     if (result != 0) {                                                                 \
       return result;                                                                   \
     }                                                                                  \
@@ -168,7 +168,7 @@ static inline lzws_result_t write_remaining_destination(FILE* destination_file, 
     size_t   remaining_destination_buffer_length      = destination_buffer_length - *destination_length_ptr;   \
     size_t   prev_remaining_destination_buffer_length = remaining_destination_buffer_length;                   \
                                                                                                                \
-    result = (function)(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);     \
+    result = function(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);       \
                                                                                                                \
     if (                                                                                                       \
       result != 0 &&                                                                                           \
@@ -202,7 +202,7 @@ static inline lzws_result_t buffered_compress(
 {
   lzws_result_t result;
 
-  BUFFERED_COMPRESS(&lzws_compress, state_ptr, source_ptr, source_length_ptr);
+  BUFFERED_COMPRESS(lzws_compress, state_ptr, source_ptr, source_length_ptr);
 
   return 0;
 }
@@ -214,7 +214,7 @@ static inline lzws_result_t buffered_compressor_finish(
 {
   lzws_result_t result;
 
-  BUFFERED_COMPRESS(&lzws_compressor_finish, state_ptr);
+  BUFFERED_COMPRESS(lzws_compressor_finish, state_ptr);
 
   return 0;
 }
@@ -232,7 +232,7 @@ static inline lzws_result_t compress(
   size_t   destination_length = 0;
 
   BUFFERED_READ_SOURCE(
-    &buffered_compress,
+    buffered_compress,
     state_ptr,
     &source, &source_length,
     destination_file, destination_buffer, &destination_length, destination_buffer_length,
@@ -372,7 +372,7 @@ static inline lzws_result_t decompress(
   size_t   destination_length = 0;
 
   BUFFERED_READ_SOURCE(
-    &buffered_decompress,
+    buffered_decompress,
     state_ptr,
     &source, &source_length,
     destination_file, destination_buffer, &destination_length, destination_buffer_length,

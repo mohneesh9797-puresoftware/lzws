@@ -37,7 +37,7 @@ static inline lzws_result_t increase_destination_buffer(
     uint8_t* remaining_destination_buffer             = *destination_ptr + *destination_length_ptr;            \
     size_t   prev_remaining_destination_buffer_length = remaining_destination_buffer_length;                   \
                                                                                                                \
-    result = (function)(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);     \
+    result = function(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);       \
                                                                                                                \
     if (                                                                                                       \
       result != 0 &&                                                                                           \
@@ -72,18 +72,18 @@ static inline lzws_result_t compress(
   size_t remaining_destination_buffer_length = destination_buffer_length;
 
   if (!compressor_state_ptr->without_magic_header) {
-    BUFFERED_COMPRESS(&lzws_compressor_write_magic_header, compressor_state_ptr);
+    BUFFERED_COMPRESS(lzws_compressor_write_magic_header, compressor_state_ptr);
   }
 
-  BUFFERED_COMPRESS(&lzws_compressor_write_header, compressor_state_ptr);
+  BUFFERED_COMPRESS(lzws_compressor_write_header, compressor_state_ptr);
 
   for (size_t index = 0; index < codes_length; index++) {
     lzws_code_t code = codes[index];
 
-    BUFFERED_COMPRESS(&lzws_compressor_write_code, compressor_state_ptr, code);
+    BUFFERED_COMPRESS(lzws_compressor_write_code, compressor_state_ptr, code);
   }
 
-  BUFFERED_COMPRESS(&lzws_compressor_flush_remainder, compressor_state_ptr);
+  BUFFERED_COMPRESS(lzws_compressor_flush_remainder, compressor_state_ptr);
 
   result = lzws_resize_buffer(destination_ptr, *destination_length_ptr, false);
   if (result != 0) {

@@ -46,7 +46,7 @@ static inline lzws_result_t increase_destination_buffer(
     uint8_t* remaining_destination_buffer             = *destination_ptr + *destination_length_ptr;            \
     size_t   prev_remaining_destination_buffer_length = remaining_destination_buffer_length;                   \
                                                                                                                \
-    result = (function)(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);     \
+    result = function(__VA_ARGS__, &remaining_destination_buffer, &remaining_destination_buffer_length);       \
                                                                                                                \
     if (                                                                                                       \
       result != 0 &&                                                                                           \
@@ -82,8 +82,8 @@ static inline lzws_result_t compress(
 
   size_t remaining_destination_buffer_length = destination_buffer_length;
 
-  BUFFERED_COMPRESS(&lzws_compress, state_ptr, &source, &source_length);
-  BUFFERED_COMPRESS(&lzws_compressor_finish, state_ptr);
+  BUFFERED_COMPRESS(lzws_compress, state_ptr, &source, &source_length);
+  BUFFERED_COMPRESS(lzws_compressor_finish, state_ptr);
 
   result = lzws_resize_buffer(destination_ptr, *destination_length_ptr, quiet);
   if (result != 0) {
