@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  test:
+  build:
     docker:
       - image: puchuu/test-lzws_amd64-pc-linux-gnu:latest
     branches:
