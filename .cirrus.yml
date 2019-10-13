@@ -1,2 +1,9 @@
 container:
-  image: puchuu/test-lzws_amd64-pc-linux-gnu:latest
+  cpu: 1
+  memory: 1G
+
+task:
+  only_if: $CIRRUS_BRANCH == 'master'
+  container:
+    image: puchuu/test-lzws_amd64-pc-linux-gnu:latest
+  script: /home/data/entrypoint.sh
