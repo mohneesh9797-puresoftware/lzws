@@ -1,0 +1,11 @@
+version: "2.1"
+
+jobs:
+  test:
+    docker:
+      - image: puchuu/test-lzws_amd64-pc-linux-gnu:latest
+    branches:
+      only:
+        - master
+    steps:
+      - /home/data/entrypoint.sh

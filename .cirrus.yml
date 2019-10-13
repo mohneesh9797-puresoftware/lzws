@@ -1,7 +1,3 @@
-container:
-  cpu: 1
-  memory: 1G
-
 task:
   only_if: $CIRRUS_BRANCH == 'master'
   container:
