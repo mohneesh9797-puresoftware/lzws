@@ -8,4 +8,4 @@ jobs:
       only:
         - master
     steps:
-      - run: /home/data/entrypoint.sh
+      - run: /home/entrypoint.sh
