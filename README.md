@@ -174,10 +174,6 @@ It will take a week on modern CPU (there are many large archives).
 Test will be successful if file [volatile_archives.xz](scripts/tar-z-collector/data/volatile_archives.xz) will be empty.
 Volatile archives means the list of archives that lzws/ncompress can process, but ncompress/lzws can't.
 
-## Multiarch testing
-
-WIP
-
 ## Man
 
 CLI:
