@@ -11,7 +11,7 @@ DOCKER_IMAGE="${DOCKER_IMAGE_PREFIX}_amd64-pc-linux-gnu"
 CONTAINER=$(buildah from "docker.io/$DOCKER_USERNAME/test_amd64-pc-linux-gnu:latest")
 buildah config --label maintainer="$MAINTAINER" --entrypoint "/home/data/entrypoint.sh" "$CONTAINER"
 
-mkdir -p /home/data
+run mkdir -p /home/data
 copy ../entrypoint.sh /home/data/
 
 copy root/ /
