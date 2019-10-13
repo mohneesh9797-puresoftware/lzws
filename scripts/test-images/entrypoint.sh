@@ -3,6 +3,7 @@ set -e
 
 cd "$(dirname $0)"
 
-git clone "https://github.com/andrew-aladev/lzws.git" "lzws" --depth 1
+git clone "https://github.com/andrew-aladev/lzws.git" --single-branch --branch master --depth 1 "lzws"
 cd "lzws"
-"./scripts/toolchains.sh"
+
+./scripts/toolchains.sh
