@@ -1,0 +1,2 @@
+container:
+  image: puchuu/test-lzws_amd64-pc-linux-gnu:latest
