@@ -133,6 +133,11 @@ make clean && make
 CTEST_OUTPUT_ON_FAILURE=1 make test
 ```
 
+## CI
+
+Travis and appveyor uses [scripts/toolchains.sh](scripts/toolchains.sh) directly.
+Cirrus and Circle uses prebuilt [scripts/test-images](scripts/test-images).
+
 ## Real world testing
 
 There are a great amount of `tar.Z` archives available on the internet.
