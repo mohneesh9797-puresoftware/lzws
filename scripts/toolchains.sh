@@ -9,17 +9,10 @@ build="$tmp/toolchain-build"
 mkdir -p "$build"
 cd "$build"
 
-# We need to tests builds for all possible toolchains and dictionaries.
+# We need to make test builds for all possible toolchains and dictionaries.
 toolchains="../../cmake/toolchains"
 
-kernel_name=$(uname -s)
-if [ $kernel_name = "Darwin" ]; then
-  toolchains="$toolchains/osx"
-elif [ $kernel_name = "FreeBSD" ]; then
-  toolchains="$toolchains/freebsd"
-else
-  toolchains="$toolchains/linux"
-fi
+some_test_passed=false
 
 find "$toolchains" -type f | while read -r toolchain; do
   for dictionary in "linked-list" "sparse-array"; do
@@ -27,6 +20,7 @@ find "$toolchains" -type f | while read -r toolchain; do
 
     find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
+    # Toolchain may not work on target platform.
     cmake "../.." \
       -DCMAKE_TOOLCHAIN_FILE="$toolchain" \
       -DLZWS_COMPRESSOR_DICTIONARY="$dictionary" \
@@ -37,10 +31,18 @@ find "$toolchains" -type f | while read -r toolchain; do
       -DLZWS_EXAMPLES=ON \
       -DLZWS_MAN=OFF \
       -DCMAKE_BUILD_TYPE="RELEASE" \
-      -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native"
+      -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native" \
+      || continue
     make clean
     make -j2
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
+
+    some_test_passed=true
   done
 done
+
+if [ "$some_test_passed" = false ]; then
+  echo "At least one test should pass"
+  exit 1
+fi
