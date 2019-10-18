@@ -43,6 +43,6 @@ find "$toolchains" -type f | while read -r toolchain; do
 done
 
 if [ "$some_test_passed" = false ]; then
-  echo "At least one test should pass"
+  echo "At least one test should pass" > /dev/stderr
   exit 1
 fi
