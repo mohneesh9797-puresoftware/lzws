@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 cd "$(dirname $0)"
@@ -14,7 +14,7 @@ toolchains="../../cmake/toolchains"
 
 some_test_passed=false
 
-find "$toolchains" -type f | while read -r toolchain; do
+while read -r toolchain; do
   for dictionary in "linked-list" "sparse-array"; do
     echo "toolchain: $toolchain, dictionary: $dictionary"
 
@@ -40,7 +40,7 @@ find "$toolchains" -type f | while read -r toolchain; do
 
     some_test_passed=true
   done
-done
+done < <(find "$toolchains" -type f)
 
 if [ "$some_test_passed" = false ]; then
   echo "At least one test should pass" > /dev/stderr
