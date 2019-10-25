@@ -6,6 +6,7 @@ gem "filesize"
 gem "ruby-xz"
 
 group :development, :test do
+  gem "rake"
   gem "rubocop"
   gem "rubocop-performance"
   gem "rubocop-rails"
