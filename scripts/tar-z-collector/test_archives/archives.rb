@@ -1,6 +1,7 @@
 require "colorize"
 require "digest"
 require "filesize"
+require "ocg"
 require "uri"
 
 require "English"
@@ -30,26 +31,30 @@ ALL_BINARIES = (LZWS_BINARIES + [COMPRESS_BINARY]).freeze
 
 # -- lzws options --
 
-LZWS_MAX_CODE_BIT_LENGTH_OPTIONS = (9..16)
-  .map { |length| "--max-code-bit-length=#{length}" }
-  .freeze
-LZWS_OTHER_OPTIONS = %w[
-  --without-magic-header
-  --msb
-  --raw
-  --unaligned-bit-groups
+BOOLS = [
+  true,
+  false
 ]
 .freeze
 
-# Variant with no other options need to be included too.
-LZWS_OTHER_OPTION_COMBINATIONS = (0..LZWS_OTHER_OPTIONS.length)
-  .flat_map { |length| LZWS_OTHER_OPTIONS.combination(length).to_a }
-  .freeze
+LZWS_OPTION_COMBINATIONS = OCG.new(
+  "max-code-bit-length"  => 9..16,
+  "without-magic-header" => BOOLS,
+  "msb"                  => BOOLS,
+  "raw"                  => BOOLS,
+  "unaligned-bit-groups" => BOOLS
+)
+.to_a
 
-LZWS_OPTION_COMBINATIONS = LZWS_MAX_CODE_BIT_LENGTH_OPTIONS
-  .product(LZWS_OTHER_OPTION_COMBINATIONS)
-  .map(&:flatten)
-  .freeze
+LZWS_OPTIONS = LZWS_OPTION_COMBINATIONS.map do |combination|
+  combination.map do |name, value|
+    next nil if value  == false
+    next name if value == true
+
+    "#{name}=#{value}"
+  end
+  .compact
+end
 
 def download_archive(url)
   begin
@@ -146,7 +151,7 @@ def test_archive(path)
   # So this test can take a long time.
 
   lzws_re_decompressed_digests = LZWS_BINARIES.flat_map do |binary|
-    LZWS_OPTION_COMBINATIONS.map do |options|
+    LZWS_OPTIONS.map do |options|
       STDERR.print "."
 
       options_text = options.join " "

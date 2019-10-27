@@ -1,4 +1,4 @@
-image: Ubuntu1804
+image: Ubuntu
 
 init:
   - sh: sudo apt-get install -y libgmp-dev
