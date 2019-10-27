@@ -8,9 +8,11 @@ addons:
   apt:
     packages:
       - libgmp-dev
+    update: true
   homebrew:
     packages:
       - gmp
+    update: true
 
 script:
   - scripts/toolchains.sh
