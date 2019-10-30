@@ -6,7 +6,7 @@ GEM
     ast (2.4.0)
     colorize (0.8.1)
     filesize (0.2.0)
-    jaro_winkler (1.5.3)
+    jaro_winkler (1.5.4)
     ocg (1.1.0)
     parallel (1.18.0)
     parser (2.6.5.0)
