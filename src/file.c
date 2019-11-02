@@ -100,28 +100,42 @@ static inline lzws_result_t read_more_source(
   return 0;
 }
 
-#define BUFFERED_READ_SOURCE(function, ...)                                            \
-  while (true) {                                                                       \
-    result = function(__VA_ARGS__);                                                    \
-    if (result != 0) {                                                                 \
-      return result;                                                                   \
-    }                                                                                  \
-                                                                                       \
-    result = read_more_source(                                                         \
-      source_file,                                                                     \
-      &source, &source_length,                                                         \
-      source_buffer, source_buffer_length,                                             \
-      quiet);                                                                          \
-                                                                                       \
-    if (result == LZWS_FILE_READ_FINISHED) {                                           \
-      /* Some UNIX compress implementations write alignment at the end of the file. */ \
-      /* So source length here can not be zero here, we have to ignore it. */          \
-      break;                                                                           \
-    }                                                                                  \
-    else if (result != 0) {                                                            \
-      return result;                                                                   \
-    }                                                                                  \
-  }
+#define BUFFERED_READ_SOURCE(function, ...)                                              \
+  do {                                                                                   \
+    bool is_function_called = false;                                                     \
+                                                                                         \
+    while (true) {                                                                       \
+      result = read_more_source(                                                         \
+        source_file,                                                                     \
+        &source, &source_length,                                                         \
+        source_buffer, source_buffer_length,                                             \
+        quiet);                                                                          \
+                                                                                         \
+      if (result == LZWS_FILE_READ_FINISHED) {                                           \
+        /* Some UNIX compress implementations write alignment at the end of the file. */ \
+        /* So source length here can not be zero here, we have to ignore it. */          \
+        break;                                                                           \
+      }                                                                                  \
+      else if (result != 0) {                                                            \
+        return result;                                                                   \
+      }                                                                                  \
+                                                                                         \
+      result = function(__VA_ARGS__);                                                    \
+      if (result != 0) {                                                                 \
+        return result;                                                                   \
+      }                                                                                  \
+                                                                                         \
+      is_function_called = true;                                                         \
+    }                                                                                    \
+                                                                                         \
+    if (!is_function_called) {                                                           \
+      /* Function should be called at least once. */                                     \
+      result = function(__VA_ARGS__);                                                    \
+      if (result != 0) {                                                                 \
+        return result;                                                                   \
+      }                                                                                  \
+    }                                                                                    \
+  } while (false);
 
 // Algorithm has written data into destination buffer.
 // We need to write this data into file.
