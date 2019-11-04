@@ -4,6 +4,8 @@ os:
   - linux
   - osx
 
+dist: bionic
+
 arch:
   - amd64
   - arm64
@@ -11,6 +13,7 @@ arch:
 addons:
   apt:
     packages:
+      - cmake
       - libgmp-dev
     update: true
   homebrew:
