@@ -5,6 +5,7 @@ os:
   - osx
 
 dist: bionic
+osx_image: xcode11.2
 
 arch:
   - amd64
@@ -15,11 +16,9 @@ addons:
     packages:
       - cmake
       - libgmp-dev
-    update: true
   homebrew:
     packages:
       - gmp
-    update: true
 
 script:
   - scripts/toolchains.sh
