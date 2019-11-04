@@ -1,6 +1,6 @@
 # LZW streaming compressor/decompressor
 
-[![Travis test status](https://travis-ci.org/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.org/andrew-aladev/lzws)
+[![Travis test status](https://travis-ci.com/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.com/andrew-aladev/lzws)
 [![AppVeyor test status](https://ci.appveyor.com/api/projects/status/github/andrew-aladev/lzws?branch=master&svg=true)](https://ci.appveyor.com/project/andrew-aladev/lzws/branch/master)
 [![Cirrus test status](https://api.cirrus-ci.com/github/andrew-aladev/lzws.svg?branch=master)](https://cirrus-ci.com/github/andrew-aladev/lzws)
 [![Circle test status](https://circleci.com/gh/andrew-aladev/lzws/tree/master.svg?style=shield)](https://circleci.com/gh/andrew-aladev/lzws/tree/master)
