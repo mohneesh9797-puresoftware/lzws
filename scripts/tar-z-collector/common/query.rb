@@ -15,7 +15,8 @@ ENV["SOCKS_SERVER"] = TOR_SOCKS_SERVER
 ENV["ftp_proxy"] = TOR_SOCKS_PROXY
 ENV["https_proxy"] = ENV["http_proxy"] = TOR_HTTP_PROXY
 
-TIMEOUT = 20 # seconds
+TIMEOUT        = 20 # seconds
+REDIRECT_LIMIT = 5
 
 # -- http --
 
@@ -32,7 +33,9 @@ HTTP_OPTIONS =
   .to_h
   .freeze
 
-def get_http_content(uri)
+def get_http_content(uri, redirect_limit = REDIRECT_LIMIT)
+  raise StandardError, "http redirect limit exceeded" if redirect_limit == 0
+
   options = HTTP_OPTIONS.merge(
     :use_ssl => uri.scheme == "https"
   )
@@ -45,9 +48,18 @@ def get_http_content(uri)
     raise StandardError, "http query failed, error: #{error}"
   end
 
-  raise StandardError, "http response failed, code: #{response.code}" unless response.is_a? Net::HTTPSuccess
+  case response
+  when Net::HTTPSuccess
+    response.body || ""
+  when Net::HTTPRedirection
+    next_uri = URI response["location"]
+    next_uri = URI.join uri, next_uri if next_uri.relative?
+    warn "http redirect to #{next_uri}"
 
-  response.body || ""
+    get_http_content next_uri, redirect_limit - 1
+  else
+    raise StandardError, "http response failed, code: #{response.code}"
+  end
 end
 
 OPEN_OPTIONS =

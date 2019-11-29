@@ -10,18 +10,22 @@ require_relative "../common/query"
 # We can make a queue of search urls and process urls one-by-one instead.
 # This method provides better results.
 
+# "tar.Z" index|directory|listing|ftp|file|archive
+MAIN_TEXT        = "\"#{ARCHIVE_EXTENSION}\"".freeze
+ADDITIONAL_TEXTS = %w[index directory listing ftp file archive].freeze
+
 def get_text
-  # "tar.Z" index|directory|listing|ftp|file|archive
   [
-    "\"#{ARCHIVE_EXTENSION}\"",
-    %w[index directory listing ftp file archive].shuffle.join("|")
+    MAIN_TEXT,
+    ADDITIONAL_TEXTS.shuffle.slice(0, rand(0..ADDITIONAL_TEXTS.length)).join("|")
   ]
   .shuffle
   .join(" ")
+  .strip
 end
 
 def read_new_page_urls_from_search_url(url, text, page_number, page_urls)
-  warn "- processing search url: #{url}, page number: #{page_number}"
+  warn "- processing search url: #{url}, text: #{text}, page number: #{page_number}"
 
   begin
     uri = URI "#{url}/search"
