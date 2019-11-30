@@ -136,7 +136,7 @@ def get_content_or_listing_from_ftp(uri)
       ftp.chdir path
       data = ftp.list.join "\n"
       return data, true
-    rescue StandardError # rubocop:disable Lint/HandleExceptions
+    rescue StandardError # rubocop:disable Lint/SuppressedException
     end
 
     data = get_file_from_ftp ftp, path, nil
