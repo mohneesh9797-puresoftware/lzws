@@ -17,6 +17,7 @@ ENV["https_proxy"] = ENV["http_proxy"] = TOR_HTTP_PROXY
 
 TIMEOUT        = 20 # seconds
 REDIRECT_LIMIT = 5
+SIZE_LIMIT     = 1 << 30 # 1 GB
 
 # -- http --
 
@@ -42,6 +43,10 @@ def get_http_content(uri, redirect_limit = REDIRECT_LIMIT)
 
   begin
     response = Net::HTTP.start(uri.host, uri.port, options) do |http|
+      head           = http.request_head uri.path
+      content_length = head["content-length"].to_i
+      raise StandardError, "size limit exceeded, requested size: #{content_length}" if content_length > SIZE_LIMIT
+
       http.get uri
     end
   rescue StandardError => error
@@ -114,7 +119,7 @@ end
 
 def download_file_from_ftp(uri, file_path)
   process_ftp(uri) do |ftp|
-    ftp.getbinaryfile uri.path, file_path
+    get_file_from_ftp ftp, uri.path, file_path
   end
 
   nil
@@ -134,7 +139,14 @@ def get_content_or_listing_from_ftp(uri)
     rescue StandardError # rubocop:disable Lint/HandleExceptions
     end
 
-    data = ftp.getbinaryfile path, nil
+    data = get_file_from_ftp ftp, path, nil
     return data, false
   end
+end
+
+def get_file_from_ftp(ftp, path, file_path)
+  size = ftp.size path
+  raise StandardError, "size limit exceeded, requested size: #{size}" if size > SIZE_LIMIT
+
+  ftp.getbinaryfile path, file_path
 end
