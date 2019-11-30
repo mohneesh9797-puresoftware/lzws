@@ -43,7 +43,10 @@ def get_http_content(uri, redirect_limit = REDIRECT_LIMIT)
 
   begin
     response = Net::HTTP.start(uri.host, uri.port, options) do |http|
-      head           = http.request_head uri.path
+      path_for_head = uri.path
+      path_for_head = "/" if path_for_head.empty?
+      head          = http.request_head path_for_head
+
       content_length = head["content-length"].to_i
       raise StandardError, "size limit exceeded, requested size: #{content_length}" if content_length > SIZE_LIMIT
 
