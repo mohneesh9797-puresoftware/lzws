@@ -30,6 +30,7 @@ option (LZWS_SHARED   "build shared libs" ON)
 option (LZWS_STATIC   "build static libs" OFF)
 option (LZWS_CLI      "build cli"         ON)
 option (LZWS_TESTS    "build tests"       ON)
+option (LZWS_COVERAGE "enable coverage"   OFF)
 option (LZWS_EXAMPLES "build examples"    OFF)
 option (LZWS_MAN      "build man"         ON)
 
@@ -55,14 +56,16 @@ cmake_get_verbose_flags ()
 include (GetPipeFlags)
 cmake_get_pipe_flags ()
 
+if (LZWS_COVERAGE)
+  include (GetCoverageFlags)
+  cmake_get_coverage_flags ()
+endif ()
+
 include (CheckC11)
 cmake_check_c11 ()
 
 include (CheckIPO)
 cmake_check_ipo ()
-
-include (CheckRunnable)
-cmake_check_runnable ()
 
 find_package (GMP REQUIRED)
 
@@ -76,7 +79,11 @@ if (LZWS_STATIC AND NOT CMAKE_GMP_STATIC_LIBRARY_PATH)
   message (FATAL_ERROR "GMP static library is not available.")
 endif ()
 
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_PIPE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C11_C_FLAGS}")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_PIPE_C_FLAGS} ${CMAKE_C11_C_FLAGS}")
+
+if (LZWS_COVERAGE)
+  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_COVERAGE_C_FLAGS}")
+endif ()
 
 if (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
   set (CMAKE_BUILD_TYPE "DEBUG")
