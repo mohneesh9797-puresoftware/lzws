@@ -20,6 +20,13 @@ while read -r toolchain; do
 
     find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
+    # Only special toolchain can use coverage.
+    if [ -n "$CI" ] || [ -n "$COVERAGE" ] && (echo "$toolchain" | grep -q "coverage.cmake$"); then
+      TOOLCHAIN_COVERAGE=true
+    else
+      TOOLCHAIN_COVERAGE=false
+    fi
+
     # Toolchain may not work on target platform.
     cmake "../.." \
       -DCMAKE_TOOLCHAIN_FILE="$toolchain" \
@@ -28,7 +35,7 @@ while read -r toolchain; do
       -DLZWS_STATIC=ON \
       -DLZWS_CLI=OFF \
       -DLZWS_TESTS=ON \
-      -DLZWS_COVERAGE=$(if [ -n "$CI" ] || [ -n "$COVERAGE" ]; then echo "ON"; else echo "OFF"; fi) \
+      -DLZWS_COVERAGE=$(if [ "$TOOLCHAIN_COVERAGE" = true ]; then echo "ON"; else echo "OFF"; fi) \
       -DLZWS_EXAMPLES=ON \
       -DLZWS_MAN=OFF \
       -DCMAKE_BUILD_TYPE="RELEASE" \
@@ -39,7 +46,7 @@ while read -r toolchain; do
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
 
-    if [ -n "$CI" ] || [ -n "$COVERAGE" ]; then
+    if [ -n "$CI" ]; then
       bash <(curl -s "https://codecov.io/bash")
     fi
 
