@@ -8,7 +8,7 @@ function (cmake_check_runnable)
 
   set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
-  set (NAME "cmake_check_basic")
+  set (NAME "cmake_check_runnable")
 
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}

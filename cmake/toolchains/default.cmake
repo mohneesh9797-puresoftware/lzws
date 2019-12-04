@@ -5,5 +5,3 @@ set (CMAKE_C_COMPILER_AR "ar")
 set (CMAKE_C_COMPILER_RANLIB "ranlib")
 
 set (CMAKE_C_FLAGS "")
-
-unset (CMAKE_HAVE_IPO CACHE)

@@ -1,8 +1,8 @@
 # LZW streaming compressor/decompressor
 
-| Travis | AppVeyor | Cirrus | Circle |
-| :---:  | :---:    | :---:  | :---:  |
-| [![Travis test status](https://travis-ci.com/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.com/andrew-aladev/lzws) | [![AppVeyor test status](https://ci.appveyor.com/api/projects/status/github/andrew-aladev/lzws?branch=master&svg=true)](https://ci.appveyor.com/project/andrew-aladev/lzws/branch/master) | [![Cirrus test status](https://api.cirrus-ci.com/github/andrew-aladev/lzws.svg?branch=master)](https://cirrus-ci.com/github/andrew-aladev/lzws) | [![Circle test status](https://circleci.com/gh/andrew-aladev/lzws/tree/master.svg?style=shield)](https://circleci.com/gh/andrew-aladev/lzws/tree/master)
+| Travis | AppVeyor | Cirrus | Circle | Codecov |
+| :---:  | :---:    | :---:  | :---:  | :---:   |
+| [![Travis test status](https://travis-ci.com/andrew-aladev/lzws.svg?branch=master)](https://travis-ci.com/andrew-aladev/lzws) | [![AppVeyor test status](https://ci.appveyor.com/api/projects/status/github/andrew-aladev/lzws?branch=master&svg=true)](https://ci.appveyor.com/project/andrew-aladev/lzws/branch/master) | [![Cirrus test status](https://api.cirrus-ci.com/github/andrew-aladev/lzws.svg?branch=master)](https://cirrus-ci.com/github/andrew-aladev/lzws) | [![Circle test status](https://circleci.com/gh/andrew-aladev/lzws/tree/master.svg?style=shield)](https://circleci.com/gh/andrew-aladev/lzws/tree/master) | [![Codecov](https://codecov.io/gh/andrew-aladev/lzws/branch/master/graph/badge.svg)](https://codecov.io/gh/andrew-aladev/lzws) |
 
 LZW streaming compressor/decompressor based on LZW AB compatible with UNIX compress.
 It has no legacy code from [ncompress](https://github.com/vapier/ncompress/blob/ncompress-4.2.4/compress42.c).

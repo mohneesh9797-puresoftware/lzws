@@ -8,7 +8,7 @@ function (cmake_get_pipe_flags)
 
   set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
-  set (NAME "cmake_check_basic")
+  set (NAME "cmake_get_pipe_flags")
 
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
@@ -33,5 +33,5 @@ function (cmake_get_pipe_flags)
   set (CMAKE_PIPE_C_FLAGS ${CMAKE_PIPE_C_FLAGS} CACHE STRING "pipe C flags")
   set (CMAKE_GET_PIPE_FLAGS_PROCESSED true CACHE STRING "get pipe flags processed")
 
-  mark_as_advanced (CMAKE_GET_PIPE_FLAGS_PROCESSED CMAKE_PIPE_C_FLAGS)
+  mark_as_advanced (CMAKE_PIPE_C_FLAGS CMAKE_GET_PIPE_FLAGS_PROCESSED)
 endfunction ()

@@ -28,6 +28,7 @@ while read -r toolchain; do
       -DLZWS_STATIC=ON \
       -DLZWS_CLI=OFF \
       -DLZWS_TESTS=ON \
+      -DLZWS_COVERAGE=$(if [ -n "$CI" ] || [ -n "$COVERAGE" ]; then echo "ON"; else echo "OFF"; fi) \
       -DLZWS_EXAMPLES=ON \
       -DLZWS_MAN=OFF \
       -DCMAKE_BUILD_TYPE="RELEASE" \
@@ -37,6 +38,10 @@ while read -r toolchain; do
     make -j2
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
+
+    if [ -n "$CI" ] || [ -n "$COVERAGE" ]; then
+      bash <(curl -s "https://codecov.io/bash")
+    fi
 
     some_test_passed=true
   done
