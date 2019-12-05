@@ -50,15 +50,12 @@ inline void lzws_write_byte(uint_fast8_t byte, uint8_t** destination_ptr, size_t
   (*destination_length_ptr)--;
 }
 
+// Keeping universal fill and allocate functions despite the losses of coverage percent.
+
 inline void lzws_fill_array(void* array, size_t size_of_item, size_t length, void* item_ptr, bool item_bytes_are_identical)
 {
   uint8_t* bytes      = item_ptr;
   uint8_t  first_byte = bytes[0];
-
-  if (size_of_item == 1) {
-    memset(array, first_byte, length);
-    return;
-  }
 
   if (item_bytes_are_identical) {
     memset(array, first_byte, size_of_item * length);

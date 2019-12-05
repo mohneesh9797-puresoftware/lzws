@@ -51,7 +51,7 @@ lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* 
 
   lzws_code_t* next_codes = lzws_allocate_array(
     sizeof(lzws_code_t), next_codes_length, &undefined_next_code,
-    LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_IS_ZERO, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
+    undefined_next_code == 0, LZWS_COMPRESSOR_UNDEFINED_NEXT_CODE_HAS_IDENTICAL_BYTES);
 
   if (next_codes == NULL) {
     if (!quiet) {
