@@ -65,7 +65,7 @@ lzws_result_t lzws_decompressor_read_header(lzws_decompressor_state_t* state_ptr
 
   state_ptr->block_mode = block_mode;
 
-  state_ptr->max_code  = lzws_get_mask_for_last_bits(max_code_bit_length);
+  state_ptr->max_code  = lzws_get_max_value_for_bits(max_code_bit_length);
   state_ptr->free_code = state_ptr->first_free_code = lzws_get_first_free_code(block_mode);
 
   // It is possible to keep prefix code uninitialized.

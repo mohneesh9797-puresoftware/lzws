@@ -8,28 +8,21 @@
 #include "../state.h"
 #include "main.h"
 
-#undef LZWS_INLINE
-#if defined(LZWS_DECOMPRESSOR_ALIGNMENT_WRAPPER_C)
-#define LZWS_INLINE
-#else
-#define LZWS_INLINE inline
-#endif
-
-LZWS_INLINE void lzws_decompressor_initialize_alignment_wrapper(lzws_decompressor_state_t* state_ptr)
+inline void lzws_decompressor_initialize_alignment_wrapper(lzws_decompressor_state_t* state_ptr)
 {
   if (!state_ptr->unaligned_bit_groups) {
     lzws_decompressor_initialize_alignment(&state_ptr->alignment, state_ptr->free_code_bit_length);
   }
 }
 
-LZWS_INLINE void lzws_decompressor_add_source_byte_length_to_alignment_wrapper(lzws_decompressor_state_t* state_ptr, uint_fast8_t source_byte_length)
+inline void lzws_decompressor_add_source_byte_length_to_alignment_wrapper(lzws_decompressor_state_t* state_ptr, uint_fast8_t source_byte_length)
 {
   if (!state_ptr->unaligned_bit_groups) {
     lzws_decompressor_add_source_byte_length_to_alignment(&state_ptr->alignment, source_byte_length);
   }
 }
 
-LZWS_INLINE bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompressor_state_t* state_ptr)
+inline bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompressor_state_t* state_ptr)
 {
   if (state_ptr->unaligned_bit_groups) {
     return false;

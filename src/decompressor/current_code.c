@@ -46,7 +46,7 @@ static inline lzws_code_fast_t get_next_code(lzws_decompressor_state_t* state_pt
   else {
     if (next_code == state_ptr->max_free_code_for_bit_length) {
       uint_fast8_t free_code_bit_length       = ++state_ptr->free_code_bit_length;
-      state_ptr->max_free_code_for_bit_length = lzws_get_mask_for_last_bits(free_code_bit_length);
+      state_ptr->max_free_code_for_bit_length = lzws_get_max_value_for_bits(free_code_bit_length);
     }
 
     state_ptr->free_code++;

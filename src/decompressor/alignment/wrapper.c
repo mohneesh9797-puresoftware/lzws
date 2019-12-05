@@ -2,12 +2,14 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_DECOMPRESSOR_ALIGNMENT_WRAPPER_C
-
 #include "wrapper.h"
 
 #include "../common.h"
 #include "../utils.h"
+
+extern inline void lzws_decompressor_initialize_alignment_wrapper(lzws_decompressor_state_t* state_ptr);
+extern inline void lzws_decompressor_add_source_byte_length_to_alignment_wrapper(lzws_decompressor_state_t* state_ptr, uint_fast8_t source_byte_length);
+extern inline bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompressor_state_t* state_ptr);
 
 static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
 {

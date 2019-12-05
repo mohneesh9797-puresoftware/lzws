@@ -9,14 +9,7 @@
 
 #include "common.h"
 
-#undef LZWS_INLINE
-#if defined(LZWS_COMPRESSOR_DICTIONARY_SPARSE_ARRAY_MAIN_C)
-#define LZWS_INLINE
-#else
-#define LZWS_INLINE inline
-#endif
-
-LZWS_INLINE void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code, bool block_mode)
+inline void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code, bool block_mode)
 {
   dictionary_ptr->next_codes = NULL;
 
@@ -42,7 +35,7 @@ void lzws_compressor_save_next_code_to_dictionary(
   lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code, bool block_mode,
   lzws_code_fast_t current_code, uint_fast8_t next_symbol, lzws_code_fast_t next_code);
 
-LZWS_INLINE void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool block_mode)
+inline void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, bool block_mode)
 {
   lzws_code_t* next_codes = dictionary_ptr->next_codes;
   if (next_codes != NULL) {

@@ -7,13 +7,6 @@
 
 #include <stdio.h>
 
-#undef LZWS_INLINE
-#if defined(LZWS_LOG_C)
-#define LZWS_INLINE
-#else
-#define LZWS_INLINE inline
-#endif
-
 // Relative file path can be provided during each source file compilation.
 #ifndef __RELATIVE_FILE_PATH__
 #define __RELATIVE_FILE_PATH__ __FILE__

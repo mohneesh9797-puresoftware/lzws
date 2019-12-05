@@ -18,7 +18,7 @@ static inline lzws_code_fast_t get_next_code(lzws_compressor_state_t* state_ptr)
 {
   if (state_ptr->last_used_code == state_ptr->max_last_used_code_for_bit_length) {
     uint_fast8_t last_used_code_bit_length       = ++state_ptr->last_used_code_bit_length;
-    state_ptr->max_last_used_code_for_bit_length = lzws_get_mask_for_last_bits(last_used_code_bit_length);
+    state_ptr->max_last_used_code_for_bit_length = lzws_get_max_value_for_bits(last_used_code_bit_length);
   }
 
   return ++state_ptr->last_used_code;

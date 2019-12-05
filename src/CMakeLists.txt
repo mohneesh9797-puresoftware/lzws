@@ -13,9 +13,6 @@ configure_file ("config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 include (GenerateBytesWithReversedBitsTable)
 generate_bytes_with_reversed_bits_table ()
 
-include (GeneratePowersOfTwoTable)
-generate_powers_of_two_table ()
-
 include (GenerateMasksForLastBitsTable)
 generate_masks_for_last_bits_table ()
 
@@ -40,7 +37,6 @@ set (SOURCES ${SOURCES}
   "${CMAKE_CURRENT_SOURCE_DIR}/common.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/file.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/generated_constants.c"
-  "${CMAKE_CURRENT_SOURCE_DIR}/log.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/string.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/utils.c"
 )

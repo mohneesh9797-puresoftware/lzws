@@ -2,8 +2,6 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_COMPRESSOR_STATE_C
-
 #include "state.h"
 
 #include "../log.h"
@@ -46,7 +44,7 @@ lzws_result_t lzws_compressor_get_initial_state(
   state_ptr->quiet                = quiet;
 
   state_ptr->first_free_code = lzws_get_first_free_code(block_mode);
-  state_ptr->max_code        = lzws_get_mask_for_last_bits(max_code_bit_length);
+  state_ptr->max_code        = lzws_get_max_value_for_bits(max_code_bit_length);
 
   lzws_compressor_reset_last_used_data(state_ptr);
 
@@ -68,7 +66,7 @@ void lzws_compressor_reset_last_used_data(lzws_compressor_state_t* state_ptr)
 {
   state_ptr->last_used_code                    = state_ptr->first_free_code - 1;
   state_ptr->last_used_code_bit_length         = LZWS_LOWEST_MAX_CODE_BIT_LENGTH;
-  state_ptr->max_last_used_code_for_bit_length = lzws_get_mask_for_last_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
+  state_ptr->max_last_used_code_for_bit_length = lzws_get_max_value_for_bits(LZWS_LOWEST_MAX_CODE_BIT_LENGTH);
 }
 
 void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr)
@@ -86,3 +84,7 @@ void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr)
 
   free(state_ptr);
 }
+
+extern inline bool   lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state_ptr);
+extern inline size_t lzws_compressor_get_last_used_codes_length(lzws_compressor_state_t* state_ptr);
+extern inline size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_t* state_ptr);

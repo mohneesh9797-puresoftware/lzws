@@ -9,6 +9,11 @@ build="$tmp/toolchain-build"
 mkdir -p "$build"
 cd "$build"
 
+if ([ -n "$CI" ] && [ -n "$TRAVIS" ]); then
+  curl -s "https://codecov.io/bash" > "codecov.sh"
+  chmod +x "codecov.sh"
+fi
+
 # We need to make test builds for all possible toolchains and dictionaries.
 toolchains="../../cmake/toolchains"
 
@@ -18,13 +23,24 @@ while read -r toolchain; do
   for dictionary in "linked-list" "sparse-array"; do
     echo "toolchain: $toolchain, dictionary: $dictionary"
 
-    find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
-
     # Only special toolchain can use coverage.
     if ([ -n "$CI" ] || [ -n "$COVERAGE" ]) && (echo "$toolchain" | grep -q "coverage.cmake$"); then
       TOOLCHAIN_COVERAGE=true
     else
       TOOLCHAIN_COVERAGE=false
+    fi
+
+    find . \( \
+      -name "CMake*" \
+      -o -name "*.cmake" \
+    \) -exec rm -rf {} +
+
+    if [ "$TOOLCHAIN_COVERAGE" = true ]; then
+      find . \( \
+        -name "*.gcov" \
+        -o -name "*.gcda" \
+        -o -name "*.gcno" \
+      \) -exec rm -rf {} +
     fi
 
     # Toolchain may not work on target platform.
@@ -46,8 +62,12 @@ while read -r toolchain; do
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
 
-    if [ "$TOOLCHAIN_COVERAGE" = true ] && [ -n "$TRAVIS" ]; then
-      bash <(curl -s "https://codecov.io/bash")
+    if ([ "$TOOLCHAIN_COVERAGE" = true ] && [ -n "$CI" ] && [ -n "$TRAVIS" ]); then
+      if (echo "$toolchain" | grep -q "clang/coverage.cmake$"); then
+        ./codecov.sh -x "llvm-cov gcov"
+      else
+        ./codecov.sh -x "gcov"
+      fi
     fi
 
     some_test_passed=true

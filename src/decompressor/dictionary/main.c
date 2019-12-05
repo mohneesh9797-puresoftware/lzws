@@ -2,8 +2,6 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_DECOMPRESSOR_DICTIONARY_MAIN_C
-
 #include "main.h"
 
 #include "../../log.h"
@@ -24,6 +22,8 @@ static inline lzws_code_fast_t get_code_index(lzws_decompressor_dictionary_t* di
 }
 
 // -- implementation --
+
+extern inline void lzws_decompressor_initialize_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);
 
 lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length, lzws_code_fast_t first_free_code, bool quiet)
 {
@@ -165,3 +165,7 @@ void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* di
   dictionary_ptr->previous_codes[next_code_index]       = prefix_code;
   dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;
 }
+
+extern inline bool    lzws_decompressor_has_symbol_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);
+extern inline uint8_t lzws_decompressor_get_symbol_from_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);
+extern inline void    lzws_decompressor_free_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);

@@ -2,8 +2,6 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_COMPRESSOR_DICTIONARY_LINKED_LIST_MAIN_C
-
 #include "main.h"
 
 #include "../../../log.h"
@@ -39,6 +37,8 @@ static inline lzws_code_fast_t get_next_sibling_code_index(lzws_compressor_dicti
 }
 
 // -- implementation --
+
+extern inline void lzws_compressor_initialize_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code);
 
 lzws_result_t lzws_compressor_allocate_dictionary(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length, bool quiet)
 {
@@ -170,3 +170,5 @@ void lzws_compressor_save_next_code_to_dictionary(
     dictionary_ptr->next_sibling_codes[next_code_index] = first_child_code;
   }
 }
+
+extern inline void lzws_compressor_free_dictionary(lzws_compressor_dictionary_t* dictionary_ptr);

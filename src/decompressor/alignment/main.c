@@ -2,6 +2,10 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#define LZWS_DECOMPRESSOR_ALIGNMENT_MAIN_C
-
 #include "main.h"
+
+extern inline void lzws_decompressor_initialize_alignment(lzws_decompressor_alignment_t* alignment_ptr, uint_fast8_t free_code_bit_length);
+extern inline void lzws_decompressor_add_source_byte_length_to_alignment(lzws_decompressor_alignment_t* alignment_ptr, uint_fast8_t source_byte_length);
+extern inline bool lzws_decompressor_need_to_read_alignment(lzws_decompressor_alignment_t* alignment_ptr, uint_fast8_t free_code_bit_length);
+extern inline bool lzws_decompressor_need_to_read_alignment_byte(lzws_decompressor_alignment_t* alignment_ptr);
+extern inline void lzws_decompressor_reset_alignment_after_reading(lzws_decompressor_alignment_t* alignment_ptr, uint_fast8_t free_code_bit_length);

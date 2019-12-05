@@ -11,13 +11,6 @@
 
 #include "config.h"
 
-#undef LZWS_INLINE
-#if defined(LZWS_COMMON_C)
-#define LZWS_INLINE
-#else
-#define LZWS_INLINE inline
-#endif
-
 // We are working for POSIX systems only.
 // POSIX system requires CHAR_BIT to be 8.
 // We won't use "least" types from "stdint.h".
@@ -55,7 +48,7 @@ typedef uint_fast16_t lzws_code_fast_t;
 // We can use any value between 0 and alphabet length - 1 as undefined free code.
 #define LZWS_UNDEFINED_FREE_CODE 0
 
-LZWS_INLINE lzws_code_fast_t lzws_get_first_free_code(bool block_mode)
+inline lzws_code_fast_t lzws_get_first_free_code(bool block_mode)
 {
   return block_mode ? LZWS_FIRST_FREE_CODE_IN_BLOCK_MODE : LZWS_FIRST_FREE_CODE;
 }

@@ -8,36 +8,29 @@
 #include "../../common.h"
 #include "common.h"
 
-#undef LZWS_INLINE
-#if defined(LZWS_COMPRESSOR_ALIGNMENT_MAIN_C)
-#define LZWS_INLINE
-#else
-#define LZWS_INLINE inline
-#endif
-
-LZWS_INLINE void lzws_compressor_initialize_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+inline void lzws_compressor_initialize_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
 {
   alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
   alignment_ptr->destination_byte_length   = 0;
 }
 
-LZWS_INLINE void lzws_compressor_add_destination_byte_length_to_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t destination_byte_length)
+inline void lzws_compressor_add_destination_byte_length_to_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t destination_byte_length)
 {
   // Destination byte length can be aligned by last used code bit length * 8.
   alignment_ptr->destination_byte_length = (alignment_ptr->destination_byte_length + destination_byte_length) % alignment_ptr->last_used_code_bit_length;
 }
 
-LZWS_INLINE bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+inline bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
 {
   return alignment_ptr->last_used_code_bit_length != last_used_code_bit_length;
 }
 
-LZWS_INLINE bool lzws_compressor_need_to_write_alignment_byte(lzws_compressor_alignment_t* alignment_ptr)
+inline bool lzws_compressor_need_to_write_alignment_byte(lzws_compressor_alignment_t* alignment_ptr)
 {
   return alignment_ptr->destination_byte_length != 0;
 }
 
-LZWS_INLINE void lzws_compressor_reset_alignment_after_writing(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+inline void lzws_compressor_reset_alignment_after_writing(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
 {
   alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
 }
