@@ -21,7 +21,7 @@ while read -r toolchain; do
     find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
     # Only special toolchain can use coverage.
-    if [ -n "$CI" ] || [ -n "$COVERAGE" ] && (echo "$toolchain" | grep -q "coverage.cmake$"); then
+    if ([ -n "$CI" ] || [ -n "$COVERAGE" ]) && (echo "$toolchain" | grep -q "coverage.cmake$"); then
       TOOLCHAIN_COVERAGE=true
     else
       TOOLCHAIN_COVERAGE=false
@@ -46,7 +46,7 @@ while read -r toolchain; do
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
 
-    if [ -n "$CI" ]; then
+    if [ "$TOOLCHAIN_COVERAGE" = true ] && [ -n "$TRAVIS" ]; then
       bash <(curl -s "https://codecov.io/bash")
     fi
 
