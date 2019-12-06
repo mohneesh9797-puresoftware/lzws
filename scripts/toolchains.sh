@@ -26,10 +26,11 @@ while read -r toolchain; do
     # Only special toolchain can use coverage.
     if (echo "$toolchain" | grep -q "coverage.cmake$"); then
       COVERAGE_TOOLCHAIN=true
-
       if ! ([ -n "$CI" ] || [ -n "$COVERAGE" ]); then
         continue
       fi
+    else
+      COVERAGE_TOOLCHAIN=false
     fi
 
     find . \( \
@@ -77,6 +78,6 @@ while read -r toolchain; do
 done < <(find "$toolchains" -type f)
 
 if [ "$some_test_passed" = false ]; then
-  echo "At least one test should pass" > /dev/stderr
+  echo "At least one test should pass" > "/dev/stderr"
   exit 1
 fi
