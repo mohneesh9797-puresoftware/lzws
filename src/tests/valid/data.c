@@ -124,7 +124,7 @@ static inline lzws_result_t test_eof_after_completed_bits_group(
   const char symbol = 'a';
   char*      string = lzws_allocate_array(1, string_length, (void*)&symbol, false, true);
   if (string == NULL) {
-    LZWS_LOG_ERROR("malloc failed, string size: %zu", string_length);
+    LZWS_LOG_ERROR("allocate array failed, string size: %zu", string_length);
     return 1;
   }
 
