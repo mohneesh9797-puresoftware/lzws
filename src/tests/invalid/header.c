@@ -4,6 +4,8 @@
 
 #include "../../decompressor/header.h"
 
+#include "../../compressor/common.h"
+#include "../../compressor/header.h"
 #include "../../decompressor/common.h"
 #include "../../log.h"
 #include "../../macro.h"
@@ -23,33 +25,69 @@ static const uint8_t headers[][HEADER_SIZE] = {
 #define HEADER_LENGTH sizeof(headers) / HEADER_SIZE
 
 static inline lzws_result_t test_invalid_header(
-  lzws_decompressor_state_t* state_ptr,
+  lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
   size_t LZWS_UNUSED(buffer_length), va_list LZWS_UNUSED(args))
 {
   lzws_result_t result;
   size_t        index;
+  uint8_t*      header;
+  size_t        header_size;
 
-  if (!state_ptr->without_magic_header) {
+  // Magic header.
+
+  if (!compressor_state_ptr->without_magic_header) {
+    header_size = MAGIC_HEADER_SIZE - 1;
+    result      = lzws_compressor_write_magic_header(compressor_state_ptr, NULL, &header_size);
+    if (result != LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
+      LZWS_LOG_ERROR("compressor write magic header should require more destination");
+      return 1;
+    }
+  }
+
+  if (!decompressor_state_ptr->without_magic_header) {
+    header_size = MAGIC_HEADER_SIZE - 1;
+    result      = lzws_decompressor_read_magic_header(decompressor_state_ptr, NULL, &header_size);
+    if (result != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+      LZWS_LOG_ERROR("decompressor read magic header should require more source");
+      return 2;
+    }
+
     for (index = 0; index < MAGIC_HEADER_LENGTH; index++) {
-      uint8_t* magic_header      = (uint8_t*)magic_headers[index];
-      size_t   magic_header_size = MAGIC_HEADER_SIZE;
+      header      = (uint8_t*)magic_headers[index];
+      header_size = MAGIC_HEADER_SIZE;
 
-      result = lzws_decompressor_read_magic_header(state_ptr, &magic_header, &magic_header_size);
+      result = lzws_decompressor_read_magic_header(decompressor_state_ptr, &header, &header_size);
       if (result != LZWS_DECOMPRESSOR_INVALID_MAGIC_HEADER) {
         LZWS_LOG_ERROR("decompressor read magic header should fail with invalid magic header");
-        return 1;
+        return 3;
       }
     }
   }
 
-  for (index = 0; index < HEADER_LENGTH; index++) {
-    uint8_t* header      = (uint8_t*)headers[index];
-    size_t   header_size = HEADER_SIZE;
+  // Header.
 
-    result = lzws_decompressor_read_header(state_ptr, &header, &header_size);
+  header_size = HEADER_SIZE - 1;
+  result      = lzws_compressor_write_header(compressor_state_ptr, NULL, &header_size);
+  if (result != LZWS_COMPRESSOR_NEEDS_MORE_DESTINATION) {
+    LZWS_LOG_ERROR("compressor write header should require more destination");
+    return 4;
+  }
+
+  header_size = HEADER_SIZE - 1;
+  result      = lzws_decompressor_read_header(decompressor_state_ptr, NULL, &header_size);
+  if (result != LZWS_DECOMPRESSOR_NEEDS_MORE_SOURCE) {
+    LZWS_LOG_ERROR("decompressor read header should require more source");
+    return 5;
+  }
+
+  for (index = 0; index < HEADER_LENGTH; index++) {
+    header      = (uint8_t*)headers[index];
+    header_size = HEADER_SIZE;
+
+    result = lzws_decompressor_read_header(decompressor_state_ptr, &header, &header_size);
     if (result != LZWS_DECOMPRESSOR_INVALID_MAX_CODE_BIT_LENGTH) {
       LZWS_LOG_ERROR("decompressor read header should fail with invalid max code bit length");
-      return 2;
+      return 6;
     }
   }
 
@@ -58,5 +96,5 @@ static inline lzws_result_t test_invalid_header(
 
 lzws_result_t lzws_test_invalid_header()
 {
-  return lzws_test_decompressor_combinations(test_invalid_header);
+  return lzws_test_compatible_compressor_and_decompressor_combinations(test_invalid_header);
 }
