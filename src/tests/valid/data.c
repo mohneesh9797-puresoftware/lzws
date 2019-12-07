@@ -6,8 +6,10 @@
 
 #include <string.h>
 
+#include "../../common.h"
 #include "../../log.h"
 #include "../../macro.h"
+#include "../../utils.h"
 #include "../combination.h"
 #include "../random_string.h"
 #include "../string_and_file.h"
@@ -77,6 +79,70 @@ static inline lzws_result_t test_data(
   return result;
 }
 
+static inline lzws_result_t test_random_string(
+  lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
+  size_t buffer_length)
+{
+  char* random_string = malloc(RANDOM_STRING_LENGTH);
+  if (random_string == NULL) {
+    LZWS_LOG_ERROR("malloc failed, string size: %u", RANDOM_STRING_LENGTH);
+    return 1;
+  }
+
+  lzws_tests_set_random_string(random_string, RANDOM_STRING_LENGTH);
+  lzws_result_t result = test_data(
+    compressor_state_ptr, decompressor_state_ptr,
+    random_string, buffer_length);
+
+  free(random_string);
+
+  if (result != 0) {
+    return 2;
+  }
+
+  return 0;
+}
+
+// We need to test a special case: eof after completed bits group.
+// Algorithm creates a next code (with another bit length), saves it into the dictionary, but doesn't write it.
+// Than eof appears and algorithm have to write alignment and this code.
+
+// We can use just string filled with single symbol.
+// "aa" - first code, "aaa" - second code, ... "a...a" (n + 1) - "n" code.
+// Last symbol of first code is the first symbol of second code.
+// Length of "n" codes string: (2 - 1) + (3 - 1) + ... + (n - 1) + n + 1 = n * (n + 1) / 2 + 1.
+// "n" should be equal to first free code with another bit length.
+
+static inline lzws_result_t test_eof_after_completed_bits_group(
+  lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
+  size_t buffer_length)
+{
+  lzws_code_fast_t first_code    = lzws_get_first_free_code(compressor_state_ptr->block_mode);
+  lzws_code_fast_t target_number = (1 << LZWS_LOWEST_MAX_CODE_BIT_LENGTH) - first_code + 1;
+  size_t           string_length = target_number * (target_number + 1) / 2 + 2; // + 1 byte for \0.
+
+  const char symbol = 'a';
+  char*      string = lzws_allocate_array(1, string_length, (void*)&symbol, false, true);
+  if (string == NULL) {
+    LZWS_LOG_ERROR("malloc failed, string size: %zu", string_length);
+    return 1;
+  }
+
+  string[string_length - 1] = '\0';
+
+  lzws_result_t result = test_data(
+    compressor_state_ptr, decompressor_state_ptr,
+    string, buffer_length);
+
+  free(string);
+
+  if (result != 0) {
+    return 2;
+  }
+
+  return 0;
+}
+
 static inline lzws_result_t test_datas(
   lzws_compressor_state_t* compressor_state_ptr, lzws_decompressor_state_t* decompressor_state_ptr,
   size_t buffer_length, va_list LZWS_UNUSED(args))
@@ -89,23 +155,27 @@ static inline lzws_result_t test_datas(
       datas[index], buffer_length);
 
     if (result != 0) {
-      return result;
+      return 1;
     }
   }
 
-  char* random_string = malloc(RANDOM_STRING_LENGTH);
-  if (random_string == NULL) {
-    LZWS_LOG_ERROR("malloc failed, string size: %u", RANDOM_STRING_LENGTH);
-    return 5;
+  result = test_random_string(
+    compressor_state_ptr, decompressor_state_ptr,
+    buffer_length);
+
+  if (result != 0) {
+    return 2;
   }
 
-  lzws_tests_set_random_string(random_string, RANDOM_STRING_LENGTH);
-  result = test_data(
+  result = test_eof_after_completed_bits_group(
     compressor_state_ptr, decompressor_state_ptr,
-    random_string, buffer_length);
+    buffer_length);
 
-  free(random_string);
-  return result;
+  if (result != 0) {
+    return 3;
+  }
+
+  return 0;
 }
 
 lzws_result_t lzws_test_valid_datas()
