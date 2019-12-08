@@ -66,7 +66,8 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
   // Output buffer by codes don't require default values.
   // Algorithm will access only initialized buffer data.
 
-  size_t output_size = codes_length;
+  // + 1 for symbol from prefix.
+  size_t output_size = codes_length + 1;
 
   uint8_t* output_buffer = malloc(output_size);
   if (output_buffer == NULL) {
