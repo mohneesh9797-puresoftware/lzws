@@ -2,6 +2,7 @@ require "colorize"
 require "digest"
 require "filesize"
 require "ocg"
+require "parallel"
 require "uri"
 
 require "English"
@@ -48,13 +49,20 @@ LZWS_OPTION_COMBINATIONS = OCG.new(
 
 LZWS_OPTIONS = LZWS_OPTION_COMBINATIONS.map do |combination|
   combination.map do |name, value|
-    next nil if value  == false
-    next name if value == true
+    next nil if value == false
+    next "--#{name}" if value == true
 
-    "#{name}=#{value}"
+    "--#{name}=#{value}"
   end
   .compact
+  .join " "
 end
+
+LZWS_BINARIES_WITH_OPTIONS = OCG.new(
+  :binary  => LZWS_BINARIES,
+  :options => LZWS_OPTIONS
+)
+.to_a
 
 def download_archive(url)
   begin
@@ -97,8 +105,13 @@ rescue StandardError => error
   nil
 end
 
+def threaded_map(items, item_threads_count, &block)
+  threads_count = Parallel.processor_count / item_threads_count
+  Parallel.map items, :in_threads => threads_count, &block
+end
+
 def test_archive(path)
-  decompressed_digests = ALL_BINARIES.map do |binary|
+  decompressed_digests = threaded_map(ALL_BINARIES, 1) do |binary|
     STDERR.print "."
 
     get_command_digest "#{binary} -d < \"#{path}\""
@@ -126,7 +139,7 @@ def test_archive(path)
   # So it is more CPU than I/O intensive.
   # It is safe to run this code on SSD.
 
-  re_decompressed_digests = ALL_BINARIES.map do |binary|
+  re_decompressed_digests = threaded_map(ALL_BINARIES, 3) do |binary|
     STDERR.print "."
 
     get_command_digest(
@@ -150,17 +163,17 @@ def test_archive(path)
   # It should be possible to process lzws options in any combination.
   # So this test can take a long time.
 
-  lzws_re_decompressed_digests = LZWS_BINARIES.flat_map do |binary|
-    LZWS_OPTIONS.map do |options|
-      STDERR.print "."
+  lzws_re_decompressed_digests = threaded_map(LZWS_BINARIES_WITH_OPTIONS, 3) do |object|
+    STDERR.print "."
 
-      options_text = options.join " "
-      get_command_digest(
-        "#{binary} -d < \"#{path}\" | " \
-        "#{binary} #{options_text} | " \
-        "#{binary} #{options_text} -d"
-      )
-    end
+    binary  = object[:binary]
+    options = object[:options]
+
+    get_command_digest(
+      "#{binary} -d < \"#{path}\" | " \
+      "#{binary} #{options} | " \
+      "#{binary} #{options} -d"
+    )
   end
 
   STDERR.print "\n"

@@ -4,6 +4,7 @@ gem "addressable"
 gem "colorize"
 gem "filesize"
 gem "ocg"
+gem "parallel"
 gem "ruby-xz"
 
 group :development, :test do
