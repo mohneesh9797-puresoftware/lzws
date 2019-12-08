@@ -57,7 +57,7 @@ while read -r toolchain; do
       -DLZWS_COVERAGE=$(if [ "$COVERAGE_TOOLCHAIN" = true ]; then echo "ON"; else echo "OFF"; fi) \
       -DLZWS_EXAMPLES=ON \
       -DLZWS_MAN=OFF \
-      -DCMAKE_BUILD_TYPE="RELEASE" \
+      -DCMAKE_BUILD_TYPE=$(if [ "$COVERAGE_TOOLCHAIN" = true ]; then echo "DEBUG"; else echo "RELEASE"; fi) \
       -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native" \
       || continue
     make clean
