@@ -24,7 +24,7 @@ for dictionary in "linked-list" "sparse-array"; do
     -DLZWS_EXAMPLES=OFF \
     -DLZWS_MAN=OFF \
     -DCMAKE_BUILD_TYPE="RELEASE" \
-    -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native"
+    -DCMAKE_C_FLAGS_RELEASE="-Ofast -march=native"
   make clean
   make -j2
 
