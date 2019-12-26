@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname $0)"
+DIR=$(dirname "${BASH_SOURCE[0]}")
+cd "$DIR"
 
 while true; do
   ./update_urls.sh

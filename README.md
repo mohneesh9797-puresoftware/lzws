@@ -167,13 +167,13 @@ forward-socks5t / 127.0.0.1:9050 .
 
 Update urls:
 ```sh
-./bin/update_urls.sh
+./scripts/update_urls.sh
 ```
 
 Re-test archives:
 ```sh
-./bin/clear_results.sh
-./bin/test_archives.sh
+./scripts/clear_results.sh
+./scripts/test_archives.sh
 ```
 
 This test will decompress and re-compress more than 10000 unique archives in all possible combinations of dictionaries and lzws options.

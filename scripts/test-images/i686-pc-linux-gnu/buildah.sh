@@ -1,15 +1,14 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname $0)"
+DIR=$(dirname "${BASH_SOURCE[0]}")
+cd "$DIR"
 
-source "../env.sh"
-source "../utils.sh"
+source "../../utils.sh"
+source "./env.sh"
 
-DOCKER_IMAGE="${DOCKER_IMAGE_PREFIX}_i686-pc-linux-gnu"
-
-CONTAINER=$(buildah from "docker.io/$DOCKER_USERNAME/test_i686-pc-linux-gnu:latest")
-buildah config --label maintainer="$MAINTAINER" --entrypoint "/home/entrypoint.sh" "$CONTAINER"
+CONTAINER=$(buildah from "$FROM_IMAGE_NAME")
+buildah config --label maintainer="$MAINTAINER" "$CONTAINER"
 
 run mkdir -p /home
 copy ../entrypoint.sh /home/
@@ -17,9 +16,11 @@ copy ../entrypoint.sh /home/
 copy root/ /
 build emerge -v dev-vcs/git dev-util/cmake dev-libs/gmp
 
-build "update && upgrade && cleanup"
+run update
+build upgrade
+run cleanup
 
-run rm -rf /etc/._cfg*
+run find /etc -maxdepth 1 -name ._cfg* -delete
 run eselect news read
 
 commit

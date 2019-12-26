@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname $0)"
-cd ".."
+DIR=$(dirname "${BASH_SOURCE[0]}")
+cd "$DIR/.."
 
 valid_count=$(xzcat "data/valid_archives.xz" | cut -d " " -f 2 | sort | uniq | wc -l)
 invalid_count=$(xzcat "data/invalid_archives.xz" | cut -d " " -f 2 | sort | uniq | wc -l)

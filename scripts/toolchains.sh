@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname $0)"
+DIR=$(dirname "${BASH_SOURCE[0]}")
+cd "$DIR"
 
-tmp="../tmp"
-build="$tmp/toolchain-build"
-
+build="../tmp/toolchain-build"
 mkdir -p "$build"
 cd "$build"
 

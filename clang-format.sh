@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname $0)"
+DIR=$(dirname "${BASH_SOURCE[0]}")
+cd "$DIR"
 
 find "cmake" "src" \( -name "*.h" -o -name "*.c" \) -exec clang-format -i {} \;

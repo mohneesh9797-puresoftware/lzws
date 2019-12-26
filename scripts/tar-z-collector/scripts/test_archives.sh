@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname $0)"
-base=$(pwd)
+DIR=$(dirname "${BASH_SOURCE[0]}")
+cd "$DIR"
 
-tmp="../../../tmp"
-cd "$tmp"
+cd "../../../tmp"
 
 # We need to create release builds for all possible dictionaries.
 for dictionary in "linked-list" "sparse-array"; do
@@ -31,6 +30,6 @@ for dictionary in "linked-list" "sparse-array"; do
   cd ".."
 done
 
-cd "$base"
-"../test_archives/main.rb" \
+cd "$DIR"
+../test_archives/main.rb \
   "../data/archive_urls.xz" "../data/valid_archives.xz" "../data/invalid_archives.xz" "../data/volatile_archives.xz"
