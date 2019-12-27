@@ -7,4 +7,4 @@ cd "$DIR"
 cd ".."
 
 truncate --size=0 \
-  "./data/valid_archives.xz" "./data/invalid_archives.xz" "./data/volatile_archives.xz"
+  "data/valid_archives.xz" "data/invalid_archives.xz" "data/volatile_archives.xz"

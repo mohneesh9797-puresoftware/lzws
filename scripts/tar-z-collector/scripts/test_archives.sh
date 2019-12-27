@@ -11,7 +11,7 @@ cd "../../tmp"
 
 # We need to create release builds for all possible dictionaries.
 for dictionary in "linked-list" "sparse-array"; do
-  build="./tar-z-collector-$dictionary-build"
+  build="tar-z-collector-$dictionary-build"
   mkdir -p "$build"
   cd "$build"
 
@@ -36,4 +36,4 @@ done
 cd "$BASE_DIR"
 
 ./test_archives/main.rb \
-  "./data/archive_urls.xz" "./data/valid_archives.xz" "./data/invalid_archives.xz" "./data/volatile_archives.xz"
+  "data/archive_urls.xz" "data/valid_archives.xz" "data/invalid_archives.xz" "data/volatile_archives.xz"

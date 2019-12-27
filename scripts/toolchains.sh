@@ -6,7 +6,7 @@ cd "$DIR"
 
 cd "../tmp"
 
-build="./toolchain-build"
+build="toolchain-build"
 mkdir -p "$build"
 cd "$build"
 
