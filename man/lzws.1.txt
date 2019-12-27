@@ -27,7 +27,7 @@ OPTIONS
 
 *-w, --without-magic-header*::
   Disable magic header.
-  Disabled by default.
+  Magic header is enabled by default.
   It should be used in both compress and decompress mode.
   Compressor won't store information about magic header in file.
   Decompressor won't read this option from file.
@@ -55,14 +55,14 @@ OPTIONS
 
 *-u, --unaligned-bit-groups*::
   Enable unaligned bit groups.
-  Disabled by default.
+  Unaligned bit groups are disabled by default.
   It should be used in both compress and decompress mode.
   Compressor won't store information about unaligned bit groups in file.
   Decompressor won't read this option from file.
 
 *-q, --quiet*::
   Disable error messages.
-  Enabled by default.
+  Error messages are enabled by default.
 
 *-h, --help*::
   Print help.

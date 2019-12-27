@@ -4,11 +4,14 @@ set -e
 DIR=$(dirname "${BASH_SOURCE[0]}")
 cd "$DIR"
 
-cd "../../../tmp"
+cd ".."
+BASE_DIR=$(pwd)
+
+cd "../../tmp"
 
 # We need to create release builds for all possible dictionaries.
 for dictionary in "linked-list" "sparse-array"; do
-  build="tar-z-collector-$dictionary-build"
+  build="./tar-z-collector-$dictionary-build"
   mkdir -p "$build"
   cd "$build"
 
@@ -30,6 +33,7 @@ for dictionary in "linked-list" "sparse-array"; do
   cd ".."
 done
 
-cd "$DIR"
-../test_archives/main.rb \
-  "../data/archive_urls.xz" "../data/valid_archives.xz" "../data/invalid_archives.xz" "../data/volatile_archives.xz"
+cd "$BASE_DIR"
+
+./test_archives/main.rb \
+  "./data/archive_urls.xz" "./data/valid_archives.xz" "./data/invalid_archives.xz" "./data/volatile_archives.xz"

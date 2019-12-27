@@ -4,7 +4,9 @@ set -e
 DIR=$(dirname "${BASH_SOURCE[0]}")
 cd "$DIR"
 
-build="../tmp/toolchain-build"
+cd "../tmp"
+
+build="./toolchain-build"
 mkdir -p "$build"
 cd "$build"
 
