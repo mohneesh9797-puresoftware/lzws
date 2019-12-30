@@ -22,7 +22,7 @@ some_test_passed=false
 
 while read -r toolchain; do
   for dictionary in "linked-list" "sparse-array"; do
-    echo "toolchain: $toolchain, dictionary: $dictionary"
+    echo "toolchain: ${toolchain}, dictionary: ${dictionary}"
 
     # Only special toolchain can use coverage.
     if (echo "$toolchain" | grep -q "coverage.cmake$"); then

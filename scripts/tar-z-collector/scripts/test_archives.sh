@@ -11,7 +11,7 @@ cd "../../tmp"
 
 # We need to create release builds for all possible dictionaries.
 for dictionary in "linked-list" "sparse-array"; do
-  build="tar-z-collector-$dictionary-build"
+  build="tar-z-collector-${dictionary}-build"
   mkdir -p "$build"
   cd "$build"
 

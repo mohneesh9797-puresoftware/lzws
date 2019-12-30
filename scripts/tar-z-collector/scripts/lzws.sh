@@ -9,4 +9,4 @@ cd "../../../tmp"
 dictionary="$1"
 shift
 
-"./tar-z-collector-$dictionary-build/src/cli/lzws-static" $@
+"./tar-z-collector-${dictionary}-build/src/cli/lzws-static" $@
