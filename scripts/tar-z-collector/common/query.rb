@@ -80,7 +80,7 @@ OPEN_OPTIONS =
   .freeze
 
 def download_http_file(uri, file_path)
-  io = Kernel.open uri, "rb", OPEN_OPTIONS
+  io = URI.open uri, "rb", OPEN_OPTIONS
 
   begin
     IO.copy_stream io, file_path
