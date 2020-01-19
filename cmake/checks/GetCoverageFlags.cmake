@@ -13,6 +13,8 @@ function (cmake_get_coverage_flags)
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
   set (NAME "cmake_get_coverage_flags")
 
+  set (MESSAGE_PREFIX "Status of --coverage support")
+
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
@@ -28,14 +30,14 @@ function (cmake_get_coverage_flags)
 
   if (CHECK_RESULT)
     set (CMAKE_COVERAGE_C_FLAGS "--coverage")
-    message (STATUS "Status of --coverage support - yes")
+    message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
     set (CMAKE_COVERAGE_C_FLAGS "")
-    message (STATUS "Status of --coverage support - no")
+    message (STATUS "${MESSAGE_PREFIX} - no")
   endif ()
 
-  set (CMAKE_COVERAGE_C_FLAGS ${CMAKE_COVERAGE_C_FLAGS} CACHE STRING "coverage C flags")
-  set (CMAKE_GET_COVERAGE_FLAGS_PROCESSED true CACHE STRING "get coverage flags processed")
+  set (CMAKE_COVERAGE_C_FLAGS ${CMAKE_COVERAGE_C_FLAGS} CACHE STRING "Coverage C flags")
+  set (CMAKE_GET_COVERAGE_FLAGS_PROCESSED true CACHE STRING "Coverage flags processed")
 
   mark_as_advanced (CMAKE_COVERAGE_C_FLAGS CMAKE_GET_COVERAGE_FLAGS_PROCESSED)
 endfunction ()

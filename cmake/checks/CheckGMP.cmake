@@ -18,6 +18,8 @@ function (cmake_check_gmp)
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/GMP")
   set (NAME "cmake_check_gmp")
 
+  set (MESSAGE_PREFIX "Status of GMP support")
+
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
@@ -36,13 +38,13 @@ function (cmake_check_gmp)
 
   if (CHECK_RESULT)
     set (CMAKE_GMP_WORKS true)
-    message (STATUS "Status of GMP - working")
+    message (STATUS "${MESSAGE_PREFIX} - working")
   else ()
     set (CMAKE_GMP_WORKS false)
-    message (FATAL_ERROR "Status of GMP - not working")
+    message (FATAL_ERROR "${MESSAGE_PREFIX} - not working")
   endif ()
 
-  set (CMAKE_GMP_WORKS ${CMAKE_GMP_WORKS} CACHE STRING "GMP working status")
+  set (CMAKE_GMP_WORKS ${CMAKE_GMP_WORKS} CACHE STRING "Status of GMP")
 
   mark_as_advanced (CMAKE_GMP_WORKS)
 endfunction ()

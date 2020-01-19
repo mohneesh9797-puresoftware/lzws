@@ -7,6 +7,8 @@ function (generate_masks_for_last_bits_table)
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/masks_for_last_bits_table")
   set (NAME "cmake_generator_masks_for_last_bits_table")
 
+  set (MESSAGE_PREFIX "Masks for last bits table")
+
   try_compile (
     COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
@@ -16,25 +18,26 @@ function (generate_masks_for_last_bits_table)
     message (STATUS ${COMPILE_OUTPUT})
   endif ()
 
-  if (NOT COMPILE_RESULT)
-    FILE (REMOVE_RECURSE ${BINARY_DIR})
-    message (FATAL_ERROR "Masks for last bits table - compilation failed")
-  endif ()
+  if (COMPILE_RESULT)
+    execute_process (
+      COMMAND "${BINARY_DIR}/main"
+      RESULT_VARIABLE RUN_RESULT
+      OUTPUT_VARIABLE RUN_OUTPUT
+    )
 
-  execute_process (
-    COMMAND "${BINARY_DIR}/main"
-    RESULT_VARIABLE RUN_RESULT
-    OUTPUT_VARIABLE RUN_OUTPUT
-  )
-  FILE (REMOVE_RECURSE ${BINARY_DIR})
-
-  set (CMAKE_MASKS_FOR_LAST_BITS_TABLE ${RUN_OUTPUT} PARENT_SCOPE)
-
-  if (RUN_RESULT EQUAL 0)
-    message (STATUS "Masks for last bits table - generated")
+    if (RUN_RESULT EQUAL 0)
+      set (CMAKE_MASKS_FOR_LAST_BITS_TABLE ${RUN_OUTPUT} PARENT_SCOPE)
+      message (STATUS "${MESSAGE_PREFIX} - generated")
+    else ()
+      unset (CMAKE_MASKS_FOR_LAST_BITS_TABLE PARENT_SCOPE)
+      message (STATUS "${MESSAGE_PREFIX} - failed to generate, using default")
+    endif ()
   else ()
-    message (FATAL_ERROR "Masks for last bits table - failed to generate")
+    unset (CMAKE_MASKS_FOR_LAST_BITS_TABLE PARENT_SCOPE)
+    message (STATUS "${MESSAGE_PREFIX} - compilation failed, using default")
   endif ()
+
+  FILE (REMOVE_RECURSE ${BINARY_DIR})
 
   mark_as_advanced (CMAKE_MASKS_FOR_LAST_BITS_TABLE)
 endfunction ()

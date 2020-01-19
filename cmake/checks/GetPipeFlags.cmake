@@ -10,6 +10,8 @@ function (cmake_get_pipe_flags)
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
   set (NAME "cmake_get_pipe_flags")
 
+  set (MESSAGE_PREFIX "Status of -pipe support")
+
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
@@ -24,14 +26,14 @@ function (cmake_get_pipe_flags)
 
   if (CHECK_RESULT)
     set (CMAKE_PIPE_C_FLAGS "-pipe")
-    message (STATUS "Status of -pipe support - yes")
+    message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
     set (CMAKE_PIPE_C_FLAGS "")
-    message (STATUS "Status of -pipe support - no")
+    message (STATUS "${MESSAGE_PREFIX} - no")
   endif ()
 
-  set (CMAKE_PIPE_C_FLAGS ${CMAKE_PIPE_C_FLAGS} CACHE STRING "pipe C flags")
-  set (CMAKE_GET_PIPE_FLAGS_PROCESSED true CACHE STRING "get pipe flags processed")
+  set (CMAKE_PIPE_C_FLAGS ${CMAKE_PIPE_C_FLAGS} CACHE STRING "Pipe C flags")
+  set (CMAKE_GET_PIPE_FLAGS_PROCESSED true CACHE STRING "Pipe flags processed")
 
   mark_as_advanced (CMAKE_PIPE_C_FLAGS CMAKE_GET_PIPE_FLAGS_PROCESSED)
 endfunction ()

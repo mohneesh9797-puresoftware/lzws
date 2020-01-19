@@ -1,5 +1,4 @@
 build/*
 src/config.h
-src/generated_constants.c
 tmp/*
 Gemfile.lock

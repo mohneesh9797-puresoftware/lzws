@@ -10,6 +10,8 @@ function (cmake_check_runnable)
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
   set (NAME "cmake_check_runnable")
 
+  set (MESSAGE_PREFIX "Status of run exe support")
+
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
@@ -25,13 +27,13 @@ function (cmake_check_runnable)
 
   if (CHECK_RESULT)
     set (CMAKE_CAN_RUN_EXE true)
-    message (STATUS "Status of run exe support - yes")
+    message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
     set (CMAKE_CAN_RUN_EXE false)
-    message (STATUS "Status of run exe support - no")
+    message (STATUS "${MESSAGE_PREFIX} - no")
   endif ()
 
-  set (CMAKE_CAN_RUN_EXE ${CMAKE_CAN_RUN_EXE} CACHE STRING "status of run exe support")
+  set (CMAKE_CAN_RUN_EXE ${CMAKE_CAN_RUN_EXE} CACHE STRING "Status of run exe")
 
   mark_as_advanced (CMAKE_CAN_RUN_EXE)
 endfunction ()

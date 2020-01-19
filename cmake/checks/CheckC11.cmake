@@ -16,6 +16,8 @@ function (cmake_check_c11)
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/C11")
   set (NAME "cmake_check_c11")
 
+  set (MESSAGE_PREFIX "Status of C11 support")
+
   # -- -gnu11 --
 
   try_compile (
@@ -34,7 +36,7 @@ function (cmake_check_c11)
   if (CHECK_RESULT)
     set (CMAKE_HAVE_C11 true)
     set (CMAKE_C11_C_FLAGS "-std=gnu11")
-    message (STATUS "Status of C11 support - gnu11")
+    message (STATUS "${MESSAGE_PREFIX} - gnu11")
   endif ()
 
   # -- -c11 --
@@ -56,7 +58,7 @@ function (cmake_check_c11)
     if (CHECK_RESULT)
       set (CMAKE_HAVE_C11 true)
       set (CMAKE_C11_C_FLAGS "-std=c11")
-      message (STATUS "Status of C11 support - c11")
+      message (STATUS "${MESSAGE_PREFIX} - c11")
     endif ()
   endif ()
 
@@ -79,7 +81,7 @@ function (cmake_check_c11)
     if (CHECK_RESULT)
       set (CMAKE_HAVE_C11 true)
       set (CMAKE_C11_C_FLAGS "")
-      message (STATUS "Status of C11 support - vanilla")
+      message (STATUS "${MESSAGE_PREFIX} - vanilla")
     endif ()
   endif ()
 
@@ -88,11 +90,11 @@ function (cmake_check_c11)
   if (NOT CHECK_RESULT)
     set (CMAKE_HAVE_C11 false)
     set (CMAKE_C11_C_FLAGS "")
-    message (STATUS "Status of C11 support - no")
+    message (STATUS "${MESSAGE_PREFIX} - no")
   endif ()
 
-  set (CMAKE_HAVE_C11 ${CMAKE_HAVE_C11} CACHE STRING "status of C11 support")
-  set (CMAKE_C11_C_FLAGS ${CMAKE_C11_C_FLAGS} CACHE STRING "c11 C flags")
+  set (CMAKE_HAVE_C11 ${CMAKE_HAVE_C11} CACHE STRING "Status of C11")
+  set (CMAKE_C11_C_FLAGS ${CMAKE_C11_C_FLAGS} CACHE STRING "C11 C flags")
 
   mark_as_advanced (CMAKE_HAVE_C11 CMAKE_C11_C_FLAGS)
 endfunction ()
