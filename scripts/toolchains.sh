@@ -4,7 +4,7 @@ set -e
 DIR=$(dirname "${BASH_SOURCE[0]}")
 cd "$DIR"
 
-CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo")
+CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo" || sysctl -n "hw.ncpu")
 
 cd "../tmp"
 

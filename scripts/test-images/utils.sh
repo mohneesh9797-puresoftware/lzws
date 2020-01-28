@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo")
+CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo" || sysctl -n "hw.ncpu")
 MAKEOPTS="-j${CPU_COUNT}"
 
 quote_args () {
