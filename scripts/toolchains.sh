@@ -4,6 +4,8 @@ set -e
 DIR=$(dirname "${BASH_SOURCE[0]}")
 cd "$DIR"
 
+CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo")
+
 cd "../tmp"
 
 build="toolchain-build"
@@ -62,7 +64,7 @@ while read -r toolchain; do
       -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native" \
       || continue
     make clean
-    make -j2
+    make -j${CPU_COUNT}
 
     CTEST_OUTPUT_ON_FAILURE=1 make test
 

@@ -134,9 +134,12 @@ CTEST_OUTPUT_ON_FAILURE=1 make test
 
 ## CI
 
-Travis and Appveyor CI uses [scripts/toolchains.sh](scripts/toolchains.sh) directly.
-Cirrus and Circle CI uses prebuilt [scripts/test-images](scripts/test-images).
-Cirrus CI uses amd64 image, Circle CI - i686.
+See universal test script [scripts/toolchains.sh](scripts/toolchains.sh) for CI.
+Please visit [scripts/test-images](scripts/test-images).
+You can run this test script using many native and cross images.
+
+Cirrus CI uses `x86_64-pc-linux-gnu` image, Circle CI - `x86_64-gentoo-linux-musl` image.
+
 
 ## Real world testing
 

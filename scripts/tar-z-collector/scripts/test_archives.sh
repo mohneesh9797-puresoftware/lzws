@@ -4,6 +4,8 @@ set -e
 DIR=$(dirname "${BASH_SOURCE[0]}")
 cd "$DIR"
 
+CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo")
+
 cd ".."
 BASE_DIR=$(pwd)
 
@@ -28,7 +30,7 @@ for dictionary in "linked-list" "sparse-array"; do
     -DCMAKE_BUILD_TYPE="RELEASE" \
     -DCMAKE_C_FLAGS_RELEASE="-Ofast -march=native"
   make clean
-  make -j2
+  make -j${CPU_COUNT}
 
   cd ".."
 done

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export MAINTAINER="Andrew Aladjev <andrew.aladev@hiqo-solutions.com>"
-export IMAGE_PREFIX="test-lzws"
-export DOCKER_USERNAME="puchuu"
+MAINTAINER="Andrew Aladjev <andrew.aladev@hiqo-solutions.com>"
+IMAGE_PREFIX="test-lzws"
+DOCKER_USERNAME="puchuu"
