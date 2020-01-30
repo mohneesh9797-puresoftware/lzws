@@ -61,7 +61,6 @@ while read -r toolchain; do
       -DLZWS_EXAMPLES=ON \
       -DLZWS_MAN=OFF \
       -DCMAKE_BUILD_TYPE=$(if [ "$COVERAGE_TOOLCHAIN" = true ]; then echo "DEBUG"; else echo "RELEASE"; fi) \
-      -DCMAKE_C_FLAGS_RELEASE="-O2 -march=native" \
       || continue
     make clean
     make -j${CPU_COUNT}
