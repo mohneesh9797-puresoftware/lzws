@@ -46,10 +46,10 @@ m * d < s * n
 
 This formular is much better: we need to process 2 multiplications and compare it.
 We can use GMP library for such purpose.
-This solution will be accurate and won't limit source length.
+This solution will be accurate and wont limit source length.
 
 We will count these multiplications and comparison once per 10000 new source length.
-It won't provide a big performance penalty.
+It wont provide a big performance penalty.
 
 -----
 
@@ -62,7 +62,7 @@ Ncompress counts ratio when:
 Dictionary is not full.
 We will increment new source length and new destination length.
 Dictionary become full after we have written last code + new source byte length >= 10000.
-We can't count ratio now because destination length is 0.
+We cant count ratio now because destination length is 0.
 So we will clear ratio and repeat procedure once again.
 
 Dictionary is full.

@@ -118,9 +118,9 @@ Next sibling codes:
 
 Now lets try to encode "aac".
 Code for "aa" is 259.
-But we can't get this information from "First child codes" or "Next sibling codes".
+But we cant get this information from "First child codes" or "Next sibling codes".
 
-We have to maintain an association between code and it's last symbol.
+We have to maintain an association between code and its last symbol.
 Association between first codes ("0" - "255") and symbols is identity, we don't need to keep it.
 We don't need any special value so we don't need to keep 256 too.
 
@@ -182,7 +182,7 @@ We have to clear both first and next sibling codes.
 
 Is it possible to clear these arrays in a smart way?
 We need to collect indexes with non zero values into 2 separate arrays.
-This solution is heavy, target arrays are small, so we won't receive good result.
+This solution is heavy, target arrays are small, so we wont receive good result.
 So we can just use memset to clear them.
 
 We can keep last symbol by codes as is.

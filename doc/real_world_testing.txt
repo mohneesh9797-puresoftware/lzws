@@ -5,13 +5,13 @@ You can check it by using any search engine with query like '"tar.Z" index|direc
 We can use some search engine api for automatic search.
 The easiest way is to use searx.
 It is a metasearch engine that provides results from popular search engines.
-It is possible to receive about 20-30% results of real search engines using it's api.
+It is possible to receive about 20-30% results of real search engines using its api.
 20% of results are enough for testing purposes.
 
 It is better to make this search using tor.
 You need to have tor up and running before using these scripts.
 
-Some searx endpoints won't provide results for tor exit node IPs.
+Some searx endpoints wont provide results for tor exit node IPs.
 So we will use all available endpoints from "stats.searx.xyz".
 
 -----
@@ -41,7 +41,7 @@ Second test: lzws and ncompress will try to recompress archive in any possible c
 6. lzws -d < archive.tar.Z | compress | compress -d
 
 If there are 2 lzws versions (2 compressor dictionary types), so this list will have 12 commands.
-This test won't take much time.
+This test wont take much time.
 
 Third test: lzws will try to recompress archive using all possible combinations of options.
 1. lzws -d < archive.tar.Z | lzws --max-code-bit-length=9 | lzws -d --max-code-bit-length=9
@@ -67,11 +67,11 @@ Valid archives are stored in "data/valid_archives.xz".
 Volatile archives are stored in "data/volatile_archives.xz".
 
 Format of list is "#{archive url} #{sha256sum of archive}".
-Archives with same digest won't be tested again.
+Archives with same digest wont be tested again.
 They will be just stored in related list.
 
 You can count unique archives.
-For example: 'xzcat data/valid_archives.xz | cut -d " " -f 2 | sort | uniq -c | sort'.
+For example: "xzcat data/valid_archives.xz | cut -d " " -f 2 | sort | uniq -c | sort".
 
 Volatile archives list is the main result of this test.
 If volatile archives list are empty - lzws and ncompress are 100% compatible.

@@ -79,7 +79,7 @@ Indexes of this array will be >= 257.
 Values are previous codes including symbols.
 Any code can be previous for other code except max code.
 
-Max code (2 ** 16) - 1 can't be previous code.
+Max code (2 ** 16) - 1 cant be previous code.
 So values will be between 0 and (2 ** 16) - 2.
 Undefined previous code will be equal to (2 ** 16) - 1.
 
@@ -103,7 +103,7 @@ It is possible to use another array as output buffer.
 It can be named as "output_buffer".
 
 Lets imagine we compressed "aa..." data.
-All codes will be equal to prev code + 'a' symbol.
+All codes will be equal to prev code + "a" symbol.
 "aa" - 257, "aaa" - 258, ... "a...a" ((2 ** 16) - 1 - 255) - ((2 ** 16) - 1).
 So max length of buffer will be (2 ** 16) - 256 = (2 ** 16) - 257 + 1.
 
@@ -127,10 +127,10 @@ Previous codes:
 3 (260) -> 259
 
 Last symbol by codes:
-0 (257) -> 'b'
-1 (258) -> 'a'
-2 (259) -> 'a'
-3 (260) -> 'b'
+0 (257) -> "b"
+1 (258) -> "a"
+2 (259) -> "a"
+3 (260) -> "b"
 
 Output buffer (reversed):
 257 -> ba

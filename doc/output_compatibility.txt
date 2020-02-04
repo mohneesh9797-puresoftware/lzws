@@ -84,7 +84,7 @@ So we can create feature named as "unaligned" which will provide output without 
 
 -----
 
-UNIX compress and his friends won't be able to decompress data compressed with "unaligned".
+UNIX compress and his friends wont be able to decompress data compressed with "unaligned".
 Their decompressor will just bypass bits that it counts as zero padding.
 But "unaligned" output has no any padding bits except last byte.
 So they will just miss data.
