@@ -1,4 +1,4 @@
-Let's try to decompress [97, 98, 257].
+Lets try to decompress [97, 98, 257].
 We need to find a convenient way to simulate algorithm.
 
 Read 97.
@@ -18,7 +18,7 @@ Destination is "abab".
 
 -----
 
-Now let's try to decompress [97, 98, 258].
+Now lets try to decompress [97, 98, 258].
 
 97 and 98 means the same.
 
@@ -102,7 +102,7 @@ We have to write output in an opposite direction.
 It is possible to use another array as output buffer.
 It can be named as "output_buffer".
 
-Let's imagine we compressed "aa..." data.
+Lets imagine we compressed "aa..." data.
 All codes will be equal to prev code + 'a' symbol.
 "aa" - 257, "aaa" - 258, ... "a...a" ((2 ** 16) - 1 - 255) - ((2 ** 16) - 1).
 So max length of buffer will be (2 ** 16) - 256 = (2 ** 16) - 257 + 1.

@@ -1,5 +1,5 @@
 We are going to be compatible with original UNIX compress utility.
-Let's show how it works with ncompress (open source version of this utility).
+Lets show how it works with ncompress (open source version of this utility).
 
 echo -n "abc" | compress -b 9 | ruby -e "pp STDIN.read.unpack('C*')"
 > [31, 157, 137, 97, 196, 140, 1]
