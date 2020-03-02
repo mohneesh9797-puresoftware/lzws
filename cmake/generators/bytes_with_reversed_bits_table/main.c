@@ -8,7 +8,7 @@
 #define LINE_PREFIX "  "
 #define LINE_TERMINATOR ",\n"
 
-#define PRINT(string) fwrite(string, 1, sizeof(string), stdout)
+#define PRINT(string) fputs(string, stdout)
 
 static inline void print_bytes_with_reversed_bits(uint_fast8_t byte)
 {

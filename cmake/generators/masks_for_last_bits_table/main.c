@@ -13,7 +13,7 @@
 #define LINE_PREFIX "  "
 #define LINE_TERMINATOR ",\n"
 
-#define PRINT(string) fwrite(string, 1, sizeof(string), stdout)
+#define PRINT(string) fputs(string, stdout)
 
 int main()
 {
