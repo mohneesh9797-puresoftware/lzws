@@ -27,14 +27,15 @@ int main()
   uint_fast8_t index = 0;
 
   while (true) {
-    if (index != 0) {
-      if (index % BYTE_LENGTH_PER_LINE == 0) {
-        PRINT(LINE_TERMINATOR);
-        PRINT(LINE_PREFIX);
-      }
-      else {
-        PRINT(BYTE_LENGTH_GLUE);
-      }
+    if (index == 0) {
+      PRINT(LINE_PREFIX);
+    }
+    else if (index % BYTE_LENGTH_PER_LINE == 0) {
+      PRINT(LINE_TERMINATOR);
+      PRINT(LINE_PREFIX);
+    }
+    else {
+      PRINT(BYTE_LENGTH_GLUE);
     }
 
     print_bytes_with_reversed_bits(index);
