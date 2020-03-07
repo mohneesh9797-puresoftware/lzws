@@ -5,12 +5,12 @@
 #if !defined(LZWS_CONSTANTS_H)
 #define LZWS_CONSTANTS_H
 
-#include <stdint.h>
+#include "common.h"
 
 // Standard table to reverse single byte.
-extern const uint8_t LZWS_BYTES_WITH_REVERSED_BITS[256];
+extern const lzws_symbol_t LZWS_BYTES_WITH_REVERSED_BITS[256];
 
 // Algorithm will try to access ((2 ** 0) - 1) - ((2 ** 16) - 1) only.
-extern const uint16_t LZWS_MASKS_FOR_LAST_BITS[17];
+extern const lzws_code_t LZWS_MASKS_FOR_LAST_BITS[17];
 
 #endif // LZWS_CONSTANTS_H

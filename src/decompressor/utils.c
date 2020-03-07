@@ -6,9 +6,9 @@
 
 #include "utils.h"
 
-void lzws_decompressor_read_byte(lzws_decompressor_state_t* state, uint_fast8_t* byte_ptr, uint8_t** source_ptr, size_t* source_length_ptr)
+void lzws_decompressor_read_byte(lzws_decompressor_state_t* state, lzws_symbol_fast_t* byte_ptr, lzws_symbol_t** source_ptr, size_t* source_length_ptr)
 {
-  uint_fast8_t byte;
+  lzws_symbol_fast_t byte;
   lzws_read_byte(&byte, source_ptr, source_length_ptr);
 
   if (state->msb) {

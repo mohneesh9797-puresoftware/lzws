@@ -5,7 +5,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 
-#include "../config.h"
+#include "../common.h"
 #include "../file.h"
 
 static const char* help =
@@ -55,12 +55,12 @@ int main(int argc, char** argv)
 {
   bool is_compressor = true;
 
-  bool         without_magic_header = false;
-  uint_fast8_t max_code_bit_length  = LZWS_BIGGEST_MAX_CODE_BIT_LENGTH;
-  bool         block_mode           = true;
-  bool         msb                  = false;
-  bool         unaligned_bit_groups = false;
-  bool         quiet                = false;
+  bool               without_magic_header = false;
+  lzws_symbol_fast_t max_code_bit_length  = LZWS_BIGGEST_MAX_CODE_BIT_LENGTH;
+  bool               block_mode           = true;
+  bool               msb                  = false;
+  bool               unaligned_bit_groups = false;
+  bool               quiet                = false;
 
   int option;
 

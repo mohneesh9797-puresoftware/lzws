@@ -5,22 +5,21 @@
 #if !defined(LZWS_COMPRESSOR_ALIGNMENT_MAIN_H)
 #define LZWS_COMPRESSOR_ALIGNMENT_MAIN_H
 
-#include "../../common.h"
 #include "common.h"
 
-inline void lzws_compressor_initialize_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+inline void lzws_compressor_initialize_alignment(lzws_compressor_alignment_t* alignment_ptr, lzws_symbol_fast_t last_used_code_bit_length)
 {
   alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
   alignment_ptr->destination_byte_length   = 0;
 }
 
-inline void lzws_compressor_add_destination_byte_length_to_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t destination_byte_length)
+inline void lzws_compressor_add_destination_byte_length_to_alignment(lzws_compressor_alignment_t* alignment_ptr, lzws_symbol_fast_t destination_byte_length)
 {
   // Destination byte length can be aligned by last used code bit length * 8.
   alignment_ptr->destination_byte_length = (alignment_ptr->destination_byte_length + destination_byte_length) % alignment_ptr->last_used_code_bit_length;
 }
 
-inline bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+inline bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignment_t* alignment_ptr, lzws_symbol_fast_t last_used_code_bit_length)
 {
   return alignment_ptr->last_used_code_bit_length != last_used_code_bit_length;
 }
@@ -30,7 +29,7 @@ inline bool lzws_compressor_need_to_write_alignment_byte(lzws_compressor_alignme
   return alignment_ptr->destination_byte_length != 0;
 }
 
-inline void lzws_compressor_reset_alignment_after_writing(lzws_compressor_alignment_t* alignment_ptr, uint_fast8_t last_used_code_bit_length)
+inline void lzws_compressor_reset_alignment_after_writing(lzws_compressor_alignment_t* alignment_ptr, lzws_symbol_fast_t last_used_code_bit_length)
 {
   alignment_ptr->last_used_code_bit_length = last_used_code_bit_length;
 }
