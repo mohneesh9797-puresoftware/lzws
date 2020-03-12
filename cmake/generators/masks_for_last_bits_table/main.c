@@ -17,7 +17,7 @@
 
 int main()
 {
-  for (uint_fast8_t index = 0; index <= MAX_INDEX; index++) {
+  for (uint8_t index = 0; index <= MAX_INDEX; index++) {
     if (index == 0) {
       PRINT(LINE_PREFIX);
     }
