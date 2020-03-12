@@ -22,7 +22,7 @@ lzws_result_t lzws_decompressor_allocate_dictionary(lzws_decompressor_dictionary
 void lzws_decompressor_write_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code);
 void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t prefix_code, lzws_code_fast_t current_code, lzws_code_fast_t next_code);
 
-inline bool lzws_decompressor_has_symbol_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr)
+inline bool lzws_decompressor_has_symbol_in_dictionary(const lzws_decompressor_dictionary_t* dictionary_ptr)
 {
   return dictionary_ptr->output_length != 0;
 }

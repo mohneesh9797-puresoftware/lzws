@@ -37,7 +37,7 @@ inline void lzws_compressor_clear_dictionary_wrapper(lzws_compressor_state_t* st
 }
 
 inline lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary_wrapper(
-  lzws_compressor_state_t* state_ptr, lzws_code_fast_t current_code, lzws_symbol_fast_t next_symbol)
+  const lzws_compressor_state_t* state_ptr, lzws_code_fast_t current_code, lzws_symbol_fast_t next_symbol)
 {
   return lzws_compressor_get_next_code_from_dictionary(&state_ptr->dictionary, state_ptr->first_free_code, current_code, next_symbol);
 }

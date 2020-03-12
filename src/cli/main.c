@@ -28,8 +28,8 @@ static const char* help =
   "  Default options are fully compatible with UNIX compress.\n"
   "  Compressor only options (-b and -r) can be changed without loosing compatibility.\n";
 
-static const char*   short_options  = "dwb:rmuqhv";
-static struct option long_options[] = {
+static const char*         short_options  = "dwb:rmuqhv";
+static const struct option long_options[] = {
   {"decompress", optional_argument, NULL, 'd'},
   {"without-magic-header", optional_argument, NULL, 'w'},
   {"max-code-bit-length", optional_argument, NULL, 'b'},

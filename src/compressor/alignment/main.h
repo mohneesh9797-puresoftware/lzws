@@ -19,12 +19,12 @@ inline void lzws_compressor_add_destination_byte_length_to_alignment(lzws_compre
   alignment_ptr->destination_byte_length = (alignment_ptr->destination_byte_length + destination_byte_length) % alignment_ptr->last_used_code_bit_length;
 }
 
-inline bool lzws_compressor_need_to_write_alignment(lzws_compressor_alignment_t* alignment_ptr, lzws_symbol_fast_t last_used_code_bit_length)
+inline bool lzws_compressor_need_to_write_alignment(const lzws_compressor_alignment_t* alignment_ptr, lzws_symbol_fast_t last_used_code_bit_length)
 {
   return alignment_ptr->last_used_code_bit_length != last_used_code_bit_length;
 }
 
-inline bool lzws_compressor_need_to_write_alignment_byte(lzws_compressor_alignment_t* alignment_ptr)
+inline bool lzws_compressor_need_to_write_alignment_byte(const lzws_compressor_alignment_t* alignment_ptr)
 {
   return alignment_ptr->destination_byte_length != 0;
 }

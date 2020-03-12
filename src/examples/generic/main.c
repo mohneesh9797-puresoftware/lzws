@@ -36,7 +36,6 @@ int main()
 
   if (result != 0) {
     LZWS_LOG_ERROR("compressor get initial state failed");
-
     return 1;
   }
 

@@ -22,7 +22,7 @@ inline void lzws_compressor_add_destination_byte_length_to_alignment_wrapper(lzw
   }
 }
 
-inline bool lzws_compressor_need_to_write_alignment_wrapper(lzws_compressor_state_t* state_ptr)
+inline bool lzws_compressor_need_to_write_alignment_wrapper(const lzws_compressor_state_t* state_ptr)
 {
   if (state_ptr->unaligned_bit_groups) {
     return false;

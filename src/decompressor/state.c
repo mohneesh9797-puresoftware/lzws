@@ -69,5 +69,5 @@ void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr)
   free(state_ptr);
 }
 
-extern inline bool   lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr);
-extern inline size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr);
+extern inline bool   lzws_decompressor_is_dictionary_full(const lzws_decompressor_state_t* state_ptr);
+extern inline size_t lzws_decompressor_get_total_codes_length(const lzws_decompressor_state_t* state_ptr);

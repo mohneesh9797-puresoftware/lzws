@@ -10,19 +10,19 @@
 
 // -- codes length --
 
-static inline size_t get_first_child_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+static inline size_t get_first_child_codes_length(const lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
 {
   return total_codes_length - dictionary_ptr->first_child_codes_offset;
 }
 
-static inline size_t get_next_sibling_codes_length(lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+static inline size_t get_next_sibling_codes_length(const lzws_compressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
 {
   return total_codes_length - dictionary_ptr->next_sibling_codes_offset;
 }
 
 // -- code index --
 
-static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code, lzws_code_fast_t code)
+static inline lzws_code_fast_t get_first_child_code_index(const lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code, lzws_code_fast_t code)
 {
   if (code >= first_free_code) {
     code -= dictionary_ptr->first_child_codes_offset;
@@ -31,7 +31,7 @@ static inline lzws_code_fast_t get_first_child_code_index(lzws_compressor_dictio
   return code;
 }
 
-static inline lzws_code_fast_t get_next_sibling_code_index(lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
+static inline lzws_code_fast_t get_next_sibling_code_index(const lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
 {
   return code - dictionary_ptr->next_sibling_codes_offset;
 }
@@ -123,7 +123,7 @@ void lzws_compressor_clear_dictionary(lzws_compressor_dictionary_t* dictionary_p
 }
 
 lzws_code_fast_t lzws_compressor_get_next_code_from_dictionary(
-  lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code,
+  const lzws_compressor_dictionary_t* dictionary_ptr, lzws_code_fast_t first_free_code,
   lzws_code_fast_t current_code, lzws_symbol_fast_t next_symbol)
 {
   lzws_code_fast_t current_code_index = get_first_child_code_index(dictionary_ptr, first_free_code, current_code);

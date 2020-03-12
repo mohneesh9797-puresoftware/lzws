@@ -9,14 +9,14 @@
 
 // -- codes length --
 
-static inline size_t get_codes_length(lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
+static inline size_t get_codes_length(const lzws_decompressor_dictionary_t* dictionary_ptr, size_t total_codes_length)
 {
   return total_codes_length - dictionary_ptr->codes_offset;
 }
 
 // -- code index --
 
-static inline lzws_code_fast_t get_code_index(lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
+static inline lzws_code_fast_t get_code_index(const lzws_decompressor_dictionary_t* dictionary_ptr, lzws_code_fast_t code)
 {
   return code - dictionary_ptr->codes_offset;
 }
@@ -105,8 +105,8 @@ static inline lzws_symbol_t prepare_output(lzws_decompressor_dictionary_t* dicti
 
   lzws_code_fast_t codes_offset = dictionary_ptr->codes_offset;
 
-  lzws_code_t*   previous_codes       = dictionary_ptr->previous_codes;
-  lzws_symbol_t* last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
+  const lzws_code_t*   previous_codes       = dictionary_ptr->previous_codes;
+  const lzws_symbol_t* last_symbol_by_codes = dictionary_ptr->last_symbol_by_codes;
 
   lzws_symbol_t* output_buffer = dictionary_ptr->output_buffer;
 
@@ -167,6 +167,6 @@ void lzws_decompressor_add_code_to_dictionary(lzws_decompressor_dictionary_t* di
   dictionary_ptr->last_symbol_by_codes[next_code_index] = first_symbol;
 }
 
-extern inline bool          lzws_decompressor_has_symbol_in_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);
+extern inline bool          lzws_decompressor_has_symbol_in_dictionary(const lzws_decompressor_dictionary_t* dictionary_ptr);
 extern inline lzws_symbol_t lzws_decompressor_get_symbol_from_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);
 extern inline void          lzws_decompressor_free_dictionary(lzws_decompressor_dictionary_t* dictionary_ptr);

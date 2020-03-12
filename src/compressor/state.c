@@ -85,6 +85,6 @@ void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr)
   free(state_ptr);
 }
 
-extern inline bool   lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state_ptr);
-extern inline size_t lzws_compressor_get_last_used_codes_length(lzws_compressor_state_t* state_ptr);
-extern inline size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_t* state_ptr);
+extern inline bool   lzws_compressor_is_dictionary_full(const lzws_compressor_state_t* state_ptr);
+extern inline size_t lzws_compressor_get_last_used_codes_length(const lzws_compressor_state_t* state_ptr);
+extern inline size_t lzws_compressor_get_total_codes_length(const lzws_compressor_state_t* state_ptr);

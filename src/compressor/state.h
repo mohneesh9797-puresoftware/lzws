@@ -63,17 +63,17 @@ void lzws_compressor_reset_last_used_data(lzws_compressor_state_t* state_ptr);
 void lzws_compressor_clear_state(lzws_compressor_state_t* state_ptr);
 void lzws_compressor_free_state(lzws_compressor_state_t* state_ptr);
 
-inline bool lzws_compressor_is_dictionary_full(lzws_compressor_state_t* state_ptr)
+inline bool lzws_compressor_is_dictionary_full(const lzws_compressor_state_t* state_ptr)
 {
   return state_ptr->last_used_code == state_ptr->max_code;
 }
 
-inline size_t lzws_compressor_get_last_used_codes_length(lzws_compressor_state_t* state_ptr)
+inline size_t lzws_compressor_get_last_used_codes_length(const lzws_compressor_state_t* state_ptr)
 {
   return state_ptr->last_used_code + 1;
 }
 
-inline size_t lzws_compressor_get_total_codes_length(lzws_compressor_state_t* state_ptr)
+inline size_t lzws_compressor_get_total_codes_length(const lzws_compressor_state_t* state_ptr)
 {
   return state_ptr->max_code + 1;
 }

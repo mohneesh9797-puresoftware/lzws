@@ -54,12 +54,12 @@ void lzws_decompressor_reset_last_used_data(lzws_decompressor_state_t* state_ptr
 void lzws_decompressor_clear_state(lzws_decompressor_state_t* state_ptr);
 void lzws_decompressor_free_state(lzws_decompressor_state_t* state_ptr);
 
-inline bool lzws_decompressor_is_dictionary_full(lzws_decompressor_state_t* state_ptr)
+inline bool lzws_decompressor_is_dictionary_full(const lzws_decompressor_state_t* state_ptr)
 {
   return state_ptr->free_code == LZWS_UNDEFINED_FREE_CODE;
 }
 
-inline size_t lzws_decompressor_get_total_codes_length(lzws_decompressor_state_t* state_ptr)
+inline size_t lzws_decompressor_get_total_codes_length(const lzws_decompressor_state_t* state_ptr)
 {
   return state_ptr->max_code + 1;
 }

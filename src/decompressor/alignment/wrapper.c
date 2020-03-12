@@ -9,7 +9,7 @@
 
 extern inline void lzws_decompressor_initialize_alignment_wrapper(lzws_decompressor_state_t* state_ptr);
 extern inline void lzws_decompressor_add_source_byte_length_to_alignment_wrapper(lzws_decompressor_state_t* state_ptr, lzws_symbol_fast_t source_byte_length);
-extern inline bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompressor_state_t* state_ptr);
+extern inline bool lzws_decompressor_need_to_read_alignment_wrapper(const lzws_decompressor_state_t* state_ptr);
 
 static inline lzws_result_t read_alignment(lzws_decompressor_state_t* state_ptr, lzws_symbol_t** source_ptr, size_t* source_length_ptr)
 {

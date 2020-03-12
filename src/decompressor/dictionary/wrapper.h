@@ -37,7 +37,7 @@ inline void lzws_decompressor_add_code_to_dictionary_wrapper(lzws_decompressor_s
   lzws_decompressor_add_code_to_dictionary(&state_ptr->dictionary, prefix_code, current_code, next_code);
 }
 
-inline bool lzws_decompressor_has_symbol_in_dictionary_wrapper(lzws_decompressor_state_t* state_ptr)
+inline bool lzws_decompressor_has_symbol_in_dictionary_wrapper(const lzws_decompressor_state_t* state_ptr)
 {
   return lzws_decompressor_has_symbol_in_dictionary(&state_ptr->dictionary);
 }

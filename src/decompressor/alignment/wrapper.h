@@ -22,7 +22,7 @@ inline void lzws_decompressor_add_source_byte_length_to_alignment_wrapper(lzws_d
   }
 }
 
-inline bool lzws_decompressor_need_to_read_alignment_wrapper(lzws_decompressor_state_t* state_ptr)
+inline bool lzws_decompressor_need_to_read_alignment_wrapper(const lzws_decompressor_state_t* state_ptr)
 {
   if (state_ptr->unaligned_bit_groups) {
     return false;

@@ -121,8 +121,8 @@ static inline lzws_result_t test_eof_after_completed_bits_group(
   lzws_code_fast_t target_number = (1 << LZWS_LOWEST_MAX_CODE_BIT_LENGTH) - first_code + 1;
   size_t           string_length = target_number * (target_number + 1) / 2 + 2; // + 1 byte for \0.
 
-  const char symbol = 'a';
-  char*      string = lzws_allocate_array(1, string_length, (void*)&symbol, false, true);
+  char  symbol = 'a';
+  char* string = lzws_allocate_array(1, string_length, (void*)&symbol, false, true);
   if (string == NULL) {
     LZWS_LOG_ERROR("allocate array failed, string size: %zu", string_length);
     return 1;

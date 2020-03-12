@@ -65,8 +65,8 @@ static inline lzws_result_t read_more_source(
   lzws_symbol_t* source_buffer, size_t source_buffer_length,
   bool quiet)
 {
-  lzws_symbol_t* source        = *source_ptr;
-  size_t         source_length = *source_length_ptr;
+  const lzws_symbol_t* source        = *source_ptr;
+  size_t               source_length = *source_length_ptr;
 
   if (source != source_buffer) {
     if (source_length != 0) {

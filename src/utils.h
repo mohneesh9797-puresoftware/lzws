@@ -52,10 +52,10 @@ inline void lzws_write_byte(lzws_symbol_fast_t byte, lzws_symbol_t** destination
 
 // Keeping universal fill and allocate functions despite the losses of coverage percent.
 
-inline void lzws_fill_array(void* array, size_t size_of_item, size_t length, void* item_ptr, bool item_bytes_are_identical)
+inline void lzws_fill_array(void* array, size_t size_of_item, size_t length, const void* item_ptr, bool item_bytes_are_identical)
 {
-  lzws_symbol_t* bytes      = item_ptr;
-  lzws_symbol_t  first_byte = bytes[0];
+  const lzws_symbol_t* bytes      = item_ptr;
+  lzws_symbol_t        first_byte = bytes[0];
 
   if (item_bytes_are_identical) {
     memset(array, first_byte, size_of_item * length);
@@ -67,7 +67,7 @@ inline void lzws_fill_array(void* array, size_t size_of_item, size_t length, voi
   }
 }
 
-inline void* lzws_allocate_array(lzws_symbol_fast_t size_of_item, size_t length, void* item_ptr, bool item_is_zero, bool item_bytes_are_identical)
+inline void* lzws_allocate_array(lzws_symbol_fast_t size_of_item, size_t length, const void* item_ptr, bool item_is_zero, bool item_bytes_are_identical)
 {
   size_t size = size_of_item * length;
 
