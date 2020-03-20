@@ -2,6 +2,8 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
+// This file was generated, do not edit manually.
+
 // It may not be possible to run generator while cross compiling.
 // So generated file should be shipped with its template.
 
