@@ -1,0 +1,6 @@
+invalid_page_urls.xz filter=lfs diff=lfs merge=lfs -text
+valid_archives.xz filter=lfs diff=lfs merge=lfs -text
+valid_page_urls.xz filter=lfs diff=lfs merge=lfs -text
+volatile_archives.xz filter=lfs diff=lfs merge=lfs -text
+archive_urls.xz filter=lfs diff=lfs merge=lfs -text
+invalid_archives.xz filter=lfs diff=lfs merge=lfs -text
