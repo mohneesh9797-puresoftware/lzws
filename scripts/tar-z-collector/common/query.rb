@@ -19,6 +19,8 @@ TIMEOUT        = 20 # seconds
 REDIRECT_LIMIT = 5
 SIZE_LIMIT     = 1 << 30 # 1 GB
 
+FTP_LISTING_TERMINATOR = "\n".freeze
+
 # -- http --
 
 HTTP_OPTIONS =
@@ -137,7 +139,7 @@ def get_content_or_listing_from_ftp(uri)
 
     begin
       ftp.chdir path
-      data = ftp.list.join "\n"
+      data = ftp.list.join FTP_LISTING_TERMINATOR
       return data, true
     rescue StandardError # rubocop:disable Lint/SuppressedException
     end

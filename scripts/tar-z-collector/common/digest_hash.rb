@@ -12,11 +12,13 @@ require_relative "list"
 # digest_2 => [url_3]
 # ...
 
+SEPARATOR = " ".freeze
+
 def read_digest_hash(path)
   list = read_list path
 
   list.each_with_object({}) do |item, hash|
-    values = item.split(" ").map(&:strip).reject(&:empty?)
+    values = item.split(SEPARATOR).map(&:strip).reject(&:empty?)
     url    = values[0]
     digest = values[1]
 
@@ -31,7 +33,7 @@ end
 def write_digest_hash(path, hash)
   list = hash
     .flat_map do |digest, urls|
-      urls.map { |url| "#{url} #{digest}" }
+      urls.map { |url| url + SEPARATOR + digest }
     end
     .sort
 
