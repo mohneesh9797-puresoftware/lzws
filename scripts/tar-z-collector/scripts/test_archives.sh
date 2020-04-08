@@ -38,4 +38,7 @@ done
 cd "$BASE_DIR"
 
 ./test_archives/main.rb \
-  "data/archive_urls.xz" "data/valid_archives.xz" "data/invalid_archives.xz" "data/volatile_archives.xz"
+  "data/archive_urls.xz" \
+  "data/valid_archives.xz" \
+  "data/invalid_archives.xz" \
+  "data/volatile_archives.xz"

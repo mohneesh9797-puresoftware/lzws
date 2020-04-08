@@ -19,7 +19,9 @@ valid_archive_urls    = valid_archives.values.flatten
 invalid_archive_urls  = invalid_archives.values.flatten
 volatile_archive_urls = volatile_archives.values.flatten
 
-archive_urls -= valid_archive_urls + invalid_archive_urls + volatile_archive_urls
+archive_urls -= valid_archive_urls
+archive_urls -= invalid_archive_urls
+archive_urls -= volatile_archive_urls
 
 text = colorize_length archive_urls.length
 warn "-- processing #{text} archive urls"
@@ -27,7 +29,7 @@ warn "-- processing #{text} archive urls"
 begin
   test_archives archive_urls, valid_archives, invalid_archives, volatile_archives
 ensure
-  # You can stop test at any time and it will sync all tested archives.
+  # You can stop test at any time and it will sync all results.
 
   write_digest_hash valid_archives_path,    valid_archives
   write_digest_hash invalid_archives_path,  invalid_archives

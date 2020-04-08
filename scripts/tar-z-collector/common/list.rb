@@ -9,16 +9,16 @@ COMPRESS_OPTIONS = {
 
 TERMINATOR = "\n".freeze
 
-def read_list(path)
-  XZ.decompress(File.read(path))
+def read_list(file_path)
+  XZ.decompress(File.read(file_path))
     .split(TERMINATOR)
     .map(&:strip)
     .reject(&:empty?)
 end
 
-def write_list(path, list)
+def write_list(file_path, list)
   data = XZ.compress list.join(TERMINATOR), **COMPRESS_OPTIONS
-  File.write path, data
+  File.write file_path, data
 
   nil
 end

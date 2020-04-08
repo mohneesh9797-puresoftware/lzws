@@ -14,8 +14,8 @@ require_relative "list"
 
 SEPARATOR = " ".freeze
 
-def read_digest_hash(path)
-  list = read_list path
+def read_digest_hash(file_path)
+  list = read_list file_path
 
   list.each_with_object({}) do |item, hash|
     values = item.split(SEPARATOR).map(&:strip).reject(&:empty?)
@@ -30,14 +30,14 @@ def read_digest_hash(path)
   end
 end
 
-def write_digest_hash(path, hash)
+def write_digest_hash(file_path, hash)
   list = hash
     .flat_map do |digest, urls|
       urls.map { |url| url + SEPARATOR + digest }
     end
     .sort
 
-  write_list path, list
+  write_list file_path, list
 
   nil
 end

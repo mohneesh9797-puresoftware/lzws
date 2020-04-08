@@ -110,11 +110,11 @@ def threaded_map(items, item_threads_count, &block)
   Parallel.map items, :in_threads => threads_count, &block
 end
 
-def test_archive(path)
+def test_archive(file_path)
   decompressed_digests = threaded_map(ALL_BINARIES, 1) do |binary|
     STDERR.print "."
 
-    get_command_digest "#{binary} -d < \"#{path}\""
+    get_command_digest "#{binary} -d < \"#{file_path}\""
   end
 
   STDERR.print " "
@@ -143,7 +143,7 @@ def test_archive(path)
     STDERR.print "."
 
     get_command_digest(
-      "#{binary} -d < \"#{path}\" | " \
+      "#{binary} -d < \"#{file_path}\" | " \
       "#{binary} | " \
       "#{binary} -d"
     )
@@ -170,7 +170,7 @@ def test_archive(path)
     options = object[:options]
 
     get_command_digest(
-      "#{binary} -d < \"#{path}\" | " \
+      "#{binary} -d < \"#{file_path}\" | " \
       "#{binary} #{options} | " \
       "#{binary} #{options} -d"
     )
@@ -191,11 +191,11 @@ def test_archive(path)
 end
 
 def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archives)
+  archives_size = 0
+
   volatile_archives_length = 0
   invalid_archives_length  = 0
   valid_archives_length    = 0
-
-  archives_size = 0
 
   archive_urls
     .shuffle
@@ -203,12 +203,12 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
       percent = format_percent index, archive_urls.length
       warn "- #{percent}% testing archive, url: #{archive_url}"
 
-      path = download_archive archive_url
-      next if path.nil?
+      file_path = download_archive archive_url
+      next if file_path.nil?
 
       begin
-        size = File.size path
-        digest = Digest::SHA256.file(path).to_s
+        size = File.size file_path
+        digest = Digest::SHA256.file(file_path).to_s
         warn "downloaded archive, size: #{Filesize.new(size).pretty}, digest: #{digest}"
 
         hash, hash_name = get_hash_by_archive_digest digest, valid_archives, invalid_archives, volatile_archives
@@ -218,7 +218,7 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
           next
         end
 
-        result = test_archive path
+        result = test_archive file_path
         case result
         when :volatile
           volatile_archives_length += 1
@@ -235,11 +235,12 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
         archives_size += size
 
       ensure
-        File.delete path
+        File.delete file_path
       end
     end
 
-  archives_size_text     = Filesize.new(archives_size).pretty
+  archives_size_text = Filesize.new(archives_size).pretty
+
   volatile_archives_text = colorize_length volatile_archives_length
   invalid_archives_text  = colorize_length invalid_archives_length
   valid_archives_text    = colorize_length valid_archives_length
@@ -248,7 +249,7 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
     "-- processed #{archives_size_text} archives size, received " \
     "#{volatile_archives_text} volatile archives, " \
     "#{invalid_archives_text} invalid archives, " \
-    "#{valid_archives_text} valid archives" \
+    "#{valid_archives_text} valid archives"
   )
 
   nil
