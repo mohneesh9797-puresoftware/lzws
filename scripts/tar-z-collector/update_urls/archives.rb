@@ -83,20 +83,18 @@ def get_archive_urls_from_page_url(url)
     .compact
     .map do |archive_url|
       begin
-        uri = Addressable::URI.parse(url).join archive_url
+        uri    = URI Addressable::URI.parse(url).join(archive_url).to_s
+        scheme = uri.scheme
+
+        case scheme
+        when "ftp", "http", "https"
+          uri.to_s
+        else
+          raise StandardError, "unknown uri scheme: #{scheme}"
+        end
       rescue StandardError => error
         warn error
         next nil
-      end
-
-      scheme = uri.scheme
-
-      case scheme
-      when "ftp", "http", "https"
-        uri.to_s
-      else
-        warn "unknown uri scheme: #{scheme}"
-        nil
       end
     end
     .compact
