@@ -219,6 +219,7 @@ def test_archives(archive_urls, valid_archives, invalid_archives, volatile_archi
         end
 
         result = test_archive file_path
+
         case result
         when :volatile
           volatile_archives_length += 1
