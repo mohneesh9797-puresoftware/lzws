@@ -85,7 +85,7 @@ int main()
 
   lzws_compressor_free_state(compressor_state_ptr);
 
-  // decompress
+  // Decompress.
 
   lzws_decompressor_state_t* decompressor_state_ptr;
 

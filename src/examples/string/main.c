@@ -35,7 +35,7 @@ int main()
     return 1;
   }
 
-  // decompress
+  // Decompress.
 
   char*  decompressed_text;
   size_t decompressed_text_length;

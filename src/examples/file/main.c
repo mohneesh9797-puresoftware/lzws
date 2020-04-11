@@ -65,7 +65,7 @@ int main()
     return 4;
   }
 
-  // decompress
+  // Decompress.
 
   compressed_text_file = fmemopen((void*)compressed_text, strlen(compressed_text), "r");
   if (compressed_text_file == NULL) {
