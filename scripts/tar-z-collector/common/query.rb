@@ -3,27 +3,27 @@ require "net/ftp"
 require "open-uri"
 require "uri"
 
-TOR_HOST = "127.0.0.1".freeze
-TOR_SOCKS_PORT = 9050
-TOR_HTTP_PORT = 8118
+QUERY_TOR_HOST       = "127.0.0.1".freeze
+QUERY_TOR_SOCKS_PORT = 9050
+QUERY_TOR_HTTP_PORT  = 8118
 
-TOR_SOCKS_SERVER = "#{TOR_HOST}:#{TOR_SOCKS_PORT}".freeze
-TOR_SOCKS_PROXY = "socks://#{TOR_SOCKS_SERVER}".freeze
-TOR_HTTP_PROXY = "http://#{TOR_HOST}:#{TOR_HTTP_PORT}".freeze
+QUERY_TOR_SOCKS_SERVER = "#{QUERY_TOR_HOST}:#{QUERY_TOR_SOCKS_PORT}".freeze
+QUERY_TOR_SOCKS_PROXY  = "socks://#{QUERY_TOR_SOCKS_SERVER}".freeze
+QUERY_TOR_HTTP_PROXY   = "http://#{QUERY_TOR_HOST}:#{QUERY_TOR_HTTP_PORT}".freeze
 
-ENV["SOCKS_SERVER"] = TOR_SOCKS_SERVER
-ENV["ftp_proxy"] = TOR_SOCKS_PROXY
-ENV["https_proxy"] = ENV["http_proxy"] = TOR_HTTP_PROXY
+ENV["SOCKS_SERVER"] = QUERY_TOR_SOCKS_SERVER
+ENV["ftp_proxy"]    = QUERY_TOR_SOCKS_PROXY
+ENV["https_proxy"]  = ENV["http_proxy"] = QUERY_TOR_HTTP_PROXY
 
-TIMEOUT        = 20 # seconds
-REDIRECT_LIMIT = 5
-SIZE_LIMIT     = 1 << 30 # 1 GB
+QUERY_TIMEOUT        = 20 # seconds
+QUERY_REDIRECT_LIMIT = 5
+QUERY_SIZE_LIMIT     = 1 << 30 # 1 GB
 
-FTP_LISTING_TERMINATOR = "\n".freeze
+QUERY_FTP_LISTING_TERMINATOR = "\n".freeze
 
 # -- http --
 
-HTTP_OPTIONS =
+QUERY_HTTP_OPTIONS =
   %i[
     open_timeout
     read_timeout
@@ -32,14 +32,14 @@ HTTP_OPTIONS =
     continue_timeout
     keep_alive_timeout
   ]
-  .map { |timeout| [timeout, TIMEOUT] }
+  .map { |timeout| [timeout, QUERY_TIMEOUT] }
   .to_h
   .freeze
 
-def get_http_content(uri, redirect_limit = REDIRECT_LIMIT)
+def get_http_content(uri, redirect_limit = QUERY_REDIRECT_LIMIT)
   raise StandardError, "http redirect limit exceeded" if redirect_limit == 0
 
-  options = HTTP_OPTIONS.merge(
+  options = QUERY_HTTP_OPTIONS.merge(
     :use_ssl => uri.scheme == "https"
   )
 
@@ -50,7 +50,7 @@ def get_http_content(uri, redirect_limit = REDIRECT_LIMIT)
       head          = http.request_head path_for_head
 
       content_length = head["content-length"].to_i
-      raise StandardError, "size limit exceeded, requested size: #{content_length}" if content_length > SIZE_LIMIT
+      raise StandardError, "size limit exceeded, requested size: #{content_length}" if content_length > QUERY_SIZE_LIMIT
 
       http.get uri
     end
@@ -72,17 +72,17 @@ def get_http_content(uri, redirect_limit = REDIRECT_LIMIT)
   end
 end
 
-OPEN_OPTIONS =
+QUERY_OPEN_OPTIONS =
   %i[
     read_timeout
     open_timeout
   ]
-  .map { |timeout| [timeout, TIMEOUT] }
+  .map { |timeout| [timeout, QUERY_TIMEOUT] }
   .to_h
   .freeze
 
 def download_http_file(uri, file_path)
-  io = URI.open uri, "rb", OPEN_OPTIONS
+  io = URI.open uri, "rb", QUERY_OPEN_OPTIONS
 
   begin
     IO.copy_stream io, file_path
@@ -97,18 +97,18 @@ end
 
 # -- ftp --
 
-FTP_OPTIONS =
+QUERY_FTP_OPTIONS =
   %i[
     open_timeout
     read_timeout
     ssl_handshake_timeout
   ]
-  .map { |timeout| [timeout, TIMEOUT] }
+  .map { |timeout| [timeout, QUERY_TIMEOUT] }
   .to_h
   .freeze
 
 def process_ftp(uri, &_block)
-  options = FTP_OPTIONS.merge(
+  options = QUERY_FTP_OPTIONS.merge(
     :port => uri.port
   )
 
@@ -139,7 +139,7 @@ def get_content_or_listing_from_ftp(uri)
 
     begin
       ftp.chdir path
-      data = ftp.list.join FTP_LISTING_TERMINATOR
+      data = ftp.list.join QUERY_FTP_LISTING_TERMINATOR
       return data, true
     rescue StandardError # rubocop:disable Lint/SuppressedException
     end
@@ -151,7 +151,7 @@ end
 
 def get_file_from_ftp(ftp, path, file_path)
   size = ftp.size path
-  raise StandardError, "size limit exceeded, requested size: #{size}" if size > SIZE_LIMIT
+  raise StandardError, "size limit exceeded, requested size: #{size}" if size > QUERY_SIZE_LIMIT
 
   ftp.getbinaryfile path, file_path
 end
