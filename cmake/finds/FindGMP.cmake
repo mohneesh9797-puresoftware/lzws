@@ -2,7 +2,7 @@ if (DEFINED CMAKE_GMP_FOUND)
   return ()
 endif ()
 
-set (MESSAGE_PREFIX "Status of GMP library")
+set (MESSAGE_PREFIX "Status of GMP")
 
 find_path (CMAKE_GMP_INCLUDE_PATH NAMES "gmp.h")
 if (CMAKE_GMP_INCLUDE_PATH)
