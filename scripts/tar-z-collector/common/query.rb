@@ -72,25 +72,9 @@ def get_http_content(uri, redirect_limit = QUERY_REDIRECT_LIMIT)
   end
 end
 
-QUERY_OPEN_OPTIONS =
-  %i[
-    read_timeout
-    open_timeout
-  ]
-  .map { |timeout| [timeout, QUERY_TIMEOUT] }
-  .to_h
-  .freeze
-
 def download_http_file(uri, file_path)
-  io = URI.open uri, "rb", QUERY_OPEN_OPTIONS
-
-  begin
-    IO.copy_stream io, file_path
-  rescue StandardError => error
-    raise StandardError, "http query failed, error: #{error}"
-  ensure
-    io.close
-  end
+  content = get_http_content uri
+  File.write file_path, content
 
   nil
 end

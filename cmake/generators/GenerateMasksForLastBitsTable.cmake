@@ -3,6 +3,12 @@ function (generate_masks_for_last_bits_table)
     return ()
   endif ()
 
+  include (GetVerboseFlags)
+  cmake_get_verbose_flags ()
+
+  include (CheckC11)
+  cmake_check_c11 ()
+
   set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_masks_for_last_bits_table")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/masks_for_last_bits_table")
   set (NAME "cmake_generator_masks_for_last_bits_table")
@@ -11,7 +17,9 @@ function (generate_masks_for_last_bits_table)
 
   try_compile (
     COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
-    CMAKE_FLAGS "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
+    CMAKE_FLAGS
+      "-DCMAKE_C_FLAGS=${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C11_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
+      "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
     OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)

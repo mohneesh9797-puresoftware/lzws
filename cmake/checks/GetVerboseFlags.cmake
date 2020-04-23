@@ -16,7 +16,7 @@ function (cmake_get_verbose_flags)
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} -Werror"
+      "-DCMAKE_C_FLAGS=-Werror"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
     OUTPUT_VARIABLE CHECK_OUTPUT
   )
@@ -40,7 +40,7 @@ function (cmake_get_verbose_flags)
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -pedantic"
+      "-DCMAKE_C_FLAGS=${CMAKE_WERROR_C_FLAGS} -pedantic"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
     OUTPUT_VARIABLE CHECK_OUTPUT
   )
@@ -63,7 +63,7 @@ function (cmake_get_verbose_flags)
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -Wall"
+      "-DCMAKE_C_FLAGS=${CMAKE_WERROR_C_FLAGS} -Wall"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
     OUTPUT_VARIABLE CHECK_OUTPUT
   )
@@ -86,7 +86,7 @@ function (cmake_get_verbose_flags)
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
-      "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -Wextra"
+      "-DCMAKE_C_FLAGS=${CMAKE_WERROR_C_FLAGS} -Wextra"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
     OUTPUT_VARIABLE CHECK_OUTPUT
   )
