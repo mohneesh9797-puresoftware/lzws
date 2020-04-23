@@ -6,8 +6,8 @@ cd "$DIR"
 
 SIZE=$1
 
-tmp_path=$(readlink -f "../tmp")
-mkdir -p "$tmp_path"
+mkdir -p "../tmp"
+tmp_path=$(cd "../tmp" && pwd -P)
 
 if mount | grep "$tmp_path" > /dev/null 2>&1; then
   echo "tmp is already mounted"
