@@ -9,7 +9,7 @@ CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo" || sysctl -n "hw.ncpu")
 cd ".."
 BASE_DIR=$(pwd)
 
-../mount_tmp.sh
+../mount_tmp.sh "1024"
 cd "../../tmp"
 
 # We need to create release builds for all possible dictionaries.

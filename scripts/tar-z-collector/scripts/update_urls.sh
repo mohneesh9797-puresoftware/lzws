@@ -6,7 +6,7 @@ cd "$DIR"
 
 cd ".."
 
-../mount_tmp.sh
+../mount_tmp.sh "1024"
 
 ./update_urls/main.rb \
   "data/valid_page_urls.xz" \

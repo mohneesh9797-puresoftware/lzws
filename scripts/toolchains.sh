@@ -6,6 +6,7 @@ cd "$DIR"
 
 CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo" || sysctl -n "hw.ncpu")
 
+./mount_tmp.sh "64"
 cd "../tmp"
 
 build="toolchain-build"
