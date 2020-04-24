@@ -7,10 +7,12 @@ cd "$DIR"
 CPU_COUNT=$(grep -c "^processor" "/proc/cpuinfo" || sysctl -n "hw.ncpu")
 
 cd ".."
-BASE_DIR=$(pwd)
 
-../mount_tmp.sh "1024"
-cd "../../tmp"
+TMP_PATH="$(pwd)/tmp"
+TMP_SIZE="1024"
+
+../mount_tmp.sh "$TMP_PATH" "$TMP_SIZE"
+cd "$TMP_PATH"
 
 # We need to create release builds for all possible dictionaries.
 for dictionary in "linked-list" "sparse-array"; do
@@ -20,7 +22,7 @@ for dictionary in "linked-list" "sparse-array"; do
 
   find . \( -name "CMake*" -o -name "*.cmake" \) -exec rm -rf {} +
 
-  cmake "../.." \
+  cmake "../../../.." \
     -DLZWS_COMPRESSOR_DICTIONARY="$dictionary" \
     -DLZWS_SHARED=OFF \
     -DLZWS_STATIC=ON \
@@ -36,7 +38,7 @@ for dictionary in "linked-list" "sparse-array"; do
   cd ".."
 done
 
-cd "$BASE_DIR"
+cd ".."
 
 ./test_archives/main.rb \
   "data/archive_urls.xz" \

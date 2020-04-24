@@ -11,7 +11,7 @@ require_relative "../common/data"
 require_relative "../common/format"
 require_relative "../common/query"
 
-TEMP_DIRECTORY = File.join(File.dirname(__FILE__), "..", "..", "..", "tmp").freeze
+TEMP_DIRECTORY = File.join(File.dirname(__FILE__), "..", "tmp").freeze
 ARCHIVE_NAME   = "archive#{ARCHIVE_POSTFIX}".freeze
 ARCHIVE_PATH   = File.join(TEMP_DIRECTORY, ARCHIVE_NAME).freeze
 
