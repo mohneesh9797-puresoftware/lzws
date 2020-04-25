@@ -11,7 +11,7 @@ cd ".."
 TMP_PATH="$(pwd)/tmp"
 TMP_SIZE="1024"
 
-../mount_tmp.sh "$TMP_PATH" "$TMP_SIZE"
+../temp/mount.sh "$TMP_PATH" "$TMP_SIZE"
 cd "$TMP_PATH"
 
 # We need to create release builds for all possible dictionaries.
