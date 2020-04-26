@@ -1,6 +1,5 @@
 require "net/http"
 require "net/ftp"
-require "open-uri"
 require "uri"
 
 QUERY_TOR_HOST       = "127.0.0.1".freeze
