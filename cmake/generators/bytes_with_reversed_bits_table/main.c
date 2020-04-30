@@ -2,17 +2,16 @@
 // Copyright (c) 2016 David Bryant, 2018+ other authors, all rights reserved (see AUTHORS).
 // Distributed under the BSD Software License (see LICENSE).
 
-#include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 
+#include "print.h"
+
+#define BYTE_TEMPLATE "0x%02x"
 #define BYTE_LENGTH_PER_LINE 16
 #define BYTE_LENGTH_GLUE ", "
 #define LINE_PREFIX "  "
 #define LINE_TERMINATOR ",\n"
-
-#define PRINT(string) fputs(string, stdout)
 
 static inline void print_bytes_with_reversed_bits(uint8_t byte)
 {
@@ -23,20 +22,18 @@ static inline void print_bytes_with_reversed_bits(uint8_t byte)
     byte_with_reversed_bits |= bit_value << (7 - bit_index);
   }
 
-  printf("0x%02x", byte_with_reversed_bits);
+  printf(BYTE_TEMPLATE, byte_with_reversed_bits);
 }
 
 int main()
 {
+  INITIALIZE_SPACERS();
+
   uint8_t index = 0;
 
   while (true) {
-    if (index == 0) {
-      PRINT(LINE_PREFIX);
-    }
-    else if (index % BYTE_LENGTH_PER_LINE == 0) {
-      PRINT(LINE_TERMINATOR);
-      PRINT(LINE_PREFIX);
+    if (index % BYTE_LENGTH_PER_LINE == 0) {
+      PRINT_SPACER(LINE_PREFIX, LINE_TERMINATOR);
     }
     else {
       PRINT(BYTE_LENGTH_GLUE);
