@@ -7,18 +7,21 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#define PREFIX "  "
+#define TERMINATOR ",\n"
+
 #define PRINT(string) fputs(string, stdout)
 
 #define INITIALIZE_SPACERS() bool is_first_spacer = true;
 
-#define PRINT_SPACER(PREFIX, TERMINATOR) \
-  if (is_first_spacer) {                 \
-    PRINT(PREFIX);                       \
-    is_first_spacer = false;             \
-  }                                      \
-  else {                                 \
-    PRINT(TERMINATOR);                   \
-    PRINT(PREFIX);                       \
+#define PRINT_SPACER()       \
+  if (is_first_spacer) {     \
+    PRINT(PREFIX);           \
+    is_first_spacer = false; \
+  }                          \
+  else {                     \
+    PRINT(TERMINATOR);       \
+    PRINT(PREFIX);           \
   }
 
 #endif // PRINT_H
