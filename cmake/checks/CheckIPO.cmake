@@ -8,6 +8,10 @@ function (cmake_check_ipo)
   include (CheckIPOSupported)
   check_ipo_supported (RESULT CHECK_RESULT OUTPUT CHECK_OUTPUT)
 
+  if (CMAKE_VERBOSE_MAKEFILE)
+    message (STATUS ${CHECK_OUTPUT})
+  endif ()
+
   if (CHECK_RESULT)
     set (CMAKE_HAVE_IPO true)
     message (STATUS "${MESSAGE_PREFIX} - yes")
