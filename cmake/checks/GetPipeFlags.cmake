@@ -13,18 +13,18 @@ function (cmake_get_pipe_flags)
   cmake_get_verbose_flags ()
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} -pipe"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_PIPE_C_FLAGS "-pipe")
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()

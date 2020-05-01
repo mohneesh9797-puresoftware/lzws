@@ -12,18 +12,18 @@ function (cmake_get_verbose_flags)
   set (MESSAGE_PREFIX "Status of -Werror support")
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=-Werror"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_WERROR_C_FLAGS "-Werror" CACHE STRING "Werror C flags")
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
@@ -38,18 +38,18 @@ function (cmake_get_verbose_flags)
   set (CMAKE_VERBOSE_C_FLAGS "")
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_WERROR_C_FLAGS} -pedantic"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_VERBOSE_C_FLAGS "${CMAKE_VERBOSE_C_FLAGS} -pedantic")
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
@@ -61,18 +61,18 @@ function (cmake_get_verbose_flags)
   set (MESSAGE_PREFIX "Status of -Wall support")
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_WERROR_C_FLAGS} -Wall"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_VERBOSE_C_FLAGS "${CMAKE_VERBOSE_C_FLAGS} -Wall")
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
@@ -84,18 +84,18 @@ function (cmake_get_verbose_flags)
   set (MESSAGE_PREFIX "Status of -Wextra support")
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_WERROR_C_FLAGS} -Wextra"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_VERBOSE_C_FLAGS "${CMAKE_VERBOSE_C_FLAGS} -Wextra")
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()

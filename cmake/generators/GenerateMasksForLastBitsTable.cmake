@@ -20,10 +20,10 @@ function (generate_masks_for_last_bits_table)
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_C11_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
 
   if (COMPILE_RESULT)
@@ -31,6 +31,7 @@ function (generate_masks_for_last_bits_table)
       COMMAND "${BINARY_DIR}/main"
       RESULT_VARIABLE RUN_RESULT
       OUTPUT_VARIABLE RUN_OUTPUT
+      ERROR_VARIABLE RUN_ERROR
     )
 
     if (RUN_RESULT EQUAL 0)
@@ -38,7 +39,7 @@ function (generate_masks_for_last_bits_table)
       message (STATUS "${MESSAGE_PREFIX} - generated")
     else ()
       unset (CMAKE_MASKS_FOR_LAST_BITS_TABLE PARENT_SCOPE)
-      message (STATUS "${MESSAGE_PREFIX} - result: ${RUN_RESULT}")
+      message (STATUS "${MESSAGE_PREFIX} - result: ${RUN_RESULT}, error: ${RUN_ERROR}")
       message (STATUS "${MESSAGE_PREFIX} - failed to generate, using default")
     endif ()
   else ()

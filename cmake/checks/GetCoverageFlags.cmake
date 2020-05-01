@@ -16,19 +16,19 @@ function (cmake_get_coverage_flags)
   cmake_check_runnable ()
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS} --coverage"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
       "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_COVERAGE_C_FLAGS "--coverage")
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()

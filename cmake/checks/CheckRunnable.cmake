@@ -13,19 +13,19 @@ function (cmake_check_runnable)
   cmake_get_verbose_flags ()
 
   try_compile (
-    CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
+    COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
     CMAKE_FLAGS
       "-DCMAKE_C_FLAGS=${CMAKE_VERBOSE_C_FLAGS} ${CMAKE_WERROR_C_FLAGS}"
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
       "-DCMAKE_TRY_RUN=1"
-    OUTPUT_VARIABLE COMPILE_RESULT
+    OUTPUT_VARIABLE COMPILE_OUTPUT
   )
   if (CMAKE_VERBOSE_MAKEFILE)
-    message (STATUS ${COMPILE_RESULT})
+    message (STATUS ${COMPILE_OUTPUT})
   endif ()
   FILE (REMOVE_RECURSE ${BINARY_DIR})
 
-  if (CHECK_RESULT)
+  if (COMPILE_RESULT)
     set (CMAKE_CAN_RUN_EXE true)
     message (STATUS "${MESSAGE_PREFIX} - yes")
   else ()
