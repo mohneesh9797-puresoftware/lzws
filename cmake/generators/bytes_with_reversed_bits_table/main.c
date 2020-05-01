@@ -39,7 +39,7 @@ int main()
 
     print_bytes_with_reversed_bits(index);
 
-    if (index == 255) {
+    if (index == UINT8_MAX) {
       break;
     }
     index++;
