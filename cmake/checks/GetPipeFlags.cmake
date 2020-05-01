@@ -22,7 +22,7 @@ function (cmake_get_pipe_flags)
   if (CMAKE_VERBOSE_MAKEFILE)
     message (STATUS ${COMPILE_OUTPUT})
   endif ()
-  FILE (REMOVE_RECURSE ${BINARY_DIR})
+  file (REMOVE_RECURSE ${BINARY_DIR})
 
   if (COMPILE_RESULT)
     set (CMAKE_PIPE_C_FLAGS "-pipe")

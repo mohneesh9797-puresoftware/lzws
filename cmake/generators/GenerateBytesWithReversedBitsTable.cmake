@@ -47,5 +47,5 @@ function (generate_bytes_with_reversed_bits_table)
     message (STATUS "${MESSAGE_PREFIX} - compilation failed, using default")
   endif ()
 
-  FILE (REMOVE_RECURSE ${BINARY_DIR})
+  file (REMOVE_RECURSE ${BINARY_DIR})
 endfunction ()

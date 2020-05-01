@@ -26,7 +26,7 @@ function (cmake_get_coverage_flags)
   if (CMAKE_VERBOSE_MAKEFILE)
     message (STATUS ${COMPILE_OUTPUT})
   endif ()
-  FILE (REMOVE_RECURSE ${BINARY_DIR})
+  file (REMOVE_RECURSE ${BINARY_DIR})
 
   if (COMPILE_RESULT)
     set (CMAKE_COVERAGE_C_FLAGS "--coverage")
