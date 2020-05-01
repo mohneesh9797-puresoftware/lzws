@@ -10,8 +10,8 @@ require_relative "../common/query"
 # We can make a queue of search urls and process urls one-by-one instead.
 # This method provides better results.
 
-# "tar.Z" index|directory|listing|ftp|file|archive
-MAIN_TEXT        = "\"#{ARCHIVE_EXTENSION}\"".freeze
+# ".Z" index|directory|listing|ftp|file|archive
+MAIN_TEXT        = "\"#{ARCHIVE_POSTFIX}\"".freeze
 ADDITIONAL_TEXTS = %w[index directory listing ftp file archive].freeze
 
 def get_text

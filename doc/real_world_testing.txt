@@ -1,6 +1,6 @@
 It is possible to test lzws and ncompress in real world.
-There are a lot of "tar.Z" archives available on the internet.
-You can check it by using any search engine with query like '"tar.Z" index|directory|listing|ftp|file|archive'.
+There are a lot of ".Z" archives available on the internet.
+You can check it by using any search engine with query like '".Z" index|directory|listing|ftp|file|archive'.
 
 We can use some search engine api for automatic search.
 The easiest way is to use searx.
@@ -17,7 +17,7 @@ So we will use all available endpoints from "stats.searx.xyz".
 -----
 
 Search results are the list of page urls.
-We will visit pages in random order and collect all links that ends with "tar.Z".
+We will visit pages in random order and collect all links that ends with ".Z".
 
 Page urls with at least one link will be stored in "data/valid_page_urls.xz".
 Page urls with no archive links will be stored in "data/invalid_page_urls.xz".
@@ -33,19 +33,19 @@ Lzws in all tests will be used using all possible versions (with different compr
 First test: lzws and ncompress will try to decompress it.
 
 Second test: lzws and ncompress will try to recompress archive in any possible combinations using default options:
-1. compress -d < archive.tar.Z | lzws | lzws -d
-2. compress -d < archive.tar.Z | lzws | compress -d
-3. compress -d < archive.tar.Z | compress | compress -d
-4. lzws -d < archive.tar.Z | lzws | lzws -d
-5. lzws -d < archive.tar.Z | lzws | compress -d
-6. lzws -d < archive.tar.Z | compress | compress -d
+1. compress -d < archive.Z | lzws | lzws -d
+2. compress -d < archive.Z | lzws | compress -d
+3. compress -d < archive.Z | compress | compress -d
+4. lzws -d < archive.Z | lzws | lzws -d
+5. lzws -d < archive.Z | lzws | compress -d
+6. lzws -d < archive.Z | compress | compress -d
 
 If there are 2 lzws versions (2 compressor dictionary types), so this list will have 12 commands.
 This test wont take much time.
 
 Third test: lzws will try to recompress archive using all possible combinations of options.
-1. lzws -d < archive.tar.Z | lzws --max-code-bit-length=9 | lzws -d --max-code-bit-length=9
-2. lzws -d < archive.tar.Z | lzws --max-code-bit-length=10 | lzws -d --max-code-bit-length=10
+1. lzws -d < archive.Z | lzws --max-code-bit-length=9 | lzws -d --max-code-bit-length=9
+2. lzws -d < archive.Z | lzws --max-code-bit-length=10 | lzws -d --max-code-bit-length=10
 ...
 
 There are 64 possible option combinations for lzws.
@@ -88,7 +88,7 @@ curl -sSL https://get.rvm.io | bash -s stable
 rvm install ruby-2.7.0 -C --enable-socks
 
 3. Install required gems
-cd scripts/tar-z-collector
+cd scripts/archive-collector
 bundle install
 
 4. Start tor

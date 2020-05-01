@@ -9,7 +9,7 @@ lzws - LZW streaming compressor/decompressor compatible with UNIX compress.
 
 SYNOPSIS
 --------
-*lzws* ['OPTIONS'] < 'archive.tar' > 'archive.tar.Z'
+*lzws* ['OPTIONS'] < 'archive' > 'archive.Z'
 
 
 DESCRIPTION
@@ -83,7 +83,7 @@ EXAMPLES
   Archive size is about 33% of original tar.
 
 `lzws -u < linux.tar > linux.tar.Zu`::
-  Archive without alignment groups is about 12 kb smaller.
+  Archive without alignment groups is about 0.01% smaller.
 
 `lzws < linux.tar | compress -d | compress | lzws -d > linux.tar.new`::
   New tar will be the same as original one.

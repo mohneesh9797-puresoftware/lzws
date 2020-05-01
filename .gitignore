@@ -1,6 +1,6 @@
 build/*
 src/config.h
 tmp
-scripts/tar-z-collector/tmp
+scripts/archive-collector/tmp
 Gemfile.lock
 .rebuild_date

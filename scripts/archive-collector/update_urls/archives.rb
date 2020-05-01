@@ -5,9 +5,9 @@ require "uri"
 require_relative "../common/data"
 require_relative "../common/query"
 
-# href='*.tar.Z'
-# href="*.tar.Z"
-# href=*.tar.Z
+# href='*.Z'
+# href="*.Z"
+# href=*.Z
 PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
     href[[:space:]]*=[[:space:]]*
@@ -37,7 +37,7 @@ PAGE_WITH_ARCHIVES_REGEXP = Regexp.new(
 )
 .freeze
 
-# -r--r--r--  1 257  7070  337967 Jul 29  1992 *.tar.Z
+# -r--r--r--  1 257  7070  337967 Jul 29  1992 *.Z
 LISTING_WITH_ARCHIVES_REGEXP = Regexp.new(
   "
     (

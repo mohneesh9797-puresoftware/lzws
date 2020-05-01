@@ -143,7 +143,7 @@ Cirrus CI uses `x86_64-pc-linux-gnu` image, Circle CI - `x86_64-gentoo-linux-mus
 
 ## Real world testing
 
-There are a great amount of `tar.Z` archives available on the internet.
+There are a great amount of `.Z` archives available on the internet.
 It is possible to test lzws using these archives.
 
 Install modern version of ruby:
@@ -154,7 +154,7 @@ rvm install ruby-2.7.0 -C --enable-socks
 
 Install required gems:
 ```sh
-cd scripts/tar-z-collector
+cd scripts/archive-collector
 bundle install
 ```
 
@@ -182,7 +182,7 @@ Re-test archives:
 This test will decompress and re-compress more than 10000 unique archives in all possible combinations of dictionaries and lzws options.
 It will take a week on modern CPU (there are many large archives).
 CPU with 16+ cores is recommended.
-Test will be successful if file [volatile_archives.xz](scripts/tar-z-collector/data/volatile_archives.xz) will be empty.
+Test will be successful if file [volatile_archives.xz](scripts/archive-collector/data/volatile_archives.xz) will be empty.
 Volatile archives means the list of archives that lzws/ncompress can process, but ncompress/lzws can't.
 
 ## Man
