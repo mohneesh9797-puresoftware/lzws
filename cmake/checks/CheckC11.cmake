@@ -25,10 +25,11 @@ function (cmake_check_c11)
       "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
     OUTPUT_VARIABLE COMPILE_OUTPUT
   )
+  file (REMOVE_RECURSE ${BINARY_DIR})
+
   if (CMAKE_VERBOSE_MAKEFILE)
     message (STATUS ${COMPILE_OUTPUT})
   endif ()
-  file (REMOVE_RECURSE ${BINARY_DIR})
 
   if (COMPILE_RESULT)
     set (CMAKE_HAVE_C11 true)
@@ -47,10 +48,11 @@ function (cmake_check_c11)
         "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
       OUTPUT_VARIABLE COMPILE_OUTPUT
     )
+    file (REMOVE_RECURSE ${BINARY_DIR})
+
     if (CMAKE_VERBOSE_MAKEFILE)
       message (STATUS ${COMPILE_OUTPUT})
     endif ()
-    file (REMOVE_RECURSE ${BINARY_DIR})
 
     if (COMPILE_RESULT)
       set (CMAKE_HAVE_C11 true)
@@ -70,10 +72,11 @@ function (cmake_check_c11)
         "-DCMAKE_TRY_RUN=${CMAKE_CAN_RUN_EXE}"
       OUTPUT_VARIABLE COMPILE_OUTPUT
     )
+    file (REMOVE_RECURSE ${BINARY_DIR})
+
     if (CMAKE_VERBOSE_MAKEFILE)
       message (STATUS ${COMPILE_OUTPUT})
     endif ()
-    file (REMOVE_RECURSE ${BINARY_DIR})
 
     if (COMPILE_RESULT)
       set (CMAKE_HAVE_C11 true)

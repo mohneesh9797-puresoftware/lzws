@@ -19,10 +19,11 @@ function (cmake_get_pipe_flags)
       "-DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}"
     OUTPUT_VARIABLE COMPILE_OUTPUT
   )
+  file (REMOVE_RECURSE ${BINARY_DIR})
+
   if (CMAKE_VERBOSE_MAKEFILE)
     message (STATUS ${COMPILE_OUTPUT})
   endif ()
-  file (REMOVE_RECURSE ${BINARY_DIR})
 
   if (COMPILE_RESULT)
     set (CMAKE_PIPE_C_FLAGS "-pipe")
