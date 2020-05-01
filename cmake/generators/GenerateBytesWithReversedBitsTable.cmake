@@ -32,7 +32,7 @@ function (generate_bytes_with_reversed_bits_table)
       COMMAND "${BINARY_DIR}/main"
       RESULT_VARIABLE RUN_RESULT
       OUTPUT_VARIABLE RUN_OUTPUT
-      ERROR_VARIABLE RUN_ERROR
+      ERROR_VARIABLE RUN_ERRORS
     )
 
     if (RUN_RESULT EQUAL 0)
@@ -40,7 +40,7 @@ function (generate_bytes_with_reversed_bits_table)
       message (STATUS "${MESSAGE_PREFIX} - generated")
     else ()
       unset (CMAKE_BYTES_WITH_REVERSED_BITS_TABLE PARENT_SCOPE)
-      message (STATUS "${MESSAGE_PREFIX} - result: ${RUN_RESULT}, error:\n${RUN_ERROR}")
+      message (STATUS "${MESSAGE_PREFIX} - result: ${RUN_RESULT}, errors:\n${RUN_ERRORS}")
       message (STATUS "${MESSAGE_PREFIX} - failed to generate, using default")
     endif ()
 
