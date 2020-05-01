@@ -3,6 +3,12 @@ function (cmake_check_gmp)
     return ()
   endif ()
 
+  set (MESSAGE_PREFIX "Status of GMP support")
+
+  set (NAME "cmake_check_gmp")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_GMP")
+  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/GMP")
+
   find_package (GMP REQUIRED)
 
   include (GetVerboseFlags)
@@ -13,12 +19,6 @@ function (cmake_check_gmp)
 
   include (CheckRunnable)
   cmake_check_runnable ()
-
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_GMP")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/GMP")
-  set (NAME "cmake_check_gmp")
-
-  set (MESSAGE_PREFIX "Status of GMP support")
 
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}

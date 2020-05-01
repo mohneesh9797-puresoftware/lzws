@@ -3,20 +3,17 @@ function (cmake_check_c11)
     return ()
   endif ()
 
+  set (MESSAGE_PREFIX "Status of C11 support")
+
+  set (NAME "cmake_check_c11")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_C11")
+  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/C11")
+
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()
 
   include (CheckRunnable)
   cmake_check_runnable ()
-
-  set (CMAKE_HAVE_C11 false)
-  set (CMAKE_C11_C_FLAGS "")
-
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_C11")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/C11")
-  set (NAME "cmake_check_c11")
-
-  set (MESSAGE_PREFIX "Status of C11 support")
 
   # -- -gnu11 --
 

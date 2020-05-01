@@ -3,14 +3,14 @@ function (cmake_get_pipe_flags)
     return ()
   endif ()
 
-  include (GetVerboseFlags)
-  cmake_get_verbose_flags ()
+  set (MESSAGE_PREFIX "Status of -pipe support")
 
+  set (NAME "cmake_get_pipe_flags")
   set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
-  set (NAME "cmake_get_pipe_flags")
 
-  set (MESSAGE_PREFIX "Status of -pipe support")
+  include (GetVerboseFlags)
+  cmake_get_verbose_flags ()
 
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}

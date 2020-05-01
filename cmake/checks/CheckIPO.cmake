@@ -3,11 +3,10 @@ function (cmake_check_ipo)
     return ()
   endif ()
 
-  include (CheckIPOSupported)
-
-  check_ipo_supported (RESULT CHECK_RESULT OUTPUT CHECK_OUTPUT)
-
   set (MESSAGE_PREFIX "Status of IPO support")
+
+  include (CheckIPOSupported)
+  check_ipo_supported (RESULT CHECK_RESULT OUTPUT CHECK_OUTPUT)
 
   if (CHECK_RESULT)
     set (CMAKE_HAVE_IPO true)

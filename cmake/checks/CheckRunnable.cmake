@@ -3,14 +3,14 @@ function (cmake_check_runnable)
     return ()
   endif ()
 
-  include (GetVerboseFlags)
-  cmake_get_verbose_flags ()
+  set (MESSAGE_PREFIX "Status of run exe support")
 
+  set (NAME "cmake_check_runnable")
   set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
-  set (NAME "cmake_check_runnable")
 
-  set (MESSAGE_PREFIX "Status of run exe support")
+  include (GetVerboseFlags)
+  cmake_get_verbose_flags ()
 
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}

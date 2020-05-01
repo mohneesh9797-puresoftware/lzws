@@ -3,17 +3,17 @@ function (generate_bytes_with_reversed_bits_table)
     return ()
   endif ()
 
+  set (MESSAGE_PREFIX "Bytes with reversed bits table")
+
+  set (NAME "cmake_generator_bytes_with_reversed_bits_table")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_bytes_with_reversed_bits_table")
+  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/bytes_with_reversed_bits_table")
+
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()
 
   include (CheckC11)
   cmake_check_c11 ()
-
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_bytes_with_reversed_bits_table")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/bytes_with_reversed_bits_table")
-  set (NAME "cmake_generator_bytes_with_reversed_bits_table")
-
-  set (MESSAGE_PREFIX "Bytes with reversed bits table")
 
   try_compile (
     COMPILE_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
@@ -46,6 +46,4 @@ function (generate_bytes_with_reversed_bits_table)
   endif ()
 
   FILE (REMOVE_RECURSE ${BINARY_DIR})
-
-  mark_as_advanced (CMAKE_BYTES_WITH_REVERSED_BITS_TABLE)
 endfunction ()

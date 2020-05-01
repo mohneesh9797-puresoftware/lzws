@@ -67,8 +67,6 @@ cmake_check_c11 ()
 include (CheckIPO)
 cmake_check_ipo ()
 
-find_package (GMP REQUIRED)
-
 include (CheckGMP)
 cmake_check_gmp ()
 

@@ -3,11 +3,9 @@ function (cmake_get_verbose_flags)
     return ()
   endif ()
 
-  set (CMAKE_VERBOSE_C_FLAGS "")
-
+  set (NAME "cmake_get_verbose_flags")
   set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
   set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
-  set (NAME "cmake_get_verbose_flags")
 
   # -- Werror --
 
@@ -36,6 +34,8 @@ function (cmake_get_verbose_flags)
   # -- pedantic --
 
   set (MESSAGE_PREFIX "Status of -pedantic support")
+
+  set (CMAKE_VERBOSE_C_FLAGS "")
 
   try_compile (
     CHECK_RESULT ${BINARY_DIR} ${SOURCE_DIR} ${NAME}
@@ -105,5 +105,9 @@ function (cmake_get_verbose_flags)
   set (CMAKE_VERBOSE_C_FLAGS ${CMAKE_VERBOSE_C_FLAGS} CACHE STRING "Verbose C flags")
   set (CMAKE_GET_VERBOSE_FLAGS_PROCESSED true CACHE STRING "Verbose flags processed")
 
-  mark_as_advanced (CMAKE_VERBOSE_C_FLAGS CMAKE_GET_VERBOSE_FLAGS_PROCESSED)
+  mark_as_advanced (
+    CMAKE_WERROR_C_FLAGS
+    CMAKE_VERBOSE_C_FLAGS
+    CMAKE_GET_VERBOSE_FLAGS_PROCESSED
+  )
 endfunction ()
