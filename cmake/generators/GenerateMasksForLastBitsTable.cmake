@@ -40,7 +40,7 @@ function (generate_masks_for_last_bits_table)
       message (STATUS "${MESSAGE_PREFIX} - generated")
     else ()
       unset (CMAKE_MASKS_FOR_LAST_BITS_TABLE PARENT_SCOPE)
-      message (STATUS "${MESSAGE_PREFIX} - result: ${RUN_RESULT}, error: ${RUN_ERROR}")
+      message (STATUS "${MESSAGE_PREFIX} - result: ${RUN_RESULT}, error:\n${RUN_ERROR}")
       message (STATUS "${MESSAGE_PREFIX} - failed to generate, using default")
     endif ()
 
