@@ -5,7 +5,7 @@
 // This file was generated, do not edit manually.
 
 // It may not be possible to run generator while cross compiling.
-// So generated file should be shipped with its template.
+// So generated file should be distributed with its template.
 
 #include "constants.h"
 
