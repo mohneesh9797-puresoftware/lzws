@@ -1,0 +1,3 @@
+[submodule "archive-collector"]
+	path = archive-collector
+	url = git@github.com:andrew-aladev/lzws-archive-collector.git
