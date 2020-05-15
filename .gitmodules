@@ -1,3 +1,4 @@
 [submodule "archive-collector"]
 	path = archive-collector
 	url = https://github.com/andrew-aladev/lzws-archive-collector.git
+	branch = master
