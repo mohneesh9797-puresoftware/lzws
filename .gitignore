@@ -1,6 +1,4 @@
 build/*
 src/config.h
 tmp
-scripts/archive-collector/tmp
-Gemfile.lock
 .rebuild_date
