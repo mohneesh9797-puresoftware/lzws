@@ -31,7 +31,6 @@ You can add your own implementation.
 
 - Runtime dependency is [GMP](https://gmplib.org) only.
 - Compilation dependencies: [cmake](https://cmake.org/), [asciidoc](http://asciidoc.org/) and [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/).
-- Testing dependencies: [tor](https://www.torproject.org/), [privoxy](http://www.privoxy.org/), [rvm](https://rvm.io/), [ncompress](https://github.com/vapier/ncompress).
 
 ## Operating systems
 
