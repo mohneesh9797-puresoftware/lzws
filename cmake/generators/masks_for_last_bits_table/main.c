@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "print.h"
+#include "print_data.h"
 
 #define XSTR(x) STR(x)
 #define STR(x) #x
@@ -16,8 +17,6 @@
 #define BYTE_TEMPLATE "0x%0" XSTR(NUMBER_WIDTH) "x"
 #define BYTE_LENGTH_PER_LINE 4
 #define BYTE_LENGTH_GLUE ", "
-
-#define PRINT(string) fputs(string, stdout)
 
 int main()
 {

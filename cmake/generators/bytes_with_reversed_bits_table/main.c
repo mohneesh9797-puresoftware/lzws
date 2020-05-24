@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "print.h"
+#include "print_data.h"
 
 #define BYTE_TEMPLATE "0x%02x"
 #define BYTE_LENGTH_PER_LINE 16
