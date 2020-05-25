@@ -11,7 +11,8 @@
 #define PREFIX "  "
 #define TERMINATOR ",\n"
 
-#define INITIALIZE_SPACERS() bool is_first_spacer = true;
+#define INITIALIZE_SPACERS() \
+  bool is_first_spacer = true;
 
 #define PRINT_SPACER()       \
   if (is_first_spacer) {     \
