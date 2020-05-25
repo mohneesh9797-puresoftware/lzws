@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 
-#define PRINT(string) fputs(string, stdout)
+#define PRINT(string) \
+  fputs(string, stdout)
 
 #endif // PRINT_H
