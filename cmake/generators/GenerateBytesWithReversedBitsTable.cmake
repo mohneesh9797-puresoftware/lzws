@@ -1,3 +1,5 @@
+set (CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function (generate_bytes_with_reversed_bits_table)
   if (DEFINED CMAKE_BYTES_WITH_REVERSED_BITS_TABLE)
     return ()
@@ -6,8 +8,8 @@ function (generate_bytes_with_reversed_bits_table)
   set (MESSAGE_PREFIX "Bytes with reversed bits table")
 
   set (NAME "cmake_generator_bytes_with_reversed_bits_table")
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_bytes_with_reversed_bits_table")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/bytes_with_reversed_bits_table")
+  set (SOURCE_DIR "${CURRENT_LIST_DIR}/bytes_with_reversed_bits_table")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/generator_bytes_with_reversed_bits_table")
 
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()

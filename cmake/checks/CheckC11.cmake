@@ -1,3 +1,5 @@
+set (CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function (cmake_check_c11)
   if (DEFINED CMAKE_HAVE_C11)
     return ()
@@ -6,8 +8,8 @@ function (cmake_check_c11)
   set (MESSAGE_PREFIX "Status of C11 support")
 
   set (NAME "cmake_check_c11")
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_C11")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/C11")
+  set (SOURCE_DIR "${CURRENT_LIST_DIR}/C11")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/check_c11")
 
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()

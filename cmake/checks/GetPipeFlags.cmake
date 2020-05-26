@@ -1,3 +1,5 @@
+set (CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function (cmake_get_pipe_flags)
   if (DEFINED CMAKE_GET_PIPE_FLAGS_PROCESSED)
     return ()
@@ -6,8 +8,8 @@ function (cmake_get_pipe_flags)
   set (MESSAGE_PREFIX "Status of -pipe support")
 
   set (NAME "cmake_get_pipe_flags")
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
+  set (SOURCE_DIR "${CURRENT_LIST_DIR}/basic")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/get_pipe_flags")
 
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()

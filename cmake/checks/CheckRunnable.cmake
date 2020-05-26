@@ -1,3 +1,5 @@
+set (CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function (cmake_check_runnable)
   if (DEFINED CMAKE_CAN_RUN_EXE)
     return ()
@@ -6,8 +8,8 @@ function (cmake_check_runnable)
   set (MESSAGE_PREFIX "Status of run exe support")
 
   set (NAME "cmake_check_runnable")
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_basic")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/basic")
+  set (SOURCE_DIR "${CURRENT_LIST_DIR}/basic")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/check_runnable")
 
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()

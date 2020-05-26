@@ -1,3 +1,5 @@
+set (CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function (cmake_check_gmp)
   if (DEFINED CMAKE_GMP_WORKS)
     return ()
@@ -6,8 +8,8 @@ function (cmake_check_gmp)
   set (MESSAGE_PREFIX "Status of GMP support")
 
   set (NAME "cmake_check_gmp")
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/check_GMP")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/checks/GMP")
+  set (SOURCE_DIR "${CURRENT_LIST_DIR}/GMP")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/check_gmp")
 
   find_package (GMP REQUIRED)
 

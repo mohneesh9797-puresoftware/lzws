@@ -1,3 +1,5 @@
+set (CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function (generate_masks_for_last_bits_table)
   if (DEFINED CMAKE_MASKS_FOR_LAST_BITS_TABLE)
     return ()
@@ -6,8 +8,8 @@ function (generate_masks_for_last_bits_table)
   set (MESSAGE_PREFIX "Masks for last bits table")
 
   set (NAME "cmake_generator_masks_for_last_bits_table")
-  set (BINARY_DIR "${PROJECT_BINARY_DIR}/CMakeTmp/generator_masks_for_last_bits_table")
-  set (SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmake/generators/masks_for_last_bits_table")
+  set (SOURCE_DIR "${CURRENT_LIST_DIR}/masks_for_last_bits_table")
+  set (BINARY_DIR "${PROJECT_BINARY_DIR}/generator_masks_for_last_bits_table")
 
   include (GetVerboseFlags)
   cmake_get_verbose_flags ()
