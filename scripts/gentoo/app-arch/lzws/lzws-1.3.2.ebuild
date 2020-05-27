@@ -13,7 +13,7 @@ LICENSE="BSD-3-Clause"
 SLOT="0"
 KEYWORDS=""
 
-IUSE="static-libs test noman"
+IUSE="static test noman"
 
 COMPRESSOR_DICTIONARIES="linked-list sparse-array"
 for compressor_dictionary in ${COMPRESSOR_DICTIONARIES}; do
@@ -31,7 +31,7 @@ src_configure() {
   local mycmakeargs=(
     -DLZWS_COMPRESSOR_DICTIONARY=$(usex compressor_dictionary_linked-list linked-list sparse-array)
     -DLZWS_SHARED=ON
-    -DLZWS_STATIC=$(usex static-libs)
+    -DLZWS_STATIC=$(usex static)
     -DLZWS_CLI=ON
     -DLZWS_TESTS=$(usex test)
     -DLZWS_EXAMPLES=OFF

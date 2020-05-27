@@ -26,20 +26,20 @@ endif ()
 
 set (LZWS_COMPRESSOR_DICTIONARY "sparse-array" CACHE STRING "dictionary implementation")
 
-option (LZWS_SHARED   "build shared libs" ON)
-option (LZWS_STATIC   "build static libs" OFF)
-option (LZWS_CLI      "build cli"         ON)
-option (LZWS_TESTS    "build tests"       ON)
-option (LZWS_COVERAGE "enable coverage"   OFF)
-option (LZWS_EXAMPLES "build examples"    OFF)
-option (LZWS_MAN      "build man"         ON)
+option (LZWS_SHARED   "build shared binaries" ON)
+option (LZWS_STATIC   "build static binaries" OFF)
+option (LZWS_CLI      "build cli"             ON)
+option (LZWS_TESTS    "build tests"           ON)
+option (LZWS_COVERAGE "enable coverage"       OFF)
+option (LZWS_EXAMPLES "build examples"        OFF)
+option (LZWS_MAN      "build man"             ON)
 
 if (NOT LZWS_COMPRESSOR_DICTIONARY)
   message (FATAL_ERROR "Please select dictionary implementation.")
 endif ()
 
 if (NOT LZWS_SHARED AND NOT LZWS_STATIC)
-  message (FATAL_ERROR "Please enable building of shared or static libraries.")
+  message (FATAL_ERROR "Please enable building of shared or static binaries.")
 endif ()
 
 set (
@@ -87,8 +87,8 @@ if (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
   set (CMAKE_BUILD_TYPE "DEBUG")
 endif ()
 
-set (CMAKE_C_FLAGS_DEBUG         "-O0 -g" CACHE STRING "debug cflags" FORCE)
-set (CMAKE_C_FLAGS_RELEASE       "-O2"    CACHE STRING "release cflags" FORCE)
+set (CMAKE_C_FLAGS_DEBUG         "-O0 -g" CACHE STRING "debug cflags"         FORCE)
+set (CMAKE_C_FLAGS_RELEASE       "-O2"    CACHE STRING "release cflags"       FORCE)
 set (CMAKE_C_FLAGS_RELEASE_EMBED "-Os"    CACHE STRING "release embed cflags" FORCE)
 
 if (CMAKE_HAVE_IPO)

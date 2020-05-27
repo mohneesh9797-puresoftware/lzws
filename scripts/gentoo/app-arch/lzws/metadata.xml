@@ -10,8 +10,7 @@
     LZW streaming compressor/decompressor compatible with UNIX compress.
   </longdescription>
   <use>
-    <flag name="shared-libs">Build shared libraries</flag>
-    <flag name="static-libs">Build static libraries</flag>
+    <flag name="static">Build static binaries</flag>
     <flag name="test">Build and run tests</flag>
     <flag name="man">Create man pages</flag>
   </use>
